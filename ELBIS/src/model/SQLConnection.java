@@ -8,14 +8,14 @@ public class SQLConnection {
 	
 // 	Example 
 	
-//	static PreparedStatement pst = null;
-//	static ResultSet rs = null;
-//	
-//
-//	
+	static PreparedStatement pst = null;
+	static ResultSet rs = null;
+	
+
+	
 //	public static void main(String[] args) {
 //		Connection con = ConnectDB();
-//		String sql = "INSERT INTO User VALUES (1, 'testmail@mail.de', 'xyz', ?, 'testuser', 'teststrasse 1', ?,'01.01.1900')";
+//		String sql = "INSERT INTO User VALUES (5, 'testmail@mail.de', 'xyz', ?, 'testuser', 'teststrasse 1', ?,'01.01.1900')";
 //		try {
 //			pst = con.prepareStatement(sql);
 //			pst.execute();
