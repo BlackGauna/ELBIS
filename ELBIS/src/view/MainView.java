@@ -21,6 +21,12 @@ public class MainView extends Application {
 			primaryStage.setScene(new Scene(mainPane));
 			primaryStage.show();
 		
+			// test ArticleEditor layout
+			Stage secondStage = new Stage();
+			Pane editorPane = (Pane) FXMLLoader.load(MainView.class.getResource("article_editor.fxml"));
+			secondStage.setScene(new Scene(editorPane));
+
+			secondStage.show();
 
 	}
 }
