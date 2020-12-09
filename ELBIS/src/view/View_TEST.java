@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.JOptionPane;
 
+import controller.MainController;
 import javafx.application.Application;
 
 public class View_TEST {
@@ -11,6 +12,7 @@ public class View_TEST {
 	
 	
 	public static void main(String[] args) {
+		
 		new MainView();
 		try {
 		Application.launch(MainView.class);
