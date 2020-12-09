@@ -19,8 +19,8 @@ public class FXMLController {
 
     @FXML
     void loginClicked(ActionEvent event) {
-
+    	System.out.println("loginClicked with: "+txtEmail.getText());
     }
-    //TEST
+  
 }
 
