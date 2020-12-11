@@ -29,7 +29,7 @@ public class WebViewTest extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        URL url= this.getClass().getResource("/tinymce/tinymce_test.html");
+        URL url= getClass().getResource("/resource/tinymce/tinymce_test.html");
 
         WebView webView = new WebView();
         final WebEngine webEngine= webView.getEngine();
