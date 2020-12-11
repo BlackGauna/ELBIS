@@ -95,17 +95,12 @@ public class DataController {
 	}
 
 	public boolean open() {
-		try {
-			con =  SQLConnection.ConnectDB();
+		con =  SQLConnection.ConnectDB();
 
-			//TODO Preload statements at connection
+		//TODO Preload statements at connection
 
 
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
+		return true;
 	}
 
 	public void close() {

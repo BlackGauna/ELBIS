@@ -1,5 +1,5 @@
 package model;
 
 public enum Gender {
-	Männlich,Weiblich,Divers
+	Maennlich,Weiblich,Divers
 }
