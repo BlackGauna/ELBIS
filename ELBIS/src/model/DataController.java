@@ -1,7 +1,11 @@
 package model;
+import javafx.scene.text.Text;
+
 import java.sql.*;
 
 public class DataController {
+
+	//ATTRIBUTES--------------------------------------------------------------------------------------------------------
 
 	public static final String TABLE_ARTICLE = "Article";
 	public static final String COLUMN_ARTICLE_ID = "id";
@@ -13,8 +17,8 @@ public class DataController {
 	public static final String COLUMN_ARTICLE_STATUS = "status";
 	public static final String COLUMN_ARTICLE_TOPIC = "topic";
 	public static final String COLUMN_ARTICLE_AUTHOR_ID = "authorId";
-	public static final String COLUMN_ARTICLE_PUBLISHER_ID= "publisherId";
-	public static final String COLUMN_ARTICLE_PUBLISHER_COMMENT= "publisherComment";
+	public static final String COLUMN_ARTICLE_PUBLISHER_ID = "publisherId";
+	public static final String COLUMN_ARTICLE_PUBLISHER_COMMENT = "publisherComment";
 	public static final int INDEX_TABLE_ARTICLE = 1;
 	public static final int INDEX_ARTICLE_ID = 2;
 	public static final int INDEX_ARTICLE_TITLE = 3;
@@ -77,27 +81,31 @@ public class DataController {
 	public static final int ORDER_BY_ASCENDING = 1;
 	public static final int ORDER_BY_DESCENDING = 2;
 
+
+
+	//QUERIES-----------------------------------------------------------------------------------------------------------
+
 	//How exactly will the creation, expiration, last edit dates set ? plus the other stuff ?
 	//The Stuff that we need can be changed anytime to however we want to receive something from the database, do not hesitate to make changes.
 
-	public static final String SEND_NEW_ARTICLE =  "INSERT INTO " + TABLE_ARTICLE +
+	public static final String SEND_NEW_ARTICLE = "INSERT INTO " + TABLE_ARTICLE +
 			'(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_CONTENT +
 			", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ") VALUES(?, ?, ?, ?)";
 
-	public static final String SEND_NEW_TOPIC =  "INSERT INTO " + TABLE_TOPIC +
+	public static final String SEND_NEW_TOPIC = "INSERT INTO " + TABLE_TOPIC +
 			'(' + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + ") VALUES(?, ?)";
 
-	public static final String SEND_NEW_USER =  "INSERT INTO " + TABLE_USER +
+	public static final String SEND_NEW_USER = "INSERT INTO " + TABLE_USER +
 			'(' + COLUMN_USER_EMAIL + ", " + COLUMN_USER_PASSWORD + ", " + COLUMN_USER_NAME + ", " +
 			COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER + ", " + COLUMN_USER_DATE_OF_BIRTH + ") VALUES(?, ?, ?, ?, ?, ?)";
 
 	public static final String LOAD_ARTICLE = "SELECT " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
-	COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
-			" WHERE " + COLUMN_ARTICLE_TITLE + " = ?";
+			COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
+			" WHERE " + COLUMN_ARTICLE_ID + " = ?";
 
 	public static final String LOAD_TOPIC = "SELECT " + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_CONTENT + ", "
 			+ COLUMN_ARTICLE_PUBLISHER_COMMENT + " FROM " +
-	TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_TOPIC + " = ?";
+			TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_TOPIC + " = ?";
 
 	public static final String LOAD_USER = "SELECT " + COLUMN_USER_EMAIL + ", "
 			+ COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
@@ -107,7 +115,7 @@ public class DataController {
 	//Be careful with the UPDATE commands, if it is left empty it can update all tables and wipe the database.
 
 	public static final String EDIT_ARTICLE = "UPDATE " + TABLE_ARTICLE + " SET " +
-			COLUMN_ARTICLE_TITLE +  ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_CONTENT + ", "
+			COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_CONTENT + ", "
 			+ COLUMN_ARTICLE_PUBLISHER_COMMENT + " = ? WHERE " + COLUMN_ARTICLE_ID + " = ?";
 
 	public static final String EDIT_USER = "UPDATE " + TABLE_USER + " SET " + COLUMN_USER_EMAIL +
@@ -121,18 +129,21 @@ public class DataController {
 			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 1";
 
 
+	//CONNECTION--------------------------------------------------------------------------------------------------------
+
 	Connection con;
 
-	private PreparedStatement DBSendNewArticle;
-	private PreparedStatement DBSendNewTopic;
-	private PreparedStatement DBSendNewUser;
-	private PreparedStatement DBLoadArticle;
-	private PreparedStatement DBLoadTopic;
-	private PreparedStatement DBLoadUser;
-	private PreparedStatement DBEditArticle;
-	private PreparedStatement DBEditUser;
-	private PreparedStatement DBEditTopic;
-	private PreparedStatement DBLoadRecentArticle;
+	private PreparedStatement SendNewArticle;
+	private PreparedStatement SendNewTopic;
+	private PreparedStatement SendNewUser;
+	private PreparedStatement LoadArticle;
+	private PreparedStatement LoadTopic;
+	private PreparedStatement LoadUser;
+	private PreparedStatement EditArticle;
+	private PreparedStatement EditUser;
+	private PreparedStatement EditTopic;
+	private PreparedStatement LoadRecentArticle;
+
 
 	private static DataController instance = new DataController();
 
@@ -146,18 +157,18 @@ public class DataController {
 
 	public boolean open() {
 		try {
-			con =  SQLConnection.ConnectDB();
+			con = SQLConnection.ConnectDB();
 
-			DBSendNewArticle = con.prepareStatement(SEND_NEW_ARTICLE,Statement.RETURN_GENERATED_KEYS);
-			DBSendNewTopic = con.prepareStatement(SEND_NEW_TOPIC,Statement.RETURN_GENERATED_KEYS);
-			DBSendNewUser = con.prepareStatement(SEND_NEW_USER,Statement.RETURN_GENERATED_KEYS);
-			DBLoadArticle = con.prepareStatement(LOAD_ARTICLE);
-			DBLoadTopic = con.prepareStatement(LOAD_TOPIC);
-			DBLoadUser = con.prepareStatement(LOAD_USER);
-			DBEditArticle = con.prepareStatement(EDIT_ARTICLE);
-			DBEditUser = con.prepareStatement(EDIT_USER);
-			DBEditTopic = con.prepareStatement(EDIT_TOPIC);
-			DBLoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE);
+			SendNewArticle = con.prepareStatement(SEND_NEW_ARTICLE, Statement.RETURN_GENERATED_KEYS);
+			SendNewTopic = con.prepareStatement(SEND_NEW_TOPIC, Statement.RETURN_GENERATED_KEYS);
+			SendNewUser = con.prepareStatement(SEND_NEW_USER, Statement.RETURN_GENERATED_KEYS);
+			LoadArticle = con.prepareStatement(LOAD_ARTICLE);
+			LoadTopic = con.prepareStatement(LOAD_TOPIC);
+			LoadUser = con.prepareStatement(LOAD_USER);
+			EditArticle = con.prepareStatement(EDIT_ARTICLE);
+			EditUser = con.prepareStatement(EDIT_USER);
+			EditTopic = con.prepareStatement(EDIT_TOPIC);
+			LoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE);
 
 			return true;
 
@@ -172,46 +183,45 @@ public class DataController {
 		try {
 
 
-			if(DBSendNewArticle != null) {
-				DBSendNewArticle.close();
+			if (SendNewArticle != null) {
+				SendNewArticle.close();
 			}
 
-			if(DBSendNewTopic != null) {
-				DBSendNewTopic.close();
+			if (SendNewTopic != null) {
+				SendNewTopic.close();
 			}
 
-			if(DBSendNewUser != null) {
-				DBSendNewUser.close();
+			if (SendNewUser != null) {
+				SendNewUser.close();
 			}
 
-			if(DBLoadArticle !=  null) {
-				DBLoadArticle.close();
+			if (LoadArticle != null) {
+				LoadArticle.close();
 			}
 
-			if(DBLoadTopic != null) {
-				DBLoadTopic.close();
+			if (LoadTopic != null) {
+				LoadTopic.close();
 			}
 
-			if(DBLoadUser != null) {
-				DBLoadUser.close();
+			if (LoadUser != null) {
+				LoadUser.close();
 			}
 
-			if(DBEditArticle != null) {
-				DBEditArticle.close();
+			if (EditArticle != null) {
+				EditArticle.close();
 			}
 
-			if(DBEditUser != null) {
-				DBEditUser.close();
+			if (EditUser != null) {
+				EditUser.close();
 			}
 
-			if(DBEditTopic != null) {
-				DBEditTopic.close();
+			if (EditTopic != null) {
+				EditTopic.close();
 			}
 
-			if(DBLoadRecentArticle != null) {
-				DBLoadRecentArticle.close();
+			if (LoadRecentArticle != null) {
+				LoadRecentArticle.close();
 			}
-
 
 
 			if (con != null) {
@@ -222,72 +232,247 @@ public class DataController {
 		}
 	}
 
+	//METHODS--------------------------------------------------------------------------------------------------------
 
+	public boolean DBSendNewArticle(String title, String content, String publisherComment) {
 
-	//TODO Implement Methods
+		try {
+			SendNewArticle.setString(2, title);
+			SendNewArticle.setString(3, content);
+			SendNewArticle.setString(11, publisherComment);
 
+			int affectedRows = SendNewArticle.executeUpdate();
 
-	/*Connection con = null;
-	PreparedStatement pst = null;
+			if (affectedRows == 0) {
+				throw new SQLException("Couldn't save article!");
+			} else
+				System.out.println("Successful submit!");
 
-	public boolean DBSendNewArticle() {
-		//newArticle:Article , should return boolean
-		con =  SQLConnection.ConnectDB();
-		try
-		{
-			String query = "INSERT INTO Article (title, content, creationDate, expireDate, lastEdit, status, topic, authorId, publisherId, publisherComment)"
-					+ "VALUES ()";
-			pst = con.prepareStatement(query);
-			pst.execute();
-			con.close();
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("Couldn't save article: " + e.getMessage());
+			return false;
+		}
+	}
+
+	public boolean DBSendNewTopic(String name) {
+
+		try {
+			SendNewTopic.setString(2, name);
+
+			int affectedRows = SendNewTopic.executeUpdate();
+
+			if (affectedRows == 0) {
+				throw new SQLException("Couldn't save topic!");
+			} else
+				System.out.println("Successfully added!");
+
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("Couldn't save topic: " + e.getMessage());
+			return false;
+		}
+	}
+
+	public boolean DBSendNewUser(String email, String password, String name, String address, int gender, String dateOfBirth) {
+		try {
+			SendNewUser.setString(2, email);
+			SendNewUser.setString(3, password);
+			SendNewUser.setString(5, name);
+			SendNewUser.setString(6, address);
+			SendNewUser.setInt(2, gender);
+			SendNewUser.setString(2, dateOfBirth); //In database dateOfBirth is saved as TEXT not as date.
+
+			int affectedRows = SendNewUser.executeUpdate();
+
+			if (affectedRows == 0) {
+				throw new SQLException("Couldn't save User!");
+			} else
+				System.out.println("User successfully added!");
+
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("Couldn't save User: " + e.getMessage());
+			return false;
 		}
 
-		catch (SQLException e) {
-			e.printStackTrace();
+	}
+
+	public Article DBLoadArticle(int id) {
+		try {
+			Article article = LoadArticle.
+
+					//TODO Learn to load the article LoadArticle
+
+
+			if (article == null) {
+				throw new SQLException("Couldn't get Article!");
+			} else {
+				System.out.println("Article successfully loaded!");
+				return article;
+			}
+		} catch (SQLException e) {
+			System.out.println("Couldn't get Article: " + e.getMessage());
+
 		}
 	}
 
-	public boolean DBSendNewTopic() {
-		//newTopic:Topic
+	public Topic DBLoadTopic() {
+		//TODO LoadTopic
+
 
 	}
 
-	public boolean DBSendNewUser(){
-		//newUser:User
+	public User DBLoadUser() {
+		//TODO LoadUser
 
 	}
 
-	public Article DBLoadArticle(){
-		//dbrequest:String
+	public boolean DBEditArticle(int id, String newTitle, String newContent, String newPublisherComment) {
+		try {
+			con.setAutoCommit(false);
+
+			//TODO Learn how to pick the specific article to edit EditArticle
+
+			EditArticle.setString(2, newTitle);
+			EditArticle.setString(3, newContent);
+			EditArticle.setNString(11, newPublisherComment);
+			int affectedRows = EditArticle.executeUpdate();
+
+			if (affectedRows == 1) {
+				con.commit();
+				System.out.println("Successful!");
+				return true;
+			} else {
+				System.out.println("Failed!");
+				con.rollback();
+				con.setAutoCommit(true);
+				return false;
+			}
+
+		} catch (Exception e) {
+			System.out.println("Article edit exception: " + e.getMessage());
+			try {
+				System.out.println("Performing rollback");
+				con.rollback();
+				return false;
+			} catch (SQLException e2) {
+				System.out.println("Oh boy! Things are really bad! " + e2.getMessage());
+				return false;
+			}
+		} finally {
+			try {
+				System.out.println("Resetting default commit behavior");
+				con.setAutoCommit(true);
+			} catch (SQLException e) {
+				System.out.println("Couldn't reset auto-commit! " + e.getMessage());
+			}
+		}
+	}
+
+	public boolean DBEditUser ( int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth) {
+		try {
+			con.setAutoCommit(false);
+
+			//TODO EditUser
+
+			EditUser.setString(2, newEmail);
+			EditUser.setString(3, newPassword);
+			EditUser.setString(5, newName);
+			EditUser.setString(6, newAddress);
+			EditUser.setInt(7, newGender);
+			EditUser.setString(8, newDateOfBirth);
+
+
+			int affectedRows = EditUser.executeUpdate();
+
+			if (affectedRows == 1) {
+				con.commit();
+				System.out.println("Successful!");
+				return true;
+			} else {
+				System.out.println("Failed!");
+				con.rollback();
+				con.setAutoCommit(true);
+				return false;
+			}
+
+		} catch (Exception e) {
+			System.out.println("User edit exception: " + e.getMessage());
+			try {
+				System.out.println("Performing rollback");
+				con.rollback();
+				return false;
+			} catch (SQLException e2) {
+				System.out.println("Oh boy! Things are really bad! " + e2.getMessage());
+				return false;
+			}
+		} finally {
+			try {
+				System.out.println("Resetting default commit behavior");
+				con.setAutoCommit(true);
+			} catch (SQLException e) {
+				System.out.println("Couldn't reset auto-commit! " + e.getMessage());
+			}
+		}
+	}
+
+	public boolean DBEditTopic (int id,String newName,String newParentTopic) {
+			try {
+				con.setAutoCommit(false);
+
+				//TODO EditTopic
+
+				EditTopic.setString(2, newName);
+				EditArticle.setString(3, newParentTopic);
+
+				int affectedRecords = EditTopic.executeUpdate();
+
+				if (affectedRecords == 1) {
+					con.commit();
+					System.out.println("Successful!");
+					return true;
+				} else {
+					System.out.println("Failed!");
+					con.rollback();
+					con.setAutoCommit(true);
+					return false;
+				}
+
+			} catch (Exception e) {
+				System.out.println("Topic edit exception: " + e.getMessage());
+				try {
+					System.out.println("Performing rollback");
+					con.rollback();
+					return false;
+				} catch (SQLException e2) {
+					System.out.println("Oh boy! Things are really bad! " + e2.getMessage());
+					return false;
+				}
+			} finally {
+				try {
+					System.out.println("Resetting default commit behavior");
+					con.setAutoCommit(true);
+				} catch (SQLException e) {
+					System.out.println("Couldn't reset auto-commit! " + e.getMessage());
+				}
+
+			}
+	}
+
+	public LinkedList<Article> DBLoadRecentArticle () {
+			//dbrequest:String
+
+		//TODO LoadRecentArticle
 
 	}
-	public Topic DBLoadTopic(){
-		//dbrequest:String
-
-	}
-	public User DBLoadUser(){
-		//dbrequest:String
-
-	}
-	public boolean DBEditArticle(){
-		//dbrequest:String
-
-	}
-	public boolean DBEditUser(){
-		//dbrequest:String
-
-	}
-	public boolean DBEditTopic(){
-		//dbrequest:String
-
-	}
-	public LinkedList<Article> DBLoadRecentArticle(){
-		//dbrequest:String
-
-	}
-	*/
 
 	//add methods; delete, sort ?
+	//there is no method to view all the articles in an order ?
+	//there is no way to browse topics ?
 	//TODO open and close in main, methods to FXML
 
 }
