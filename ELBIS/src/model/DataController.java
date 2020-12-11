@@ -9,7 +9,7 @@ public class DataController {
 	public static final String COLUMN_ARTICLE_CONTENT = "content";
 	public static final String COLUMN_ARTICLE_CREATION_DATE = "creationDate";
 	public static final String COLUMN_ARTICLE_EXPIRE_DATE = "expireDate";
-	public static final String COLUMN_ARTICLE_LASTED_IT = "lastEdit";
+	public static final String COLUMN_ARTICLE_LAST_EDIT = "lastEdit";
 	public static final String COLUMN_ARTICLE_STATUS = "status";
 	public static final String COLUMN_ARTICLE_TOPIC = "topic";
 	public static final String COLUMN_ARTICLE_AUTHOR_ID = "authorId";
@@ -73,16 +73,66 @@ public class DataController {
 	public static final int INDEX_USER_DATE_OF_BIRTH = 8;
 
 
-	//TODO More ordering types?
-	public static final int ORDER_BY_NONE = 1;
-	public static final int ORDER_BY_ASCENDING = 2;
-	public static final int ORDER_BY_DESCENDING = 3;
+	// More ordering types?
+	public static final int ORDER_BY_ASCENDING = 1;
+	public static final int ORDER_BY_DESCENDING = 2;
 
-	//TODO Prepare querys
+	//How exactly will the creation, expiration, last edit dates set ? plus the other stuff ?
+	//The Stuff that we need can be changed anytime to however we want to receive something from the database, do not hesitate to make changes.
+
+	public static final String SEND_NEW_ARTICLE =  "INSERT INTO " + TABLE_ARTICLE +
+			'(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_CONTENT +
+			", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ") VALUES(?, ?, ?, ?)";
+
+	public static final String SEND_NEW_TOPIC =  "INSERT INTO " + TABLE_TOPIC +
+			'(' + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + ") VALUES(?, ?)";
+
+	public static final String SEND_NEW_USER =  "INSERT INTO " + TABLE_USER +
+			'(' + COLUMN_USER_EMAIL + ", " + COLUMN_USER_PASSWORD + ", " + COLUMN_USER_NAME + ", " +
+			COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER + ", " + COLUMN_USER_DATE_OF_BIRTH + ") VALUES(?, ?, ?, ?, ?, ?)";
+
+	public static final String LOAD_ARTICLE = "SELECT " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
+	COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
+			" WHERE " + COLUMN_ARTICLE_TITLE + " = ?";
+
+	public static final String LOAD_TOPIC = "SELECT " + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_CONTENT + ", "
+			+ COLUMN_ARTICLE_PUBLISHER_COMMENT + " FROM " +
+	TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_TOPIC + " = ?";
+
+	public static final String LOAD_USER = "SELECT " + COLUMN_USER_EMAIL + ", "
+			+ COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
+			", " + COLUMN_USER_DATE_OF_BIRTH + " FROM " +
+			TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
+
+	//Be careful with the UPDATE commands, if it is left empty it can update all tables and wipe the database.
+
+	public static final String EDIT_ARTICLE = "UPDATE " + TABLE_ARTICLE + " SET " +
+			COLUMN_ARTICLE_TITLE +  ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_CONTENT + ", "
+			+ COLUMN_ARTICLE_PUBLISHER_COMMENT + " = ? WHERE " + COLUMN_ARTICLE_ID + " = ?";
+
+	public static final String EDIT_USER = "UPDATE " + TABLE_USER + " SET " + COLUMN_USER_EMAIL +
+			", " + COLUMN_USER_PASSWORD + ", " + COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
+			", " + COLUMN_USER_DATE_OF_BIRTH + " = ? WHERE " + COLUMN_USER_ID + " = ?";
+
+	public static final String EDIT_TOPIC = "UPDATE " + TABLE_TOPIC + " SET " +
+			COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + " = ? WHERE " + COLUMN_TOPIC_ID + " = ?";
+
+	public static final String LOAD_RECENT_ARTICLE = "SELECT * FROM " + TABLE_ARTICLE +
+			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 1";
+
 
 	Connection con;
 
-	//TODO PreparedStatement blabla;
+	private PreparedStatement DBSendNewArticle;
+	private PreparedStatement DBSendNewTopic;
+	private PreparedStatement DBSendNewUser;
+	private PreparedStatement DBLoadArticle;
+	private PreparedStatement DBLoadTopic;
+	private PreparedStatement DBLoadUser;
+	private PreparedStatement DBEditArticle;
+	private PreparedStatement DBEditUser;
+	private PreparedStatement DBEditTopic;
+	private PreparedStatement DBLoadRecentArticle;
 
 	private static DataController instance = new DataController();
 
@@ -98,12 +148,22 @@ public class DataController {
 		try {
 			con =  SQLConnection.ConnectDB();
 
-			//TODO Preload statements at connection
-
+			DBSendNewArticle = con.prepareStatement(SEND_NEW_ARTICLE,Statement.RETURN_GENERATED_KEYS);
+			DBSendNewTopic = con.prepareStatement(SEND_NEW_TOPIC,Statement.RETURN_GENERATED_KEYS);
+			DBSendNewUser = con.prepareStatement(SEND_NEW_USER,Statement.RETURN_GENERATED_KEYS);
+			DBLoadArticle = con.prepareStatement(LOAD_ARTICLE);
+			DBLoadTopic = con.prepareStatement(LOAD_TOPIC);
+			DBLoadUser = con.prepareStatement(LOAD_USER);
+			DBEditArticle = con.prepareStatement(EDIT_ARTICLE);
+			DBEditUser = con.prepareStatement(EDIT_USER);
+			DBEditTopic = con.prepareStatement(EDIT_TOPIC);
+			DBLoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE);
 
 			return true;
+
 		} catch (SQLException e) {
 			e.printStackTrace();
+
 			return false;
 		}
 	}
@@ -111,7 +171,48 @@ public class DataController {
 	public void close() {
 		try {
 
-			//TODO querys != null and close them
+
+			if(DBSendNewArticle != null) {
+				DBSendNewArticle.close();
+			}
+
+			if(DBSendNewTopic != null) {
+				DBSendNewTopic.close();
+			}
+
+			if(DBSendNewUser != null) {
+				DBSendNewUser.close();
+			}
+
+			if(DBLoadArticle !=  null) {
+				DBLoadArticle.close();
+			}
+
+			if(DBLoadTopic != null) {
+				DBLoadTopic.close();
+			}
+
+			if(DBLoadUser != null) {
+				DBLoadUser.close();
+			}
+
+			if(DBEditArticle != null) {
+				DBEditArticle.close();
+			}
+
+			if(DBEditUser != null) {
+				DBEditUser.close();
+			}
+
+			if(DBEditTopic != null) {
+				DBEditTopic.close();
+			}
+
+			if(DBLoadRecentArticle != null) {
+				DBLoadRecentArticle.close();
+			}
+
+
 
 			if (con != null) {
 				con.close();
@@ -186,6 +287,7 @@ public class DataController {
 	}
 	*/
 
-	//TODO add methods; delete, sort ?
+	//add methods; delete, sort ?
+	//TODO open and close in main, methods to FXML
 
 }
