@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script>
+      tinymce.init({
+        selector: '#mytextarea'
+      });
+
+        function sendToJava () {
+            var s = document.getElementById('input').value;
+            javaConnector.toLowerCase(s);
+        };
+
+        var jsConnector = {
+            showResult: function (result) {
+                document.getElementById('result').innerHTML = result;
+            }
+        };
+
+        function getJsConnector() {
+            return jsConnector;
+        };
+
+
+    </script>
+
+</head>
+
+<body>
+<h1>TinyMCE Quick Start Guide</h1>
+<form method="post">
+    <textarea id="mytextarea">Hello, World!</textarea>
+</form>
+</body>
+</html>
