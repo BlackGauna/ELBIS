@@ -7,8 +7,16 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class FXMLController {
-	
-	//Pane_Login
+
+    // Atrrib_______________________________________________________________________________________________________
+    private MainView mainView;
+
+    // Ctor_______________________________________________________________________________________________________
+    public FXMLController(MainView mainView) {
+        this.mainView = mainView;
+    }
+
+    //Pane_Login
     @FXML
     private Button btnLogin;
 
@@ -20,8 +28,8 @@ public class FXMLController {
 
     @FXML
     void loginClicked(ActionEvent event) {
-    	System.out.println("loginClicked with: "+txtEmail.getText());
+        System.out.println("loginClicked with: " + txtEmail.getText());
+        mainView.openEditorScene();
     }
-  
-}
 
+}
