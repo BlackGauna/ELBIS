@@ -2,6 +2,7 @@ package model;
 
 import java.sql.*;
 import java.util.LinkedList;
+import java.util.List;
 
 public class DataController {
 
@@ -351,6 +352,7 @@ public class DataController {
 			ResultSet rs = LoadTopic.getResultSet();
 			Topic topic = new Topic();
 			while (rs.next()) {
+
 				topic.setId(id);
 				topic.setName(rs.getString(2));
 				//topic.parentTopic(rs.getString(3));      //TODO Topic Class must be initialized
@@ -371,11 +373,12 @@ public class DataController {
 			ResultSet rs = LoadUser.getResultSet();
 			User user = new User();
 			while (rs.next()) {
-				user.setId(id);
+				//user.setId(id);
 				user.seteMail(rs.getString(2));
+				user.setAddress(rs.getString(6));
 				//user.setName(rs.getString(5));        //TODO User Class must be initialized
 				//user.setGender(rs.getInt(7));        //TODO ERROR
-				user.setDateOfBirth(rs.getDate(8));
+				//user.setDateOfBirth(rs.getDate(8));
 			}
 			return user;
 		} catch (SQLException e) {
