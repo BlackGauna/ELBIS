@@ -153,7 +153,7 @@ public class DataController {
 
 	//CONNECTION--------------------------------------------------------------------------------------------------------
 
-	Connection con;
+	private Connection con;
 
 	private PreparedStatement SendNewArticle;
 	private PreparedStatement SendNewTopic;
@@ -278,10 +278,13 @@ public class DataController {
 		}
 	}
 
-	public boolean DBSendNewTopic(String name) {
+	//TODO DBSendNewTopic sends succesfully to the database but twice, a variable gets stuck in the stream.
+
+	public boolean DBSendNewTopic(String name,int parentTopic) {
 
 		try {
-			SendNewTopic.setString(2, name);
+			SendNewTopic.setString(1, name);
+			SendNewTopic.setInt(2,parentTopic);
 
 			int affectedRows = SendNewTopic.executeUpdate();
 
