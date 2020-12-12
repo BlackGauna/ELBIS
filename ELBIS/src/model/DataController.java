@@ -1,7 +1,7 @@
 package model;
-import javafx.scene.text.Text;
 
 import java.sql.*;
+import java.util.LinkedList;
 
 public class DataController {
 
@@ -82,8 +82,10 @@ public class DataController {
 	public static final int ORDER_BY_DESCENDING = 2;
 
 
-
 	//QUERIES-----------------------------------------------------------------------------------------------------------
+
+
+	//TODO Discuss what queries that we exactly need to adapt them.
 
 	//How exactly will the creation, expiration, last edit dates set ? plus the other stuff ?
 	//The Stuff that we need can be changed anytime to however we want to receive something from the database, do not hesitate to make changes.
@@ -92,25 +94,36 @@ public class DataController {
 			'(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_CONTENT +
 			", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ") VALUES(?, ?, ?, ?)";
 
+	//Create new Article
+
 	public static final String SEND_NEW_TOPIC = "INSERT INTO " + TABLE_TOPIC +
 			'(' + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + ") VALUES(?, ?)";
+
+	//Create new Topic
 
 	public static final String SEND_NEW_USER = "INSERT INTO " + TABLE_USER +
 			'(' + COLUMN_USER_EMAIL + ", " + COLUMN_USER_PASSWORD + ", " + COLUMN_USER_NAME + ", " +
 			COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER + ", " + COLUMN_USER_DATE_OF_BIRTH + ") VALUES(?, ?, ?, ?, ?, ?)";
 
+	//Create new User
+
 	public static final String LOAD_ARTICLE = "SELECT " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
 			COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
 			" WHERE " + COLUMN_ARTICLE_ID + " = ?";
 
-	public static final String LOAD_TOPIC = "SELECT " + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_CONTENT + ", "
-			+ COLUMN_ARTICLE_PUBLISHER_COMMENT + " FROM " +
-			TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_TOPIC + " = ?";
+	//Load a specific Article with ID
+
+	public static final String LOAD_TOPIC = "SELECT " + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + " FROM " +
+			TABLE_TOPIC + " WHERE " + COLUMN_TOPIC_ID + " = ?";
+
+	//Load a specific Topic with ID
 
 	public static final String LOAD_USER = "SELECT " + COLUMN_USER_EMAIL + ", "
 			+ COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
 			", " + COLUMN_USER_DATE_OF_BIRTH + " FROM " +
-			TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
+			TABLE_USER + " WHERE " + COLUMN_USER_ID + " = ?";
+
+	//Load a specific User with ID
 
 	//Be careful with the UPDATE commands, if it is left empty it can update all tables and wipe the database.
 
@@ -118,15 +131,23 @@ public class DataController {
 			COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_CONTENT + ", "
 			+ COLUMN_ARTICLE_PUBLISHER_COMMENT + " = ? WHERE " + COLUMN_ARTICLE_ID + " = ?";
 
+	//Edit a specific Article with ID
+
 	public static final String EDIT_USER = "UPDATE " + TABLE_USER + " SET " + COLUMN_USER_EMAIL +
 			", " + COLUMN_USER_PASSWORD + ", " + COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
 			", " + COLUMN_USER_DATE_OF_BIRTH + " = ? WHERE " + COLUMN_USER_ID + " = ?";
 
+	//Edit a specific User with ID
+
 	public static final String EDIT_TOPIC = "UPDATE " + TABLE_TOPIC + " SET " +
 			COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + " = ? WHERE " + COLUMN_TOPIC_ID + " = ?";
 
+	//Edit a specific Topic with ID
+
 	public static final String LOAD_RECENT_ARTICLE = "SELECT * FROM " + TABLE_ARTICLE +
-			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 1";
+			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 20 ";
+
+	//Load the 20 most recent Articles in a descending order.
 
 
 	//CONNECTION--------------------------------------------------------------------------------------------------------
@@ -283,7 +304,7 @@ public class DataController {
 			SendNewUser.setString(5, name);
 			SendNewUser.setString(6, address);
 			SendNewUser.setInt(2, gender);
-			SendNewUser.setString(2, dateOfBirth); //In database dateOfBirth is saved as TEXT not as date.
+			SendNewUser.setString(2, dateOfBirth); //TODO In database dateOfBirth is saved as TEXT not as date.
 
 			int affectedRows = SendNewUser.executeUpdate();
 
@@ -303,40 +324,75 @@ public class DataController {
 
 	public Article DBLoadArticle(int id) {
 		try {
-			Article article = LoadArticle.
-
-					//TODO Learn to load the article LoadArticle
-
-
-			if (article == null) {
-				throw new SQLException("Couldn't get Article!");
-			} else {
-				System.out.println("Article successfully loaded!");
-				return article;
+			LoadArticle.setInt(1, id);
+			LoadArticle.execute();
+			ResultSet rs = LoadArticle.getResultSet();
+			Article article = new Article();
+			while (rs.next()) {
+				article.setId(id);
+				article.setTopic(rs.getString(8));
+				article.setTitle(rs.getString(2));
+				article.setContent(rs.getString(3));
+				article.setPublisherComment(rs.getString(11));  //TODO Article Class must be initialized
+				article.setExpireDate(rs.getString(5));
 			}
+			return article;
 		} catch (SQLException e) {
-			System.out.println("Couldn't get Article: " + e.getMessage());
-
+			System.out.println("Couldn't load Article: " + e.getMessage());
+			return null;
 		}
-	}
-
-	public Topic DBLoadTopic() {
-		//TODO LoadTopic
-
 
 	}
 
-	public User DBLoadUser() {
-		//TODO LoadUser
+	public Topic DBLoadTopic(int id) {
+		try {
+			LoadTopic.setInt(1, id);
+			LoadTopic.execute();
+			ResultSet rs = LoadTopic.getResultSet();
+			Topic topic = new Topic();
+			while (rs.next()) {
+				topic.setId(id);
+				topic.setName(rs.getString(2));
+				topic.parentTopic(rs.getString(3));      //TODO Topic Class must be initialized
+
+			}
+			return topic;
+		} catch (SQLException e) {
+			System.out.println("Couldn't load Topic: " + e.getMessage());
+			return null;
+		}
 
 	}
+
+	public User DBLoadUser(int id) {
+		try {
+			LoadUser.setInt(1, id);
+			LoadUser.execute();
+			ResultSet rs = LoadUser.getResultSet();
+			User user = new User();
+			while (rs.next()) {
+				user.setId(id);
+				user.seteMail(rs.getString(2));
+				user.setName(rs.getString(5));        //TODO User Class must be initialized
+				user.setGender(rs.getInt(7));        //TODO ERROR
+				user.setDateOfBirth(rs.getString(8)); //TODO dateOfBirth is set to date in Code but TEXT in the database.
+			}
+			return user;
+		} catch (SQLException e) {
+			System.out.println("Couldn't load User: " + e.getMessage());
+			return null;
+		}
+
+
+	}
+
+	//TODO Make sure edits work.
 
 	public boolean DBEditArticle(int id, String newTitle, String newContent, String newPublisherComment) {
 		try {
 			con.setAutoCommit(false);
 
-			//TODO Learn how to pick the specific article to edit EditArticle
-
+			EditArticle.setInt(1, id);
 			EditArticle.setString(2, newTitle);
 			EditArticle.setString(3, newContent);
 			EditArticle.setNString(11, newPublisherComment);
@@ -373,12 +429,11 @@ public class DataController {
 		}
 	}
 
-	public boolean DBEditUser ( int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth) {
+	public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth) {
 		try {
 			con.setAutoCommit(false);
 
-			//TODO EditUser
-
+			EditUser.setInt(1, id);
 			EditUser.setString(2, newEmail);
 			EditUser.setString(3, newPassword);
 			EditUser.setString(5, newName);
@@ -420,57 +475,74 @@ public class DataController {
 		}
 	}
 
-	public boolean DBEditTopic (int id,String newName,String newParentTopic) {
-			try {
-				con.setAutoCommit(false);
+	public boolean DBEditTopic(int id, String newName, String newParentTopic) {
+		try {
+			con.setAutoCommit(false);
 
-				//TODO EditTopic
+			EditTopic.setInt(1, id);
+			EditTopic.setString(2, newName);
+			EditArticle.setString(3, newParentTopic);
 
-				EditTopic.setString(2, newName);
-				EditArticle.setString(3, newParentTopic);
+			int affectedRecords = EditTopic.executeUpdate();
 
-				int affectedRecords = EditTopic.executeUpdate();
-
-				if (affectedRecords == 1) {
-					con.commit();
-					System.out.println("Successful!");
-					return true;
-				} else {
-					System.out.println("Failed!");
-					con.rollback();
-					con.setAutoCommit(true);
-					return false;
-				}
-
-			} catch (Exception e) {
-				System.out.println("Topic edit exception: " + e.getMessage());
-				try {
-					System.out.println("Performing rollback");
-					con.rollback();
-					return false;
-				} catch (SQLException e2) {
-					System.out.println("Oh boy! Things are really bad! " + e2.getMessage());
-					return false;
-				}
-			} finally {
-				try {
-					System.out.println("Resetting default commit behavior");
-					con.setAutoCommit(true);
-				} catch (SQLException e) {
-					System.out.println("Couldn't reset auto-commit! " + e.getMessage());
-				}
-
+			if (affectedRecords == 1) {
+				con.commit();
+				System.out.println("Successful!");
+				return true;
+			} else {
+				System.out.println("Failed!");
+				con.rollback();
+				con.setAutoCommit(true);
+				return false;
 			}
+
+		} catch (Exception e) {
+			System.out.println("Topic edit exception: " + e.getMessage());
+			try {
+				System.out.println("Performing rollback");
+				con.rollback();
+				return false;
+			} catch (SQLException e2) {
+				System.out.println("Oh boy! Things are really bad! " + e2.getMessage());
+				return false;
+			}
+		} finally {
+			try {
+				System.out.println("Resetting default commit behavior");
+				con.setAutoCommit(true);
+			} catch (SQLException e) {
+				System.out.println("Couldn't reset auto-commit! " + e.getMessage());
+			}
+
+		}
 	}
 
-	public LinkedList<Article> DBLoadRecentArticle () {
-			//dbrequest:String
+	public LinkedList<Article> DBLoadRecentArticle() {
 
-		//TODO LoadRecentArticle
+		try {
+			ResultSet rs = LoadRecentArticle.executeQuery();
+
+			LinkedList<Article> articles = new LinkedList<>();
+			while (rs.next()) {
+				Article article = new Article();
+
+				article.setTopic(rs.getString(8));
+				article.setTitle(rs.getString(2));
+				article.setContent(rs.getString(3));
+				article.setPublisherComment(rs.getString(11));  //TODO Article Class must be initialized
+				article.setExpireDate(rs.getString(5));
+				articles.add(article);
+			}
+
+			return articles;
+		} catch (SQLException e) {
+			System.out.println("Getting recent articles failed: " + e.getMessage());
+			return null;
+		}
 
 	}
 
-	//add methods; delete, sort ?
+	//TODO add methods; delete, sort ?
 	//there is no method to view all the articles in an order ?
 	//there is no way to browse topics ?
 	//TODO open and close in main, methods to FXML
