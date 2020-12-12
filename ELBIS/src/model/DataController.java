@@ -167,8 +167,8 @@ public class DataController {
 
 
 	private static DataController instance = new DataController();
-
-	private DataController() {
+	//private, public for testing
+	public DataController() {
 
 	}
 
@@ -353,7 +353,7 @@ public class DataController {
 			while (rs.next()) {
 				topic.setId(id);
 				topic.setName(rs.getString(2));
-				topic.parentTopic(rs.getString(3));      //TODO Topic Class must be initialized
+				//topic.parentTopic(rs.getString(3));      //TODO Topic Class must be initialized
 
 			}
 			return topic;
@@ -373,9 +373,9 @@ public class DataController {
 			while (rs.next()) {
 				user.setId(id);
 				user.seteMail(rs.getString(2));
-				user.setName(rs.getString(5));        //TODO User Class must be initialized
-				user.setGender(rs.getInt(7));        //TODO ERROR
-				user.setDateOfBirth(rs.getString(8)); //TODO dateOfBirth is set to date in Code but TEXT in the database.
+				//user.setName(rs.getString(5));        //TODO User Class must be initialized
+				//user.setGender(rs.getInt(7));        //TODO ERROR
+				user.setDateOfBirth(rs.getDate(8));
 			}
 			return user;
 		} catch (SQLException e) {

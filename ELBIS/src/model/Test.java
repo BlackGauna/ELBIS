@@ -18,7 +18,7 @@ public class Test {
 
 
         User user = dataController.DBLoadUser(0);
-        System.out.println(user.getName());
+        //System.out.println(user.getName());
         System.out.println(user.geteMail());
         dataController.DBLoadUser(5);
 
