@@ -2,36 +2,33 @@ package view;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 
-public class FXMLController_Login {
+public class FXMLController_StatusBar {
 
     // Atrrib_______________________________________________________________________________________________________
-    MainView mainView;
 
     // Ini_______________________________________________________________________________________________________
 
-
     // UI_______________________________________________________________________________________________________
     @FXML
-    private Button btnLogin;
+    private Button btnHistory;
 
     @FXML
-    private PasswordField txtPassword;
+    private Label lblStatus;
 
     @FXML
-    private TextField txtEmail;
+    void historyClicked(ActionEvent event) {
 
-    @FXML
-    void loginClicked(ActionEvent event) {
-        mainView.openApplicationStage();
-        mainView.setStatus("Logged in \""+txtEmail.getText() + "\" with password \"" +txtPassword.getText()+"\"");
     }
 
     // Methods_______________________________________________________________________________________________________
-    //reference to mainView
-    public void setMainView(MainView mainView){
-        this.mainView = mainView;
+
+    public void setStatus(String status){
+        lblStatus.setText(status);
+        //Todo Create History
+        //Todo Add status to history
     }
 
 }

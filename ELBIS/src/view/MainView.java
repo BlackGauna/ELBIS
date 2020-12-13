@@ -11,93 +11,100 @@ import java.io.IOException;
 
 public class MainView extends Application {
 
-	// Atrrib_______________________________________________________________________________________________________
-	private MainController controller;
+    // Atrrib_______________________________________________________________________________________________________
+    private MainController controller;
 
-	//Loaders
-	private FXMLLoader loginLoader;
-	private FXMLLoader mainApplicationLoader;
-	//Controllers
-	private FXMLController_Login loginController;
-	private FXMLController_MainApplication mainApplicationController;
-	//Stages
-	private Stage loginStage;
-	private Stage applicationStage;
-	private Stage editorStage;
-	//Scenes
-	private Scene loginScene;
-	private Scene applicationScene;
-	private Scene editorScene;
-	//Panes
-	private Pane loginPane;
-	private Pane applicationPane;
-	private Pane editorPane;
-	// Ctor_______________________________________________________________________________________________________
-	public MainView() {
+    //Loaders
+    private FXMLLoader loginLoader;
+    private FXMLLoader mainApplicationLoader;
+    //Controllers
+    private FXMLController_Login loginController;
+    private FXMLController_MainApplication mainApplicationController;
+    //Stages
+    private Stage loginStage;
+    private Stage applicationStage;
+    private Stage editorStage;
+    //Scenes
+    private Scene loginScene;
+    private Scene applicationScene;
+    private Scene editorScene;
+    //Panes
+    private Pane loginPane;
+    private Pane applicationPane;
+    private Pane editorPane;
 
-		// ###### Create Stages ######
-		this.loginStage = new Stage(); // Login window
-		applicationStage = new Stage(); // Application Window
-		editorStage = new Stage(); // Editor Window
+    // Ctor_______________________________________________________________________________________________________
+    public MainView() {
 
-	}
+        // ###### Create Stages ######
+        this.loginStage = new Stage(); // Login window
+        applicationStage = new Stage(); // Application Window
+        editorStage = new Stage(); // Editor Window
 
-	public MainView(MainController controller) {
-		this();
-		this.controller = controller;
+    }
 
-	}
-	// Start_______________________________________________________________________________________________________
-	@Override
-	public void start(Stage primaryStage) throws Exception {
+    public MainView(MainController controller) {
+        this();
+        this.controller = controller;
 
-		//Stage content
-		try{
-			//Manage loaders and load their controllers
-			loginLoader = new FXMLLoader(getClass().getResource("/view/Pane_Login.fxml"));
-			loginPane = (Pane) loginLoader.load();
-			loginController = loginLoader.getController();
-			loginController.setMainView(this);
+    }
 
-			mainApplicationLoader = new FXMLLoader(getClass().getResource("/view/Pane_MainApplication.fxml"));
-			applicationPane = (Pane) mainApplicationLoader.load();
-			mainApplicationController = mainApplicationLoader.getController();
-			mainApplicationController.setMainView(this);
+    // Start_______________________________________________________________________________________________________
+    @Override
+    public void start(Stage primaryStage) throws Exception {
 
-			//Manage scenes
-			loginScene = new Scene(loginPane);
-			applicationScene = new Scene(applicationPane);
+        //Stage content
+        try {
+            //Manage loaders and load their controllers
+            loginLoader = new FXMLLoader(getClass().getResource("/view/Pane_Login.fxml"));
+            loginPane = (Pane) loginLoader.load();
+            loginController = loginLoader.getController();
+            loginController.setMainView(this);
 
-			loginStage.setScene(loginScene);
-			applicationStage.setScene(applicationScene);
+            mainApplicationLoader = new FXMLLoader(getClass().getResource("/view/Pane_MainApplication.fxml"));
+            applicationPane = (Pane) mainApplicationLoader.load();
+            mainApplicationController = mainApplicationLoader.getController();
+            mainApplicationController.setMainView(this);
+
+            //Manage scenes
+            loginScene = new Scene(loginPane);
+            applicationScene = new Scene(applicationPane);
+
+            loginStage.setScene(loginScene);
+            applicationStage.setScene(applicationScene);
+
+        } catch (IOException io) {
+            System.out.println("Couldn't load scene File");
+            io.printStackTrace();
+        }
+        openLoginStage();
 
 
-		} catch (IOException io){
-			System.out.println("Couldn't load scene File");
-			io.printStackTrace();
-		}
-		openLoginStage();
+    }
 
+    // Methods_______________________________________________________________________________________________________
+    public Scene createScene(String path) throws IOException {
+        Pane Pane = (Pane) FXMLLoader.load(MainView.class.getResource(path));
+        Scene Scene = new Scene(Pane);
+        return Scene;
+    }
 
-	}
-	// Methods_______________________________________________________________________________________________________
-	public Scene createScene(String path) throws IOException {
-		Pane Pane = (Pane) FXMLLoader.load(MainView.class.getResource(path));
-		Scene Scene = new Scene(Pane);
-		return Scene;
-	}
+    public void openLoginStage() {
+        loginStage.show();
+    }
 
-	public void openLoginStage(){
-		loginStage.show();
-	}
+    public void openApplicationStage() {
+        loginStage.close();
+        applicationStage.show();
+    }
 
-	public void openApplicationStage(){
-		applicationStage.show();
-	}
+    public void openEditorScene() {
+        editorStage.show();
+    }
 
-	public void openEditorScene() {
-		editorStage.show();
-	}
+    public void setStatus (String newStatus){
+        mainApplicationController.setStatus(newStatus);
+    }
 
 }
 
