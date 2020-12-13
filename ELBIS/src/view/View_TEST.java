@@ -12,8 +12,7 @@ public class View_TEST {
 	
 	
 	public static void main(String[] args) {
-		
-		new MainView();
+
 		try {
 		Application.launch(MainView.class);
 		} catch (Exception e) {
