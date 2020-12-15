@@ -86,70 +86,62 @@ public class DataController {
 	//QUERIES-----------------------------------------------------------------------------------------------------------
 
 
-	//TODO Discuss what queries that we exactly need to adapt them.
+	//TODO Discuss what queries we exactly might need to adapt them.
 
 	//How exactly will the creation, expiration, last edit dates set ? plus the other stuff ?
+
 	//The Stuff that we need can be changed anytime to however we want to receive something from the database, do not hesitate to make changes.
 
+	//Create new Article
 	public static final String SEND_NEW_ARTICLE = "INSERT INTO " + TABLE_ARTICLE +
 			'(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_CONTENT +
 			", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ") VALUES(?, ?, ?, ?)";
 
-	//Create new Article
-
+	//Create new Topic
 	public static final String SEND_NEW_TOPIC = "INSERT INTO " + TABLE_TOPIC +
 			'(' + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + ") VALUES(?, ?)";
 
-	//Create new Topic
-
+	//Create new User
 	public static final String SEND_NEW_USER = "INSERT INTO " + TABLE_USER +
 			'(' + COLUMN_USER_EMAIL + ", " + COLUMN_USER_PASSWORD + ", " + COLUMN_USER_NAME + ", " +
 			COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER + ", " + COLUMN_USER_DATE_OF_BIRTH + ") VALUES(?, ?, ?, ?, ?, ?)";
 
-	//Create new User
 
+	//Load a specific Article with ID
 	public static final String LOAD_ARTICLE = "SELECT " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
 			COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
 			" WHERE " + COLUMN_ARTICLE_ID + " = ?";
 
-	//Load a specific Article with ID
-
+	//Load a specific Topic with ID
 	public static final String LOAD_TOPIC = "SELECT " + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + " FROM " +
 			TABLE_TOPIC + " WHERE " + COLUMN_TOPIC_ID + " = ?";
 
-	//Load a specific Topic with ID
-
+	//Load a specific User with ID
 	public static final String LOAD_USER = "SELECT " + COLUMN_USER_EMAIL + ", "
 			+ COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
 			", " + COLUMN_USER_DATE_OF_BIRTH + " FROM " +
 			TABLE_USER + " WHERE " + COLUMN_USER_ID + " = ?";
 
-	//Load a specific User with ID
-
 	//Be careful with the UPDATE commands, if it is left empty it can update all tables and wipe the database.
 
+	//Edit a specific Article with ID
 	public static final String EDIT_ARTICLE = "UPDATE " + TABLE_ARTICLE + " SET " +
 			COLUMN_ARTICLE_TITLE + " = ?, " + COLUMN_ARTICLE_TOPIC + " = ?, " + COLUMN_ARTICLE_CONTENT + " = ?, "
 			+ COLUMN_ARTICLE_PUBLISHER_COMMENT + " = ? WHERE " + COLUMN_ARTICLE_ID + " = ?";
 
-	//Edit a specific Article with ID
-
+	//Edit a specific User with ID
 	public static final String EDIT_USER = "UPDATE " + TABLE_USER + " SET " + COLUMN_USER_EMAIL +
 			" = ?, " + COLUMN_USER_PASSWORD + " = ?, " + COLUMN_USER_NAME + " = ?, " + COLUMN_USER_ADDRESS + " = ?, " + COLUMN_USER_GENDER +
 			" = ?, " + COLUMN_USER_DATE_OF_BIRTH + " = ? WHERE " + COLUMN_USER_ID + " = ?";
 
-	//Edit a specific User with ID
-
+	//Edit a specific Topic with ID
 	public static final String EDIT_TOPIC = "UPDATE " + TABLE_TOPIC + " SET " +
 			COLUMN_TOPIC_NAME + "= ?, " + COLUMN_TOPIC_PARENT_ID + " = ? WHERE " + COLUMN_TOPIC_ID + " = ?";
 
-	//Edit a specific Topic with ID
-
-	public static final String LOAD_RECENT_ARTICLE = "SELECT"  + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
+	//Load the 20 most recent Articles in a descending order.
+	public static final String LOAD_RECENT_ARTICLE = "SELECT "  + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
 			COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + "FROM" + TABLE_ARTICLE +
 			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 20 ";
-
-	//Load the 20 most recent Articles in a descending order.
 
 
 	//CONNECTION--------------------------------------------------------------------------------------------------------
@@ -191,7 +183,7 @@ public class DataController {
 			EditArticle = con.prepareStatement(EDIT_ARTICLE);
 			EditUser = con.prepareStatement(EDIT_USER);
 			EditTopic = con.prepareStatement(EDIT_TOPIC);
-			LoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE);
+			//LoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE); //Statement fails to load because of no topic error on method
 
 			return true;
 
@@ -257,8 +249,8 @@ public class DataController {
 
 	//METHODS--------------------------------------------------------------------------------------------------------
 
-	//TODO sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.
 
+	//Article creation Abort due to constraint violation (NOT NULL constraint failed: Article.creationDate) doesnt automatically create the date and time.
 	public boolean DBSendNewArticle(String title,String topic, String content, String publisherComment) {
 
 		try {
@@ -282,6 +274,7 @@ public class DataController {
 		}
 	}
 
+	//Sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.
 	public boolean DBSendNewTopic(String name,int parentTopic) {
 
 		try {
@@ -303,6 +296,7 @@ public class DataController {
 		}
 	}
 
+	//Sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.
 	public boolean DBSendNewUser(String email, String password, String name, String address, int gender, String dateOfBirth) {
 		try {
 			SendNewUser.setString(1, email);
@@ -328,6 +322,7 @@ public class DataController {
 
 	}
 
+	//Couldnt Test as the database doesnt accept manual entry as well.
 	public Article DBLoadArticle(int id) {
 		try {
 			LoadArticle.setInt(1, id);
@@ -336,7 +331,7 @@ public class DataController {
 			Article article = new Article();
 			while (rs.next()) {
 				article.setId(id);
-				article.setTopic(rs.getString(1));
+				article.setTopic(rs.getInt(1));
 				article.setTitle(rs.getString(2));
 				article.setContent(rs.getString(3));
 				article.setPublisherComment(rs.getString(4));
@@ -350,6 +345,7 @@ public class DataController {
 
 	}
 
+	//Sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.
 	public Topic DBLoadTopic(int id) {
 		try {
 			LoadTopic.setInt(1, id);
@@ -360,7 +356,7 @@ public class DataController {
 
 				topic.setId(id);
 				topic.setName(rs.getString(1));
-				//topic.parentTopic(rs.getString(2));      //TODO Topic Class must be initialized
+				//topic.parentTopic(rs.getString(2));      //Topic Class must be initialized
 
 			}
 			return topic;
@@ -371,6 +367,7 @@ public class DataController {
 
 	}
 
+	//Couldn't load User: Error parsing date null
 	public User DBLoadUser(int id) {
 		try {
 			LoadUser.setInt(1, id);
@@ -394,8 +391,7 @@ public class DataController {
 
 	}
 
-	//TODO Make sure edits work.
-
+	//Couldnt test.
 	public boolean DBEditArticle(int id, String newTitle,String newTopic, String newContent, String newPublisherComment) {
 		try {
 			con.setAutoCommit(false);
@@ -438,6 +434,7 @@ public class DataController {
 		}
 	}
 
+	//Failed!
 	public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth) {
 		try {
 			con.setAutoCommit(false);
@@ -484,6 +481,7 @@ public class DataController {
 		}
 	}
 
+	//Somehow says successful but doesnt edit.
 	public boolean DBEditTopic(int id, String newName, String newParentTopic) {
 		try {
 			con.setAutoCommit(false);
@@ -526,8 +524,7 @@ public class DataController {
 		}
 	}
 
-	//TODO Test to see if this method works or another should be implemented.
-
+	//Test to see if this method works or another should be implemented. No such column found: topic ????
 	public LinkedList<Article> DBLoadRecentArticle() {
 
 		try {
@@ -537,10 +534,10 @@ public class DataController {
 			while (rs.next()) {
 				Article article = new Article();
 
-				article.setTopic(rs.getString(1));
+				article.setTopic(rs.getInt(1));
 				article.setTitle(rs.getString(2));
 				article.setContent(rs.getString(3));
-				article.setPublisherComment(rs.getString(4));  //TODO Article Class must be initialized
+				article.setPublisherComment(rs.getString(4));  //Article Class must be initialized
 				article.setExpireDate(rs.getString(5));
 				articles.add(article);
 			}

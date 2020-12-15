@@ -6,7 +6,7 @@ public class Article {
 
     private int id;
     private String title;
-    private String topic;
+    private int topic;
     private String content;
     private String expireDate;
     private String creationDate;
@@ -60,11 +60,11 @@ public class Article {
         this.publisherComment = publisherComment;
     }
 
-    public String getTopic() {
+    public int getTopic() {
         return topic;
     }
 
-    public void setTopic(String topic) {
+    public void setTopic(int topic) {
         this.topic = topic;
     }
 }
