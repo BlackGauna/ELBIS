@@ -145,7 +145,8 @@ public class DataController {
 
 	//Edit a specific Topic with ID
 
-	public static final String LOAD_RECENT_ARTICLE = "SELECT * FROM " + TABLE_ARTICLE +
+	public static final String LOAD_RECENT_ARTICLE = "SELECT"  + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
+			COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + "FROM" + TABLE_ARTICLE +
 			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 20 ";
 
 	//Load the 20 most recent Articles in a descending order.
@@ -256,12 +257,15 @@ public class DataController {
 
 	//METHODS--------------------------------------------------------------------------------------------------------
 
-	public boolean DBSendNewArticle(String title, String content, String publisherComment) {
+	//TODO sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.
+
+	public boolean DBSendNewArticle(String title,String topic, String content, String publisherComment) {
 
 		try {
-			SendNewArticle.setString(2, title);
+			SendNewArticle.setString(1, title);
+			SendNewArticle.setString(2, topic);
 			SendNewArticle.setString(3, content);
-			SendNewArticle.setString(11, publisherComment);
+			SendNewArticle.setString(4, publisherComment);
 
 			int affectedRows = SendNewArticle.executeUpdate();
 
@@ -277,8 +281,6 @@ public class DataController {
 			return false;
 		}
 	}
-
-	//TODO DBSendNewTopic sends succesfully to the database but twice, a variable gets stuck in the stream.
 
 	public boolean DBSendNewTopic(String name,int parentTopic) {
 
@@ -303,12 +305,12 @@ public class DataController {
 
 	public boolean DBSendNewUser(String email, String password, String name, String address, int gender, String dateOfBirth) {
 		try {
-			SendNewUser.setString(2, email);
-			SendNewUser.setString(3, password);
-			SendNewUser.setString(5, name);
-			SendNewUser.setString(6, address);
-			SendNewUser.setInt(2, gender);
-			SendNewUser.setString(2, dateOfBirth); //TODO In database dateOfBirth is saved as TEXT not as date.
+			SendNewUser.setString(1, email);
+			SendNewUser.setString(2, password);
+			SendNewUser.setString(3, name);
+			SendNewUser.setString(4, address);
+			SendNewUser.setInt(5, gender);
+			SendNewUser.setString(6, dateOfBirth);
 
 			int affectedRows = SendNewUser.executeUpdate();
 
@@ -334,10 +336,10 @@ public class DataController {
 			Article article = new Article();
 			while (rs.next()) {
 				article.setId(id);
-				article.setTopic(rs.getString(8));
+				article.setTopic(rs.getString(1));
 				article.setTitle(rs.getString(2));
 				article.setContent(rs.getString(3));
-				article.setPublisherComment(rs.getString(11));  //TODO Article Class must be initialized
+				article.setPublisherComment(rs.getString(4));
 				article.setExpireDate(rs.getString(5));
 			}
 			return article;
@@ -357,8 +359,8 @@ public class DataController {
 			while (rs.next()) {
 
 				topic.setId(id);
-				topic.setName(rs.getString(2));
-				//topic.parentTopic(rs.getString(3));      //TODO Topic Class must be initialized
+				topic.setName(rs.getString(1));
+				//topic.parentTopic(rs.getString(2));      //TODO Topic Class must be initialized
 
 			}
 			return topic;
@@ -376,12 +378,12 @@ public class DataController {
 			ResultSet rs = LoadUser.getResultSet();
 			User user = new User();
 			while (rs.next()) {
-				//user.setId(id);
-				user.seteMail(rs.getString(2));
-				user.setAddress(rs.getString(6));
-				//user.setName(rs.getString(5));        //TODO User Class must be initialized
-				//user.setGender(rs.getInt(7));        //TODO ERROR
-				//user.setDateOfBirth(rs.getDate(8));
+				//user.setId(id); //user ID cant be set outside of constructors.
+				user.seteMail(rs.getString(1));
+				//user.setName(rs.getString(2)); //Setname not initialized.
+				user.setAddress(rs.getString(3));
+				//user.setGender(rs.getInt(4));        //TODO error on setting gender
+				user.setDateOfBirth(rs.getDate(5));
 			}
 			return user;
 		} catch (SQLException e) {
@@ -394,14 +396,15 @@ public class DataController {
 
 	//TODO Make sure edits work.
 
-	public boolean DBEditArticle(int id, String newTitle, String newContent, String newPublisherComment) {
+	public boolean DBEditArticle(int id, String newTitle,String newTopic, String newContent, String newPublisherComment) {
 		try {
 			con.setAutoCommit(false);
 
-			EditArticle.setInt(1, id);
-			EditArticle.setString(2, newTitle);
+			EditArticle.setInt(5, id);
+			EditArticle.setString(1, newTitle);
+			EditArticle.setString(2, newTopic);
 			EditArticle.setString(3, newContent);
-			EditArticle.setNString(11, newPublisherComment);
+			EditArticle.setNString(4, newPublisherComment);
 			int affectedRows = EditArticle.executeUpdate();
 
 			if (affectedRows == 1) {
@@ -439,13 +442,13 @@ public class DataController {
 		try {
 			con.setAutoCommit(false);
 
-			EditUser.setInt(1, id);
-			EditUser.setString(2, newEmail);
-			EditUser.setString(3, newPassword);
-			EditUser.setString(5, newName);
-			EditUser.setString(6, newAddress);
-			EditUser.setInt(7, newGender);
-			EditUser.setString(8, newDateOfBirth);
+			EditUser.setInt(6, id);
+			EditUser.setString(1, newEmail);
+			EditUser.setString(2, newPassword);
+			EditUser.setString(3, newName);
+			EditUser.setString(4, newAddress);
+			EditUser.setInt(5, newGender);
+			EditUser.setString(6, newDateOfBirth);
 
 
 			int affectedRows = EditUser.executeUpdate();
@@ -485,9 +488,9 @@ public class DataController {
 		try {
 			con.setAutoCommit(false);
 
-			EditTopic.setInt(1, id);
-			EditTopic.setString(2, newName);
-			EditArticle.setString(3, newParentTopic);
+			EditTopic.setInt(3, id);
+			EditTopic.setString(1, newName);
+			EditArticle.setString(2, newParentTopic);
 
 			int affectedRecords = EditTopic.executeUpdate();
 
@@ -523,6 +526,8 @@ public class DataController {
 		}
 	}
 
+	//TODO Test to see if this method works or another should be implemented.
+
 	public LinkedList<Article> DBLoadRecentArticle() {
 
 		try {
@@ -532,10 +537,10 @@ public class DataController {
 			while (rs.next()) {
 				Article article = new Article();
 
-				article.setTopic(rs.getString(8));
+				article.setTopic(rs.getString(1));
 				article.setTitle(rs.getString(2));
 				article.setContent(rs.getString(3));
-				article.setPublisherComment(rs.getString(11));  //TODO Article Class must be initialized
+				article.setPublisherComment(rs.getString(4));  //TODO Article Class must be initialized
 				article.setExpireDate(rs.getString(5));
 				articles.add(article);
 			}
