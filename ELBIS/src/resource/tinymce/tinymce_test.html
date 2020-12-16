@@ -6,25 +6,85 @@
 
     <script src="tinymce.min.js" referrerpolicy="origin"></script>
 
-    <script>
+    <script type="text/javascript" type="text/ecmascript-6">
+      
       tinymce.init({
-        selector: '#mytextarea'
+      	encoding: "xml",
+        selector: '#mytextarea',
+        plugins: 'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+          imagetools_cors_hosts: ['picsum.photos'],
+          toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+
+        paste_data_images: true,
+
+        images_upload_url : 'upload.php',
+		automatic_uploads : false,
+
+        urlconverter_callback: function(url, node, on_save){
+
+            url= 'file://' + url;
+            sendToJava(url);
+        	return (url);
+
+        },
+
+		images_upload_handler : function(blobInfo, success, failure) {
+			var xhr, formData;
+
+			xhr = new XMLHttpRequest();
+			xhr.withCredentials = false;
+			xhr.open('POST', 'upload.php');
+
+			xhr.onload = function() {
+				var json;
+
+				if (xhr.status != 200) {
+					failure('HTTP Error: ' + xhr.status);
+					return;
+				}
+
+				json = JSON.parse(xhr.responseText);
+
+				if (!json || typeof json.file_path != 'string') {
+					failure('Invalid JSON: ' + xhr.responseText);
+					return;
+				}
+
+				success(json.file_path);
+			};
+
+			formData = new FormData();
+			formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+			xhr.send(formData);
+		},
+
       });
 
-        function sendToJava () {
-            var s = document.getElementById('input').value;
-            javaConnector.toLowerCase(s);
-        };
+    function encode_utf(text){
+    	return unescape(encodeURIComponent(text));
+    };
+    function decode_utf(text){
+    	return decodeURIComponent(text);
+    };
 
-        var jsConnector = {
-            showResult: function (result) {
-                document.getElementById('result').innerHTML = result;
-            }
-        };
 
-        function getJsConnector() {
-            return jsConnector;
-        };
+
+    function sendToJava (text) {
+        javaConnector.toLowerCase(text);
+        javaConnector.toLowerCase(encodeURI(text));
+        javaConnector.toLowerCase(decodeURI(text));
+    };
+
+    var jsConnector = {
+        showResult: function (result) {
+            document.getElementById('result').innerHTML = result;
+        }
+    };
+
+    function getJsConnector() {
+        return jsConnector;
+    };
 
 
     </script>
@@ -34,7 +94,10 @@
 <body>
 <h1>TinyMCE Quick Start Guide</h1>
 <form method="post">
-    <textarea id="mytextarea">Hello, World!</textarea>
+    <textarea id="mytextarea">Hello, World!
+    </textarea>
 </form>
+
+
 </body>
 </html>

@@ -34,6 +34,9 @@ public class WebViewTest extends Application
         WebView webView = new WebView();
         final WebEngine webEngine= webView.getEngine();
 
+
+
+        webEngine.setJavaScriptEnabled(true);
         //listener setup
         webEngine.getLoadWorker().stateProperty().addListener(((observableValue, oldValue, newValue) ->{
             if (Worker.State.SUCCEEDED == newValue)
@@ -54,6 +57,9 @@ public class WebViewTest extends Application
         // now load the page
         webEngine.load(url.toString());
 
+
+
+
     }
 
     /**
@@ -71,7 +77,7 @@ public class WebViewTest extends Application
             if (null != value) {
 
                 System.out.println(value);
-                javascriptConnector.call("showResult", value);
+                //javascriptConnector.call("showResult", value);
             }
         }
     }
