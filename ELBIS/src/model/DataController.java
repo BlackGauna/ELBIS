@@ -8,6 +8,7 @@ public class DataController {
 
 	//ATTRIBUTES--------------------------------------------------------------------------------------------------------
 
+	// Article
 	public static final String TABLE_ARTICLE = "Article";
 	public static final String COLUMN_ARTICLE_ID = "id";
 	public static final String COLUMN_ARTICLE_TITLE = "title";
@@ -33,24 +34,28 @@ public class DataController {
 	public static final int INDEX_ARTICLE_PUBLISHER_ID = 11;
 	public static final int INDEX_ARTICLE_PUBLISHER_COMMENT = 12;
 
+	// Gender
 	public static final String TABLE_GENDER = "Gender";
 	public static final String COLUMN_GENDER_ID = "id";
 	public static final String COLUMN_GENDER_NAME = "name";
 	public static final int INDEX_GENDER_ID = 1;
 	public static final int INDEX_GENDER_NAME = 2;
 
+	// Role
 	public static final String TABLE_ROLE = "Role";
 	public static final String COLUMN_ROLE_ID = "id";
 	public static final String COLUMN_ROLE_NAME = "name";
 	public static final int INDEX_ROLE_ID = 1;
 	public static final int INDEX_ROLE_NAME = 2;
 
+	// Status
 	public static final String TABLE_STATUS = "Status";
 	public static final String COLUMN_STATUS_ID = "id";
 	public static final String COLUMN_STATUS_NAME = "name";
 	public static final int INDEX_STATUS_ID = 1;
 	public static final int INDEX_STATUS_NAME = 2;
 
+	// Topic
 	public static final String TABLE_TOPIC = "Topic";
 	public static final String COLUMN_TOPIC_ID = "id";
 	public static final String COLUMN_TOPIC_NAME = "name";
@@ -59,6 +64,7 @@ public class DataController {
 	public static final int INDEX_TOPIC_NAME = 2;
 	public static final int INDEX_TOPIC_PARENT_ID = 3;
 
+	// User
 	public static final String TABLE_USER = "User";
 	public static final String COLUMN_USER_ID = "id";
 	public static final String COLUMN_USER_EMAIL = "email";
@@ -92,7 +98,7 @@ public class DataController {
 	//The Stuff that we need can be changed anytime to however we want to receive something from the database, do not hesitate to make changes.
 
 	public static final String SEND_NEW_ARTICLE = "INSERT INTO " + TABLE_ARTICLE +
-			'(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_CONTENT +
+			'(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_TOPIC +
 			", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ") VALUES(?, ?, ?, ?)";
 
 	//Create new Article
@@ -378,7 +384,9 @@ public class DataController {
 			while (rs.next()) {
 				//user.setId(id);
 				user.seteMail(rs.getString(2));
+				System.out.println(rs.getString(2));
 				user.setAddress(rs.getString(6));
+
 				//user.setName(rs.getString(5));        //TODO User Class must be initialized
 				//user.setGender(rs.getInt(7));        //TODO ERROR
 				//user.setDateOfBirth(rs.getDate(8));
