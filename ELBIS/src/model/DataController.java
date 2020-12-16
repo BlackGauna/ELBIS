@@ -8,6 +8,7 @@ public class DataController {
 
 	//ATTRIBUTES--------------------------------------------------------------------------------------------------------
 
+	// Article
 	public static final String TABLE_ARTICLE = "Article";
 	public static final String COLUMN_ARTICLE_ID = "id";
 	public static final String COLUMN_ARTICLE_TITLE = "title";
@@ -33,24 +34,28 @@ public class DataController {
 	public static final int INDEX_ARTICLE_PUBLISHER_ID = 11;
 	public static final int INDEX_ARTICLE_PUBLISHER_COMMENT = 12;
 
+	// Gender
 	public static final String TABLE_GENDER = "Gender";
 	public static final String COLUMN_GENDER_ID = "id";
 	public static final String COLUMN_GENDER_NAME = "name";
 	public static final int INDEX_GENDER_ID = 1;
 	public static final int INDEX_GENDER_NAME = 2;
 
+	// Role
 	public static final String TABLE_ROLE = "Role";
 	public static final String COLUMN_ROLE_ID = "id";
 	public static final String COLUMN_ROLE_NAME = "name";
 	public static final int INDEX_ROLE_ID = 1;
 	public static final int INDEX_ROLE_NAME = 2;
 
+	// Status
 	public static final String TABLE_STATUS = "Status";
 	public static final String COLUMN_STATUS_ID = "id";
 	public static final String COLUMN_STATUS_NAME = "name";
 	public static final int INDEX_STATUS_ID = 1;
 	public static final int INDEX_STATUS_NAME = 2;
 
+	// Topic
 	public static final String TABLE_TOPIC = "Topic";
 	public static final String COLUMN_TOPIC_ID = "id";
 	public static final String COLUMN_TOPIC_NAME = "name";
@@ -59,6 +64,7 @@ public class DataController {
 	public static final int INDEX_TOPIC_NAME = 2;
 	public static final int INDEX_TOPIC_PARENT_ID = 3;
 
+	// User
 	public static final String TABLE_USER = "User";
 	public static final String COLUMN_USER_ID = "id";
 	public static final String COLUMN_USER_EMAIL = "email";
