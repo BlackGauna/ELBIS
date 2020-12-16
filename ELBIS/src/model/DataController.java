@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DataController {
-
 	//ATTRIBUTES--------------------------------------------------------------------------------------------------------
 
 	// Article
@@ -100,7 +99,7 @@ public class DataController {
 
 	//Create new Article
 	public static final String SEND_NEW_ARTICLE = "INSERT INTO " + TABLE_ARTICLE +
-			'(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_CONTENT +
+			'(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_TOPIC +
 			", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ") VALUES(?, ?, ?, ?)";
 
 	//Create new Topic
@@ -256,13 +255,12 @@ public class DataController {
 	//METHODS--------------------------------------------------------------------------------------------------------
 
 
-	//Article creation Abort due to constraint violation (NOT NULL constraint failed: Article.creationDate) doesnt automatically create the date and time.
-	public boolean DBSendNewArticle(String title,String topic, String content, String publisherComment) {
-
+	//Article creation
+	public boolean DBSendNewArticle(String title, String content, int topic, String publisherComment) {
 		try {
 			SendNewArticle.setString(1, title);
-			SendNewArticle.setString(2, topic);
-			SendNewArticle.setString(3, content);
+			SendNewArticle.setString(2, content);
+			SendNewArticle.setInt(3, topic);
 			SendNewArticle.setString(4, publisherComment);
 
 			int affectedRows = SendNewArticle.executeUpdate();
@@ -349,6 +347,19 @@ public class DataController {
 			return null;
 		}
 
+	}
+
+	public void DBLoadAllArticle(){
+		try{
+			String query = "SELECT title, content FROM Article";
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				System.out.println(rs.getString(2));
+			}
+		} catch (SQLException e) {
+			System.out.println("Couldn't load Article: " + e.getMessage());
+		}
 	}
 
 	//Sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.

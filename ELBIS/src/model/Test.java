@@ -16,18 +16,19 @@ public class Test {
             return;
         }
 
-        //dataController.DBSendNewArticle("Delicious Marshmellows","Food","I LIKE MARSHMELLOS","yes I really do.");
-        //dataController.DBSendNewUser("asd.123@gmail.com","12345","Hakuna Matata","Mars",1,"13.02.1997");
-       // dataController.DBSendNewTopic("WOAASDASD",3);
+//        dataController.DBSendNewArticle("Delicious Marshmellows","Food",1,"yes I really do.");
+//        dataController.DBSendNewUser("asd.123@gmail.com","12345","Hakuna Matata","Mars",1,"13.02.1997");
+        dataController.DBSendNewTopic("WOAASDfasdfsadfASD",3);
       // User user = dataController.DBLoadUser(0);
        // System.out.println(user);
-       dataController.DBEditUser(6,"MARSHMELLO",null,"TASTY",null,1,null);
+//       dataController.DBEditUser(6,"MARSHMELLO",null,"TASTY",null,1,null);
         //dataController.DBEditTopic(2,"RAMBO","1");
         //System.out.println(user.getName());
         //System.out.println(user.geteMail());
        //System.out.println(dataController.DBLoadUser(0));
-       //dataController.DBLoadTopic(1);
+//         dataController.DBLoadTopic(1);
         //System.out.println(dataController.DBLoadTopic(1));
+//        dataController.DBLoadAllArticle();
 
 
         dataController.close();
