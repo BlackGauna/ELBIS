@@ -278,7 +278,7 @@ public class DataController {
 		}
 	}
 
-	//Sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.
+	//Topic Creation
 	public boolean DBSendNewTopic(String name,int parentTopic) {
 
 		try {
@@ -300,7 +300,7 @@ public class DataController {
 		}
 	}
 
-	//Sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.
+	//User Creation
 	public boolean DBSendNewUser(String email, String password, String name, String address, int gender, String dateOfBirth) {
 		try {
 			SendNewUser.setString(1, email);
@@ -326,7 +326,7 @@ public class DataController {
 
 	}
 
-	//Couldnt Test as the database doesnt accept manual entry as well.
+	//Loading an Article
 	public Article DBLoadArticle(int id) {
 		try {
 			LoadArticle.setInt(1, id);
@@ -349,6 +349,7 @@ public class DataController {
 
 	}
 
+	//Load Contents from All Articles
 	public void DBLoadAllArticle(){
 		try{
 			String query = "SELECT title, content FROM Article";
@@ -362,7 +363,7 @@ public class DataController {
 		}
 	}
 
-	//Sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.
+	//Load a topic
 	public Topic DBLoadTopic(int id) {
 		try {
 			LoadTopic.setInt(1, id);
@@ -384,7 +385,7 @@ public class DataController {
 
 	}
 
-	//Couldn't load User: Error parsing date null
+	//Load a User
 	public User DBLoadUser(int id) {
 		try {
 			LoadUser.setInt(1, id);
@@ -394,10 +395,10 @@ public class DataController {
 			while (rs.next()) {
 				//user.setId(id); //user ID cant be set outside of constructors.
 				user.seteMail(rs.getString(1));
-				//user.setName(rs.getString(2)); //Setname not initialized.
+				user.setName(rs.getString(2));
 				user.setAddress(rs.getString(3));
-				//user.setGender(rs.getInt(4));        //TODO error on setting gender
-				user.setDateOfBirth(rs.getDate(5));
+				user.setGender(rs.getInt(4));        //TODO error on setting gender
+				user.setDateOfBirth(rs.getString(5));
 			}
 			return user;
 		} catch (SQLException e) {
@@ -408,7 +409,7 @@ public class DataController {
 
 	}
 
-	//Couldnt test.
+	//Edit Articles
 	public boolean DBEditArticle(int id, String newTitle,String newTopic, String newContent, String newPublisherComment) {
 		try {
 			con.setAutoCommit(false);
@@ -417,7 +418,7 @@ public class DataController {
 			EditArticle.setString(1, newTitle);
 			EditArticle.setString(2, newTopic);
 			EditArticle.setString(3, newContent);
-			EditArticle.setNString(4, newPublisherComment);
+			EditArticle.setString(4, newPublisherComment);
 			int affectedRows = EditArticle.executeUpdate();
 
 			if (affectedRows == 1) {
@@ -451,12 +452,12 @@ public class DataController {
 		}
 	}
 
-	//Failed!
+	//Edit User
 	public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth) {
 		try {
 			con.setAutoCommit(false);
 
-			EditUser.setInt(6, id);
+			EditUser.setInt(7, id);
 			EditUser.setString(1, newEmail);
 			EditUser.setString(2, newPassword);
 			EditUser.setString(3, newName);
@@ -498,7 +499,7 @@ public class DataController {
 		}
 	}
 
-	//Somehow says successful but doesnt edit.
+	//Edit a topic
 	public boolean DBEditTopic(int id, String newName, String newParentTopic) {
 		try {
 			con.setAutoCommit(false);
@@ -541,7 +542,7 @@ public class DataController {
 		}
 	}
 
-	//Test to see if this method works or another should be implemented. No such column found: topic ????
+	//TODO Test to see if this method works or another should be implemented. No such column found: topic ????
 	public LinkedList<Article> DBLoadRecentArticle() {
 
 		try {
@@ -567,7 +568,6 @@ public class DataController {
 
 	}
 
-	//TODO add methods; delete, sort ?
 	//there is no method to view all the articles in an order ?
 	//there is no way to browse topics ?
 	//TODO open and close in main, methods to FXML

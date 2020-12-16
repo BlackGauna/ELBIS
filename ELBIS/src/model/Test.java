@@ -17,10 +17,15 @@ public class Test {
         }
 
 //        dataController.DBSendNewArticle("Delicious Marshmellows","Food",1,"yes I really do.");
-//        dataController.DBSendNewUser("asd.123@gmail.com","12345","Hakuna Matata","Mars",1,"13.02.1997");
-        dataController.DBSendNewTopic("WOAASDfasdfsadfASD",3);
-      // User user = dataController.DBLoadUser(0);
-       // System.out.println(user);
+ //dataController.DBSendNewUser("asd.123@gmail.com","12345","Hakuna Matata","Mars",1,"13.02.1997");
+
+        //dataController.DBEditArticle(1,"SANTA","WEIHNACHTEN","I LIKE GIFTS","HES FAT");
+        //dataController.DBEditUser(1,"FATBOI@gmail.com","santaistgeil","Santa","NORTH POLE",1,"20.10.1940");
+
+        //dataController.DBEditTopic(1,"Christmas",null);
+
+       //User user = dataController.DBLoadUser(0);
+      // System.out.println(user.getDateOfBirth());
 //       dataController.DBEditUser(6,"MARSHMELLO",null,"TASTY",null,1,null);
         //dataController.DBEditTopic(2,"RAMBO","1");
         //System.out.println(user.getName());
