@@ -148,6 +148,9 @@ public class DataController {
 			COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + "FROM" + TABLE_ARTICLE +
 			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 20 ";
 
+	// Check if user exists in database
+	public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? and " + COLUMN_USER_PASSWORD + " = ?";
+
 
 	//CONNECTION--------------------------------------------------------------------------------------------------------
 
@@ -566,6 +569,23 @@ public class DataController {
 			return null;
 		}
 
+	}
+
+	// Check if user exists in DB
+	public boolean login(String email, String pw) throws SQLException {
+		try (Connection con = SQLConnection.ConnectDB();
+			 PreparedStatement pst = con.prepareStatement(CHECK_USER)) {
+			pst.setString(1, email);
+			pst.setString(2, pw);
+
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	//there is no method to view all the articles in an order ?
