@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DataController {
-
 	//ATTRIBUTES--------------------------------------------------------------------------------------------------------
 
+	// Article
 	public static final String TABLE_ARTICLE = "Article";
 	public static final String COLUMN_ARTICLE_ID = "id";
 	public static final String COLUMN_ARTICLE_TITLE = "title";
@@ -33,24 +33,28 @@ public class DataController {
 	public static final int INDEX_ARTICLE_PUBLISHER_ID = 11;
 	public static final int INDEX_ARTICLE_PUBLISHER_COMMENT = 12;
 
+	// Gender
 	public static final String TABLE_GENDER = "Gender";
 	public static final String COLUMN_GENDER_ID = "id";
 	public static final String COLUMN_GENDER_NAME = "name";
 	public static final int INDEX_GENDER_ID = 1;
 	public static final int INDEX_GENDER_NAME = 2;
 
+	// Role
 	public static final String TABLE_ROLE = "Role";
 	public static final String COLUMN_ROLE_ID = "id";
 	public static final String COLUMN_ROLE_NAME = "name";
 	public static final int INDEX_ROLE_ID = 1;
 	public static final int INDEX_ROLE_NAME = 2;
 
+	// Status
 	public static final String TABLE_STATUS = "Status";
 	public static final String COLUMN_STATUS_ID = "id";
 	public static final String COLUMN_STATUS_NAME = "name";
 	public static final int INDEX_STATUS_ID = 1;
 	public static final int INDEX_STATUS_NAME = 2;
 
+	// Topic
 	public static final String TABLE_TOPIC = "Topic";
 	public static final String COLUMN_TOPIC_ID = "id";
 	public static final String COLUMN_TOPIC_NAME = "name";
@@ -59,6 +63,7 @@ public class DataController {
 	public static final int INDEX_TOPIC_NAME = 2;
 	public static final int INDEX_TOPIC_PARENT_ID = 3;
 
+	// User
 	public static final String TABLE_USER = "User";
 	public static final String COLUMN_USER_ID = "id";
 	public static final String COLUMN_USER_EMAIL = "email";
@@ -94,7 +99,7 @@ public class DataController {
 
 	//Create new Article
 	public static final String SEND_NEW_ARTICLE = "INSERT INTO " + TABLE_ARTICLE +
-			'(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_CONTENT +
+			'(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_TOPIC +
 			", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ") VALUES(?, ?, ?, ?)";
 
 	//Create new Topic
@@ -142,6 +147,9 @@ public class DataController {
 	public static final String LOAD_RECENT_ARTICLE = "SELECT "  + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
 			COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + "FROM" + TABLE_ARTICLE +
 			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 20 ";
+
+	// Check if user exists in database
+	public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? and " + COLUMN_USER_PASSWORD + " = ?";
 
 
 	//CONNECTION--------------------------------------------------------------------------------------------------------
@@ -250,13 +258,12 @@ public class DataController {
 	//METHODS--------------------------------------------------------------------------------------------------------
 
 
-	//Article creation Abort due to constraint violation (NOT NULL constraint failed: Article.creationDate) doesnt automatically create the date and time.
-	public boolean DBSendNewArticle(String title,String topic, String content, String publisherComment) {
-
+	//Article creation
+	public boolean DBSendNewArticle(String title, String content, int topic, String publisherComment) {
 		try {
 			SendNewArticle.setString(1, title);
-			SendNewArticle.setString(2, topic);
-			SendNewArticle.setString(3, content);
+			SendNewArticle.setString(2, content);
+			SendNewArticle.setInt(3, topic);
 			SendNewArticle.setString(4, publisherComment);
 
 			int affectedRows = SendNewArticle.executeUpdate();
@@ -274,7 +281,7 @@ public class DataController {
 		}
 	}
 
-	//Sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.
+	//Topic Creation
 	public boolean DBSendNewTopic(String name,int parentTopic) {
 
 		try {
@@ -296,7 +303,7 @@ public class DataController {
 		}
 	}
 
-	//Sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.
+	//User Creation
 	public boolean DBSendNewUser(String email, String password, String name, String address, int gender, String dateOfBirth) {
 		try {
 			SendNewUser.setString(1, email);
@@ -322,7 +329,7 @@ public class DataController {
 
 	}
 
-	//Couldnt Test as the database doesnt accept manual entry as well.
+	//Loading an Article
 	public Article DBLoadArticle(int id) {
 		try {
 			LoadArticle.setInt(1, id);
@@ -345,7 +352,21 @@ public class DataController {
 
 	}
 
-	//Sends succesfully to the database but not on the first run, and twice, a variable gets stuck in the stream.
+	//Load Contents from All Articles
+	public void DBLoadAllArticle(){
+		try{
+			String query = "SELECT title, content FROM Article";
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				System.out.println(rs.getString(2));
+			}
+		} catch (SQLException e) {
+			System.out.println("Couldn't load Article: " + e.getMessage());
+		}
+	}
+
+	//Load a topic
 	public Topic DBLoadTopic(int id) {
 		try {
 			LoadTopic.setInt(1, id);
@@ -367,7 +388,7 @@ public class DataController {
 
 	}
 
-	//Couldn't load User: Error parsing date null
+	//Load a User
 	public User DBLoadUser(int id) {
 		try {
 			LoadUser.setInt(1, id);
@@ -377,10 +398,10 @@ public class DataController {
 			while (rs.next()) {
 				//user.setId(id); //user ID cant be set outside of constructors.
 				user.seteMail(rs.getString(1));
-				//user.setName(rs.getString(2)); //Setname not initialized.
+				user.setName(rs.getString(2));
 				user.setAddress(rs.getString(3));
-				//user.setGender(rs.getInt(4));        //TODO error on setting gender
-				user.setDateOfBirth(rs.getDate(5));
+				user.setGender(rs.getInt(4));        //TODO error on setting gender
+				user.setDateOfBirth(rs.getString(5));
 			}
 			return user;
 		} catch (SQLException e) {
@@ -391,7 +412,7 @@ public class DataController {
 
 	}
 
-	//Couldnt test.
+	//Edit Articles
 	public boolean DBEditArticle(int id, String newTitle,String newTopic, String newContent, String newPublisherComment) {
 		try {
 			con.setAutoCommit(false);
@@ -400,7 +421,7 @@ public class DataController {
 			EditArticle.setString(1, newTitle);
 			EditArticle.setString(2, newTopic);
 			EditArticle.setString(3, newContent);
-			EditArticle.setNString(4, newPublisherComment);
+			EditArticle.setString(4, newPublisherComment);
 			int affectedRows = EditArticle.executeUpdate();
 
 			if (affectedRows == 1) {
@@ -434,12 +455,12 @@ public class DataController {
 		}
 	}
 
-	//Failed!
+	//Edit User
 	public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth) {
 		try {
 			con.setAutoCommit(false);
 
-			EditUser.setInt(6, id);
+			EditUser.setInt(7, id);
 			EditUser.setString(1, newEmail);
 			EditUser.setString(2, newPassword);
 			EditUser.setString(3, newName);
@@ -481,7 +502,7 @@ public class DataController {
 		}
 	}
 
-	//Somehow says successful but doesnt edit.
+	//Edit a topic
 	public boolean DBEditTopic(int id, String newName, String newParentTopic) {
 		try {
 			con.setAutoCommit(false);
@@ -524,7 +545,7 @@ public class DataController {
 		}
 	}
 
-	//Test to see if this method works or another should be implemented. No such column found: topic ????
+	//TODO Test to see if this method works or another should be implemented. No such column found: topic ????
 	public LinkedList<Article> DBLoadRecentArticle() {
 
 		try {
@@ -550,7 +571,23 @@ public class DataController {
 
 	}
 
-	//TODO add methods; delete, sort ?
+	// Check if user exists in DB
+	public boolean login(String email, String pw) throws SQLException {
+		try (Connection con = SQLConnection.ConnectDB();
+			 PreparedStatement pst = con.prepareStatement(CHECK_USER)) {
+			pst.setString(1, email);
+			pst.setString(2, pw);
+
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	//there is no method to view all the articles in an order ?
 	//there is no way to browse topics ?
 	//TODO open and close in main, methods to FXML

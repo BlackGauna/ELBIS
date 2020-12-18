@@ -1,8 +1,12 @@
 package view;
 
+import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import model.DataController;
+
+import java.sql.SQLException;
 
 public class FXMLController_Login {
 
@@ -22,11 +26,6 @@ public class FXMLController_Login {
     @FXML
     private TextField txtEmail;
 
-    @FXML
-    void loginClicked(ActionEvent event) {
-        mainView.openApplicationStage();
-        mainView.setStatus("Logged in \""+txtEmail.getText() + "\" with password \"" +txtPassword.getText()+"\"");
-    }
 
     // Methods_______________________________________________________________________________________________________
     //reference to mainView
@@ -34,4 +33,32 @@ public class FXMLController_Login {
         this.mainView = mainView;
     }
 
+    public void loginClicked(ActionEvent event) throws SQLException {
+        String email = txtEmail.getText();
+        String pw = txtPassword.getText();
+
+        DataController dc = new DataController();
+        boolean flag = dc.login(email, pw);
+
+        if (!flag){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Please enter correct email and password");
+            alert.setHeaderText(null);
+            alert.showAndWait();
+        } else {
+            mainView.openApplicationStage();
+            mainView.setStatus("Logged in \""+ email + "\" with password \"" + pw +"\"");
+        }
+    }
+
+    // Getters,Setters_________________________________________________________________________________________________
+
+    public String getTxtPassword() {
+        return txtPassword.toString();
+    }
+
+    public String getTxtEmail() {
+        return txtEmail.toString();
+    }
 }

@@ -1,14 +1,16 @@
 package model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class User {
 	// Atrrib_______________________________________________________________________________________________________
 	private int id;
-	private String 
-		eMail, 
-		password, 
-		address;
+	private String eMail;
+	private String name;
+	private String password;
+	private String address;
 	private Date dateOfBirth;
 	private Gender gender;
 	
@@ -61,10 +63,55 @@ public class User {
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	public Gender getGender() {
+	public void setDateOfBirth(String dateOfBirth) {
+		try {
+			Date date = new SimpleDateFormat("dd.MM.yyyy").parse(dateOfBirth);
+			this.dateOfBirth = date;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+	}
+	public Gender getGenderAsGender() {
 		return gender;
+	}
+	public int getGenderAsInt() {
+		int g;
+		if (this.gender == Gender.Maennlich){
+			g = 1;
+		}
+		else if (this.gender == Gender.Weiblich){
+			g = 2;
+		}
+		else if (this.gender == Gender.Divers){
+			g = 3;
+		}else{
+			g = 0;
+			System.out.println("Couldn't map gender");
+		}
+		return g;
 	}
 	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
+	public void setGender(int gender) {
+		if (gender == 1){
+			this.gender = Gender.Maennlich;
+		}
+		if (gender == 2){
+			this.gender = Gender.Weiblich;
+		}
+		if (gender == 3){
+			this.gender = Gender.Divers;
+		}
+
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
 }
