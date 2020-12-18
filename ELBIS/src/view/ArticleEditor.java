@@ -1,5 +1,6 @@
 package view;
 
+import com.itextpdf.html2pdf.HtmlConverter;
 import javafx.application.Application;
 import javafx.concurrent.Worker;
 import javafx.scene.Scene;
@@ -8,17 +9,17 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 
 /**
-Test class for using TinyMCE as alternative editor in a WebView
-base structure from: https://javafxpedia.com/en/tutorial/5156/webview-and-webengine
+ * class containing TinyMCE editor in a JavaFX WebView
+ * base structure from: https://javafxpedia.com/en/tutorial/5156/webview-and-webengine
 
  @author Onur Hokkaömeroglu
  */
 
-public class WebViewTest extends Application
+public class ArticleEditor extends Application
 {
     // for communication Java -> Javascript
     private JSObject javascriptConnector;
@@ -26,17 +27,22 @@ public class WebViewTest extends Application
     // for communication Javascript -> Java
     private JavaConnector javaConnector = new JavaConnector();
 
+
+
     @Override
     public void start(Stage primaryStage) throws Exception
     {
+        // html source for the WebView
         URL url= getClass().getResource("/resource/tinymce/tinymce_test.html");
 
+        // setup WebView and WebEngine
         WebView webView = new WebView();
         final WebEngine webEngine= webView.getEngine();
 
-
-
         webEngine.setJavaScriptEnabled(true);
+        webEngine.setUserStyleSheetLocation(getClass().
+                getResource("/resource/tinymce/style.css").toString());
+
         //listener setup
         webEngine.getLoadWorker().stateProperty().addListener(((observableValue, oldValue, newValue) ->{
             if (Worker.State.SUCCEEDED == newValue)
@@ -57,16 +63,25 @@ public class WebViewTest extends Application
         // now load the page
         webEngine.load(url.toString());
 
-
-
-
     }
+
+
 
     /**
      * Helper class for communication between the Javascript and Java
      * Javascript can call functions in this class
      */
     public class JavaConnector {
+
+        // IO for pdfhtml
+        // save to desktop for now
+        // TODO: add way to choose save location and filename
+        final String TARGET= System.getProperty("user.home")+ "/Desktop/";
+        final String DEST = System.getProperty("user.home")+ "\\Desktop\\output.pdf";
+
+        private String html;
+
+
         /**
          * called when the JS side wants a String to be converted.
          *
@@ -80,5 +95,38 @@ public class WebViewTest extends Application
                 //javascriptConnector.call("showResult", value);
             }
         }
+
+        /**
+         * get html source from JS side, then convert and save to PDF
+         *
+         * @param htmlSource - String containing HTML code.
+         * @author Onur Hokkaömeroglu
+         */
+        public void saveHtml(String htmlSource)
+        {
+            //System.out.println(value);
+            html = htmlSource;
+            html= html.replace("file://","");
+            try
+            {
+                //File file= new File();
+                HtmlConverter.convertToPdf(html, new FileOutputStream(DEST));
+                System.out.println(DEST);
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        public void createPdf(String html, String dest) throws IOException
+        {
+            HtmlConverter.convertToPdf(html, new FileOutputStream(dest));
+        }
+
+        public String getHtml()
+        {
+            return html;
+        }
     }
+
 }
