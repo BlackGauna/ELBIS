@@ -39,20 +39,21 @@ min_height: 500,
 
 
     },
+
     // custom button to convert editor content to PDF
+
     setup: function(editor) {
       editor.ui.registry.addButton('customPDF', {
-      text: 'In PDF',
-      onAction: function (_) {
-        sendHtml(tinyMCE.activeEditor.getContent());
-      }
-    });
-    },
-    setup: function(editor) {
+          text: 'In PDF',
+          onAction: function (_) {
+            sendHtml(tinyMCE.activeEditor.getContent());
+          }
+      });
       editor.on('init', function(e) {
         editor.execCommand('mceFullScreen');
       });
     },
+
 
    });
 
