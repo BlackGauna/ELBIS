@@ -6,7 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry excluding="**" kind="src" path="src"/>
-	<classpathentry kind="src" path="lib/tinymce"/>
 	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.fxml.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
@@ -52,6 +51,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/tinymce"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/iText7"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
