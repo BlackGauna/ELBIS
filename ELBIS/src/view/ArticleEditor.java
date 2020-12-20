@@ -6,10 +6,12 @@ import javafx.concurrent.Worker;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -127,6 +129,24 @@ public class ArticleEditor extends Application
         {
             return html;
         }
+
+
+        public void openImage()
+        {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Bild öffnen");
+
+            File image= fileChooser.showOpenDialog(new Stage());
+
+            System.out.println(image.getAbsolutePath());
+
+            String html;
+            URI path= image.toURI();
+            html = "<p><img src=\""+ path + "\" /></p>";
+
+            javascriptConnector.call("importImage", html);
+        }
+
     }
 
 }
