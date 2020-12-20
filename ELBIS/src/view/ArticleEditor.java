@@ -33,15 +33,15 @@ public class ArticleEditor extends Application
     public void start(Stage primaryStage) throws Exception
     {
         // html source for the WebView
-        URL url= getClass().getResource("/resource/tinymce/tinymce_test.html");
+        URL url= Thread.currentThread().getContextClassLoader().getResource("tinymce/tinymce_test.html");
 
         // setup WebView and WebEngine
         WebView webView = new WebView();
         final WebEngine webEngine= webView.getEngine();
 
         webEngine.setJavaScriptEnabled(true);
-        webEngine.setUserStyleSheetLocation(getClass().
-                getResource("/resource/tinymce/style.css").toString());
+        webEngine.setUserStyleSheetLocation(Thread.currentThread().getContextClassLoader()
+                .getResource("tinymce/style.css").toString());
 
         //listener setup
         webEngine.getLoadWorker().stateProperty().addListener(((observableValue, oldValue, newValue) ->{
