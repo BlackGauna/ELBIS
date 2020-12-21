@@ -10,20 +10,33 @@ public class FXMLController_MainApplication {
 
     // Atrrib_______________________________________________________________________________________________________
     MainView mainView;
+    //Loaders
+    FXMLLoader statusBarLoader;
+    FXMLLoader headBarLoader;
+    //Panes
     Pane statusBar;
+    Pane headBar;
+    //Controllers
     FXMLController_StatusBar statusBarController;
+    FXMLController_HeadBar headBarController;
 
     // Ini_______________________________________________________________________________________________________
 
     @FXML
     public void initialize() {
         //TODO Create Head bar and add refresh button
-        //TODO optimize Window Appearance
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/StatusBar.fxml"));
-            statusBar = (Pane) loader.load();
-            statusBarController = loader.getController();
+            //StatusBar
+            statusBarLoader = new FXMLLoader(getClass().getResource("/view/StatusBar.fxml"));
+            statusBar = (Pane) statusBarLoader.load();
+            statusBarController = statusBarLoader.getController();
             borderPane.setBottom(statusBar);
+
+            //HeadBar
+            headBarLoader = new FXMLLoader(getClass().getResource("/view/HeadBar.fxml"));
+            headBar = (Pane) headBarLoader.load();
+            headBarController = headBarLoader.getController();
+            borderPane.setTop(headBar);
         }catch(Exception e){
             e.printStackTrace();
         }
