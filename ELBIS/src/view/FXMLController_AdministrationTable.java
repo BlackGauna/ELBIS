@@ -5,7 +5,6 @@ import javafx.scene.control.*;
 
 public class FXMLController_AdministrationTable {
     //TODO import Table variables
-    //TODO add buttonpanel to promote/degrade users per user in table
     //TODO buttonEvents
 
     // Atrrib_______________________________________________________________________________________________________

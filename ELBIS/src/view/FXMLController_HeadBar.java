@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 
 public class FXMLController_HeadBar {
     //TODO buttonEvent
+    //TODO refresh based on which type of user is logged in
     //TODO show loggedUser
 
     // Atrrib_______________________________________________________________________________________________________

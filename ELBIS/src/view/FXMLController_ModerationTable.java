@@ -4,7 +4,6 @@ import javafx.scene.control.*;
 
 public class FXMLController_ModerationTable {
     //TODO import Table variables
-    //TODO add buttonpanel to delete and edit users per user in table
     //TODO buttonEvents
 
     // Atrrib_______________________________________________________________________________________________________

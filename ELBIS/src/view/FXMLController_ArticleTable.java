@@ -6,7 +6,6 @@ import javafx.scene.control.*;
 
 public class FXMLController_ArticleTable {
     //TODO import Table variables
-    //TODO add buttonpanel to delete and edit articles per article in table
     //TODO buttonEvents
 
     // Atrrib_______________________________________________________________________________________________________
