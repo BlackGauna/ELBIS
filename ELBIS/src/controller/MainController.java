@@ -106,8 +106,13 @@ public class MainController extends Application {
     }
 
     public boolean login(String email, String pw) throws SQLException {
-        return dc.login(email, pw);
-        //TODO set active User
+        boolean login = dc.login(email, pw);
+        if(login){
+           //TODO set activeUser
+            // activeUser =  dc.DBLoadUser();
+            setStatus("Logged in \""+ email + "\" with password \"" + pw +"\"");
+        }
+        return login;
     }
 
     //Getters,Setters_______________________________________________________________________________________________________
