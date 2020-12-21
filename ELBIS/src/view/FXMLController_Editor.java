@@ -1,6 +1,7 @@
 package view;
 
 import com.itextpdf.html2pdf.HtmlConverter;
+import controller.MainController;
 import javafx.application.Application;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
@@ -33,6 +34,7 @@ public class FXMLController_Editor
     // for communication Javascript -> Java
     private JavaConnector javaConnector = new JavaConnector();
 
+    private MainController mainController;
 
     @FXML
     WebView webView;
@@ -77,6 +79,10 @@ public class FXMLController_Editor
     }
 
 
+    //reference to mainView
+    public void setMainController(MainController mainController){
+        this.mainController = mainController;
+    }
 
     /**
      * Helper class for communication between the Javascript and Java

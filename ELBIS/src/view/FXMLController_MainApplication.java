@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import model.*;
+
 
 public class FXMLController_MainApplication {
 
@@ -14,12 +16,21 @@ public class FXMLController_MainApplication {
     //Loaders
     FXMLLoader statusBarLoader;
     FXMLLoader headBarLoader;
+    FXMLLoader userTableLoader;
+    FXMLLoader moderatorTableLoader;
+    FXMLLoader administrationTableLoader;
     //Panes
     Pane statusBar;
     Pane headBar;
+    Pane userTable;
+    Pane moderationTable;
+    Pane AdministrationTable;
     //Controllers
     FXMLController_StatusBar statusBarController;
     FXMLController_HeadBar headBarController;
+    FXMLController_ArticleTable articleTableController;
+    FXMLController_ModerationTable moderationTableController;
+    FXMLController_AdministrationTable administrationTableController;
 
     // Ini_______________________________________________________________________________________________________
 
@@ -52,18 +63,40 @@ public class FXMLController_MainApplication {
     private BorderPane borderPane;
 
 
-    public void addToTabPane(Tab newTab) {
-        //TODO Implement table views
-        tabPane.getTabs().add(newTab);
-    }
-
     // Methods_______________________________________________________________________________________________________
     //reference to mainView
-    public void setMainView(MainController mainController){
+    public void setMainController(MainController mainController){
         this.mainController = mainController;
     }
 
     public void setStatus(String newStatus){
         statusBarController.setStatus(newStatus);
     }
+
+    public void openTabs(User user) {
+        if(user instanceof Administrator){
+            addUserTab();
+            addModeratorTab();
+            addAdminTab();
+        }
+        else if(user instanceof Moderator){
+            addUserTab();
+            addModeratorTab();
+        }
+        else if(user instanceof User){
+            addUserTab();
+        }
+
+    }
+
+    public void addUserTab(){
+        //tabPane.getTabs().add(newTab);
+    }
+    public void addModeratorTab(){
+        //tabPane.getTabs().add(newTab);
+    }
+    public void addAdminTab(){
+        //tabPane.getTabs().add(newTab);
+    }
+
 }
