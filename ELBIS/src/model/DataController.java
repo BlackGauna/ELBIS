@@ -128,7 +128,7 @@ public class DataController {
 			TABLE_USER + " WHERE " + COLUMN_USER_ID + " = ?";
 
 	//Load a specific User with Email
-	public static final String LOAD_USER_BY_EMAIL = "SELECT " + COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
+	public static final String LOAD_USER_BY_EMAIL = "SELECT " + COLUMN_USER_EMAIL + ", " + COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
 			", " + COLUMN_USER_DATE_OF_BIRTH + " FROM " +
 			TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
 
@@ -431,10 +431,11 @@ public class DataController {
 			User user = new User();
 			while (rs.next()) {
 				//user.setId(id); //user ID cant be set outside of constructors.
-				user.setName(rs.getString(1));
-				user.setAddress(rs.getString(2));
-				user.setGender(rs.getInt(3));
-				user.setDateOfBirth(rs.getString(4));
+				user.seteMail(rs.getString(1));
+				user.setName(rs.getString(2));
+				user.setAddress(rs.getString(3));
+				user.setGender(rs.getInt(4));
+				user.setDateOfBirth(rs.getString(5));
 			}
 			return user;
 		} catch (SQLException e) {
