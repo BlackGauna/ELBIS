@@ -377,7 +377,7 @@ public class DataController {
 
 				topic.setId(id);
 				topic.setName(rs.getString(1));
-				//topic.parentTopic(rs.getString(2));      //Topic Class must be initialized
+				topic.setParentTopic(rs.getInt(2));
 
 			}
 			return topic;
