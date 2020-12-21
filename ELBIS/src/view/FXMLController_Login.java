@@ -37,19 +37,7 @@ public class FXMLController_Login {
     }
 
     public void loginClicked(ActionEvent event) throws SQLException {
-        String email = txtEmail.getText();
-        String pw = txtPassword.getText();
-        boolean flag = mainController.login(email, pw);
-
-        if (!flag){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText("Please enter correct email and password");
-            alert.setHeaderText(null);
-            alert.showAndWait();
-        } else {
-            mainController.openApplicationStage();
-        }
+        boolean flag = mainController.login(txtEmail.getText(),txtPassword.getText());
     }
 
     // Getters,Setters_________________________________________________________________________________________________
