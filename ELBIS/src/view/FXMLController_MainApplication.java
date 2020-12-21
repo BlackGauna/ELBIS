@@ -17,6 +17,8 @@ public class FXMLController_MainApplication {
 
     @FXML
     public void initialize() {
+        //TODO Create Head bar and add refresh button
+        //TODO optimize Window Appearance
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/StatusBar.fxml"));
             statusBar = (Pane) loader.load();
@@ -38,6 +40,7 @@ public class FXMLController_MainApplication {
 
 
     public void addToTabPane(Tab newTab) {
+        //TODO Implement table views
         tabPane.getTabs().add(newTab);
     }
 
