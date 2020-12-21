@@ -37,8 +37,10 @@ public class MainView extends Application {
     public MainView() {
 
         // ###### Create Stages ######
-        this.loginStage = new Stage(); // Login window
+        loginStage = new Stage(); // Login window
+        loginStage.setTitle("ELBIS Login");
         applicationStage = new Stage(); // Application Window
+        applicationStage.setTitle("ELBIS");
         editorStage = new Stage(); // Editor Window
 
     }
@@ -73,6 +75,8 @@ public class MainView extends Application {
             loginStage.setScene(loginScene);
             applicationStage.setScene(applicationScene);
 
+
+
         } catch (IOException io) {
             System.out.println("Couldn't load scene File");
             io.printStackTrace();
@@ -83,12 +87,6 @@ public class MainView extends Application {
     }
 
     // Methods_______________________________________________________________________________________________________
-    public Scene createScene(String path) throws IOException {
-        Pane Pane = (Pane) FXMLLoader.load(MainView.class.getResource(path));
-        Scene Scene = new Scene(Pane);
-        return Scene;
-    }
-
     public void openLoginStage() {
         loginStage.show();
     }
