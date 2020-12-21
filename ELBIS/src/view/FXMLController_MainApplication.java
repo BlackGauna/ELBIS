@@ -41,7 +41,6 @@ public class FXMLController_MainApplication {
             e.printStackTrace();
         }
 
-
     }
 
     // UI_______________________________________________________________________________________________________

@@ -39,8 +39,10 @@ public class MainView extends Application {
         // ###### Create Stages ######
         loginStage = new Stage(); // Login window
         loginStage.setTitle("ELBIS Login");
+        loginStage.setResizable(false);
         applicationStage = new Stage(); // Application Window
         applicationStage.setTitle("ELBIS");
+        applicationStage.setResizable(false);
         editorStage = new Stage(); // Editor Window
 
     }
