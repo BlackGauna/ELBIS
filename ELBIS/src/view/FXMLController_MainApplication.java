@@ -1,5 +1,6 @@
 package view;
 
+import controller.MainController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -9,7 +10,7 @@ import javafx.scene.layout.Pane;
 public class FXMLController_MainApplication {
 
     // Atrrib_______________________________________________________________________________________________________
-    MainView mainView;
+    MainController mainController;
     //Loaders
     FXMLLoader statusBarLoader;
     FXMLLoader headBarLoader;
@@ -58,8 +59,8 @@ public class FXMLController_MainApplication {
 
     // Methods_______________________________________________________________________________________________________
     //reference to mainView
-    public void setMainView(MainView mainView){
-        this.mainView = mainView;
+    public void setMainView(MainController mainController){
+        this.mainController = mainController;
     }
 
     public void setStatus(String newStatus){

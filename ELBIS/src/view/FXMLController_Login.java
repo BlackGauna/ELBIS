@@ -1,20 +1,17 @@
 package view;
 
+import controller.Launch;
 import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
-import model.DataController;
 
 import java.sql.SQLException;
 
 public class FXMLController_Login {
 
     // Atrrib_______________________________________________________________________________________________________
-    MainView mainView;
-    static MainController mc = new MainController();
+    MainController mainController;
 
     // Ini_______________________________________________________________________________________________________
 
@@ -35,14 +32,14 @@ public class FXMLController_Login {
 
     // Methods_______________________________________________________________________________________________________
     //reference to mainView
-    public void setMainView(MainView mainView){
-        this.mainView = mainView;
+    public void setMainView(MainController mainController){
+        this.mainController = mainController;
     }
 
     public void loginClicked(ActionEvent event) throws SQLException {
         String email = txtEmail.getText();
         String pw = txtPassword.getText();
-        boolean flag = mc.login(email, pw);
+        boolean flag = mainController.login(email, pw);
 
         if (!flag){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -51,8 +48,8 @@ public class FXMLController_Login {
             alert.setHeaderText(null);
             alert.showAndWait();
         } else {
-            mainView.openApplicationStage();
-            mainView.setStatus("Logged in \""+ email + "\" with password \"" + pw +"\"");
+            mainController.openApplicationStage();
+            mainController.setStatus("Logged in \""+ email + "\" with password \"" + pw +"\"");
         }
     }
 
