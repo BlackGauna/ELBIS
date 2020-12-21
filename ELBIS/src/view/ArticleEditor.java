@@ -45,7 +45,7 @@ public class ArticleEditor extends Application
         webEngine.setUserStyleSheetLocation(Thread.currentThread().getContextClassLoader()
                 .getResource("tinymce/style.css").toString());
 
-        //listener setup
+        // listener setup
         webEngine.getLoadWorker().stateProperty().addListener(((observableValue, oldValue, newValue) ->{
             if (Worker.State.SUCCEEDED == newValue)
             {
