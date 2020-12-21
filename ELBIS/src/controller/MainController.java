@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.DataController;
@@ -121,6 +122,24 @@ public class MainController extends Application {
             alert.showAndWait();
         }
         return login;
+    }
+
+    public TableView refreshArticleTable(TableView table) {
+        //TODO fill table with DB information
+        //TODO add buttonpanel to delete and edit articles per article in table
+        return table;
+    }
+
+    public TableView refreshModerationTable(TableView table) {
+        //TODO fill table with DB information
+        //TODO add buttonpanel to delete and edit users per user in table
+        return table;
+    }
+
+    public TableView refreshAdministrationTable(TableView table) {
+        //TODO fill table with DB information
+        //TODO add buttonpanel to promote/degrade users per user in table
+        return table;
     }
 
     //Getters,Setters_______________________________________________________________________________________________________
