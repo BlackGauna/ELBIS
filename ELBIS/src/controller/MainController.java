@@ -4,6 +4,7 @@ import controller.Launch;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.DataController;
@@ -111,6 +112,13 @@ public class MainController extends Application {
            //TODO set activeUser
             // activeUser =  dc.DBLoadUser();
             setStatus("Logged in \""+ email + "\" with password \"" + pw +"\"");
+            openApplicationStage();
+        } else if(!login){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Please enter correct email and password");
+            alert.setHeaderText(null);
+            alert.showAndWait();
         }
         return login;
     }
