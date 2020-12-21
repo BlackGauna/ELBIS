@@ -122,10 +122,15 @@ public class DataController {
 			TABLE_TOPIC + " WHERE " + COLUMN_TOPIC_ID + " = ?";
 
 	//Load a specific User with ID
-	public static final String LOAD_USER = "SELECT " + COLUMN_USER_EMAIL + ", "
+	public static final String LOAD_USER_BY_ID = "SELECT " + COLUMN_USER_EMAIL + ", "
 			+ COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
 			", " + COLUMN_USER_DATE_OF_BIRTH + " FROM " +
 			TABLE_USER + " WHERE " + COLUMN_USER_ID + " = ?";
+
+	//Load a specific User with Email
+	public static final String LOAD_USER_BY_EMAIL = "SELECT " + COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
+			", " + COLUMN_USER_DATE_OF_BIRTH + " FROM " +
+			TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
 
 	//Be careful with the UPDATE commands, if it is left empty it can update all tables and wipe the database.
 
@@ -161,7 +166,8 @@ public class DataController {
 	private PreparedStatement SendNewUser;
 	private PreparedStatement LoadArticle;
 	private PreparedStatement LoadTopic;
-	private PreparedStatement LoadUser;
+	private PreparedStatement LoadUserById;
+	private PreparedStatement LoadUserByEmail;
 	private PreparedStatement EditArticle;
 	private PreparedStatement EditUser;
 	private PreparedStatement EditTopic;
@@ -187,7 +193,8 @@ public class DataController {
 			SendNewUser = con.prepareStatement(SEND_NEW_USER, Statement.RETURN_GENERATED_KEYS);
 			LoadArticle = con.prepareStatement(LOAD_ARTICLE);
 			LoadTopic = con.prepareStatement(LOAD_TOPIC);
-			LoadUser = con.prepareStatement(LOAD_USER);
+			LoadUserById = con.prepareStatement(LOAD_USER_BY_ID);
+			LoadUserByEmail = con.prepareStatement(LOAD_USER_BY_EMAIL);
 			EditArticle = con.prepareStatement(EDIT_ARTICLE);
 			EditUser = con.prepareStatement(EDIT_USER);
 			EditTopic = con.prepareStatement(EDIT_TOPIC);
@@ -226,8 +233,12 @@ public class DataController {
 				LoadTopic.close();
 			}
 
-			if (LoadUser != null) {
-				LoadUser.close();
+			if (LoadUserById != null) {
+				LoadUserById.close();
+			}
+
+			if (LoadUserByEmail != null) {
+				LoadUserByEmail.close();
 			}
 
 			if (EditArticle != null) {
@@ -388,20 +399,42 @@ public class DataController {
 
 	}
 
-	//Load a User
-	public User DBLoadUser(int id) {
+	//Load a User with ID
+	public User DBLoadUserById(int id) {
 		try {
-			LoadUser.setInt(1, id);
-			LoadUser.execute();
-			ResultSet rs = LoadUser.getResultSet();
+			LoadUserById.setInt(1, id);
+			LoadUserById.execute();
+			ResultSet rs = LoadUserById.getResultSet();
 			User user = new User();
 			while (rs.next()) {
 				//user.setId(id); //user ID cant be set outside of constructors.
 				user.seteMail(rs.getString(1));
 				user.setName(rs.getString(2));
 				user.setAddress(rs.getString(3));
-				user.setGender(rs.getInt(4));        //TODO error on setting gender
+				user.setGender(rs.getInt(4));
 				user.setDateOfBirth(rs.getString(5));
+			}
+			return user;
+		} catch (SQLException e) {
+			System.out.println("Couldn't load User: " + e.getMessage());
+			return null;
+		}
+
+	}
+
+	//Load a User with ID
+	public User DBLoadUserByEmail(String email) {
+		try {
+			LoadUserByEmail.setString(1, email);
+			LoadUserByEmail.execute();
+			ResultSet rs = LoadUserByEmail.getResultSet();
+			User user = new User();
+			while (rs.next()) {
+				//user.setId(id); //user ID cant be set outside of constructors.
+				user.setName(rs.getString(1));
+				user.setAddress(rs.getString(2));
+				user.setGender(rs.getInt(3));
+				user.setDateOfBirth(rs.getString(4));
 			}
 			return user;
 		} catch (SQLException e) {

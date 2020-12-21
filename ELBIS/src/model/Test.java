@@ -23,6 +23,11 @@ public class Test {
         //dataController.DBEditUser(1,"FATBOI@gmail.com","santaistgeil","Santa","NORTH POLE",1,"20.10.1940");
 
         //dataController.DBEditTopic(1,"Christmas",null);
+       // User user = dataController.DBLoadUserByEmail("asd.123@gmail.com");
+       // System.out.println(user.getAddress());
+
+        //User asd = dataController.DBLoadUserById(1);
+        //System.out.println(asd.getName());
 
        //User user = dataController.DBLoadUser(0);
       // System.out.println(user.getDateOfBirth());
