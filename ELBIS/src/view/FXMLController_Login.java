@@ -12,6 +12,7 @@ public class FXMLController_Login {
 
     // Atrrib_______________________________________________________________________________________________________
     MainView mainView;
+    static MainController mc = new MainController();
 
     // Ini_______________________________________________________________________________________________________
 
@@ -36,9 +37,7 @@ public class FXMLController_Login {
     public void loginClicked(ActionEvent event) throws SQLException {
         String email = txtEmail.getText();
         String pw = txtPassword.getText();
-
-        DataController dc = new DataController();
-        boolean flag = dc.login(email, pw);
+        boolean flag = mc.login(email, pw);
 
         if (!flag){
             Alert alert = new Alert(Alert.AlertType.ERROR);
