@@ -111,8 +111,8 @@ public class MainController extends Application {
         boolean login = dc.login(email, pw);
         if(login){
            //TODO set activeUser
-            // activeUser =  dc.DBLoadUser();
-            setStatus("Logged in \""+ email + "\" with password \"" + pw +"\"");
+            //activeUser = dc.DBLoadUserByEmail(email);
+            setStatus("Logged in \""+ activeUser.geteMail() + "\" with password \"" + pw +"\"");
             openApplicationStage();
         } else if(!login){
             Alert alert = new Alert(Alert.AlertType.ERROR);
