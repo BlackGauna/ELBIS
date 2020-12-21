@@ -49,7 +49,6 @@ public class FXMLController_Login {
             alert.showAndWait();
         } else {
             mainController.openApplicationStage();
-            mainController.setStatus("Logged in \""+ email + "\" with password \"" + pw +"\"");
         }
     }
 

@@ -145,7 +145,7 @@ public class DataController {
 
 	//Load the 20 most recent Articles in a descending order.
 	public static final String LOAD_RECENT_ARTICLE = "SELECT "  + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
-			COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + "FROM" + TABLE_ARTICLE +
+			COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
 			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 20 ";
 
 	// Check if user exists in database
@@ -191,7 +191,7 @@ public class DataController {
 			EditArticle = con.prepareStatement(EDIT_ARTICLE);
 			EditUser = con.prepareStatement(EDIT_USER);
 			EditTopic = con.prepareStatement(EDIT_TOPIC);
-			//LoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE); //Statement fails to load because of no topic error on method
+			LoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE); //Statement fails to load because of no topic error on method
 
 			return true;
 
@@ -377,7 +377,7 @@ public class DataController {
 
 				topic.setId(id);
 				topic.setName(rs.getString(1));
-				//topic.parentTopic(rs.getString(2));      //Topic Class must be initialized
+				topic.setParentTopic(rs.getInt(2));
 
 			}
 			return topic;
@@ -545,7 +545,7 @@ public class DataController {
 		}
 	}
 
-	//TODO Test to see if this method works or another should be implemented. No such column found: topic ????
+	//Get 20 most recent articles
 	public LinkedList<Article> DBLoadRecentArticle() {
 
 		try {
