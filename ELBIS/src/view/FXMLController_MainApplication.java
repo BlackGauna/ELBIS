@@ -59,7 +59,7 @@ public class FXMLController_MainApplication {
 
     // Methods_______________________________________________________________________________________________________
     //reference to mainView
-    public void setMainView(MainController mainController){
+    public void setMainController(MainController mainController){
         this.mainController = mainController;
     }
 

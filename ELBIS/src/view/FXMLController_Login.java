@@ -32,7 +32,7 @@ public class FXMLController_Login {
 
     // Methods_______________________________________________________________________________________________________
     //reference to mainView
-    public void setMainView(MainController mainController){
+    public void setMainController(MainController mainController){
         this.mainController = mainController;
     }
 

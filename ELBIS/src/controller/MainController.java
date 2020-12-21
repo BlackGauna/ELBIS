@@ -1,6 +1,5 @@
 package controller;
 
-import controller.Launch;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,6 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.DataController;
 import model.User;
+import view.FXMLController_Editor;
 import view.FXMLController_Login;
 import view.FXMLController_MainApplication;
 
@@ -25,9 +25,11 @@ public class MainController extends Application {
     //Loaders
     private FXMLLoader loginLoader;
     private FXMLLoader mainApplicationLoader;
+    private FXMLLoader editorLoader;
     //Controllers
     private FXMLController_Login loginController;
     private FXMLController_MainApplication mainApplicationController;
+    private FXMLController_Editor editorController;
     //Stages
     private Stage loginStage;
     private Stage applicationStage;
@@ -66,19 +68,26 @@ public class MainController extends Application {
             loginLoader = new FXMLLoader(getClass().getResource("/view/Pane_Login.fxml"));
             loginPane = (Pane) loginLoader.load();
             loginController = loginLoader.getController();
-            loginController.setMainView(this);
+            loginController.setMainController(this);
 
             mainApplicationLoader = new FXMLLoader(getClass().getResource("/view/Pane_MainApplication.fxml"));
             applicationPane = (Pane) mainApplicationLoader.load();
             mainApplicationController = mainApplicationLoader.getController();
-            mainApplicationController.setMainView(this);
+            mainApplicationController.setMainController(this);
+
+            editorLoader = new FXMLLoader(getClass().getResource("/view/Pane_Editor.fxml"));
+            editorPane = (Pane) editorLoader.load();
+            editorController = editorLoader.getController();
+            editorController.setMainController(this);
 
             //Manage scenes
             loginScene = new Scene(loginPane);
             applicationScene = new Scene(applicationPane);
+            editorScene = new Scene(editorPane);
 
             loginStage.setScene(loginScene);
             applicationStage.setScene(applicationScene);
+            editorStage.setScene(editorScene);
 
         } catch (IOException io) {
             System.out.println("Couldn't load scene File");
@@ -97,6 +106,7 @@ public class MainController extends Application {
     public void openApplicationStage() {
         loginStage.close();
         applicationStage.show();
+        editorStage.show();
     }
 
     public void openEditorScene() {
