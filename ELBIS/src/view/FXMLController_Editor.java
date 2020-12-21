@@ -3,6 +3,7 @@ package view;
 import com.itextpdf.html2pdf.HtmlConverter;
 import javafx.application.Application;
 import javafx.concurrent.Worker;
+import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -10,7 +11,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
@@ -22,7 +25,7 @@ import java.net.URL;
  */
 
 // TODO: Change to FXMLController, see FXMLController_MainApplication.java
-public class ArticleEditor extends Application
+public class FXMLController_Editor
 {
     // for communication Java -> Javascript
     private JSObject javascriptConnector;
@@ -31,40 +34,45 @@ public class ArticleEditor extends Application
     private JavaConnector javaConnector = new JavaConnector();
 
 
+    @FXML
+    WebView webView;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception
+    @FXML
+    public void initialize() throws Exception
     {
-        // html source for the WebView
-        URL url= Thread.currentThread().getContextClassLoader().getResource("tinymce/tinymce_test.html");
+        try
+        {
+            // html source for the WebView
+            URL url= Thread.currentThread().getContextClassLoader().getResource("tinymce/tinymce_test.html");
 
-        // setup WebView and WebEngine
-        WebView webView = new WebView();
-        final WebEngine webEngine= webView.getEngine();
+            // setup WebView and WebEngine
 
-        webEngine.setJavaScriptEnabled(true);
-        webEngine.setUserStyleSheetLocation(Thread.currentThread().getContextClassLoader()
-                .getResource("tinymce/style.css").toString());
+            final WebEngine webEngine= webView.getEngine();
 
-        // listener setup
-        webEngine.getLoadWorker().stateProperty().addListener(((observableValue, oldValue, newValue) ->{
-            if (Worker.State.SUCCEEDED == newValue)
-            {
-                // set an interface object named 'javaConnector' in the web engine's page
-                JSObject window= (JSObject) webEngine.executeScript("window");
-                window.setMember("javaConnector", javaConnector);
+            webEngine.setJavaScriptEnabled(true);
+            webEngine.setUserStyleSheetLocation(Thread.currentThread().getContextClassLoader()
+                    .getResource("tinymce/style.css").toString());
 
-                // get the Javascript connector object.
-                javascriptConnector = (JSObject) webEngine.executeScript("getJsConnector()");
-            }
-        } ));
+            // listener setup
+            webEngine.getLoadWorker().stateProperty().addListener(((observableValue, oldValue, newValue) ->{
+                if (Worker.State.SUCCEEDED == newValue)
+                {
+                    // set an interface object named 'javaConnector' in the web engine's page
+                    JSObject window= (JSObject) webEngine.executeScript("window");
+                    window.setMember("javaConnector", javaConnector);
 
-        Scene scene = new Scene(webView, 1280, 720);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+                    // get the Javascript connector object.
+                    javascriptConnector = (JSObject) webEngine.executeScript("getJsConnector()");
+                }
+            } ));
 
-        // now load the page
-        webEngine.load(url.toString());
+
+            // now load the page
+            webEngine.load(url.toString());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
     }
 
