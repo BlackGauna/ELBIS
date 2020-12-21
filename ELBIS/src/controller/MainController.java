@@ -17,7 +17,6 @@ public class MainController{
 	//main_______________________________________________________________________________________________________
 	public static void main(String[] args) {
 		new MainController();
-
 		//Start the FX application
 		try {
 			Application.launch(MainView.class);
@@ -25,6 +24,7 @@ public class MainController{
 			JOptionPane.showMessageDialog(null,e.getMessage(),"Error on launch in View_TEST", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
+
 	}
 	
 	//ctor_______________________________________________________________________________________________________

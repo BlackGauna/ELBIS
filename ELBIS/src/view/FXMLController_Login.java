@@ -3,7 +3,9 @@ package view;
 import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import model.DataController;
 
 import java.sql.SQLException;
@@ -16,6 +18,9 @@ public class FXMLController_Login {
 
     // Ini_______________________________________________________________________________________________________
 
+    public void initialize() {
+
+    }
 
     // UI_______________________________________________________________________________________________________
     @FXML

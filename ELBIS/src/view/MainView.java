@@ -77,8 +77,6 @@ public class MainView extends Application {
             loginStage.setScene(loginScene);
             applicationStage.setScene(applicationScene);
 
-
-
         } catch (IOException io) {
             System.out.println("Couldn't load scene File");
             io.printStackTrace();
@@ -105,6 +103,7 @@ public class MainView extends Application {
     public void setStatus (String newStatus){
         mainApplicationController.setStatus(newStatus);
     }
+
 
 }
 
