@@ -108,8 +108,7 @@ public class FXMLController_MainApplication {
         userTab.setContent(articleTable);
 
         tabPane.getTabs().add(userTab);
-        //TODO give actual Table
-        mainController.refreshArticleTable(new TableView());
+        articleTableController.setTableView(mainController.refreshArticleTable(articleTableController.getTableView()));
 
     }
     public void addModeratorTab()throws IOException{

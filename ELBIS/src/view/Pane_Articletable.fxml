@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_ArticleTable">
    <children>
       <BorderPane>
@@ -26,7 +25,7 @@
                               <content>
                                 <AnchorPane>
                                        <children>
-                                          <TableView layoutX="-1.0" layoutY="-1.0">
+                                          <TableView fx:id="articleTable" layoutX="-1.0" layoutY="-1.0">
                                             <columns>
                                               <TableColumn prefWidth="116.0" text="Title" />
                                               <TableColumn prefWidth="45.0" text="id" />

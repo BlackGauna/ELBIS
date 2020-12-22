@@ -7,14 +7,15 @@ import javafx.scene.control.*;
 
 
 public class FXMLController_ArticleTable {
-    //TODO import Table variables
-    //TODO buttonEvents
 
     // Atrrib_______________________________________________________________________________________________________
     MainController mainController;
     // Ini_______________________________________________________________________________________________________
 
     // UI_______________________________________________________________________________________________________
+    @FXML
+    private TableView<?> articleTable;
+
     @FXML
     private Accordion dropDownAccordion;
 
@@ -41,6 +42,14 @@ public class FXMLController_ArticleTable {
     }
 
 
+
     // Getters,Setters_________________________________________________________________________________________________
 
+    public void setTableView(TableView table){
+        this.articleTable = table;
+    }
+
+    public TableView getTableView(){
+        return articleTable;
+    }
 }

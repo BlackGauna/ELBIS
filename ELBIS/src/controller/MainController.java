@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -136,8 +137,6 @@ public class MainController extends Application {
 
     public TableView refreshArticleTable(TableView table) {
 
-        table = new TableView();
-
         /*
         //TODO fill table with DB information
         //TODO add buttonpanel to delete and edit articles per article in table
@@ -145,14 +144,12 @@ public class MainController extends Application {
 
         //Test if table is empty
         if(table.getItems().size() ==0) {
-            mainApplicationController.setStatus("Warning: Empty Table loaded");
+            mainApplicationController.setStatus("Warning: Empty Table loaded?");
         }
         return table;
     }
 
     public TableView refreshModerationTable(TableView table) {
-
-        table = new TableView();
 
         /*
         //TODO fill table with DB information
@@ -161,15 +158,13 @@ public class MainController extends Application {
 
         //Test if table is empty
         if(table.getItems().size() ==0) {
-            mainApplicationController.setStatus("Warning: Empty Table loaded");
+            mainApplicationController.setStatus("Warning: Empty Table loaded?");
         }
         return table;
     }
 
 
     public TableView refreshAdministrationTable(TableView table) {
-
-        table = new TableView();
 
         /*
         //TODO fill table with DB information
@@ -178,7 +173,7 @@ public class MainController extends Application {
 
         //Test if table is empty
         if(table.getItems().size() ==0) {
-            mainApplicationController.setStatus("Warning: Empty Table loaded");
+            mainApplicationController.setStatus("Warning: Empty Table loaded?");
         }
         return table;
     }

@@ -35,6 +35,9 @@ public class FXMLController_ModerationTable {
     public void setMainController(MainController mainController){
         this.mainController = mainController;
     }
+    public void setTableView(TableView table){
+
+    }
     // Getters,Setters_________________________________________________________________________________________________
 
 }
