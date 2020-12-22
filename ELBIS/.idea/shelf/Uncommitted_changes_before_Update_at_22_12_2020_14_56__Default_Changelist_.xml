@@ -1,0 +1,39 @@
+<changelist name="Uncommitted_changes_before_Update_at_22_12_2020_14_56_[Default_Changelist]" date="1608645370010" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22_12_2020_14_56_[Default_Changelist]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 22.12.2020 14:56 [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/ELBIS/view/FXMLController_MainApplication.class" />
+    <option name="AFTER_PATH" value="out/production/ELBIS/view/FXMLController_MainApplication.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22_12_2020_14_56_[Default_Changelist]/FXMLController_MainApplication.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/ELBIS/view/ArticleEditor.class" />
+    <option name="AFTER_PATH" value="out/production/ELBIS/view/ArticleEditor.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22_12_2020_14_56_[Default_Changelist]/ArticleEditor.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/ELBIS/controller/MainController.class" />
+    <option name="AFTER_PATH" value="out/production/ELBIS/controller/MainController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22_12_2020_14_56_[Default_Changelist]/MainController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/ELBIS/view/ArticleEditor$JavaConnector.class" />
+    <option name="AFTER_PATH" value="out/production/ELBIS/view/ArticleEditor$JavaConnector.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22_12_2020_14_56_[Default_Changelist]/ArticleEditor$JavaConnector.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/ELBIS/model/DataController.class" />
+    <option name="AFTER_PATH" value="out/production/ELBIS/model/DataController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22_12_2020_14_56_[Default_Changelist]/DataController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/ELBIS/model/Test.class" />
+    <option name="AFTER_PATH" value="out/production/ELBIS/model/Test.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22_12_2020_14_56_[Default_Changelist]/Test.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/ELBIS/view/FXMLController_Login.class" />
+    <option name="AFTER_PATH" value="out/production/ELBIS/view/FXMLController_Login.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22_12_2020_14_56_[Default_Changelist]/FXMLController_Login.class" />
+  </binary>
+</changelist>
