@@ -135,20 +135,51 @@ public class MainController extends Application {
     }
 
     public TableView refreshArticleTable(TableView table) {
+
+        table = new TableView();
+
+        /*
         //TODO fill table with DB information
         //TODO add buttonpanel to delete and edit articles per article in table
+        */
+
+        //Test if table is empty
+        if(table.getItems().size() ==0) {
+            mainApplicationController.setStatus("Warning: Empty Table loaded");
+        }
         return table;
     }
 
     public TableView refreshModerationTable(TableView table) {
+
+        table = new TableView();
+
+        /*
         //TODO fill table with DB information
         //TODO add buttonpanel to delete and edit users per user in table
+        */
+
+        //Test if table is empty
+        if(table.getItems().size() ==0) {
+            mainApplicationController.setStatus("Warning: Empty Table loaded");
+        }
         return table;
     }
 
+
     public TableView refreshAdministrationTable(TableView table) {
+
+        table = new TableView();
+
+        /*
         //TODO fill table with DB information
         //TODO add buttonpanel to promote/degrade users per user in table
+        */
+
+        //Test if table is empty
+        if(table.getItems().size() ==0) {
+            mainApplicationController.setStatus("Warning: Empty Table loaded");
+        }
         return table;
     }
 

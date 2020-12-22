@@ -75,7 +75,8 @@ public class FXMLController_MainApplication {
     }
 
     public void setStatus(String newStatus){
-        statusBarController.setStatus(newStatus);
+        System.out.println("Status set: \"" + newStatus+"\"");
+        statusBarController.setStatus("\""+newStatus+"\"");
     }
 
     public void openTabs(User user) {
@@ -107,6 +108,8 @@ public class FXMLController_MainApplication {
         userTab.setContent(articleTable);
 
         tabPane.getTabs().add(userTab);
+        //TODO give actual Table
+        mainController.refreshArticleTable(new TableView());
 
     }
     public void addModeratorTab()throws IOException{
@@ -120,6 +123,8 @@ public class FXMLController_MainApplication {
         moderationTab.setContent(moderationTable);
 
         tabPane.getTabs().add(moderationTab);
+        //TODO give actual Table
+        mainController.refreshModerationTable(new TableView());
 
     }
     public void addAdminTab()throws IOException{
@@ -133,6 +138,8 @@ public class FXMLController_MainApplication {
         administrationTab.setContent(administrationTable);
 
         tabPane.getTabs().add(administrationTab);
+        //TODO give actual Table
+        mainController.refreshAdministrationTable(new TableView());
     }
 
 }
