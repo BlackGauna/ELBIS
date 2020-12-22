@@ -1,5 +1,7 @@
 package view;
 
+import controller.MainController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -9,7 +11,7 @@ public class FXMLController_ArticleTable {
     //TODO buttonEvents
 
     // Atrrib_______________________________________________________________________________________________________
-
+    MainController mainController;
     // Ini_______________________________________________________________________________________________________
 
     // UI_______________________________________________________________________________________________________
@@ -28,7 +30,16 @@ public class FXMLController_ArticleTable {
     @FXML
     private Button btnCreateArticle;
 
+    @FXML
+    void createArticleClicked(ActionEvent event) {
+        mainController.openEditorScene();
+    }
+
     // Methods_______________________________________________________________________________________________________
+    public void setMainController(MainController mainController){
+        this.mainController = mainController;
+    }
+
 
     // Getters,Setters_________________________________________________________________________________________________
 

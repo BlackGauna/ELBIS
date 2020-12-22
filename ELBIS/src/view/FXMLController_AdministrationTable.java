@@ -1,5 +1,6 @@
 package view;
 
+import controller.MainController;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -8,7 +9,7 @@ public class FXMLController_AdministrationTable {
     //TODO buttonEvents
 
     // Atrrib_______________________________________________________________________________________________________
-
+    MainController mainController;
     // Ini_______________________________________________________________________________________________________
 
     // UI_______________________________________________________________________________________________________
@@ -29,7 +30,9 @@ public class FXMLController_AdministrationTable {
     private Button btnCreateTopic;
 
     // Methods_______________________________________________________________________________________________________
-
+    public void setMainController(MainController mainController){
+        this.mainController = mainController;
+    }
     // Getters,Setters_________________________________________________________________________________________________
 
 }

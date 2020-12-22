@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Administrator;
 import model.DataController;
 import model.User;
 import view.FXMLController_Editor;
@@ -106,7 +107,6 @@ public class MainController extends Application {
     public void openApplicationStage() {
         loginStage.close();
         applicationStage.show();
-        editorStage.show();
     }
 
     public void openEditorScene() {
@@ -118,11 +118,13 @@ public class MainController extends Application {
     }
 
     public boolean login(String email, String pw) throws SQLException {
-        boolean login = dc.login(email, pw);
+        boolean login = true;//dc.login(email, pw);
         if(login){
            //TODO set activeUser
+            activeUser = new Administrator();
             //activeUser = dc.DBLoadUserByEmail(email);
            // setStatus("Logged in \""+ activeUser.geteMail() + "\" with password \"" + pw +"\"");
+            mainApplicationController.openTabs(activeUser);
             openApplicationStage();
         } else if(!login){
             Alert alert = new Alert(Alert.AlertType.ERROR);

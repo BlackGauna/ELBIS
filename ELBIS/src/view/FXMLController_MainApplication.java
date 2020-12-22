@@ -8,6 +8,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import model.*;
 
+import java.io.IOException;
+
 
 public class FXMLController_MainApplication {
 
@@ -17,14 +19,17 @@ public class FXMLController_MainApplication {
     FXMLLoader statusBarLoader;
     FXMLLoader headBarLoader;
     FXMLLoader userTableLoader;
-    FXMLLoader moderatorTableLoader;
+    FXMLLoader moderationTableLoader;
     FXMLLoader administrationTableLoader;
     //Panes
     Pane statusBar;
     Pane headBar;
-    Pane userTable;
+    Pane articleTable;
     Pane moderationTable;
-    Pane AdministrationTable;
+    Pane administrationTable;
+    Tab userTab;
+    Tab moderationTab;
+    Tab administrationTab;
     //Controllers
     FXMLController_StatusBar statusBarController;
     FXMLController_HeadBar headBarController;
@@ -74,29 +79,60 @@ public class FXMLController_MainApplication {
     }
 
     public void openTabs(User user) {
-        if(user instanceof Administrator){
-            addUserTab();
-            addModeratorTab();
-            addAdminTab();
+        try {
+            if (user instanceof Administrator) {
+                addUserTab();
+                addModeratorTab();
+                addAdminTab();
+
+            } else if (user instanceof Moderator) {
+                addUserTab();
+                addModeratorTab();
+            } else if (user instanceof User) {
+                addUserTab();
+            }
+        } catch(IOException io){
+            io.printStackTrace();
         }
-        else if(user instanceof Moderator){
-            addUserTab();
-            addModeratorTab();
-        }
-        else if(user instanceof User){
-            addUserTab();
-        }
+    }
+
+    public void addUserTab() throws IOException {
+        userTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_ArticleTable.fxml"));
+        articleTable = (Pane) userTableLoader.load();
+        articleTableController = userTableLoader.getController();
+        articleTableController.setMainController(mainController);
+
+        userTab = new Tab();
+        userTab.setText("Artikelverwaltung");
+        userTab.setContent(articleTable);
+
+        tabPane.getTabs().add(userTab);
 
     }
+    public void addModeratorTab()throws IOException{
+        moderationTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_ModerationTable.fxml"));
+        moderationTable = (Pane) moderationTableLoader.load();
+        moderationTableController = moderationTableLoader.getController();
+        articleTableController.setMainController(mainController);
 
-    public void addUserTab(){
-        //tabPane.getTabs().add(newTab);
+        moderationTab = new Tab();
+        moderationTab.setText("Moderation");
+        moderationTab.setContent(moderationTable);
+
+        tabPane.getTabs().add(moderationTab);
+
     }
-    public void addModeratorTab(){
-        //tabPane.getTabs().add(newTab);
-    }
-    public void addAdminTab(){
-        //tabPane.getTabs().add(newTab);
+    public void addAdminTab()throws IOException{
+        administrationTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_AdministrationTable.fxml"));
+        administrationTable = (Pane) administrationTableLoader.load();
+        administrationTableController = administrationTableLoader.getController();
+        articleTableController.setMainController(mainController);
+
+        administrationTab = new Tab();
+        administrationTab.setText("Administration");
+        administrationTab.setContent(administrationTable);
+
+        tabPane.getTabs().add(administrationTab);
     }
 
 }

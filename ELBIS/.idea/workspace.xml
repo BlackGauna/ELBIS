@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4641a4dd-fd64-4695-b43a-21f16cb12948" name="Default Changelist" comment="" />
+    <list default="true" id="61da2200-5743-42a2-90c0-c7b1e117c42f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ELBIS/controller/MainController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ELBIS/controller/MainController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ELBIS/view/ArticleEditor$JavaConnector.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ELBIS/view/ArticleEditor$JavaConnector.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ELBIS/view/ArticleEditor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ELBIS/view/ArticleEditor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ELBIS/view/FXMLController_Login.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ELBIS/view/FXMLController_Login.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ELBIS/view/FXMLController_MainApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ELBIS/view/FXMLController_MainApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/FXMLController_AdministrationTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/FXMLController_AdministrationTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/FXMLController_ArticleTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/FXMLController_ArticleTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/FXMLController_MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/FXMLController_MainApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/FXMLController_ModerationTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/FXMLController_ModerationTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/Pane_AdministrationTable.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/Pane_AdministrationTable.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/Pane_Articletable.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/Pane_Articletable.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/Pane_MainApplication.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/Pane_MainApplication.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/Pane_ModerationTable.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/Pane_ModerationTable.fxml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,7 +38,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
-  <component name="RunManager" selected="Application.ArticleEditor_TEST">
+  <component name="RunManager" selected="Application.Launch">
     <configuration name="ArticleEditor_TEST" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="view.ArticleEditor_TEST" />
       <module name="ELBIS" />
@@ -88,10 +104,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.MainController" />
+      <item itemvalue="Application.MainView" />
+      <item itemvalue="Application.View_TEST" />
+      <item itemvalue="Application.ArticleEditor_TEST" />
+      <item itemvalue="Application.Launch" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ArticleEditor_TEST" />
         <item itemvalue="Application.Launch" />
+        <item itemvalue="Application.ArticleEditor_TEST" />
         <item itemvalue="Application.MainView" />
         <item itemvalue="Application.View_TEST" />
         <item itemvalue="Application.MainController" />
@@ -101,7 +124,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="4641a4dd-fd64-4695-b43a-21f16cb12948" name="Default Changelist" comment="" />
+      <changelist id="61da2200-5743-42a2-90c0-c7b1e117c42f" name="Default Changelist" comment="" />
       <created>1608481524107</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -127,6 +150,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Login check in MainController" />
