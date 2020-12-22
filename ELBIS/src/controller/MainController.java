@@ -116,10 +116,10 @@ public class MainController extends Application {
     }
 
     public boolean login(String email, String pw) throws SQLException {
-        boolean login = true;//dc.login(email, pw);
+        boolean login = dc.login(email, pw);
         if(login){
            //TODO set activeUser
-            activeUser = new Moderator();
+            activeUser = new Administrator();
             //activeUser = dc.DBLoadUserByEmail(email);
            // setStatus("Logged in \""+ activeUser.geteMail() + "\" with password \"" + pw +"\"");
             mainApplicationController.openTabs(activeUser);
