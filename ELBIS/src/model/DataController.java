@@ -154,8 +154,7 @@ public class DataController {
 			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 20 ";
 
 	// Check if user exists in database
-	public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? " +
-			"AND " + COLUMN_USER_PASSWORD + " = ?";
+	public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? AND " + COLUMN_USER_PASSWORD + " = ?";
 
 	// Load all articles
 	public static final String LOAD_ALL_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE;
@@ -176,7 +175,6 @@ public class DataController {
 	private PreparedStatement EditUser;
 	private PreparedStatement EditTopic;
 	private PreparedStatement LoadRecentArticle;
-	private PreparedStatement CheckUser;
 	private PreparedStatement LoadAllArticles;
 
 
@@ -205,7 +203,6 @@ public class DataController {
 			EditUser = con.prepareStatement(EDIT_USER);
 			EditTopic = con.prepareStatement(EDIT_TOPIC);
 			LoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE); //Statement fails to load because of no topic error on method
-			CheckUser = con.prepareStatement(CHECK_USER);
 			LoadAllArticles = con.prepareStatement(LOAD_ALL_ARTICLES);
 
 			return true;
@@ -263,10 +260,6 @@ public class DataController {
 
 			if (LoadRecentArticle != null) {
 				LoadRecentArticle.close();
-			}
-
-			if (CheckUser != null){
-				CheckUser.close();
 			}
 
 			if (LoadAllArticles != null){
@@ -629,11 +622,12 @@ public class DataController {
 
 	// Check if user exists in DB
 	public boolean login(String email, String pw) throws SQLException {
-		try {
-			CheckUser.setString(1, email);
-			CheckUser.setString(2, pw);
+		try (Connection con = SQLConnection.ConnectDB();
+			 PreparedStatement pst = con.prepareStatement(CHECK_USER)) {
+			pst.setString(1, email);
+			pst.setString(2, pw);
 
-			ResultSet rs = CheckUser.executeQuery();
+			ResultSet rs = pst.executeQuery();
 			if (rs.next()) {
 				return true;
 			}
