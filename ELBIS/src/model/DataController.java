@@ -154,7 +154,11 @@ public class DataController {
 			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 20 ";
 
 	// Check if user exists in database
-	public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? and " + COLUMN_USER_PASSWORD + " = ?";
+	public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? " +
+			"AND " + COLUMN_USER_PASSWORD + " = ?";
+
+	// Load all articles
+	public static final String LOAD_ALL_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE;
 
 
 	//CONNECTION--------------------------------------------------------------------------------------------------------
@@ -172,6 +176,8 @@ public class DataController {
 	private PreparedStatement EditUser;
 	private PreparedStatement EditTopic;
 	private PreparedStatement LoadRecentArticle;
+	private PreparedStatement CheckUser;
+	private PreparedStatement LoadAllArticles;
 
 
 	private static DataController instance = new DataController();
@@ -199,6 +205,8 @@ public class DataController {
 			EditUser = con.prepareStatement(EDIT_USER);
 			EditTopic = con.prepareStatement(EDIT_TOPIC);
 			LoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE); //Statement fails to load because of no topic error on method
+			CheckUser = con.prepareStatement(CHECK_USER);
+			LoadAllArticles = con.prepareStatement(LOAD_ALL_ARTICLES);
 
 			return true;
 
@@ -255,6 +263,14 @@ public class DataController {
 
 			if (LoadRecentArticle != null) {
 				LoadRecentArticle.close();
+			}
+
+			if (CheckUser != null){
+				CheckUser.close();
+			}
+
+			if (LoadAllArticles != null){
+				LoadAllArticles.close();
 			}
 
 
@@ -363,17 +379,23 @@ public class DataController {
 
 	}
 
-	//Load Contents from All Articles
-	public void DBLoadAllArticle(){
+	//Load all Articles
+	public ResultSet DBLoadAllArticles(){
 		try{
-			String query = "SELECT title, content FROM Article";
-			PreparedStatement ps = con.prepareStatement(query);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				System.out.println(rs.getString(2));
+			ResultSet rs = LoadAllArticles.executeQuery();
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int columnsNumber = rsmd.getColumnCount();
+			while (rs.next()){
+				for (int i=1;i<=columnsNumber;i++){
+					String columnValue = rs.getString(i);
+					System.out.println(rsmd.getColumnName(i) + ": " + columnValue);
+				}
+				System.out.println("");
 			}
-		} catch (SQLException e) {
-			System.out.println("Couldn't load Article: " + e.getMessage());
+			return rs;
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+			return null;
 		}
 	}
 
@@ -607,12 +629,11 @@ public class DataController {
 
 	// Check if user exists in DB
 	public boolean login(String email, String pw) throws SQLException {
-		try (Connection con = SQLConnection.ConnectDB();
-			 PreparedStatement pst = con.prepareStatement(CHECK_USER)) {
-			pst.setString(1, email);
-			pst.setString(2, pw);
+		try {
+			CheckUser.setString(1, email);
+			CheckUser.setString(2, pw);
 
-			ResultSet rs = pst.executeQuery();
+			ResultSet rs = CheckUser.executeQuery();
 			if (rs.next()) {
 				return true;
 			}

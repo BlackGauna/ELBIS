@@ -28,6 +28,7 @@ public class Test {
 
         //User asd = dataController.DBLoadUserById(1);
         //System.out.println(asd.getName());
+//        dataController.DBLoadAllArticles();
 
        //User user = dataController.DBLoadUser(0);
       // System.out.println(user.getDateOfBirth());
