@@ -7,9 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import model.Administrator;
-import model.DataController;
-import model.User;
+import model.*;
 import view.FXMLController_Editor;
 import view.FXMLController_Login;
 import view.FXMLController_MainApplication;
@@ -121,7 +119,7 @@ public class MainController extends Application {
         boolean login = true;//dc.login(email, pw);
         if(login){
            //TODO set activeUser
-            activeUser = new Administrator();
+            activeUser = new Moderator();
             //activeUser = dc.DBLoadUserByEmail(email);
            // setStatus("Logged in \""+ activeUser.geteMail() + "\" with password \"" + pw +"\"");
             mainApplicationController.openTabs(activeUser);
