@@ -16,10 +16,23 @@ public class Article {
     private int publisher_Id;
     private String publisherComment;
 
+
+
     // Ctor_______________________________________________________________________________________________________
 
     public Article() {
     }
+
+    // for ArticleTable
+    public Article(int id, String title, String creationDate, String expireDate, String lastEdit, String publisherComment) {
+        this.id = id;
+        this.title = title;
+        this.creationDate = creationDate;
+        this.expireDate = expireDate;
+        this.lastEdit = lastEdit;
+        this.publisherComment = publisherComment;
+    }
+
 
     // Methods_______________________________________________________________________________________________________
 
