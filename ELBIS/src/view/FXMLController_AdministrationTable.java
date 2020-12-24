@@ -102,7 +102,7 @@ public class FXMLController_AdministrationTable implements Initializable {
         }
 
         col_id.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
-        col_email.setCellValueFactory(new PropertyValueFactory<User, String>("eMail"));
+        col_email.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
 //        col_role.setCellValueFactory(new PropertyValueFactory<User, String>("role"));
         col_name.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
         col_address.setCellValueFactory(new PropertyValueFactory<User, String>("address"));
