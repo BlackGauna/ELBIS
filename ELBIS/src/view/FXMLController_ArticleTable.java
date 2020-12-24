@@ -83,19 +83,14 @@ public class FXMLController_ArticleTable implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        getTable();
+        getArticleTable();
     }
 
-    private void getTable() {
+    private void getArticleTable() {
         try {
             con = SQLConnection.ConnectDB();
             PreparedStatement pst = con.prepareStatement("SELECT * FROM ARTICLE");
-//            PreparedStatement pst = con.prepareStatement("SELECT article.id, article.title, article.creationDate, article.expireDate, article.lastEdit, status.name AS status, article.publisherComment\n" +
-//                    "FROM article\n" +
-//                    "JOIN status on\n" +
-//                    "article.status = status.id");
             rs = pst.executeQuery();
-
 
             articleList = FXCollections.observableArrayList();
 
@@ -106,7 +101,7 @@ public class FXMLController_ArticleTable implements Initializable {
                         rs.getString("creationDate"),
                         rs.getString("expireDate"),
                         rs.getString("lastEdit"),
-                        // status?
+                        // TODO status?
                         rs.getString("publisherComment")));
             }
 
@@ -115,7 +110,7 @@ public class FXMLController_ArticleTable implements Initializable {
         }
 
         col_id.setCellValueFactory(new PropertyValueFactory<Article, String>("id"));
-        col_title.setCellValueFactory(new PropertyValueFactory<Article, String>("Title"));
+        col_title.setCellValueFactory(new PropertyValueFactory<Article, String>("title"));
         col_creationDate.setCellValueFactory(new PropertyValueFactory<Article, String>("creationDate"));
         col_expireDate.setCellValueFactory(new PropertyValueFactory<Article, String>("expireDate"));
         col_lastEdit.setCellValueFactory(new PropertyValueFactory<Article, String>("lastEdit"));
@@ -136,31 +131,4 @@ public class FXMLController_ArticleTable implements Initializable {
         return articleTable;
     }
 
-    public TableColumn<Article, String> getCol_id() {
-        return col_id;
-    }
-
-    public TableColumn<Article, String> getCol_title() {
-        return col_title;
-    }
-
-    public TableColumn<Article, String> getCol_creationDate() {
-        return col_creationDate;
-    }
-
-    public TableColumn<Article, String> getCol_expireDate() {
-        return col_expireDate;
-    }
-
-    public TableColumn<Article, String> getCol_lastEdit() {
-        return col_lastEdit;
-    }
-
-    public TableColumn<Article, String> getCol_status() {
-        return col_status;
-    }
-
-    public TableColumn<Article, String> getCol_publisherComment() {
-        return col_publisherComment;
-    }
 }

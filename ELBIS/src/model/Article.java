@@ -20,9 +20,6 @@ public class Article {
 
     // Ctor_______________________________________________________________________________________________________
 
-    public Article() {
-    }
-
     // for ArticleTable
     public Article(int id, String title, String creationDate, String expireDate, String lastEdit, String publisherComment) {
         this.id = id;
@@ -33,6 +30,8 @@ public class Article {
         this.publisherComment = publisherComment;
     }
 
+    public Article() {
+    }
 
     // Methods_______________________________________________________________________________________________________
 

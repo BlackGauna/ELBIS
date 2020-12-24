@@ -7,7 +7,7 @@ import java.util.Date;
 public class User {
 	// Atrrib_______________________________________________________________________________________________________
 	private int id;
-	private String eMail;
+	private String email;
 	private String name;
 	private String password;
 	private String address;
@@ -15,11 +15,19 @@ public class User {
 	private Gender gender;
 	
 	// Ctor_______________________________________________________________________________________________________
-	public User() {
-		
+	public User(int id, String email, String name, String address) {
+		this.id = id;
+		this.email = email;
+		this.name = name;
+		this.address = address;
+//		this.gender = gender;
+//		this.dateOfBirth = dateOfBirth;
 	}
-	
-	// Methods_______________________________________________________________________________________________________
+
+	public User() {
+	}
+
+    // Methods_______________________________________________________________________________________________________
 	public void editArticle(int articleId){
 		//TODO Implement EditArticle - Only if the user is also the creator
 	}
@@ -40,10 +48,10 @@ public class User {
 		//this.id = id;
 	}
 	public String geteMail() {
-		return eMail;
+		return email;
 	}
-	public void seteMail(String eMail) {
-		this.eMail = eMail;
+	public void seteMail(String email) {
+		this.email = email;
 	}
 	public String getPassword() {
 		return password;
