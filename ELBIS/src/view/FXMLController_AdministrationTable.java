@@ -28,13 +28,16 @@ public class FXMLController_AdministrationTable implements Initializable {
     MainController mainController;
     // Ini_______________________________________________________________________________________________________
 
+    public void initialize() {
+        dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
+    }
     // UI_______________________________________________________________________________________________________
 
     @FXML
     private TableView<User> userTable = new TableView<>();
 
     @FXML
-    private Accordion tPane_dropDownAccordion;
+    private Accordion dropDownAccordion;
 
     @FXML
     private TitledPane tPane_ManageTopics;

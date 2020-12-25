@@ -54,7 +54,6 @@ public class FXMLController_StatusBar {
         alert.setResizable(true);
 
         alert.setHeaderText("Status history");
-        //statusArea.setScrollTop(Double.MAX_VALUE);
         statusArea.selectPositionCaret(statusArea.getLength());
         statusArea.deselect();
         alert.showAndWait();

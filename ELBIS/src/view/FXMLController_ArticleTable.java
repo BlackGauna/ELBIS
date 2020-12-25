@@ -84,6 +84,7 @@ public class FXMLController_ArticleTable implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         getArticleTable();
+        dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }
 
     private void getArticleTable() {

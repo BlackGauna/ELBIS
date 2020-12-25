@@ -18,7 +18,7 @@
                     <content>
                         <AnchorPane prefWidth="1179.0">
                             <children>
-                                <Accordion fx:id="tPane_dropDownAccordion" layoutX="7.0" layoutY="7.0" prefHeight="200.0" prefWidth="1170.0">
+                                <Accordion fx:id="dropDownAccordion" layoutX="7.0" layoutY="7.0" prefHeight="200.0" prefWidth="1170.0">
                                     <panes>
                                         <TitledPane fx:id="tPane_ManageTopics" animated="false" prefHeight="827.0" prefWidth="1172.0" text="ManageTopics">
                                             <content>

@@ -10,7 +10,9 @@ public class FXMLController_ModerationTable {
     // Atrrib_______________________________________________________________________________________________________
     MainController mainController;
     // Ini_______________________________________________________________________________________________________
-
+    public void initialize() {
+        dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
+    }
     // UI_______________________________________________________________________________________________________
 
     @FXML
