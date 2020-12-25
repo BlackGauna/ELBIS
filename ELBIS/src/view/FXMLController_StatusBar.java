@@ -13,7 +13,6 @@ public class FXMLController_StatusBar {
 
     // Atrrib_______________________________________________________________________________________________________
     LinkedList<String> statusHist = new LinkedList<String>();
-    TextArea statusArea = new TextArea();
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 
@@ -44,6 +43,7 @@ public class FXMLController_StatusBar {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("History");
 
+        TextArea statusArea = new TextArea();
         statusArea.setWrapText(true);
         statusArea.setEditable(false);
 
