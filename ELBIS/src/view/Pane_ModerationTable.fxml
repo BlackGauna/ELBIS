@@ -7,26 +7,24 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_ModerationTable">
+<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_ModerationTable">
    <children>
-      <BorderPane>
+      <BorderPane prefWidth="1200.0">
          <center>
-            <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+            <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="1200.0">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="402.0" prefWidth="599.0">
+                <AnchorPane prefWidth="1179.0">
                      <children>
-                        <Accordion fx:id="dropDownAccordion" layoutX="7.0" layoutY="7.0" prefHeight="375.0" prefWidth="574.0">
+                        <Accordion fx:id="dropDownAccordion" layoutX="7.0" layoutY="7.0" prefHeight="200.0" prefWidth="1170.0">
                           <panes>
-                              <TitledPane fx:id="tPane_NewSubmissions" animated="false" text="NewSubmissions">
+                              <TitledPane fx:id="tPane_NewSubmissions" animated="false" prefHeight="827.0" prefWidth="1172.0" text="NewSubmissions">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <TableView prefHeight="326.0" prefWidth="575.0">
+                                          <TableView prefHeight="410.0" prefWidth="1164.0">
                                              <columns>
                                                 <TableColumn prefWidth="116.0" text="Title" />
                                                 <TableColumn prefWidth="45.0" text="id" />
@@ -40,11 +38,11 @@
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
-                            <TitledPane fx:id="tPane_ManageArticles" animated="false" prefHeight="329.0" prefWidth="574.0" text="ManageArticles">
+                            <TitledPane fx:id="tPane_ManageArticles" animated="false" prefHeight="827.0" prefWidth="1172.0" text="ManageArticles">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <TableView layoutX="-1.0" layoutY="-1.0" prefHeight="326.0" prefWidth="575.0">
+                                          <TableView layoutX="-1.0" layoutY="-1.0" prefHeight="410.0" prefWidth="1164.0">
                                             <columns>
                                               <TableColumn prefWidth="116.0" text="Title" />
                                               <TableColumn prefWidth="45.0" text="id" />
@@ -59,12 +57,11 @@
                                     </AnchorPane>
                               </content>
                             </TitledPane>
-                            <TitledPane fx:id="tPane_ManageUsers" animated="false" text="ManageUsers">
+                            <TitledPane fx:id="tPane_ManageUsers" animated="false" prefHeight="827.0" prefWidth="1172.0" text="ManageUsers">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <TreeView layoutX="-1.0" prefHeight="324.0" prefWidth="572.0" />
-                                          <TableView prefHeight="326.0" prefWidth="575.0">
+                                          <TableView prefHeight="410.0" prefWidth="1164.0">
                                              <columns>
                                                 <TableColumn prefWidth="45.0" text="id" />
                                                 <TableColumn prefWidth="136.0" text="Name" />
@@ -86,7 +83,7 @@
             </ScrollPane>
          </center>
          <top>
-            <ButtonBar fx:id="btnBar" buttonOrder="U+FBIX_NCYOA_R" prefHeight="40.0" prefWidth="373.0" BorderPane.alignment="CENTER">
+            <ButtonBar fx:id="btnBar" buttonOrder="U+FBIX_NCYOA_R" prefHeight="35.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
               <buttons>
                 <Button fx:id="btn_CreateUser" mnemonicParsing="false" text="Create User" />
               </buttons>
