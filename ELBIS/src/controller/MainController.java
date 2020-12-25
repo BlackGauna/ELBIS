@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.*;
@@ -49,10 +50,10 @@ public class MainController extends Application {
         dc = new DataController();
         // ###### Create Stages ######
         loginStage = new Stage(); // Login window
-        loginStage.setTitle("ELBIS Login");
+        loginStage.setTitle("Login");
         loginStage.setResizable(false);
         applicationStage = new Stage(); // Application Window
-        applicationStage.setTitle("ELBIS");
+        applicationStage.setTitle("Verwaltung");
         applicationStage.setResizable(false);
         editorStage = new Stage(); // Editor Window
 
@@ -64,6 +65,8 @@ public class MainController extends Application {
 
         //Stage content
         try {
+            loginStage.getIcons().add(new Image("/view/ELBIS_E_small.png"));
+            applicationStage.getIcons().add(new Image("/view/ELBIS_E_small.png"));
             //Manage loaders and load their controllers
             loginLoader = new FXMLLoader(getClass().getResource("/view/Pane_Login.fxml"));
             loginPane = (Pane) loginLoader.load();
@@ -125,6 +128,7 @@ public class MainController extends Application {
         if(login){
            //TODO set activeUser
             activeUser = new Administrator();
+            setStatus("Logged in as static administrator!");
             //activeUser = dc.DBLoadUserByEmail(email);
            //setStatus("Logged in \""+ activeUser.geteMail() + "\" with password \"" + pw +"\"");
             mainApplicationController.openTabs(activeUser);
@@ -148,7 +152,7 @@ public class MainController extends Application {
 
         //Test if table is empty
         if(table.getItems().size() ==0) {
-            mainApplicationController.setStatus("Warning: Empty Table loaded?");
+            setStatus("Warning: Empty ArticleTable loaded?");
         }
         return table;
     }
@@ -162,7 +166,7 @@ public class MainController extends Application {
 
         //Test if table is empty
         if(table.getItems().size() ==0) {
-            mainApplicationController.setStatus("Warning: Empty Table loaded?");
+            setStatus("Warning: Empty ModerationTable loaded?");
         }
         return table;
     }
@@ -177,7 +181,7 @@ public class MainController extends Application {
 
         //Test if table is empty
         if(table.getItems().size() ==0) {
-            mainApplicationController.setStatus("Warning: Empty Table loaded?");
+            setStatus("Warning: Empty AdministrationTable loaded?");
         }
         return table;
     }

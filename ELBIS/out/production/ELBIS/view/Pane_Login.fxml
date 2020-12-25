@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
@@ -16,6 +18,11 @@
             <Button fx:id="btnLogin" layoutX="351.0" layoutY="200.0" mnemonicParsing="false" onAction="#loginClicked" text="Login" />
             <Label layoutX="187.0" layoutY="140.0" text="email" />
             <Label layoutX="187.0" layoutY="169.0" text="password" />
+            <ImageView fitHeight="80.0" fitWidth="80.0" layoutX="187.0" layoutY="111.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@ELBIS_Ausgeschrieben.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </center>
