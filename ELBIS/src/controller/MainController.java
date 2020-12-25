@@ -122,7 +122,7 @@ public class MainController extends Application {
            //TODO set activeUser
             activeUser = new Administrator();
             //activeUser = dc.DBLoadUserByEmail(email);
-           // setStatus("Logged in \""+ activeUser.geteMail() + "\" with password \"" + pw +"\"");
+           //setStatus("Logged in \""+ activeUser.geteMail() + "\" with password \"" + pw +"\"");
             mainApplicationController.openTabs(activeUser);
             openApplicationStage();
         } else if(!login){
