@@ -82,12 +82,16 @@ public class MainController extends Application {
 
             //Manage scenes
             loginScene = new Scene(loginPane);
+            loginScene.getStylesheets().add("/view/dark.css");
             applicationScene = new Scene(applicationPane);
+            applicationScene.getStylesheets().add("/view/dark.css");
             editorScene = new Scene(editorPane);
 
             loginStage.setScene(loginScene);
             applicationStage.setScene(applicationScene);
             editorStage.setScene(editorScene);
+
+
 
         } catch (IOException io) {
             System.out.println("Couldn't load scene File");
