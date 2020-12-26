@@ -23,10 +23,10 @@ import java.sql.SQLException;
 
 public class MainController extends Application {
 
+    private static Connection con;
     // Atrrib_______________________________________________________________________________________________________
     //Data
     private DataController dc;
-    private static Connection con;
     private User activeUser;
 
     //Loaders
@@ -142,11 +142,12 @@ public class MainController extends Application {
     public boolean login(String email, String pw) throws SQLException {
         boolean login = dc.login(email, pw);
         if (login) {
-            //TODO set activeUser
+            //TODO load actual active User
             activeUser = new Administrator();
             setStatus("Logged in as static administrator!");
-            //activeUser = dc.DBLoadUserByEmail(email);
-            //setStatus("Logged in \""+ activeUser.geteMail() + "\" with password \"" + pw +"\"");
+            DataController data = new DataController();
+            //activeUser = data.DBLoadUserByEmail(email);
+            setStatus("Logged in \"" + activeUser.geteMail() + "\" with password \"" + activeUser.getPassword() + "\"");
             mainApplicationController.openTabs(activeUser);
             openApplicationStage();
         } else if (!login) {
@@ -179,7 +180,7 @@ public class MainController extends Application {
             PreparedStatement pst = con.prepareStatement("SELECT * FROM ARTICLE");
             rs = pst.executeQuery();
 
-            while (rs.next()){
+            while (rs.next()) {
                 articleList.add(new Article(
                         rs.getInt("id"),
                         rs.getString("title"),
@@ -193,17 +194,13 @@ public class MainController extends Application {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        for(int i = 0; i< table.getColumns().size(); i++){
-            TableColumn col = (TableColumn) table.getColumns().get(i);
+        for (int i = 0; i < table.getColumns().size(); i++) {
+            setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(((TableColumn<Article, String>) table.getColumns().get(i)).getText()));
 
-            if(!col.getText().equals("Status")|| !col.getText().equals("id")) {
-                setStatus("ArticleTable loading... "+((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-                ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(((TableColumn<Article, String>) table.getColumns().get(i)).getText()));
-            }
         }
 
         table.setItems(articleList);
-
         //Test if table is empty
         if (table.getItems().size() == 0) {
             setStatus("Warning: Empty ArticleTable loaded?");
@@ -220,9 +217,44 @@ public class MainController extends Application {
         //TODO add buttonpanel to delete and edit users per user in table
         */
 
+        ResultSet rs;
+        ObservableList<User> userList = FXCollections.observableArrayList();
+
+        try {
+            con = SQLConnection.ConnectDB();
+            PreparedStatement pst = con.prepareStatement("SELECT * FROM USER");
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                userList.add(new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("name"),
+                        rs.getString("address")
+//                        rs.getString("gender"), // TODO: gender
+//                        rs.getString("dateOfBirth") // TODO: dateOfBirth
+                ));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        for (int i = 0; i < table.getColumns().size(); i++) {
+            setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
+            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>(((TableColumn<User, String>) table.getColumns().get(i)).getText()));
+
+        }
+
+        table.setItems(userList);
+
         //Test if table is empty
         if (table.getItems().size() == 0) {
             setStatus("Warning: Empty ModerationTable loaded?");
+        }
+        try {
+            con.close();
+        } catch (SQLException sqlE){
+            sqlE.printStackTrace();
         }
         return table;
     }
@@ -259,7 +291,7 @@ public class MainController extends Application {
         } else if (gender.equals("Divers")) {
             genderInt = 3;
         }
-         //TODO send actual User
+        //TODO send actual User
         setStatus("Tried to send User");
         //result = dc.DBSendNewUser(email, password, name, address, genderInt, dateOfBirth);
 

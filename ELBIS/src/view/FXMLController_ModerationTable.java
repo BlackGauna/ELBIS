@@ -4,13 +4,17 @@ import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.User;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class FXMLController_ModerationTable {
+public class FXMLController_ModerationTable implements Initializable {
     //TODO import Table variables
     //TODO buttonEvents
 
@@ -24,7 +28,21 @@ public class FXMLController_ModerationTable {
     private Pane createUserPane;
     @FXML
     private Accordion dropDownAccordion;
+
+    // Ini_______________________________________________________________________________________________________
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
+        userTable.getColumns().add(new TableColumn<User, String>("id"));
+        userTable.getColumns().add(new TableColumn<User, String>("email"));
+        userTable.getColumns().add(new TableColumn<User, String>("name"));
+        userTable.getColumns().add(new TableColumn<User, String>("address"));
+        userTable.getColumns().add(new TableColumn<User, String>("gender"));
+        userTable.getColumns().add(new TableColumn<User, String>("dob"));
+    }
     // UI_______________________________________________________________________________________________________
+    @FXML
+    private TableView<User> userTable = new TableView<>();
     @FXML
     private TitledPane tPane_NewSubmissions;
     @FXML
@@ -35,11 +53,6 @@ public class FXMLController_ModerationTable {
     private ButtonBar btnBar;
     @FXML
     private Button btn_CreateUser;
-
-    // Ini_______________________________________________________________________________________________________
-    public void initialize() {
-        dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
-    }
 
     @FXML
     void createUserClicked(ActionEvent event) {
@@ -75,7 +88,11 @@ public class FXMLController_ModerationTable {
         this.mainController = mainController;
     }
 
-    public void setTableView(TableView table) {
+    public TableView getTableView() {
+        return userTable;
+    }
 
+    public void setTableView(TableView table) {
+        this.userTable = table;
     }
 }

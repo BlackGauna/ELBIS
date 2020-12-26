@@ -78,18 +78,17 @@ public class FXMLController_MainApplication {
 
     public void openTabs(User user) {
         try {
+            headBarController.showUser(mainController.getActiveUser().getName() + " (" + mainController.getActiveUser().geteMail() + ")", "User");
             if (user instanceof Administrator) {
-                headBarController.showUser(mainController.getActiveUser().getName() + " (" + mainController.getActiveUser().geteMail() + ")", "Administrator");
                 addUserTab();
                 addModeratorTab();
                 addAdminTab();
 
             } else if (user instanceof Moderator) {
-                headBarController.showUser(mainController.getActiveUser().getName() + " (" + mainController.getActiveUser().geteMail() + ")", "Moderator");
                 addUserTab();
                 addModeratorTab();
             } else if (user instanceof User) {
-                headBarController.showUser(mainController.getActiveUser().getName() + " (" + mainController.getActiveUser().geteMail() + ")", "User");
+
                 addUserTab();
             }
         } catch (IOException io) {
@@ -98,6 +97,7 @@ public class FXMLController_MainApplication {
     }
 
     public void addUserTab() throws IOException {
+
         userTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_ArticleTable.fxml"));
         articleTable = (Pane) userTableLoader.load();
         articleTableController = userTableLoader.getController();
@@ -108,6 +108,7 @@ public class FXMLController_MainApplication {
         userTab.setContent(articleTable);
 
         tabPane.getTabs().add(userTab);
+        //initial load of ArticleTable
         articleTableController.setTableView(mainController.refreshArticleTable(articleTableController.getTableView()));
 
     }
@@ -123,8 +124,9 @@ public class FXMLController_MainApplication {
         moderationTab.setContent(moderationTable);
 
         tabPane.getTabs().add(moderationTab);
-        //TODO give actual Table
-        mainController.refreshModerationTable(new TableView());
+        //initial load of ArticleTable
+        //TODO resolve exceptions
+        //mainController.refreshModerationTable(mainController.refreshModerationTable(moderationTableController.getTableView()));
 
     }
 
@@ -139,8 +141,9 @@ public class FXMLController_MainApplication {
         administrationTab.setContent(administrationTable);
 
         tabPane.getTabs().add(administrationTab);
-        //TODO give actual Table
-        mainController.refreshAdministrationTable(new TableView());
+        //TODO RefreshAdministrationTable
+        //initial load of ArticleTable
+       // mainController.refreshAdministrationTable(mainController.refreshAdministrationTable(administrationTableController.getTableView()));
     }
 
 }

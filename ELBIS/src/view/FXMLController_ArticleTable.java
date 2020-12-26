@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 
 public class FXMLController_ArticleTable implements Initializable {
 
-
     // Atrrib_______________________________________________________________________________________________________
     MainController mainController;
 
@@ -56,8 +55,8 @@ public class FXMLController_ArticleTable implements Initializable {
 
     @FXML
     void refreshClicked(ActionEvent event) {
-        setTableView(mainController.refreshArticleTable(getTableView()));
         mainController.setStatus("Refreshing ArticleTable...");
+        setTableView(mainController.refreshArticleTable(getTableView()));
     }
 
     // Methods_______________________________________________________________________________________________________

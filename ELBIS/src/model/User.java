@@ -19,6 +19,7 @@ public class User {
         this.id = 0;
         this.email = "default@default.net";
         this.name = "default";
+        this.password = "default";
         this.address = "default";
     }
 
@@ -61,6 +62,14 @@ public class User {
     }
 
     public String getPassword() {
+        String passreturn= "";
+        for (int i = 0; i < password.length(); i++){
+            passreturn += "*";
+        }
+        return passreturn;
+    }
+
+    public String getPasswordClear() {
         return password;
     }
 
