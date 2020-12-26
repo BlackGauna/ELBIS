@@ -82,14 +82,17 @@ public class FXMLController_MainApplication {
     public void openTabs(User user) {
         try {
             if (user instanceof Administrator) {
+                headBarController.showUser(mainController.getActiveUser().getName()+" ("+mainController.getActiveUser().geteMail()+")","Administrator");
                 addUserTab();
                 addModeratorTab();
                 addAdminTab();
 
             } else if (user instanceof Moderator) {
+                headBarController.showUser(mainController.getActiveUser().getName()+" ("+mainController.getActiveUser().geteMail()+")","Moderator");
                 addUserTab();
                 addModeratorTab();
             } else if (user instanceof User) {
+                headBarController.showUser(mainController.getActiveUser().getName()+" ("+mainController.getActiveUser().geteMail()+")","User");
                 addUserTab();
             }
         } catch(IOException io){

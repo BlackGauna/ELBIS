@@ -15,6 +15,13 @@ public class User {
 	private Gender gender;
 	
 	// Ctor_______________________________________________________________________________________________________
+	public User() {
+		this.id = 0;
+		this.email = "default@default.net";
+		this.name = "default";
+		this.address = "default";
+	}
+
 	public User(int id, String email, String name, String address) {
 		this.id = id;
 		this.email = email;
@@ -24,16 +31,12 @@ public class User {
 //		this.dateOfBirth = dateOfBirth;
 	}
 
-	public User() {
-	}
 
-    // Methods_______________________________________________________________________________________________________
+	// Methods_______________________________________________________________________________________________________
 	public void editArticle(int articleId){
 		//TODO Implement EditArticle - Only if the user is also the creator
 	}
-	public void createArticle(){
-		//TODO Implement CreateArticle
-	}
+
 	public void deleteArticle(int articleId){
 		//TODO Implement deleteArticle - Only if the user is also the creator
 	}

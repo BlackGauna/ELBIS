@@ -6,7 +6,6 @@ import javafx.scene.control.*;
 public class FXMLController_HeadBar {
     //TODO buttonEvent
     //TODO refresh based on which type of user is logged in
-    //TODO show loggedUser
 
     // Atrrib_______________________________________________________________________________________________________
 
@@ -22,7 +21,10 @@ public class FXMLController_HeadBar {
     @FXML
     private Button btnRefresh;
     // Methods_______________________________________________________________________________________________________
-
+    public void showUser(String user, String role){
+        lblUser.setText(user);
+        lblRole.setText(role);
+    }
     // Getters,Setters_________________________________________________________________________________________________
 
 }
