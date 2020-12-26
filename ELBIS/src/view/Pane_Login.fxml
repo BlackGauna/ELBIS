@@ -20,7 +20,7 @@
             <Label layoutX="187.0" layoutY="169.0" text="password" />
             <ImageView fitHeight="80.0" fitWidth="80.0" layoutX="187.0" layoutY="111.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@ELBIS_Ausgeschrieben.png" />
+                  <Image url="@/ELBIS_graphic/ELBIS_Ausgeschrieben.png" />
                </image>
             </ImageView>
          </children>

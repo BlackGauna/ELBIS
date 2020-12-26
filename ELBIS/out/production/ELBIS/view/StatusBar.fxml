@@ -17,7 +17,7 @@
       <Label fx:id="lblStatus" layoutX="150.0" layoutY="8.0" text="None" />
       <ImageView fitHeight="17.0" fitWidth="80.0" layoutX="6.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@ELBIS_Ausgeschrieben.png" />
+            <Image url="@/ELBIS_graphic/ELBIS_Ausgeschrieben.png" />
          </image>
       </ImageView>
    </children>

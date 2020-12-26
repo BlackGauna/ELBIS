@@ -1,6 +1,6 @@
 package model;
 
-public class Moderator extends User{
+public class Moderator extends User {
 
     // Ctor_______________________________________________________________________________________________________
 

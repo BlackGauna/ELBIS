@@ -1,6 +1,6 @@
 package model;
 
-public class Administrator extends Moderator{
+public class Administrator extends Moderator {
 
     // Ctor_______________________________________________________________________________________________________
 

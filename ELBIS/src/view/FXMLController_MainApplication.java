@@ -38,6 +38,11 @@ public class FXMLController_MainApplication {
     FXMLController_AdministrationTable administrationTableController;
 
     // Ini_______________________________________________________________________________________________________
+    // UI_______________________________________________________________________________________________________
+    @FXML
+    private TabPane tabPane;
+    @FXML
+    private BorderPane borderPane;
 
     @FXML
     public void initialize() {
@@ -54,48 +59,40 @@ public class FXMLController_MainApplication {
             headBar = (Pane) headBarLoader.load();
             headBarController = headBarLoader.getController();
             borderPane.setTop(headBar);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    // UI_______________________________________________________________________________________________________
-    @FXML
-    private TabPane tabPane;
-
-    @FXML
-    private BorderPane borderPane;
-
-
     // Methods_______________________________________________________________________________________________________
     //reference to mainView
-    public void setMainController(MainController mainController){
+    public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
 
-    public void setStatus(String newStatus){
-        System.out.println("Status set: \"" + newStatus+"\"");
-        statusBarController.setStatus("\""+newStatus+"\"");
+    public void setStatus(String newStatus) {
+        System.out.println("Status set: \"" + newStatus + "\"");
+        statusBarController.setStatus("\"" + newStatus + "\"");
     }
 
     public void openTabs(User user) {
         try {
             if (user instanceof Administrator) {
-                headBarController.showUser(mainController.getActiveUser().getName()+" ("+mainController.getActiveUser().geteMail()+")","Administrator");
+                headBarController.showUser(mainController.getActiveUser().getName() + " (" + mainController.getActiveUser().geteMail() + ")", "Administrator");
                 addUserTab();
                 addModeratorTab();
                 addAdminTab();
 
             } else if (user instanceof Moderator) {
-                headBarController.showUser(mainController.getActiveUser().getName()+" ("+mainController.getActiveUser().geteMail()+")","Moderator");
+                headBarController.showUser(mainController.getActiveUser().getName() + " (" + mainController.getActiveUser().geteMail() + ")", "Moderator");
                 addUserTab();
                 addModeratorTab();
             } else if (user instanceof User) {
-                headBarController.showUser(mainController.getActiveUser().getName()+" ("+mainController.getActiveUser().geteMail()+")","User");
+                headBarController.showUser(mainController.getActiveUser().getName() + " (" + mainController.getActiveUser().geteMail() + ")", "User");
                 addUserTab();
             }
-        } catch(IOException io){
+        } catch (IOException io) {
             io.printStackTrace();
         }
     }
@@ -114,7 +111,8 @@ public class FXMLController_MainApplication {
         articleTableController.setTableView(mainController.refreshArticleTable(articleTableController.getTableView()));
 
     }
-    public void addModeratorTab()throws IOException{
+
+    public void addModeratorTab() throws IOException {
         moderationTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_ModerationTable.fxml"));
         moderationTable = (Pane) moderationTableLoader.load();
         moderationTableController = moderationTableLoader.getController();
@@ -129,7 +127,8 @@ public class FXMLController_MainApplication {
         mainController.refreshModerationTable(new TableView());
 
     }
-    public void addAdminTab()throws IOException{
+
+    public void addAdminTab() throws IOException {
         administrationTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_AdministrationTable.fxml"));
         administrationTable = (Pane) administrationTableLoader.load();
         administrationTableController = administrationTableLoader.getController();

@@ -20,8 +20,9 @@ public class FXMLController_HeadBar {
 
     @FXML
     private Button btnRefresh;
+
     // Methods_______________________________________________________________________________________________________
-    public void showUser(String user, String role){
+    public void showUser(String user, String role) {
         lblUser.setText(user);
         lblRole.setText(role);
     }

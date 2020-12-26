@@ -1,7 +1,6 @@
 package controller;
 
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -65,8 +64,8 @@ public class MainController extends Application {
 
         //Stage content
         try {
-            loginStage.getIcons().add(new Image("/view/ELBIS_E_small.png"));
-            applicationStage.getIcons().add(new Image("/view/ELBIS_E_small.png"));
+            loginStage.getIcons().add(new Image("/ELBIS_graphic/ELBIS_E_small.png"));
+            applicationStage.getIcons().add(new Image("/ELBIS_graphic/ELBIS_E_small.png"));
             //Manage loaders and load their controllers
             loginLoader = new FXMLLoader(getClass().getResource("/view/Pane_Login.fxml"));
             loginPane = (Pane) loginLoader.load();
@@ -85,15 +84,14 @@ public class MainController extends Application {
 
             //Manage scenes
             loginScene = new Scene(loginPane);
-            loginScene.getStylesheets().add("/view/dark.css");
+            loginScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             applicationScene = new Scene(applicationPane);
-            applicationScene.getStylesheets().add("/view/dark.css");
+            applicationScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             editorScene = new Scene(editorPane);
 
             loginStage.setScene(loginScene);
             applicationStage.setScene(applicationScene);
             editorStage.setScene(editorScene);
-
 
 
         } catch (IOException io) {
@@ -106,6 +104,13 @@ public class MainController extends Application {
     }
 
     // Methods_______________________________________________________________________________________________________
+
+    /*****************************
+     *
+     * OPen-Up Methods
+     *
+     ******************************/
+
     public void openLoginStage() {
         loginStage.show();
     }
@@ -119,21 +124,21 @@ public class MainController extends Application {
         editorStage.show();
     }
 
-    public void setStatus (String newStatus){
+    public void setStatus(String newStatus) {
         mainApplicationController.setStatus(newStatus);
     }
 
     public boolean login(String email, String pw) throws SQLException {
         boolean login = dc.login(email, pw);
-        if(login){
-           //TODO set activeUser
+        if (login) {
+            //TODO set activeUser
             activeUser = new Administrator();
             setStatus("Logged in as static administrator!");
             //activeUser = dc.DBLoadUserByEmail(email);
-           //setStatus("Logged in \""+ activeUser.geteMail() + "\" with password \"" + pw +"\"");
+            //setStatus("Logged in \""+ activeUser.geteMail() + "\" with password \"" + pw +"\"");
             mainApplicationController.openTabs(activeUser);
             openApplicationStage();
-        } else if(!login){
+        } else if (!login) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText("Please enter correct email and password");
@@ -143,6 +148,12 @@ public class MainController extends Application {
         return login;
     }
 
+    /******************************
+     *
+     * Refresh Table methods
+     *
+     ******************************/
+
     public TableView refreshArticleTable(TableView table) {
 
         /*
@@ -151,7 +162,7 @@ public class MainController extends Application {
         */
 
         //Test if table is empty
-        if(table.getItems().size() ==0) {
+        if (table.getItems().size() == 0) {
             setStatus("Warning: Empty ArticleTable loaded?");
         }
         return table;
@@ -165,7 +176,7 @@ public class MainController extends Application {
         */
 
         //Test if table is empty
-        if(table.getItems().size() ==0) {
+        if (table.getItems().size() == 0) {
             setStatus("Warning: Empty ModerationTable loaded?");
         }
         return table;
@@ -180,10 +191,31 @@ public class MainController extends Application {
         */
 
         //Test if table is empty
-        if(table.getItems().size() ==0) {
+        if (table.getItems().size() == 0) {
             setStatus("Warning: Empty AdministrationTable loaded?");
         }
         return table;
+    }
+
+    /******************************
+     *
+     *  Creation methods
+     *
+     ******************************/
+
+    public boolean createUser() {
+        boolean result = false;
+        return result;
+    }
+
+    public boolean createArticle() {
+        boolean result = false;
+        return result;
+    }
+
+    public boolean createTopic() {
+        boolean result = false;
+        return result;
     }
 
     //Getters,Setters_______________________________________________________________________________________________________
