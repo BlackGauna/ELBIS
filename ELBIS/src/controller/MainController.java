@@ -259,9 +259,10 @@ public class MainController extends Application {
         } else if (gender.equals("Divers")) {
             genderInt = 3;
         }
-
-        //result = dc.DBSendNewUser(email, password, name, address, genderInt, dateOfBirth);
+         //TODO send actual User
         setStatus("Tried to send User");
+        //result = dc.DBSendNewUser(email, password, name, address, genderInt, dateOfBirth);
+
         return result;
     }
 
