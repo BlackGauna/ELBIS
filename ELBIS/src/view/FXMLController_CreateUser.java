@@ -1,6 +1,7 @@
 package view;
 
 import controller.MainController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -34,6 +35,13 @@ public class FXMLController_CreateUser {
     private ChoiceBox<String> choiceGender;
     @FXML
     private DatePicker datefield_birthday;
+    @FXML
+    private Button btnOK;
+
+    @FXML
+    void okClicked(ActionEvent event) {
+    //    mainController.createUser(getEmail(), getPassword(),getName(), getAddress(), getGender(), getBirth());
+    }
 
     // Ini_______________________________________________________________________________________________________
     public void initialize() {
@@ -68,7 +76,7 @@ public class FXMLController_CreateUser {
         return txtVorname.getText() + " " + txtNachname.getText();
     }
 
-    public String getAnschrift() {
+    public String getAddress() {
         return txtAnschrift.getText();
     }
 
