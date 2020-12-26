@@ -9,9 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.*;
-import view.FXMLController_Editor;
-import view.FXMLController_Login;
-import view.FXMLController_MainApplication;
+import view.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,14 +24,17 @@ public class MainController extends Application {
     private FXMLLoader loginLoader;
     private FXMLLoader mainApplicationLoader;
     private FXMLLoader editorLoader;
+
     //Controllers
     private FXMLController_Login loginController;
     private FXMLController_MainApplication mainApplicationController;
     private FXMLController_Editor editorController;
+
     //Stages
     private Stage loginStage;
     private Stage applicationStage;
     private Stage editorStage;
+
     //Scenes
     private Scene loginScene;
     private Scene applicationScene;
@@ -42,6 +43,7 @@ public class MainController extends Application {
     private Pane loginPane;
     private Pane applicationPane;
     private Pane editorPane;
+
 
     // Ctor_______________________________________________________________________________________________________
     public MainController() {
@@ -203,8 +205,20 @@ public class MainController extends Application {
      *
      ******************************/
 
-    public boolean createUser() {
+    public boolean createUser(String email, String password, String name, String address, String gender, String dateOfBirth) {
         boolean result = false;
+        int genderInt = 0;
+
+        if (gender.equals("Maennlich")) {
+            genderInt = 1;
+        } else if (gender.equals("Weiblich")) {
+            genderInt = 2;
+        } else if (gender.equals("Divers")) {
+            genderInt = 3;
+        }
+
+        //result = dc.DBSendNewUser(email, password, name, address, genderInt, dateOfBirth);
+        setStatus("Tried to send User");
         return result;
     }
 

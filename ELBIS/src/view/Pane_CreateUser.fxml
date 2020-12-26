@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_CreateUser">
+   <children>
+      <Label layoutX="115.0" layoutY="68.0" text="eMail" />
+      <TextField fx:id="txtEmail" layoutX="231.0" layoutY="64.0" />
+      <Label layoutX="114.0" layoutY="96.0" text="passwort" />
+      <PasswordField fx:id="txtPassword1" layoutX="231.0" layoutY="92.0" />
+      <Label layoutX="116.0" layoutY="125.0" text="bestätigen" />
+      <PasswordField fx:id="txtPassword2" layoutX="231.0" layoutY="121.0" />
+      <Label layoutX="117.0" layoutY="194.0" text="Vorname" />
+      <TextField fx:id="txtVorname" layoutX="234.0" layoutY="190.0" />
+      <Label layoutX="115.0" layoutY="226.0" text="Nachname" />
+      <TextField fx:id="TxtNachname" layoutX="234.0" layoutY="222.0" />
+      <Label layoutX="115.0" layoutY="262.0" text="Anschrift" />
+      <TextField fx:id="txtAnschrift" layoutX="234.0" layoutY="258.0" />
+      <ChoiceBox fx:id="choiceGender" layoutX="233.0" layoutY="298.0" prefWidth="150.0" />
+      <DatePicker fx:id="datefield_birthday" layoutX="234.0" layoutY="333.0" />
+      <Label layoutX="115.0" layoutY="302.0" text="Geschlecht" />
+      <Label layoutX="114.0" layoutY="337.0" text="Geburtsdatum" />
+      <Label layoutX="114.0" layoutY="32.0" text="Accountinformation">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="116.0" layoutY="163.0" text="Persönliche Information">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>
