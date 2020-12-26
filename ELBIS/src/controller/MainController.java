@@ -1,10 +1,14 @@
 package controller;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -12,12 +16,17 @@ import model.*;
 import view.*;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MainController extends Application {
 
     // Atrrib_______________________________________________________________________________________________________
+    //Data
     private DataController dc;
+    private static Connection con;
     private User activeUser;
 
     //Loaders
@@ -159,14 +168,48 @@ public class MainController extends Application {
     public TableView refreshArticleTable(TableView table) {
 
         /*
-        //TODO fill table with DB information
         //TODO add buttonpanel to delete and edit articles per article in table
         */
+
+        ResultSet rs;
+        ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+        try {
+            con = SQLConnection.ConnectDB();
+            PreparedStatement pst = con.prepareStatement("SELECT * FROM ARTICLE");
+            rs = pst.executeQuery();
+
+            while (rs.next()){
+                articleList.add(new Article(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("creationDate"),
+                        rs.getString("expireDate"),
+                        rs.getString("lastEdit"),
+                        // TODO status?
+                        rs.getString("publisherComment")));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        for(int i = 0; i< table.getColumns().size(); i++){
+            TableColumn col = (TableColumn) table.getColumns().get(i);
+
+            if(!col.getText().equals("Status")|| !col.getText().equals("id")) {
+                setStatus("ArticleTable loading... "+((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+                ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(((TableColumn<Article, String>) table.getColumns().get(i)).getText()));
+            }
+        }
+
+        table.setItems(articleList);
 
         //Test if table is empty
         if (table.getItems().size() == 0) {
             setStatus("Warning: Empty ArticleTable loaded?");
         }
+
+
         return table;
     }
 

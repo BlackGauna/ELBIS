@@ -24,13 +24,21 @@ import java.util.ResourceBundle;
 public class FXMLController_ArticleTable implements Initializable {
 
     private static Connection con;
-    private ResultSet rs;
-    private ObservableList<Article> articleList;
-
     // Atrrib_______________________________________________________________________________________________________
     MainController mainController;
+    private ResultSet rs;
+   // private ObservableList<Article> articleList;
     // Ini_______________________________________________________________________________________________________
-
+   @Override
+   public void initialize(URL url, ResourceBundle resourceBundle) {
+       articleTable.getColumns().add(new TableColumn<Article, String>("id"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("title"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("creationDate"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("expireDate"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("lastEdit"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("publisherComment"));
+       dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
+   }
     // UI_______________________________________________________________________________________________________
     @FXML
     private TableView<Article> articleTable = new TableView<>();
@@ -76,60 +84,30 @@ public class FXMLController_ArticleTable implements Initializable {
         mainController.openEditorScene();
     }
 
+    @FXML
+    private Button btnRefresh;
+
+    @FXML
+    void refreshClicked(ActionEvent event) {
+        setTableView(mainController.refreshArticleTable(getTableView()));
+        mainController.setStatus("Refreshing ArticleTable...");
+    }
+
     // Methods_______________________________________________________________________________________________________
-    public void setMainController(MainController mainController){
+    public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        getArticleTable();
-        dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
-    }
-
-    private void getArticleTable() {
-        try {
-            con = SQLConnection.ConnectDB();
-            PreparedStatement pst = con.prepareStatement("SELECT * FROM ARTICLE");
-            rs = pst.executeQuery();
-
-            articleList = FXCollections.observableArrayList();
-
-            while (rs.next()){
-                articleList.add(new Article(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("creationDate"),
-                        rs.getString("expireDate"),
-                        rs.getString("lastEdit"),
-                        // TODO status?
-                        rs.getString("publisherComment")));
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        col_id.setCellValueFactory(new PropertyValueFactory<Article, String>("id"));
-        col_title.setCellValueFactory(new PropertyValueFactory<Article, String>("title"));
-        col_creationDate.setCellValueFactory(new PropertyValueFactory<Article, String>("creationDate"));
-        col_expireDate.setCellValueFactory(new PropertyValueFactory<Article, String>("expireDate"));
-        col_lastEdit.setCellValueFactory(new PropertyValueFactory<Article, String>("lastEdit"));
-        col_status.setCellValueFactory(new PropertyValueFactory<Article, String>("status"));
-        col_publisherComment.setCellValueFactory(new PropertyValueFactory<Article, String>("publisherComment"));
-
-        articleTable.setItems(articleList);
-    }
-
-
     // Getters,Setters_________________________________________________________________________________________________
 
-    public void setTableView(TableView table){
+    public TableView getTableView() {
+        return articleTable;
+    }
+
+    public void setTableView(TableView table) {
         this.articleTable = table;
     }
 
-    public TableView getTableView(){
-        return articleTable;
-    }
+
 
 }

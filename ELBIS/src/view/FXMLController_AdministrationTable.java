@@ -76,7 +76,8 @@ public class FXMLController_AdministrationTable implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        getUserTable();
+    //TODO Throws warnings
+        //getUserTable();
     }
 
     // UserTable to manage users
