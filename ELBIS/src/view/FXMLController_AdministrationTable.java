@@ -1,11 +1,19 @@
 package view;
 
 import controller.MainController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import model.DataController;
 import model.Topic;
+
+import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
 import java.util.ResourceBundle;
 
 public class FXMLController_AdministrationTable implements Initializable {
@@ -14,6 +22,8 @@ public class FXMLController_AdministrationTable implements Initializable {
 
     // Atrrib_______________________________________________________________________________________________________
     MainController mainController;
+    private Dialog_CreateTopic createTopicDialog;
+
     // Ini_______________________________________________________________________________________________________
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -41,6 +51,17 @@ public class FXMLController_AdministrationTable implements Initializable {
     @FXML
     private Button btnCreateTopic;
 
+    @FXML
+    void createTopicClicked(ActionEvent event){
+        try{
+            createTopic();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     // Methods_______________________________________________________________________________________________________
 
@@ -57,4 +78,8 @@ public class FXMLController_AdministrationTable implements Initializable {
         this.topicTable = table;
     }
 
+    public void createTopic(){
+        createTopicDialog = new Dialog_CreateTopic(Alert.AlertType.INFORMATION, mainController);
+        createTopicDialog.show();
+    }
 }

@@ -60,7 +60,7 @@
                     <buttons>
                         <Button mnemonicParsing="false" text="promote User" />
                         <Button mnemonicParsing="false" text="degrade User" />
-                        <Button fx:id="btnCreateTopic" mnemonicParsing="false" text="create Topic" />
+                        <Button fx:id="btnCreateTopic" mnemonicParsing="false" onAction="#createTopicClicked" text="create Topic" />
                     </buttons>
                 </ButtonBar>
             </top>

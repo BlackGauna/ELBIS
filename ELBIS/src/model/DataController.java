@@ -342,6 +342,22 @@ public class DataController {
 		}
 	}
 
+	// Create Topic via UI
+	public void DBCreateNewTopic(String name, String parentTopic){
+		try{
+			Connection con = SQLConnection.ConnectDB();
+			String sql = "INSERT INTO Topic (name, parentTopic) VALUES (?,?)";
+			PreparedStatement pst = con.prepareStatement(sql);
+
+			pst.setString(1, name);
+			pst.setString(2, parentTopic);
+
+			pst.execute();
+		} catch (SQLException e) {
+			System.out.println("Couldn't create topic: " + e.getMessage());
+		}
+	}
+
 	//User Creation
 	public boolean DBSendNewUser(String email, String password, String name, String address, int gender, String dateOfBirth) {
 		try {
