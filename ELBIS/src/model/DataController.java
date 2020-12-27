@@ -156,6 +156,7 @@ public class DataController {
     public boolean DBSendNewArticle(String title, String content, int topic, String publisherComment) {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(SEND_NEW_ARTICLE);
             pst.setString(1, title);
             pst.setString(2, content);
@@ -180,6 +181,7 @@ public class DataController {
     public boolean DBSendNewArticle(Article article) {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(SEND_NEW_ARTICLE);
 
             pst.setString(1, article.getTitle());
@@ -408,8 +410,8 @@ public class DataController {
             ResultSet rs = pst.getResultSet();
             User user;
             String name = null;
-            String adress = null;
-            String dateofbirth = null;
+            String address = null;
+            String dateOfBirth = null;
             String email = null;
             int gender = 0;
             int roleId = 0;
@@ -420,14 +422,14 @@ public class DataController {
                roleId = rs.getInt(1);
                 email = rs.getString(2);
                 name = rs.getString(3);
-                adress = rs.getString(4);
+                address = rs.getString(4);
                 gender = rs.getInt(5);
-                dateofbirth = rs.getString(6);
+                dateOfBirth = rs.getString(6);
             }
             switch (roleId) {
-                case 1 -> user = new Administrator(id,email,name,adress);
-                case 2 -> user = new Moderator(id, email, name, adress);
-                case 3 -> user = new User(id, email, name, adress);
+                case 1 -> user = new Administrator(id,email,name,address);
+                case 2 -> user = new Moderator(id, email, name, address);
+                case 3 -> user = new User(id, email, name, address);
                 default -> {
                     user = new User();
                     mainController.setStatus("Couldn't load user Role - default set");
@@ -453,8 +455,8 @@ public class DataController {
             ResultSet rs = pst.getResultSet();
             User user;
             String name = null;
-            String adress = null;
-            String dateofbirth = null;
+            String address = null;
+            String dateOfBirth = null;
             int gender = 0;
             int roleId = 0;
             int id = 0;
@@ -465,15 +467,15 @@ public class DataController {
                 roleId = rs.getInt(1);
                 id = rs.getInt(2);
                 name = rs.getString(3);
-                adress = rs.getString(4);
+                address = rs.getString(4);
                 gender = rs.getInt(5);
-                dateofbirth = rs.getString(6);
+                dateOfBirth = rs.getString(6);
 
             }
             switch (roleId) {
-                case 1 -> user = new Administrator(id,email,name,adress);
-                case 2 -> user = new Moderator(id, email, name, adress);
-                case 3 -> user = new User(id, email, name, adress);
+                case 1 -> user = new Administrator(id,email,name,address);
+                case 2 -> user = new Moderator(id, email, name, address);
+                case 3 -> user = new User(id, email, name, address);
                 default -> {
                     user = new User();
                     mainController.setStatus("Couldn't load user Role - default set");
