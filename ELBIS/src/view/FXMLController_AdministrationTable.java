@@ -60,26 +60,21 @@ public class FXMLController_AdministrationTable implements Initializable {
         }
     }
 
-
-
-
     // Methods_______________________________________________________________________________________________________
+    public void createTopic(){
+        createTopicDialog = new Dialog_CreateTopic(Alert.AlertType.INFORMATION, mainController);
+        createTopicDialog.show();
+    }
 
     // Getters,Setters_________________________________________________________________________________________________
     public void setMainController(MainController mainController){
         this.mainController = mainController;
     }
-
     public TableView getTableView() {
         return topicTable;
     }
-
     public void setTableView(TableView table) {
         this.topicTable = table;
     }
 
-    public void createTopic(){
-        createTopicDialog = new Dialog_CreateTopic(Alert.AlertType.INFORMATION, mainController);
-        createTopicDialog.show();
-    }
 }

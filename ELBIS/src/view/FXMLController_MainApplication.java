@@ -78,7 +78,7 @@ public class FXMLController_MainApplication {
 
     public void openTabs(User user) {
         try {
-            headBarController.showUser(mainController.getActiveUser().getName() + " (" + mainController.getActiveUser().geteMail() + ")", "User");
+            headBarController.showUser(mainController.getActiveUser().getName() + " (" + mainController.getActiveUser().getEmail() + ")", "User");
             if (user instanceof Administrator) {
                 addUserTab();
                 addModeratorTab();
@@ -126,7 +126,7 @@ public class FXMLController_MainApplication {
         tabPane.getTabs().add(moderationTab);
         //initial load of ArticleTable
         //TODO resolve exceptions
-        //mainController.refreshModerationTable(mainController.refreshModerationTable(moderationTableController.getTableView()));
+        moderationTableController.setTableView(mainController.refreshModerationTable(moderationTableController.getTableView()));
 
     }
 

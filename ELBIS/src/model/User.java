@@ -28,10 +28,7 @@ public class User {
         this.email = email;
         this.name = name;
         this.address = address;
-//		this.gender = gender;
-//		this.dateOfBirth = dateOfBirth;
     }
-
 
     // Methods_______________________________________________________________________________________________________
     public void editArticle(int articleId) {
@@ -53,11 +50,11 @@ public class User {
         //this.id = id;
     }
 
-    public String geteMail() {
+    public String getEmail() {
         return email;
     }
 
-    public void seteMail(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 

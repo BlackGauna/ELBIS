@@ -13,10 +13,10 @@ public class Test {
 
 
         DataController dataController = new DataController(new MainController());
-        if(!dataController.open()) {
-            System.out.println("Can't open datacontroller");
-            return;
-        }
+//        if(!dataController.open()) {
+//            System.out.println("Can't open datacontroller");
+//            return;
+//        }
 
 //        dataController.DBSendNewArticle("Delicious Marshmellows","Food",1,"yes I really do.");
  //dataController.DBSendNewUser("asd.123@gmail.com","12345","Hakuna Matata","Mars",1,"13.02.1997");
@@ -44,7 +44,7 @@ public class Test {
 //        dataController.DBLoadAllArticle();
 
 
-        dataController.close();
+//        dataController.close();
 
 //        Scanner scanner = new Scanner(System.in);
 //        System.out.println("Enter an Article title: ");

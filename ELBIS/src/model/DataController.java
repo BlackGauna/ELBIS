@@ -436,7 +436,7 @@ public class DataController {
 			User user = new User();
 			while (rs.next()) {
 				//user.setId(id); //user ID cant be set outside of constructors.
-				user.seteMail(rs.getString(1));
+				user.setEmail(rs.getString(1));
 				user.setName(rs.getString(2));
 				user.setAddress(rs.getString(3));
 				user.setGender(rs.getInt(4));
@@ -462,7 +462,7 @@ public class DataController {
 			User user = new User();
 			while (rs.next()) {
 				//user.setId(id); //user ID cant be set outside of constructors.
-				user.seteMail(rs.getString(1));
+				user.setEmail(rs.getString(1));
 				user.setName(rs.getString(2));
 				user.setAddress(rs.getString(3));
 				user.setGender(rs.getInt(4));

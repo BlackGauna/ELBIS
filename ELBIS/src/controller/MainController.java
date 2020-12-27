@@ -142,7 +142,7 @@ public class MainController extends Application {
             activeUser = new Administrator();
             setStatus("Logged in as static administrator!");
             //activeUser = dc.DBLoadUserByEmail(email);
-            setStatus("Logged in \"" + activeUser.geteMail() + "\" with password \"" + activeUser.getPassword() + "\"");
+            setStatus("Logged in \"" + activeUser.getEmail() + "\" with password \"" + activeUser.getPassword() + "\"");
             mainApplicationController.openTabs(activeUser);
             openApplicationStage();
         } else if (!login) {
@@ -207,11 +207,11 @@ public class MainController extends Application {
         if (table.getItems().size() == 0) {
             setStatus("Warning: Empty ModerationTable loaded?");
         }
-        try {
-            con.close();
-        } catch (SQLException sqlE){
-            sqlE.printStackTrace();
-        }
+//        try {
+//            con.close();
+//        } catch (SQLException sqlE){
+//            sqlE.printStackTrace();
+//        }
         return table;
     }
 
