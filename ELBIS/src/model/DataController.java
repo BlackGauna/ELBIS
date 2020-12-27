@@ -657,7 +657,7 @@ public class DataController {
                 article.setTopic(rs.getInt(1));
                 article.setTitle(rs.getString(2));
                 article.setContent(rs.getString(3));
-                article.setPublisherComment(rs.getString(4));  //Article Class must be initialized
+                article.setPublisherComment(rs.getString(4));
                 article.setExpireDate(rs.getString(5));
                 articles.add(article);
             }
