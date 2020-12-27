@@ -3,7 +3,6 @@ package model;
 import controller.MainController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.sql.*;
 import java.util.LinkedList;
 
@@ -82,20 +81,15 @@ public class DataController {
     // More ordering types?
     public static final int ORDER_BY_ASCENDING = 1;
     public static final int ORDER_BY_DESCENDING = 2;
+
+    //QUERIES-----------------------------------------------------------------------------------------------------------
+
+    //The Stuff that we need can be changed anytime to however we want to receive something from the database, do not hesitate to make changes.
+
     //Create new Article
     public static final String SEND_NEW_ARTICLE = "INSERT INTO " + TABLE_ARTICLE +
             '(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_TOPIC +
             ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ") VALUES(?, ?, ?, ?)";
-
-
-    //QUERIES-----------------------------------------------------------------------------------------------------------
-
-
-    //TODO Discuss what queries we exactly might need to adapt them.
-
-    //How exactly will the creation, expiration, last edit dates set ? plus the other stuff ?
-
-    //The Stuff that we need can be changed anytime to however we want to receive something from the database, do not hesitate to make changes.
     //Create new Topic
     public static final String SEND_NEW_TOPIC = "INSERT INTO " + TABLE_TOPIC +
             '(' + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + ") VALUES(?, ?)";
@@ -123,7 +117,6 @@ public class DataController {
     public static final String EDIT_ARTICLE = "UPDATE " + TABLE_ARTICLE + " SET " +
             COLUMN_ARTICLE_TITLE + " = ?, " + COLUMN_ARTICLE_TOPIC + " = ?, " + COLUMN_ARTICLE_CONTENT + " = ?, "
             + COLUMN_ARTICLE_PUBLISHER_COMMENT + " = ? WHERE " + COLUMN_ARTICLE_ID + " = ?";
-
     //Be careful with the UPDATE commands, if it is left empty it can update all tables and wipe the database.
     //Edit a specific User with ID
     public static final String EDIT_USER = "UPDATE " + TABLE_USER + " SET " + COLUMN_USER_EMAIL +
@@ -136,6 +129,7 @@ public class DataController {
     public static final String LOAD_RECENT_ARTICLE = "SELECT " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
             COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
             " ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 20 ";
+    //Load the last article
     public static final String LOAD_LAST_ARTICLE_ID = "SELECT " + COLUMN_ARTICLE_ID + " FROM " + TABLE_ARTICLE +
             " ORDER BY " + COLUMN_ARTICLE_ID + " DESC LIMIT 1 ";
     // Check if user exists in database
@@ -146,12 +140,11 @@ public class DataController {
     public static final String LOAD_ALL_USERS = "SELECT * FROM " + TABLE_USER;
     // Load all topics
     public static final String LOAD_ALL_TOPICS = "SELECT * FROM " + TABLE_TOPIC;
-    private MainController mainController;
 
 
     //CONNECTION--------------------------------------------------------------------------------------------------------
     private Connection con;
-
+    private MainController mainController;
     public DataController(MainController mainController) {
         this.mainController = mainController;
     }
@@ -405,29 +398,31 @@ public class DataController {
             pst.execute();
             ResultSet rs = pst.getResultSet();
             User user;
-            int roleId = rs.getInt(1);
+            String name = null;
+            String adress = null;
+            String dateofbirth = null;
+            String email = null;
+            int gender = 0;
+            int roleId = 0;
+
+            //TODO Gender and date of birth ?
+
+            while (rs.next()) {
+               roleId = rs.getInt(1);
+                email = rs.getString(2);
+                name = rs.getString(3);
+                adress = rs.getString(4);
+                gender = rs.getInt(5);
+                dateofbirth = rs.getString(6);
+            }
             switch (roleId) {
-                case 1:
-                    user = new Administrator();
-                    break;
-                case 2:
-                    user = new Moderator();
-                    break;
-                case 3:
-                    user = new User();
-                    break;
-                default:
+                case 1 -> user = new Administrator(id,email,name,adress);
+                case 2 -> user = new Moderator(id, email, name, adress);
+                case 3 -> user = new User(id, email, name, adress);
+                default -> {
                     user = new User();
                     mainController.setStatus("Couldn't load user Role - default set");
-                    break;
-            }
-            while (rs.next()) {
-                //user.setId(id); //user ID cant be set outside of constructors.
-                user.setEmail(rs.getString(2));
-                user.setName(rs.getString(3));
-                user.setAddress(rs.getString(4));
-                user.setGender(rs.getInt(5));
-                user.setDateOfBirth(rs.getString(6));
+                }
             }
             con.close();
             return user;
@@ -447,29 +442,32 @@ public class DataController {
             pst.execute();
             ResultSet rs = pst.getResultSet();
             User user;
-            int roleId = rs.getInt(1);
+            String name = null;
+            String adress = null;
+            String dateofbirth = null;
+            int gender = 0;
+            int roleId = 0;
+            int id = 0;
+
+            //TODO Gender and date of birth ?
+
+            while (rs.next()) {
+                roleId = rs.getInt(1);
+                id = rs.getInt(2);
+                name = rs.getString(3);
+                adress = rs.getString(4);
+                gender = rs.getInt(5);
+                dateofbirth = rs.getString(6);
+
+            }
             switch (roleId) {
-                case 1:
-                    user = new Administrator();
-                    break;
-                case 2:
-                    user = new Moderator();
-                    break;
-                case 3:
-                    user = new User();
-                    break;
-                default:
+                case 1 -> user = new Administrator(id,email,name,adress);
+                case 2 -> user = new Moderator(id, email, name, adress);
+                case 3 -> user = new User(id, email, name, adress);
+                default -> {
                     user = new User();
                     mainController.setStatus("Couldn't load user Role - default set");
-                    break;
-            }
-            while (rs.next()) {
-                //user.setId(id); //user ID cant be set outside of constructors. //TODO load new users via constructor
-                user.setEmail(rs.getString(2));
-                user.setName(rs.getString(3));
-                user.setAddress(rs.getString(4));
-                user.setGender(rs.getInt(5));
-                user.setDateOfBirth(rs.getString(6));
+                }
             }
             con.close();
             return user;
@@ -676,9 +674,5 @@ public class DataController {
         con.close();
         return false;
     }
-
-    //there is no method to view all the articles in an order ?
-    //there is no way to browse topics ?
-    //TODO open and close in main, methods to FXML
 
 }
