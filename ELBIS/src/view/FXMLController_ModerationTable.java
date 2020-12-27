@@ -69,17 +69,8 @@ public class FXMLController_ModerationTable implements Initializable {
 
     public boolean createUser() throws IOException {
         boolean result = false;
-        //TODO implement as new stage
         createUserDialog = new Dialog_CreateUser(Alert.AlertType.INFORMATION, mainController);
-
-        createUserDialog.show();
-
-        //  for (int i = 0 ; i < list.size(); i ++){
-        //     System.out.println(list.get(i));
-        // }
-
-
-        //result = mainController.createUser(email,password,name,address,gender,dateOfBirth);
+        createUserDialog.showAndWait();
         return result;
     }
 

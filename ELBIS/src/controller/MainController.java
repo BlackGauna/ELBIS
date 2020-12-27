@@ -251,12 +251,9 @@ public class MainController extends Application {
         if (article.getId()==0)
         {
             result=createArticle(article);
-
-
         }else
         {
             result=dc.DBEditArticle(article.getId(),article.getTitle(),article.getTopic(),article.getContent(),article.getPublisherComment());
-
         }
 
         Article newArticle= dc.DBLoadLastArticle();
@@ -283,8 +280,7 @@ public class MainController extends Application {
             genderInt = 3;
         }
         //TODO send actual User
-        setStatus("Tried to send User");
-        //result = dc.DBSendNewUser(email, password, name, address, genderInt, dateOfBirth);
+        result = dc.DBSendNewUser(email, password, name, address, genderInt, dateOfBirth);
 
         return result;
     }

@@ -40,7 +40,18 @@ public class FXMLController_CreateUser {
 
     @FXML
     void okClicked(ActionEvent event) {
-    //    mainController.createUser(getEmail(), getPassword(),getName(), getAddress(), getGender(), getBirth());
+        try {
+            //TODO throw exception if any field is empty
+            //TODO integrate Role
+            mainController.createUser(getEmail(), getPassword(), getName(), getAddress(), getGender(), getBirth());
+        } catch(Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Bitte überprüfen sie ihre Eingaben auf Vollständigkeit");
+            alert.setHeaderText(null);
+            alert.showAndWait();
+            e.printStackTrace();
+        }
     }
 
     // Ini_______________________________________________________________________________________________________
@@ -85,7 +96,7 @@ public class FXMLController_CreateUser {
     }
 
     public String getBirth() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.mm.yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String birth = datefield_birthday.getValue().format(formatter);
         return birth;
     }

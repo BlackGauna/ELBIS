@@ -117,7 +117,7 @@ public class FXMLController_MainApplication {
         moderationTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_ModerationTable.fxml"));
         moderationTable = (Pane) moderationTableLoader.load();
         moderationTableController = moderationTableLoader.getController();
-        articleTableController.setMainController(mainController);
+        moderationTableController.setMainController(mainController);
 
         moderationTab = new Tab();
         moderationTab.setText("Moderation");

@@ -395,20 +395,22 @@ public class DataController {
 	//User Creation
 	public boolean DBSendNewUser(String email, String password, String name, String address, int gender, String dateOfBirth) {
 		try {
-			SendNewUser.setString(1, email);
-			SendNewUser.setString(2, password);
-			SendNewUser.setString(3, name);
-			SendNewUser.setString(4, address);
-			SendNewUser.setInt(5, gender);
-			SendNewUser.setString(6, dateOfBirth);
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(SEND_NEW_USER);
+			pst.setString(1, email);
+			pst.setString(2, password);
+			pst.setString(3, name);
+			pst.setString(4, address);
+			pst.setInt(5, gender);
+			pst.setString(6, dateOfBirth);
 
-			int affectedRows = SendNewUser.executeUpdate();
+			int affectedRows = pst.executeUpdate();
 
 			if (affectedRows == 0) {
 				throw new SQLException("Couldn't save User!");
 			} else
 				System.out.println("User successfully added!");
-
+			con.close();
 			return true;
 
 		} catch (SQLException e) {
