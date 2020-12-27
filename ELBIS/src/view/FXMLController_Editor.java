@@ -16,11 +16,15 @@ import javafx.stage.Stage;
 import model.Article;
 import netscape.javascript.JSObject;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Iterator;
 
 /**
  * class containing TinyMCE editor in a JavaFX WebView
@@ -117,15 +121,20 @@ public class FXMLController_Editor
         final String TARGET= System.getProperty("user.home")+ "/Desktop/";
         final String DEST = System.getProperty("user.home")+ "\\Desktop\\output.pdf";
 
-        private String html;
 
         public void openArticle(String html)
         {
             javascriptConnector.call("openArticle", html);
         }
 
+        /**
+         * save open article in database
+         * @param html
+         * @throws IOException
+         */
         public void saveArticle(String html) throws IOException
         {
+            // setup save dialog window
             Stage saveDialog = new Stage();
             FXMLLoader saveLoader = new FXMLLoader(getClass().getResource("/view/SavePrompt.fxml"));
             Scene saveScene= new Scene(saveLoader.load());
@@ -133,6 +142,7 @@ public class FXMLController_Editor
 
             saveController.saveTitle.setText(currentArticle.getTitle());
 
+            // save button action
             saveController.saveButton.setOnAction(new EventHandler<ActionEvent>()
             {
                 @Override
@@ -142,6 +152,18 @@ public class FXMLController_Editor
                     currentArticle.setContent(html);
                     mainController.saveArticle(currentArticle);
 
+                    // close window
+                    saveDialog.close();
+
+                }
+            });
+
+            saveController.cancelButton.setOnAction(new EventHandler<ActionEvent>()
+            {
+                @Override
+                public void handle(ActionEvent event)
+                {
+                    saveDialog.close();
                 }
             });
 
@@ -156,19 +178,31 @@ public class FXMLController_Editor
         /**
          * get article html from JS side, then convert and save to PDF
          *
-         * @param htmlSource - String containing HTML code.
+         * @param htmlSource - String containing HTML code from editor
          * @author Onur Hokkaömeroglu
          */
         public void exportPDF(String htmlSource)
         {
-            //System.out.println(value);
-            html = htmlSource;
-            html= html.replace("file://","");
+
+            // create and open  file dialog window
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("PDF-Pfad auswählen");
+
+            // Extension filter to only show PDFs
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("PDF Dateien", "*.pdf")
+            );
+
+            // get File of chosen pdf path
+            File pdf= fileChooser.showOpenDialog(new Stage());
+
+
+
             try
             {
                 //File file= new File();
-                HtmlConverter.convertToPdf(html, new FileOutputStream(DEST));
-                System.out.println(DEST);
+                HtmlConverter.convertToPdf(htmlSource, new FileOutputStream(pdf.getAbsolutePath()));
+                System.out.println("Exported PDF to: "+ pdf.getAbsolutePath());
             } catch (IOException e)
             {
                 e.printStackTrace();
@@ -180,24 +214,58 @@ public class FXMLController_Editor
             HtmlConverter.convertToPdf(html, new FileOutputStream(dest));
         }
 
-        public String getHtml()
-        {
-            return html;
-        }
 
+
+        /**
+         * Open file dialog for importing image into editor
+         */
 
         public void openImage()
         {
+            // create and open  file dialog window
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Bild öffnen");
 
+            // get File of chosen image
             File image= fileChooser.showOpenDialog(new Stage());
 
             System.out.println(image.getAbsolutePath());
 
+            // image width for resizing if too big for editor
+            int imgWidth=0;
+
+            // get image width
+            try
+            {
+                // using ImageReader for getting size without loading whole image in memory
+                ImageInputStream in = ImageIO.createImageInputStream(image);
+                Iterator readers = ImageIO.getImageReaders(in);
+
+                if (readers.hasNext())
+                {
+                    ImageReader reader= (ImageReader) readers.next();
+
+                    try
+                    {
+                        reader.setInput(in);
+                        imgWidth= reader.getWidth(0);
+                    }finally
+                    {
+                        reader.dispose();
+                    }
+                }
+
+            }
+            catch (IOException e)
+            {
+                System.out.println("Error loading: "+ image.getAbsolutePath());
+            }
+
             String html;
             URI path= image.toURI();
-            html = "<p><img src=\""+ path + "\" /></p>";
+            imgWidth= Math.min(imgWidth, 800);
+            html = "<p><img src=\""+ path + "\""
+                    +"width="+ "\"" + imgWidth +"px\"" + "/></p>";
 
             javascriptConnector.call("importImage", html);
         }
