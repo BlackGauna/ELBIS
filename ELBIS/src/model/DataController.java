@@ -1,8 +1,9 @@
 package model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import java.sql.*;
 import java.util.LinkedList;
-import java.util.List;
 
 public class DataController {
 	//ATTRIBUTES--------------------------------------------------------------------------------------------------------
@@ -159,6 +160,9 @@ public class DataController {
 	// Load all articles
 	public static final String LOAD_ALL_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE;
 
+	// Load all users
+	public static final String LOAD_ALL_USERS = "SELECT * FROM " + TABLE_USER;
+
 
 	//CONNECTION--------------------------------------------------------------------------------------------------------
 
@@ -176,6 +180,7 @@ public class DataController {
 	private PreparedStatement EditTopic;
 	private PreparedStatement LoadRecentArticle;
 	private PreparedStatement LoadAllArticles;
+	private PreparedStatement LoadAllUsers;
 
 
 	private static DataController instance = new DataController();
@@ -204,6 +209,7 @@ public class DataController {
 			EditTopic = con.prepareStatement(EDIT_TOPIC);
 			LoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE); //Statement fails to load because of no topic error on method
 			LoadAllArticles = con.prepareStatement(LOAD_ALL_ARTICLES);
+			LoadAllUsers = con.prepareStatement(LOAD_ALL_USERS);
 
 			return true;
 
@@ -264,6 +270,10 @@ public class DataController {
 
 			if (LoadAllArticles != null){
 				LoadAllArticles.close();
+			}
+
+			if (LoadAllUsers != null){
+				LoadAllUsers.close();
 			}
 
 
@@ -372,22 +382,49 @@ public class DataController {
 
 	}
 
-	//Load all Articles
-	public ResultSet DBLoadAllArticles(){
+	// Get ObservableList of all articles
+	public ObservableList DBLoadAllArticles(){
 		try{
-			ResultSet rs = LoadAllArticles.executeQuery();
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int columnsNumber = rsmd.getColumnCount();
-			while (rs.next()){
-				for (int i=1;i<=columnsNumber;i++){
-					String columnValue = rs.getString(i);
-					System.out.println(rsmd.getColumnName(i) + ": " + columnValue);
-				}
-				System.out.println("");
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(LOAD_ALL_ARTICLES);
+			ResultSet rs = pst.executeQuery();
+			ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+			while (rs.next()) {
+				articleList.add(new Article(
+						rs.getInt(1),
+						rs.getString(2),
+						rs.getString(4),
+						rs.getString(5),
+						rs.getString(6),
+						rs.getInt(8),
+						rs.getString(11)));
 			}
-			return rs;
-		} catch (SQLException throwables) {
-			throwables.printStackTrace();
+			return articleList;
+		} catch (SQLException e) {
+			System.out.println("Couldn't load Articles: " + e.getMessage());
+			return null;
+		}
+	}
+
+	// Get ObservableList of all users
+	public ObservableList DBLoadAllUsers(){
+		try{
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(LOAD_ALL_USERS);
+			ResultSet rs = pst.executeQuery();
+			ObservableList<User> userList = FXCollections.observableArrayList();
+
+			while (rs.next()){
+				userList.add(new User(
+						rs.getInt(1),
+						rs.getString(2),
+						rs.getString(5),
+						rs.getString(6)));
+			}
+			return userList;
+		} catch (SQLException e) {
+			System.out.println("Couldn't load Users: " + e.getMessage());
 			return null;
 		}
 	}

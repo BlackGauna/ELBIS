@@ -21,12 +21,13 @@ public class Article {
     // Ctor_______________________________________________________________________________________________________
 
     // for ArticleTable
-    public Article(int id, String title, String creationDate, String expireDate, String lastEdit, String publisherComment) {
+    public Article(int id, String title, String creationDate, String expireDate, String lastEdit, int topic, String publisherComment) {
         this.id = id;
         this.title = title;
         this.creationDate = creationDate;
         this.expireDate = expireDate;
         this.lastEdit = lastEdit;
+        this.topic = topic;
         this.publisherComment = publisherComment;
     }
 

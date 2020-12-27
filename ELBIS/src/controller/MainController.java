@@ -172,28 +172,8 @@ public class MainController extends Application {
         //TODO add buttonpanel to delete and edit articles per article in table
         */
 
-        ResultSet rs;
-        ObservableList<Article> articleList = FXCollections.observableArrayList();
+        ObservableList<Article> articleList = dc.DBLoadAllArticles();
 
-        try {
-            con = SQLConnection.ConnectDB();
-            PreparedStatement pst = con.prepareStatement("SELECT * FROM ARTICLE");
-            rs = pst.executeQuery();
-
-            while (rs.next()) {
-                articleList.add(new Article(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("creationDate"),
-                        rs.getString("expireDate"),
-                        rs.getString("lastEdit"),
-                        // TODO status?
-                        rs.getString("publisherComment")));
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
         for (int i = 0; i < table.getColumns().size(); i++) {
             setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
             ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(((TableColumn<Article, String>) table.getColumns().get(i)).getText()));
@@ -217,28 +197,8 @@ public class MainController extends Application {
         //TODO add buttonpanel to delete and edit users per user in table
         */
 
-        ResultSet rs;
-        ObservableList<User> userList = FXCollections.observableArrayList();
+        ObservableList<User> userList = dc.DBLoadAllUsers();
 
-        try {
-            con = SQLConnection.ConnectDB();
-            PreparedStatement pst = con.prepareStatement("SELECT * FROM USER");
-            rs = pst.executeQuery();
-
-            while (rs.next()) {
-                userList.add(new User(
-                        rs.getInt("id"),
-                        rs.getString("email"),
-                        rs.getString("name"),
-                        rs.getString("address")
-//                        rs.getString("gender"), // TODO: gender
-//                        rs.getString("dateOfBirth") // TODO: dateOfBirth
-                ));
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
         for (int i = 0; i < table.getColumns().size(); i++) {
             setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
             ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>(((TableColumn<User, String>) table.getColumns().get(i)).getText()));

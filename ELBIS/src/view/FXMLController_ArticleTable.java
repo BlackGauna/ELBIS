@@ -23,6 +23,10 @@ public class FXMLController_ArticleTable implements Initializable {
        articleTable.getColumns().add(new TableColumn<Article, String>("creationDate"));
        articleTable.getColumns().add(new TableColumn<Article, String>("expireDate"));
        articleTable.getColumns().add(new TableColumn<Article, String>("lastEdit"));
+//       articleTable.getColumns().add(new TableColumn<Article, String>("status"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("topic"));
+//       articleTable.getColumns().add(new TableColumn<Article, String>("authorId"));
+//       articleTable.getColumns().add(new TableColumn<Article, String>("publisherId"));
        articleTable.getColumns().add(new TableColumn<Article, String>("publisherComment"));
        dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
    }
