@@ -59,7 +59,7 @@
                             </TitledPane>
                             <TitledPane fx:id="tPane_ManageUsers" animated="false" prefHeight="827.0" prefWidth="1172.0" text="ManageUsers">
                               <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                <AnchorPane>
                                        <children>
                                           <TableView fx:id="userTable" prefHeight="410.0" prefWidth="1164.0" />
                                        </children>
