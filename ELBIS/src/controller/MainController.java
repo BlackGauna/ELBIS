@@ -139,7 +139,6 @@ public class MainController extends Application {
         boolean login = dc.login(email, pw);
         if (login) {
             activeUser = dc.DBLoadUserByEmail(email);
-            activeUser = new Administrator();
             setStatus("Logged in \"" + activeUser.getEmail() + "\" with password \"" + activeUser.getPassword() + "\"");
             mainApplicationController.openTabs(activeUser);
             openApplicationStage();
