@@ -288,7 +288,7 @@ public class MainController extends Application {
 
     public boolean createTopic(String name, String parent) {
         boolean result = false;
-        dc.DBCreateNewTopic(name, parent);
+        dc.DBSendNewTopic(name, parent);
         return result;
     }
 

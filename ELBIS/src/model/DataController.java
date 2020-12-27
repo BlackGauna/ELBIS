@@ -177,146 +177,30 @@ public class DataController {
 
 	private Connection con;
 
-	private PreparedStatement SendNewArticle;
-	private PreparedStatement SendNewTopic;
-	private PreparedStatement SendNewUser;
-	private PreparedStatement LoadArticle;
-	private PreparedStatement LoadLastArticle;
-	private PreparedStatement LoadTopic;
-	private PreparedStatement LoadUserById;
-	private PreparedStatement LoadUserByEmail;
-	private PreparedStatement EditArticle;
-	private PreparedStatement EditUser;
-	private PreparedStatement EditTopic;
-	private PreparedStatement LoadRecentArticle;
-	private PreparedStatement LoadAllArticles;
-	private PreparedStatement LoadAllUsers;
-	private PreparedStatement LoadAllTopics;
-
 	public DataController(MainController mainController) {
 		this.mainController = mainController;
 	}
-
-	public boolean open() {
-		try {
-			con = SQLConnection.ConnectDB();
-
-			SendNewArticle = con.prepareStatement(SEND_NEW_ARTICLE, Statement.RETURN_GENERATED_KEYS);
-			SendNewTopic = con.prepareStatement(SEND_NEW_TOPIC, Statement.RETURN_GENERATED_KEYS);
-			SendNewUser = con.prepareStatement(SEND_NEW_USER, Statement.RETURN_GENERATED_KEYS);
-			LoadArticle = con.prepareStatement(LOAD_ARTICLE);
-			LoadLastArticle = con.prepareStatement(LOAD_LAST_ARTICLE_ID);
-			LoadTopic = con.prepareStatement(LOAD_TOPIC);
-			LoadUserById = con.prepareStatement(LOAD_USER_BY_ID);
-			LoadUserByEmail = con.prepareStatement(LOAD_USER_BY_EMAIL);
-			EditArticle = con.prepareStatement(EDIT_ARTICLE);
-			EditUser = con.prepareStatement(EDIT_USER);
-			EditTopic = con.prepareStatement(EDIT_TOPIC);
-			LoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE); //Statement fails to load because of no topic error on method
-			LoadAllArticles = con.prepareStatement(LOAD_ALL_ARTICLES);
-			LoadAllUsers = con.prepareStatement(LOAD_ALL_USERS);
-			LoadAllTopics = con.prepareStatement(LOAD_ALL_TOPICS);
-
-			return true;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-			return false;
-		}
-	}
-
-	public void close() {
-		try {
-
-
-			if (SendNewArticle != null) {
-				SendNewArticle.close();
-			}
-
-			if (SendNewTopic != null) {
-				SendNewTopic.close();
-			}
-
-			if (SendNewUser != null) {
-				SendNewUser.close();
-			}
-
-			if (LoadArticle != null) {
-				LoadArticle.close();
-			}
-
-			if (LoadLastArticle != null) {
-				LoadLastArticle.close();
-			}
-
-			if (LoadTopic != null) {
-				LoadTopic.close();
-			}
-
-			if (LoadUserById != null) {
-				LoadUserById.close();
-			}
-
-			if (LoadUserByEmail != null) {
-				LoadUserByEmail.close();
-			}
-
-			if (EditArticle != null) {
-				EditArticle.close();
-			}
-
-			if (EditUser != null) {
-				EditUser.close();
-			}
-
-			if (EditTopic != null) {
-				EditTopic.close();
-			}
-
-			if (LoadRecentArticle != null) {
-				LoadRecentArticle.close();
-			}
-
-			if (LoadAllArticles != null){
-				LoadAllArticles.close();
-			}
-
-			if (LoadAllUsers != null){
-				LoadAllUsers.close();
-			}
-
-			if (LoadAllTopics != null){
-				LoadAllTopics.close();
-			}
-
-
-			if (con != null) {
-				con.close();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	//METHODS--------------------------------------------------------------------------------------------------------
 
 
 	//Article creation
 	public boolean DBSendNewArticle(String title, String content, int topic, String publisherComment) {
 		try {
-			SendNewArticle.setString(1, title);
-			SendNewArticle.setString(2, content);
-			SendNewArticle.setInt(3, topic);
-			SendNewArticle.setString(4, publisherComment);
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(SEND_NEW_ARTICLE);
+			pst.setString(1, title);
+			pst.setString(2, content);
+			pst.setInt(3, topic);
+			pst.setString(4, publisherComment);
 
-			int affectedRows = SendNewArticle.executeUpdate();
+			int affectedRows = pst.executeUpdate();
 
 			if (affectedRows == 0) {
 				throw new SQLException("Couldn't save article!");
 			} else
 				System.out.println("Successful submit!");
-
+			con.close();
 			return true;
 
 		} catch (SQLException e) {
@@ -341,7 +225,7 @@ public class DataController {
 				throw new SQLException("Couldn't save article!");
 			} else
 				System.out.println("Successful submit!");
-
+			con.close();
 			return true;
 
 		} catch (SQLException e) {
@@ -350,39 +234,18 @@ public class DataController {
 		}
 	}
 
-	//Topic Creation
-	public boolean DBSendNewTopic(String name,int parentTopic) {
 
-		try {
-			SendNewTopic.setString(1, name);
-			SendNewTopic.setInt(2,parentTopic);
-
-			int affectedRows = SendNewTopic.executeUpdate();
-
-			if (affectedRows == 0) {
-				throw new SQLException("Couldn't save topic!");
-			} else
-				System.out.println("Successfully added!");
-
-			return true;
-
-		} catch (SQLException e) {
-			System.out.println("Couldn't save topic: " + e.getMessage());
-			return false;
-		}
-	}
-
-	// Create Topic via UI
-	public void DBCreateNewTopic(String name, String parentTopic){
+	// Topic Creation
+	public void DBSendNewTopic(String name, String parentTopic){
 		try{
-			Connection con = SQLConnection.ConnectDB();
-			String sql = "INSERT INTO Topic (name, parentTopic) VALUES (?,?)";
-			PreparedStatement pst = con.prepareStatement(sql);
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(SEND_NEW_TOPIC);
 
 			pst.setString(1, name);
 			pst.setString(2, parentTopic);
 
 			pst.execute();
+			con.close();
 		} catch (SQLException e) {
 			System.out.println("Couldn't create topic: " + e.getMessage());
 		}
@@ -433,6 +296,7 @@ public class DataController {
 				article.setPublisherComment(rs.getString(4));
 				article.setExpireDate(rs.getString(5));
 			}
+			con.close();
 			return article;
 		} catch (SQLException e) {
 			System.out.println("Couldn't load Article: " + e.getMessage());
@@ -456,7 +320,7 @@ public class DataController {
 			}
 
 			Article article = DBLoadArticle(id);
-
+			con.close();
 			return article;
 		} catch (SQLException e)
 		{
@@ -483,6 +347,7 @@ public class DataController {
 						rs.getInt(8),
 						rs.getString(11)));
 			}
+			con.close();
 			return articleList;
 		} catch (SQLException e) {
 			System.out.println("Couldn't load Articles: " + e.getMessage());
@@ -505,6 +370,7 @@ public class DataController {
 						rs.getString(5),
 						rs.getString(6)));
 			}
+			con.close();
 			return userList;
 		} catch (SQLException e) {
 			System.out.println("Couldn't load Users: " + e.getMessage());
@@ -526,6 +392,7 @@ public class DataController {
 						rs.getString(2),
 						rs.getInt(3)));
 			}
+			con.close();
 			return topicList;
 		} catch (SQLException e) {
 			System.out.println("Couldn't load Topics: " + e.getMessage());
@@ -536,9 +403,11 @@ public class DataController {
 	//Load a topic
 	public Topic DBLoadTopic(int id) {
 		try {
-			LoadTopic.setInt(1, id);
-			LoadTopic.execute();
-			ResultSet rs = LoadTopic.getResultSet();
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(LOAD_TOPIC);
+			pst.setInt(1, id);
+			pst.execute();
+			ResultSet rs = pst.getResultSet();
 			Topic topic = new Topic();
 			while (rs.next()) {
 
@@ -547,6 +416,7 @@ public class DataController {
 				topic.setParentTopic(rs.getInt(2));
 
 			}
+			con.close();
 			return topic;
 		} catch (SQLException e) {
 			System.out.println("Couldn't load Topic: " + e.getMessage());
@@ -558,9 +428,11 @@ public class DataController {
 	//Load a User with ID
 	public User DBLoadUserById(int id) {
 		try {
-			LoadUserById.setInt(1, id);
-			LoadUserById.execute();
-			ResultSet rs = LoadUserById.getResultSet();
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(LOAD_USER_BY_ID);
+			pst.setInt(1, id);
+			pst.execute();
+			ResultSet rs = pst.getResultSet();
 			User user = new User();
 			while (rs.next()) {
 				//user.setId(id); //user ID cant be set outside of constructors.
@@ -570,6 +442,7 @@ public class DataController {
 				user.setGender(rs.getInt(4));
 				user.setDateOfBirth(rs.getString(5));
 			}
+			con.close();
 			return user;
 		} catch (SQLException e) {
 			System.out.println("Couldn't load User: " + e.getMessage());
@@ -581,9 +454,11 @@ public class DataController {
 	//Load a User with ID
 	public User DBLoadUserByEmail(String email) {
 		try {
-			LoadUserByEmail.setString(1, email);
-			LoadUserByEmail.execute();
-			ResultSet rs = LoadUserByEmail.getResultSet();
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(LOAD_USER_BY_EMAIL);
+			pst.setString(1, email);
+			pst.execute();
+			ResultSet rs = pst.getResultSet();
 			User user = new User();
 			while (rs.next()) {
 				//user.setId(id); //user ID cant be set outside of constructors.
@@ -593,6 +468,7 @@ public class DataController {
 				user.setGender(rs.getInt(4));
 				user.setDateOfBirth(rs.getString(5));
 			}
+			con.close();
 			return user;
 		} catch (SQLException e) {
 			System.out.println("Couldn't load User: " + e.getMessage());
@@ -624,6 +500,7 @@ public class DataController {
 				System.out.println("Failed!");
 				con.rollback();
 				con.setAutoCommit(true);
+				con.close();
 				return false;
 			}
 
@@ -641,6 +518,7 @@ public class DataController {
 			try {
 				System.out.println("Resetting default commit behavior");
 				con.setAutoCommit(true);
+				con.close();
 			} catch (SQLException e) {
 				System.out.println("Couldn't reset auto-commit! " + e.getMessage());
 			}
@@ -650,27 +528,31 @@ public class DataController {
 	//Edit User
 	public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth) {
 		try {
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(EDIT_USER);
 			con.setAutoCommit(false);
 
-			EditUser.setInt(7, id);
-			EditUser.setString(1, newEmail);
-			EditUser.setString(2, newPassword);
-			EditUser.setString(3, newName);
-			EditUser.setString(4, newAddress);
-			EditUser.setInt(5, newGender);
-			EditUser.setString(6, newDateOfBirth);
+			pst.setInt(7, id);
+			pst.setString(1, newEmail);
+			pst.setString(2, newPassword);
+			pst.setString(3, newName);
+			pst.setString(4, newAddress);
+			pst.setInt(5, newGender);
+			pst.setString(6, newDateOfBirth);
 
 
-			int affectedRows = EditUser.executeUpdate();
+			int affectedRows = pst.executeUpdate();
 
 			if (affectedRows == 1) {
 				con.commit();
 				System.out.println("Successful!");
+				con.close();
 				return true;
 			} else {
 				System.out.println("Failed!");
 				con.rollback();
 				con.setAutoCommit(true);
+				con.close();
 				return false;
 			}
 
@@ -688,6 +570,7 @@ public class DataController {
 			try {
 				System.out.println("Resetting default commit behavior");
 				con.setAutoCommit(true);
+				con.close();
 			} catch (SQLException e) {
 				System.out.println("Couldn't reset auto-commit! " + e.getMessage());
 			}
@@ -697,22 +580,26 @@ public class DataController {
 	//Edit a topic
 	public boolean DBEditTopic(int id, String newName, String newParentTopic) {
 		try {
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(EDIT_TOPIC);
 			con.setAutoCommit(false);
 
-			EditTopic.setInt(3, id);
-			EditTopic.setString(1, newName);
-			EditArticle.setString(2, newParentTopic);
+			pst.setInt(3, id);
+			pst.setString(1, newName);
+			pst.setString(2, newParentTopic);
 
-			int affectedRecords = EditTopic.executeUpdate();
+			int affectedRecords = pst.executeUpdate();
 
 			if (affectedRecords == 1) {
 				con.commit();
 				System.out.println("Successful!");
+				con.close();
 				return true;
 			} else {
 				System.out.println("Failed!");
 				con.rollback();
 				con.setAutoCommit(true);
+				con.close();
 				return false;
 			}
 
@@ -730,6 +617,7 @@ public class DataController {
 			try {
 				System.out.println("Resetting default commit behavior");
 				con.setAutoCommit(true);
+				con.close();
 			} catch (SQLException e) {
 				System.out.println("Couldn't reset auto-commit! " + e.getMessage());
 			}
@@ -741,7 +629,9 @@ public class DataController {
 	public LinkedList<Article> DBLoadRecentArticle() {
 
 		try {
-			ResultSet rs = LoadRecentArticle.executeQuery();
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(LOAD_RECENT_ARTICLE);
+			ResultSet rs = pst.executeQuery();
 
 			LinkedList<Article> articles = new LinkedList<>();
 			while (rs.next()) {
@@ -754,7 +644,7 @@ public class DataController {
 				article.setExpireDate(rs.getString(5));
 				articles.add(article);
 			}
-
+			con.close();
 			return articles;
 		} catch (SQLException e) {
 			System.out.println("Getting recent articles failed: " + e.getMessage());
@@ -765,18 +655,22 @@ public class DataController {
 
 	// Check if user exists in DB
 	public boolean login(String email, String pw) throws SQLException {
-		try (Connection con = SQLConnection.ConnectDB();
-			 PreparedStatement pst = con.prepareStatement(CHECK_USER)) {
+		try {
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(CHECK_USER);
 			pst.setString(1, email);
 			pst.setString(2, pw);
 
 			ResultSet rs = pst.executeQuery();
 			if (rs.next()) {
+				con.close();
 				return true;
 			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		con.close();
 		return false;
 	}
 
