@@ -151,6 +151,7 @@ public class DataController {
 
     //METHODS--------------------------------------------------------------------------------------------------------
 
+//TODO SET STATUSES FOR METHODS
 
     //Article creation
     public boolean DBSendNewArticle(String title, String content, int topic, String publisherComment) {
