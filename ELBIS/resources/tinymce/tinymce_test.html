@@ -10,8 +10,10 @@
       
     tinymce.init({
     selector: '#editor',
-    plugins: 'example autoresize print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
-    toolbar: 'example ImageImp customPDF undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile media template link anchor codesample | ltr rtl',
+    content_css: "document",
+    plugins: 'hr print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+    toolbar: 'customSave ImageImp customPDF undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile media template link anchor codesample | ltr rtl',
+
 
     language: 'de',
     paste_data_images: true,
@@ -30,29 +32,41 @@
 
             sendToJava(url);
         }
-
         return (url);
-
-
-
     },*/
+
 
     // custom button to convert editor content to PDF
 
-    setup: function(editor) {
-      editor.ui.registry.addButton('customPDF', {
+    setup: function(editor)
+    {
+      editor.ui.registry.addButton('customPDF',
+      {
           text: 'In PDF',
-          onAction: function (_) {
-            sendHtml(tinyMCE.activeEditor.getContent());
+          onAction: function (_)
+          {
+            exportPDF(tinyMCE.activeEditor.getContent());
           }
       });
-      editor.ui.registry.addButton('ImageImp', {
+      editor.ui.registry.addButton('ImageImp',
+      {
           text: 'Bild einfügen',
-          onAction: function (_) {
+          onAction: function (_)
+          {
             var imagepath= openImage();
           }
       });
-      editor.on('init', function(e) {
+      editor.ui.registry.addButton('customSave',
+      {
+          tooltip: 'Artikel speichern',
+          icon: 'save',
+          onAction: function (_)
+          {
+            saveArticle(tinyMCE.activeEditor.getContent());
+          }
+      });
+      editor.on('init', function(e)
+      {
         editor.execCommand('mceFullScreen');
       });
     },
@@ -69,27 +83,35 @@
         return path;
     }
 
-    function sendHtml(text)
+    function exportPDF(text)
     {
-    	javaConnector.saveHtml(text);
+    	javaConnector.exportPDF(text);
     }
 
-    function sendToJava (text) {
-        javaConnector.toLowerCase(text);
+    function saveArticle(text)
+    {
+        javaConnector.saveArticle(text);
+    }
 
-    };
 
-    var jsConnector = {
-        showResult: function (result) {
+    var jsConnector =
+    {
+        showResult: function (result)
+        {
             document.getElementById('result').innerHTML = result;
         },
         importImage: function (path)
         {
             tinymce.activeEditor.insertContent(path);
         },
+        openArticle: function (html)
+        {
+            tinymce.activeEditor.setContent(html);
+        },
     };
 
-    function getJsConnector() {
+    function getJsConnector()
+    {
         return jsConnector;
     };
 
@@ -102,7 +124,7 @@
 
 <body>
     <form method="post">
-    <textarea id="editor">Hello, World!
+    <textarea id="editor">
     </textarea>
     </form>
 </body>

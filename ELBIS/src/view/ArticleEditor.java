@@ -1,6 +1,7 @@
 package view;
 
 import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.io.font.otf.GsubLookupType1;
 import javafx.application.Application;
 import javafx.concurrent.Worker;
 import javafx.scene.Scene;
@@ -10,9 +11,14 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import java.awt.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
+import java.util.Iterator;
 
 /**
  * class containing TinyMCE editor in a JavaFX WebView
@@ -21,7 +27,6 @@ import java.net.URL;
  @author Onur Hokkaömeroglu
  */
 
-// TODO: Change to FXMLController, see FXMLController_MainApplication.java
 public class ArticleEditor extends Application
 {
     // for communication Java -> Javascript
@@ -131,9 +136,14 @@ public class ArticleEditor extends Application
             return html;
         }
 
-
+        /**
+         * opens an explorer dialog for choosing a file;
+         * then sends HTML String to JS for linking the image
+         * @author Onur Hokkaömeroglu
+         */
         public void openImage()
         {
+            // setup and open explorer dialod
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Bild öffnen");
 
@@ -141,9 +151,47 @@ public class ArticleEditor extends Application
 
             System.out.println(image.getAbsolutePath());
 
+            // image width for resizing if too big for editor
+            int imgWidth=0;
+
+            // get image width
+            try
+            {
+                // using ImageReader for getting size without loading whole image in memory
+                ImageInputStream in = ImageIO.createImageInputStream(image);
+                Iterator readers = ImageIO.getImageReaders(in);
+
+                if (readers.hasNext())
+                {
+                    ImageReader reader= (ImageReader) readers.next();
+
+                    try
+                    {
+                        reader.setInput(in);
+                        imgWidth= reader.getWidth(0);
+                    }finally
+                    {
+                        reader.dispose();
+                    }
+                }
+
+            }
+            catch (IOException e)
+            {
+                System.out.println("Error loading: "+ image.getAbsolutePath());
+            }
+
+            // Setup HTML String
             String html;
             URI path= image.toURI();
-            html = "<p><img src=\""+ path + "\" /></p>";
+
+            System.out.println(imgWidth);
+            imgWidth= Math.min(imgWidth, 900);
+
+            System.out.println(imgWidth);
+
+            html = "<p><img src=\""+ path + "\""
+                    +"width="+ "\"" + imgWidth +"px\"" + "/></p>";
 
             javascriptConnector.call("importImage", html);
         }

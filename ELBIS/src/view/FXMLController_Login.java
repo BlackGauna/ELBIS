@@ -40,6 +40,12 @@ public class FXMLController_Login {
         boolean flag = mainController.login(txtEmail.getText(),txtPassword.getText());
     }
 
+    // alternative to loginClicked. Login when pressing enter key
+    public void onEnter(ActionEvent event) throws SQLException
+    {
+        boolean flag = mainController.login(txtEmail.getText(),txtPassword.getText());
+    }
+
     // Getters,Setters_________________________________________________________________________________________________
 
     public String getTxtPassword() {

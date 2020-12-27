@@ -7,8 +7,6 @@ import javafx.application.Application;
 public class ArticleEditor_TEST
 {
 
-    //VM args:
-    //--module-path "\lib\javafx-sdk-11.0.2\lib" --add-modules javafx.controls,javafx.fxml,javafx.web
 
 
     public static void main(String[] args) {

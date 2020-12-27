@@ -172,6 +172,7 @@ public class MainController extends Application {
         //TODO add buttonpanel to delete and edit articles per article in table
         */
 
+        ObservableList<Topic> topicList = dc.DBLoadAllTopics();
         ObservableList<Article> articleList = dc.DBLoadAllArticles();
 
         for (int i = 0; i < table.getColumns().size(); i++) {
@@ -244,6 +245,26 @@ public class MainController extends Application {
         return table;
     }
 
+    public boolean saveArticle (Article article)
+    {
+        boolean result=false;
+        if (article.getId()==0)
+        {
+            result=createArticle(article);
+
+
+        }else
+        {
+            result=dc.DBEditArticle(article.getId(),article.getTitle(),article.getTopic(),article.getContent(),article.getPublisherComment());
+
+        }
+
+        Article newArticle= dc.DBLoadLastArticle();
+        editorController.openArticle(newArticle);
+
+        return result;
+    }
+
     /******************************
      *
      *  Creation methods
@@ -268,8 +289,9 @@ public class MainController extends Application {
         return result;
     }
 
-    public boolean createArticle() {
+    public boolean createArticle(Article article) {
         boolean result = false;
+        result= dc.DBSendNewArticle(article);
         return result;
     }
 

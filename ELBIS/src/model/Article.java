@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Article {
     // Atrrib_______________________________________________________________________________________________________
-    private int id;
+    private int id=0;
     private String title;
     private String content;
     private String creationDate;
@@ -32,6 +32,7 @@ public class Article {
     }
 
     public Article() {
+
     }
 
     // Methods_______________________________________________________________________________________________________

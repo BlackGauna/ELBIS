@@ -4,12 +4,16 @@ import com.itextpdf.html2pdf.HtmlConverter;
 import controller.MainController;
 import javafx.application.Application;
 import javafx.concurrent.Worker;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.Article;
 import netscape.javascript.JSObject;
 
 import java.io.File;
@@ -25,7 +29,6 @@ import java.net.URL;
  @author Onur Hokkaömeroglu
  */
 
-// TODO: Change to FXMLController, see FXMLController_MainApplication.java
 public class FXMLController_Editor
 {
     // for communication Java -> Javascript
@@ -36,8 +39,13 @@ public class FXMLController_Editor
 
     private MainController mainController;
 
+    // current Article loaded in editor
+    private Article currentArticle= new Article();
+
     @FXML
     WebView webView;
+
+
 
     @FXML
     public void initialize() throws Exception
@@ -48,7 +56,6 @@ public class FXMLController_Editor
             URL url= Thread.currentThread().getContextClassLoader().getResource("tinymce/tinymce_test.html");
 
             // setup WebView and WebEngine
-
             final WebEngine webEngine= webView.getEngine();
 
             webEngine.setJavaScriptEnabled(true);
@@ -71,6 +78,7 @@ public class FXMLController_Editor
 
             // now load the page
             webEngine.load(url.toString());
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -84,6 +92,18 @@ public class FXMLController_Editor
         this.mainController = mainController;
     }
 
+
+    public void openArticle(Article article)
+    {
+        currentArticle=article;
+        javaConnector.openArticle(article.getContent());
+    }
+
+    public void openArticle (String html)
+    {
+        javaConnector.openArticle(html);
+    }
+
     /**
      * Helper class for communication between the Javascript and Java
      * Javascript can call functions in this class
@@ -93,33 +113,53 @@ public class FXMLController_Editor
         // IO for pdfhtml
         // save to desktop for now
         // TODO: add way to choose save location and filename
+
         final String TARGET= System.getProperty("user.home")+ "/Desktop/";
         final String DEST = System.getProperty("user.home")+ "\\Desktop\\output.pdf";
 
         private String html;
 
-
-        /**
-         * called when the JS side wants a String to be converted.
-         *
-         * @param value
-         *         the String to convert
-         */
-        public void toLowerCase(String value) {
-            if (null != value) {
-
-                System.out.println(value);
-                //javascriptConnector.call("showResult", value);
-            }
+        public void openArticle(String html)
+        {
+            javascriptConnector.call("openArticle", html);
         }
 
+        public void saveArticle(String html) throws IOException
+        {
+            Stage saveDialog = new Stage();
+            FXMLLoader saveLoader = new FXMLLoader(getClass().getResource("/view/SavePrompt.fxml"));
+            Scene saveScene= new Scene(saveLoader.load());
+            FXMLController_Save saveController= saveLoader.getController();
+
+            saveController.saveTitle.setText(currentArticle.getTitle());
+
+            saveController.saveButton.setOnAction(new EventHandler<ActionEvent>()
+            {
+                @Override
+                public void handle(ActionEvent event)
+                {
+                    currentArticle.setTitle(saveController.saveTitle.getText());
+                    currentArticle.setContent(html);
+                    mainController.saveArticle(currentArticle);
+
+                }
+            });
+
+            //saveLoader.setController(saveController);
+            saveDialog.setScene(saveScene);
+
+            saveDialog.show();
+        }
+
+
+
         /**
-         * get html source from JS side, then convert and save to PDF
+         * get article html from JS side, then convert and save to PDF
          *
          * @param htmlSource - String containing HTML code.
          * @author Onur Hokkaömeroglu
          */
-        public void saveHtml(String htmlSource)
+        public void exportPDF(String htmlSource)
         {
             //System.out.println(value);
             html = htmlSource;

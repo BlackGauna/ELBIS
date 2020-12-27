@@ -154,6 +154,9 @@ public class DataController {
 			COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
 			" ORDER BY " + COLUMN_ARTICLE_CREATION_DATE + " DESC LIMIT 20 ";
 
+	public static final String LOAD_LAST_ARTICLE_ID = "SELECT "  + COLUMN_ARTICLE_ID + " FROM " + TABLE_ARTICLE +
+			" ORDER BY " + COLUMN_ARTICLE_ID + " DESC LIMIT 1 ";
+
 	// Check if user exists in database
 	public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? AND " + COLUMN_USER_PASSWORD + " = ?";
 
@@ -175,6 +178,7 @@ public class DataController {
 	private PreparedStatement SendNewTopic;
 	private PreparedStatement SendNewUser;
 	private PreparedStatement LoadArticle;
+	private PreparedStatement LoadLastArticle;
 	private PreparedStatement LoadTopic;
 	private PreparedStatement LoadUserById;
 	private PreparedStatement LoadUserByEmail;
@@ -205,6 +209,7 @@ public class DataController {
 			SendNewTopic = con.prepareStatement(SEND_NEW_TOPIC, Statement.RETURN_GENERATED_KEYS);
 			SendNewUser = con.prepareStatement(SEND_NEW_USER, Statement.RETURN_GENERATED_KEYS);
 			LoadArticle = con.prepareStatement(LOAD_ARTICLE);
+			LoadLastArticle = con.prepareStatement(LOAD_LAST_ARTICLE_ID);
 			LoadTopic = con.prepareStatement(LOAD_TOPIC);
 			LoadUserById = con.prepareStatement(LOAD_USER_BY_ID);
 			LoadUserByEmail = con.prepareStatement(LOAD_USER_BY_EMAIL);
@@ -243,6 +248,10 @@ public class DataController {
 
 			if (LoadArticle != null) {
 				LoadArticle.close();
+			}
+
+			if (LoadLastArticle != null) {
+				LoadLastArticle.close();
 			}
 
 			if (LoadTopic != null) {
@@ -306,6 +315,31 @@ public class DataController {
 			SendNewArticle.setString(4, publisherComment);
 
 			int affectedRows = SendNewArticle.executeUpdate();
+
+			if (affectedRows == 0) {
+				throw new SQLException("Couldn't save article!");
+			} else
+				System.out.println("Successful submit!");
+
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("Couldn't save article: " + e.getMessage());
+			return false;
+		}
+	}
+
+	public boolean DBSendNewArticle(Article article) {
+		try {
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(SEND_NEW_ARTICLE);
+
+			pst.setString(1, article.getTitle());
+			pst.setString(2, article.getContent());
+			pst.setInt(3, article.getTopic());
+			pst.setString(4, article.getPublisherComment());
+
+			int affectedRows = pst.executeUpdate();
 
 			if (affectedRows == 0) {
 				throw new SQLException("Couldn't save article!");
@@ -387,9 +421,11 @@ public class DataController {
 	//Loading an Article
 	public Article DBLoadArticle(int id) {
 		try {
-			LoadArticle.setInt(1, id);
-			LoadArticle.execute();
-			ResultSet rs = LoadArticle.getResultSet();
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(LOAD_ARTICLE);
+			pst.setInt(1, id);
+			pst.execute();
+			ResultSet rs = pst.getResultSet();
 			Article article = new Article();
 			while (rs.next()) {
 				article.setId(id);
@@ -405,6 +441,30 @@ public class DataController {
 			return null;
 		}
 
+	}
+
+	public Article DBLoadLastArticle()
+	{
+		try
+		{
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(LOAD_LAST_ARTICLE_ID);
+			ResultSet rs = pst.executeQuery();
+			int id=0;
+
+			while (rs.next())
+			{
+				id = rs.getInt(1);
+			}
+
+			Article article = DBLoadArticle(id);
+
+			return article;
+		} catch (SQLException e)
+		{
+		System.out.println("Couldn't load Article: " + e.getMessage());
+		return null;
+		}
 	}
 
 	// Get ObservableList of all articles
@@ -545,16 +605,18 @@ public class DataController {
 	}
 
 	//Edit Articles
-	public boolean DBEditArticle(int id, String newTitle,String newTopic, String newContent, String newPublisherComment) {
+	public boolean DBEditArticle(int id, String newTitle,int newTopic, String newContent, String newPublisherComment) {
 		try {
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(EDIT_ARTICLE);
 			con.setAutoCommit(false);
 
-			EditArticle.setInt(5, id);
-			EditArticle.setString(1, newTitle);
-			EditArticle.setString(2, newTopic);
-			EditArticle.setString(3, newContent);
-			EditArticle.setString(4, newPublisherComment);
-			int affectedRows = EditArticle.executeUpdate();
+			pst.setInt(5, id);
+			pst.setString(1, newTitle);
+			pst.setInt(2, newTopic);
+			pst.setString(3, newContent);
+			pst.setString(4, newPublisherComment);
+			int affectedRows = pst.executeUpdate();
 
 			if (affectedRows == 1) {
 				con.commit();
