@@ -11,6 +11,9 @@ public class FXMLController_Save
     Button saveButton;
 
     @FXML
+    Button cancelButton;
+
+    @FXML
     TextField saveTitle;
 
     @FXML
