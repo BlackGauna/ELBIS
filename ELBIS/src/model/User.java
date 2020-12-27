@@ -30,6 +30,18 @@ public class User {
         this.address = address;
     }
 
+    public User(int id, String email, String name, String address, String password,String dateOfBirth,int gender) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.address = address;
+        this.password = password;
+       setDateOfBirth(dateOfBirth);
+       setGender(gender);
+    }
+
+
+
     // Methods_______________________________________________________________________________________________________
     public void editArticle(int articleId) {
         //TODO Implement EditArticle - Only if the user is also the creator

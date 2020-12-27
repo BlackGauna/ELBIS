@@ -12,4 +12,8 @@ public class Moderator extends User {
         super(id, email, name, address);
     }
 
+    public Moderator(int id, String email, String name, String address,String password,String dateOfBirth,int gender) {
+        super(id, email, name, address, password, dateOfBirth, gender);
+    }
+
 }

@@ -107,11 +107,11 @@ public class DataController {
     //Load a specific User with ID
     public static final String LOAD_USER_BY_ID = "SELECT " + COLUMN_USER_ROLE + ", " + COLUMN_USER_EMAIL + ", "
             + COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
-            ", " + COLUMN_USER_DATE_OF_BIRTH + " FROM " +
+            ", " + COLUMN_USER_DATE_OF_BIRTH +  ", " + COLUMN_USER_PASSWORD + " FROM " +
             TABLE_USER + " WHERE " + COLUMN_USER_ID + " = ?";
     //Load a specific User with Email
     public static final String LOAD_USER_BY_EMAIL = "SELECT " + COLUMN_USER_ROLE + ", " + COLUMN_USER_EMAIL + ", " + COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
-            ", " + COLUMN_USER_DATE_OF_BIRTH + " FROM " +
+            ", " + COLUMN_USER_DATE_OF_BIRTH +  ", " + COLUMN_USER_PASSWORD + " FROM " +
             TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
     //Edit a specific Article with ID
     public static final String EDIT_ARTICLE = "UPDATE " + TABLE_ARTICLE + " SET " +
@@ -413,10 +413,10 @@ public class DataController {
             String address = null;
             String dateOfBirth = null;
             String email = null;
+            String password = null;
             int gender = 0;
             int roleId = 0;
 
-            //TODO Gender and date of birth ?
 
             while (rs.next()) {
                roleId = rs.getInt(1);
@@ -425,11 +425,12 @@ public class DataController {
                 address = rs.getString(4);
                 gender = rs.getInt(5);
                 dateOfBirth = rs.getString(6);
+                password = rs.getString(7);
             }
             switch (roleId) {
-                case 1 -> user = new Administrator(id,email,name,address);
-                case 2 -> user = new Moderator(id, email, name, address);
-                case 3 -> user = new User(id, email, name, address);
+                case 1 -> user = new Administrator(id,email,name, address, password, dateOfBirth, gender);
+                case 2 -> user = new Moderator(id, email, name, address, password, dateOfBirth, gender);
+                case 3 -> user = new User(id, email, name, address, password, dateOfBirth, gender);
                 default -> {
                     user = new User();
                     mainController.setStatus("Couldn't load user Role - default set");
@@ -457,11 +458,10 @@ public class DataController {
             String name = null;
             String address = null;
             String dateOfBirth = null;
+            String password = null;
             int gender = 0;
             int roleId = 0;
             int id = 0;
-
-            //TODO Gender and date of birth ?
 
             while (rs.next()) {
                 roleId = rs.getInt(1);
@@ -470,12 +470,13 @@ public class DataController {
                 address = rs.getString(4);
                 gender = rs.getInt(5);
                 dateOfBirth = rs.getString(6);
+                password = rs.getString(7);
 
             }
             switch (roleId) {
-                case 1 -> user = new Administrator(id,email,name,address);
-                case 2 -> user = new Moderator(id, email, name, address);
-                case 3 -> user = new User(id, email, name, address);
+                case 1 -> user = new Administrator(id,email,name, address, password, dateOfBirth, gender);
+                case 2 -> user = new Moderator(id, email, name, address, password, dateOfBirth, gender);
+                case 3 -> user = new User(id, email, name, address, password, dateOfBirth, gender);
                 default -> {
                     user = new User();
                     mainController.setStatus("Couldn't load user Role - default set");
