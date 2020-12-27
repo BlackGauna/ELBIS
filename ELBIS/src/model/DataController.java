@@ -464,7 +464,7 @@ public class DataController {
                     break;
             }
             while (rs.next()) {
-                //user.setId(id); //user ID cant be set outside of constructors.
+                //user.setId(id); //user ID cant be set outside of constructors. //TODO load new users via constructor
                 user.setEmail(rs.getString(2));
                 user.setName(rs.getString(3));
                 user.setAddress(rs.getString(4));
