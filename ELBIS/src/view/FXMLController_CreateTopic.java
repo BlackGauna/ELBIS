@@ -20,8 +20,7 @@ public class FXMLController_CreateTopic {
 
     @FXML
     void topicOkClicked(ActionEvent event) {
-        DataController dc = new DataController();
-        dc.DBCreateNewTopic(txtName.getText(), txtParentTopic.getText());
+        mainController.createTopic(txtName.getText(), txtParentTopic.getText());
     }
 
     // Getters,Setters_________________________________________________________________________________________________

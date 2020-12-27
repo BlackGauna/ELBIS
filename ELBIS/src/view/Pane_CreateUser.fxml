@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_CreateUser">
    <children>
       <Label layoutX="115.0" layoutY="68.0" text="eMail" />
@@ -38,6 +37,6 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="btnOK" layoutX="484.0" layoutY="367.0" mnemonicParsing="false" onAction="#okClicked" prefHeight="25.0" prefWidth="102.0" text="OK" />
+      <Button fx:id="btnOK" cancelButton="true" layoutX="484.0" layoutY="367.0" mnemonicParsing="false" onAction="#okClicked" prefHeight="25.0" prefWidth="102.0" text="OK" />
    </children>
 </Pane>

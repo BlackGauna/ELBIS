@@ -1,5 +1,7 @@
 package model;
 
+import controller.MainController;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -10,7 +12,7 @@ public class Test {
     public static void main(String[] args) {
 
 
-        DataController dataController = new DataController();
+        DataController dataController = new DataController(new MainController());
         if(!dataController.open()) {
             System.out.println("Can't open datacontroller");
             return;

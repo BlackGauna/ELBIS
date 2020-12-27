@@ -1,7 +1,6 @@
 package controller;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,11 +13,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.*;
 import view.*;
-
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MainController extends Application {
@@ -57,7 +53,7 @@ public class MainController extends Application {
     // Ctor_______________________________________________________________________________________________________
     public MainController() {
 
-        dc = new DataController();
+        dc = new DataController(this);
         // ###### Create Stages ######
         loginStage = new Stage(); // Login window
         loginStage.setTitle("Login");
@@ -145,8 +141,7 @@ public class MainController extends Application {
             //TODO load actual active User
             activeUser = new Administrator();
             setStatus("Logged in as static administrator!");
-            DataController data = new DataController();
-            //activeUser = data.DBLoadUserByEmail(email);
+            //activeUser = dc.DBLoadUserByEmail(email);
             setStatus("Logged in \"" + activeUser.geteMail() + "\" with password \"" + activeUser.getPassword() + "\"");
             mainApplicationController.openTabs(activeUser);
             openApplicationStage();
@@ -291,8 +286,9 @@ public class MainController extends Application {
         return result;
     }
 
-    public boolean createTopic() {
+    public boolean createTopic(String name, String parent) {
         boolean result = false;
+        dc.DBCreateNewTopic(name, parent);
         return result;
     }
 

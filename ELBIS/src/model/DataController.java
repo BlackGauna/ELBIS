@@ -1,5 +1,6 @@
 package model;
 
+import controller.MainController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
@@ -7,6 +8,8 @@ import java.util.LinkedList;
 
 public class DataController {
 	//ATTRIBUTES--------------------------------------------------------------------------------------------------------
+
+	private MainController mainController;
 
 	// Article
 	public static final String TABLE_ARTICLE = "Article";
@@ -190,15 +193,8 @@ public class DataController {
 	private PreparedStatement LoadAllUsers;
 	private PreparedStatement LoadAllTopics;
 
-
-	private static DataController instance = new DataController();
-	//private, public for testing
-	public DataController() {
-
-	}
-
-	public static DataController getInstance() {
-		return instance;
+	public DataController(MainController mainController) {
+		this.mainController = mainController;
 	}
 
 	public boolean open() {

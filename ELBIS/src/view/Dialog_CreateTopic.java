@@ -12,11 +12,12 @@ public class Dialog_CreateTopic extends Alert{
     private FXMLLoader createTopicPaneLoader;
     private FXMLController_CreateTopic createTopicController;
     private Pane createTopicPane;
+    private MainController mainController;
 
 
     public Dialog_CreateTopic(Alert.AlertType alertType, MainController mainController) {
         super(alertType);
-
+        this.mainController = mainController;
         setTitle("Bereich anlegen");
         setHeaderText("Bereichserstellung");
         setResizable(false);

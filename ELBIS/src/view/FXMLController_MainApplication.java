@@ -134,7 +134,7 @@ public class FXMLController_MainApplication {
         administrationTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_AdministrationTable.fxml"));
         administrationTable = (Pane) administrationTableLoader.load();
         administrationTableController = administrationTableLoader.getController();
-        articleTableController.setMainController(mainController);
+        administrationTableController.setMainController(mainController);
 
         administrationTab = new Tab();
         administrationTab.setText("Administration");
