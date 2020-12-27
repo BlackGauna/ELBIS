@@ -21,7 +21,7 @@
       <Label layoutX="117.0" layoutY="194.0" text="Vorname" />
       <TextField fx:id="txtVorname" layoutX="234.0" layoutY="190.0" />
       <Label layoutX="115.0" layoutY="226.0" text="Nachname" />
-      <TextField fx:id="TxtNachname" layoutX="234.0" layoutY="222.0" />
+      <TextField fx:id="txtNachname" layoutX="234.0" layoutY="222.0" />
       <Label layoutX="115.0" layoutY="262.0" text="Anschrift" />
       <TextField fx:id="txtAnschrift" layoutX="234.0" layoutY="258.0" />
       <ChoiceBox fx:id="choiceGender" layoutX="233.0" layoutY="298.0" prefWidth="150.0" />
