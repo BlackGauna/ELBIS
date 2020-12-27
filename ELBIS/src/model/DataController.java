@@ -144,7 +144,7 @@ public class DataController {
 
     //CONNECTION--------------------------------------------------------------------------------------------------------
     private Connection con;
-    private MainController mainController;
+    private final MainController mainController;
     public DataController(MainController mainController) {
         this.mainController = mainController;
     }
@@ -207,6 +207,7 @@ public class DataController {
     public void DBSendNewTopic(String name, String parentTopic) {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(SEND_NEW_TOPIC);
 
             pst.setString(1, name);
@@ -223,6 +224,7 @@ public class DataController {
     public boolean DBSendNewUser(String email, String password, String name, String address, int gender, String dateOfBirth) {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(SEND_NEW_USER);
             pst.setString(1, email);
             pst.setString(2, password);
@@ -251,6 +253,7 @@ public class DataController {
     public Article DBLoadArticle(int id) {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(LOAD_ARTICLE);
             pst.setInt(1, id);
             pst.execute();
@@ -276,6 +279,7 @@ public class DataController {
     public Article DBLoadLastArticle() {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(LOAD_LAST_ARTICLE_ID);
             ResultSet rs = pst.executeQuery();
             int id = 0;
@@ -297,6 +301,7 @@ public class DataController {
     public ObservableList DBLoadAllArticles() {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(LOAD_ALL_ARTICLES);
             ResultSet rs = pst.executeQuery();
             ObservableList<Article> articleList = FXCollections.observableArrayList();
@@ -323,6 +328,7 @@ public class DataController {
     public ObservableList DBLoadAllUsers() {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(LOAD_ALL_USERS);
             ResultSet rs = pst.executeQuery();
             ObservableList<User> userList = FXCollections.observableArrayList();
@@ -346,6 +352,7 @@ public class DataController {
     public ObservableList DBLoadAllTopics() {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(LOAD_ALL_TOPICS);
             ResultSet rs = pst.executeQuery();
             ObservableList<Topic> topicList = FXCollections.observableArrayList();
@@ -368,6 +375,7 @@ public class DataController {
     public Topic DBLoadTopic(int id) {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(LOAD_TOPIC);
             pst.setInt(1, id);
             pst.execute();
@@ -393,6 +401,7 @@ public class DataController {
     public User DBLoadUserById(int id) {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(LOAD_USER_BY_ID);
             pst.setInt(1, id);
             pst.execute();
@@ -437,6 +446,7 @@ public class DataController {
     public User DBLoadUserByEmail(String email) {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(LOAD_USER_BY_EMAIL);
             pst.setString(1, email);
             pst.execute();
@@ -483,6 +493,7 @@ public class DataController {
     public boolean DBEditArticle(int id, String newTitle, int newTopic, String newContent, String newPublisherComment) {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(EDIT_ARTICLE);
             con.setAutoCommit(false);
 
@@ -530,6 +541,7 @@ public class DataController {
     public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth) {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(EDIT_USER);
             con.setAutoCommit(false);
 
@@ -582,6 +594,7 @@ public class DataController {
     public boolean DBEditTopic(int id, String newName, String newParentTopic) {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(EDIT_TOPIC);
             con.setAutoCommit(false);
 
@@ -631,6 +644,7 @@ public class DataController {
 
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(LOAD_RECENT_ARTICLE);
             ResultSet rs = pst.executeQuery();
 
@@ -658,6 +672,7 @@ public class DataController {
     public boolean login(String email, String pw) throws SQLException {
         try {
             con = SQLConnection.ConnectDB();
+            assert con != null;
             PreparedStatement pst = con.prepareStatement(CHECK_USER);
             pst.setString(1, email);
             pst.setString(2, pw);
