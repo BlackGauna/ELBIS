@@ -138,10 +138,7 @@ public class MainController extends Application {
     public boolean login(String email, String pw) throws SQLException {
         boolean login = dc.login(email, pw);
         if (login) {
-            //TODO load actual active User
-            activeUser = new Administrator();
-            setStatus("Logged in as static administrator!");
-            //activeUser = dc.DBLoadUserByEmail(email);
+            activeUser = dc.DBLoadUserByEmail(email);
             setStatus("Logged in \"" + activeUser.getEmail() + "\" with password \"" + activeUser.getPassword() + "\"");
             mainApplicationController.openTabs(activeUser);
             openApplicationStage();
