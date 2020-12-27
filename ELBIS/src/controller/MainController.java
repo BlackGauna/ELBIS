@@ -227,6 +227,16 @@ public class MainController extends Application {
         //TODO add buttonpanel to promote/degrade users per user in table
         */
 
+        ObservableList<Topic> topicList = dc.DBLoadAllTopics();
+
+        for (int i = 0; i < table.getColumns().size(); i++) {
+            setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
+            ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>(((TableColumn<Topic, String>) table.getColumns().get(i)).getText()));
+
+        }
+
+        table.setItems(topicList);
+
         //Test if table is empty
         if (table.getItems().size() == 0) {
             setStatus("Warning: Empty AdministrationTable loaded?");

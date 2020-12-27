@@ -1,10 +1,23 @@
 package model;
 
 public class Topic {
+    // Atrrib_______________________________________________________________________________________________________
     private int id;
     private String name;
     private int parentTopic;
 
+    // Ctor_______________________________________________________________________________________________________
+    public Topic(int id, String name, int parentTopic) {
+        this.id = id;
+        this.name = name;
+        this.parentTopic = parentTopic;
+    }
+
+    public Topic(){
+
+    }
+
+    // Getters,Setters________________________________________________________________________________________________
     public int getId() {
         return id;
     }

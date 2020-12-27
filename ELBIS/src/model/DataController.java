@@ -163,6 +163,9 @@ public class DataController {
 	// Load all users
 	public static final String LOAD_ALL_USERS = "SELECT * FROM " + TABLE_USER;
 
+	// Load all topics
+	public static final String LOAD_ALL_TOPICS = "SELECT * FROM " + TABLE_TOPIC;
+
 
 	//CONNECTION--------------------------------------------------------------------------------------------------------
 
@@ -181,6 +184,7 @@ public class DataController {
 	private PreparedStatement LoadRecentArticle;
 	private PreparedStatement LoadAllArticles;
 	private PreparedStatement LoadAllUsers;
+	private PreparedStatement LoadAllTopics;
 
 
 	private static DataController instance = new DataController();
@@ -210,6 +214,7 @@ public class DataController {
 			LoadRecentArticle = con.prepareStatement(LOAD_RECENT_ARTICLE); //Statement fails to load because of no topic error on method
 			LoadAllArticles = con.prepareStatement(LOAD_ALL_ARTICLES);
 			LoadAllUsers = con.prepareStatement(LOAD_ALL_USERS);
+			LoadAllTopics = con.prepareStatement(LOAD_ALL_TOPICS);
 
 			return true;
 
@@ -274,6 +279,10 @@ public class DataController {
 
 			if (LoadAllUsers != null){
 				LoadAllUsers.close();
+			}
+
+			if (LoadAllTopics != null){
+				LoadAllTopics.close();
 			}
 
 
@@ -425,6 +434,27 @@ public class DataController {
 			return userList;
 		} catch (SQLException e) {
 			System.out.println("Couldn't load Users: " + e.getMessage());
+			return null;
+		}
+	}
+
+	// Load all topics
+	public ObservableList DBLoadAllTopics(){
+		try{
+			con = SQLConnection.ConnectDB();
+			PreparedStatement pst = con.prepareStatement(LOAD_ALL_TOPICS);
+			ResultSet rs = pst.executeQuery();
+			ObservableList<Topic> topicList = FXCollections.observableArrayList();
+
+			while (rs.next()){
+				topicList.add(new Topic(
+						rs.getInt(1),
+						rs.getString(2),
+						rs.getInt(3)));
+			}
+			return topicList;
+		} catch (SQLException e) {
+			System.out.println("Couldn't load Topics: " + e.getMessage());
 			return null;
 		}
 	}

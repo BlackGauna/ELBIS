@@ -143,7 +143,7 @@ public class FXMLController_MainApplication {
         tabPane.getTabs().add(administrationTab);
         //TODO RefreshAdministrationTable
         //initial load of ArticleTable
-       // mainController.refreshAdministrationTable(mainController.refreshAdministrationTable(administrationTableController.getTableView()));
+        administrationTableController.setTableView(mainController.refreshAdministrationTable(administrationTableController.getTableView()));
     }
 
 }
