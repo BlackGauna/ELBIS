@@ -250,6 +250,13 @@ public class MainController extends Application {
         return result;
     }
 
+    public ObservableList<Topic> getAllTopics()
+    {
+        ObservableList<Topic> topics= dc.DBLoadAllTopics();
+
+        return topics;
+    }
+
     /******************************
      *
      *  Creation methods

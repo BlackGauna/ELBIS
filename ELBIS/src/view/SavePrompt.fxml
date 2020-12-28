@@ -4,33 +4,42 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="400.0" prefHeight="200.0"
-            prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="view.FXMLController_Save">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="400.0" prefHeight="232.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" >
 
-    <Label layoutX="14.0" layoutY="68.0" text="Titel:">
-        <font>
-            <Font size="18.0"/>
-        </font>
-    </Label>
+    <children>
+        <Label layoutX="14.0" layoutY="18.0" text="Titel:">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <TextField fx:id="saveTitle" layoutX="131.0" layoutY="18.0" prefHeight="25.0" prefWidth="204.0" />
 
-    <TextField fx:id="saveTitle" layoutX="95.0" layoutY="68.0" prefHeight="25.0" prefWidth="269.0"/>
+        <Label layoutX="14.0" layoutY="58.0" text="Bereich:">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <ChoiceBox fx:id="topicChoice" layoutX="131.0" layoutY="59.0" prefHeight="25.0" prefWidth="204.0" />
 
-    <Label layoutX="14.0" layoutY="108.0" text="Bereich: ">
-        <font>
-            <Font size="18.0"/>
-        </font>
-    </Label>
+        <Label layoutX="14.0" layoutY="94.0" text="Ablaufdatum:">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <DatePicker fx:id="expireDate" layoutX="131.0" layoutY="95.0" prefHeight="25.0" prefWidth="204.0" />
 
-    <ChoiceBox layoutX="95.0" layoutY="109.0" prefHeight="25.0" prefWidth="204.0"/>
+        <Label layoutX="14.0" layoutY="138.0" text="Status:">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <ChoiceBox fx:id="statusChoice" layoutX="131.0" layoutY="138.0" prefHeight="25.0" prefWidth="204.0" />
 
-    <Button fx:id="saveButton" layoutX="236.0" layoutY="172.0" mnemonicParsing="false" text="Speichern"/>
 
-    <Button fx:id="cancelButton" layoutX="312.0" layoutY="172.0" mnemonicParsing="false" text="Abbrechen"/>
+        <Button fx:id="saveButton" layoutX="236.0" layoutY="193.0" mnemonicParsing="false" text="Speichern" />
 
-    <Label layoutX="13.0" layoutY="14.0" text="Artikel speichern:">
-        <font>
-          <Font name="System Bold" size="20.0"/>
-        </font>
-    </Label>
+        <Button fx:id="cancelButton" layoutX="312.0" layoutY="193.0" mnemonicParsing="false" text="Abbrechen" />
+
+    </children>
+
 </AnchorPane>

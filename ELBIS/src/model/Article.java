@@ -102,9 +102,6 @@ public class Article {
     public void setPublisher_Id(int publisher_Id) {
         this.publisher_Id = publisher_Id;
     }
-    public Status getStatusAsStatus() {
-        return status;
-    }
     public int getStatusAsInt() {
         int s;
         if (this.status == Status.Default){

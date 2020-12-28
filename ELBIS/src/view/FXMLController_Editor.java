@@ -9,10 +9,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.Article;
 import netscape.javascript.JSObject;
 
@@ -136,11 +140,34 @@ public class FXMLController_Editor
         {
             // setup save dialog window
             Stage saveDialog = new Stage();
-            FXMLLoader saveLoader = new FXMLLoader(getClass().getResource("/view/SavePrompt.fxml"));
-            Scene saveScene= new Scene(saveLoader.load());
-            FXMLController_Save saveController= saveLoader.getController();
+            FXMLController_Save saveController= new FXMLController_Save(mainController);
 
+            FXMLLoader saveLoader = new FXMLLoader(getClass().getResource("/view/SavePrompt.fxml"));
+            saveLoader.setController(saveController);
+            saveLoader.load();
+
+            //FXMLController_Save saveController= saveLoader.getController();
+
+            saveDialog.setTitle("Artikel speichern:");
+
+            // define save stage as modal and set owner window as the editor
+            saveDialog.initOwner(webView.getScene().getWindow());
+            saveDialog.initStyle(StageStyle.UTILITY);
+            saveDialog.initModality(Modality.APPLICATION_MODAL);
+
+
+
+            // load current attributes of article
             saveController.saveTitle.setText(currentArticle.getTitle());
+            if (currentArticle.getStatus()!=null)
+            {
+                saveController.statusChoice.setValue(currentArticle.getStatus());
+            }
+            if (currentArticle.getTopic()!=0)
+            {
+
+            }
+
 
             // save button action
             saveController.saveButton.setOnAction(new EventHandler<ActionEvent>()
@@ -148,12 +175,27 @@ public class FXMLController_Editor
                 @Override
                 public void handle(ActionEvent event)
                 {
-                    currentArticle.setTitle(saveController.saveTitle.getText());
-                    currentArticle.setContent(html);
-                    mainController.saveArticle(currentArticle);
+                    String titleText= saveController.saveTitle.getText();
 
-                    // close window
-                    saveDialog.close();
+                    if (titleText==null || titleText.matches("^\\s*$"))
+                    {
+                        Alert alert= new Alert(Alert.AlertType.ERROR,
+                                "Bitte keinen leeren Titel angeben!");
+                        alert.showAndWait();
+
+                    }else if (true)
+                    {
+
+                    }
+                    else
+                    {
+                        currentArticle.setTitle(saveController.saveTitle.getText());
+                        currentArticle.setContent(html);
+                        mainController.saveArticle(currentArticle);
+
+                        // close window
+                        saveDialog.close();
+                    }
 
                 }
             });
@@ -167,6 +209,8 @@ public class FXMLController_Editor
                 }
             });
 
+
+            Scene saveScene= new Scene(saveController.anchorPane);
             //saveLoader.setController(saveController);
             saveDialog.setScene(saveScene);
 

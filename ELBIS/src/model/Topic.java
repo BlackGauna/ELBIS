@@ -6,6 +6,10 @@ public class Topic {
     private String name;
     private int parentTopic;
 
+    private Topic parent;
+
+
+
     // Ctor_______________________________________________________________________________________________________
     public Topic(int id, String name, int parentTopic) {
         this.id = id;
@@ -40,5 +44,26 @@ public class Topic {
 
     public void setParentTopic(int parentTopic) {
         this.parentTopic = parentTopic;
+    }
+
+    public Topic getParent()
+    {
+        return parent;
+    }
+
+    public void setParent(Topic parent)
+    {
+        this.parent = parent;
+    }
+
+
+
+    // Methods_________________________________________________________________________________________________________
+
+    // for ChoiceBox in save prompt of editor
+    @Override
+    public String toString()
+    {
+        return name;
     }
 }
