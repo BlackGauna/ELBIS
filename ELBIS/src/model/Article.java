@@ -12,6 +12,7 @@ public class Article {
     private String lastEdit;
     private Status status;
     private int topic;
+    private Topic Topic;
     private int author_Id;
     private int publisher_Id;
     private String publisherComment;
@@ -102,51 +103,8 @@ public class Article {
     public void setPublisher_Id(int publisher_Id) {
         this.publisher_Id = publisher_Id;
     }
-    public int getStatusAsInt() {
-        int s;
-        if (this.status == Status.Default){
-            s = 1;
-        }
-        else if (this.status == Status.Submitted){
-            s = 2;
-        }
-        else if (this.status == Status.Declined){
-            s = 3;
-        }
-        else if (this.status == Status.Authorized) {
-            s = 4;
-        }
-        else if (this.status == Status.Released) {
-            s = 5;
-        } else if (this.status == Status.Archived) {
-            s = 6;
-        }else{
-            s = 0;
-            System.out.println("Couldn't map status");
-        }
-        return s;
-    }
     public void setStatus(Status status) {
         this.status = status;
     }
-    public void setStatus(int status) {
-        if (status == 1){
-            this.status = Status.Default;
-        }
-        if (status == 2){
-            this.status = Status.Submitted;
-        }
-        if (status == 3){
-            this.status = Status.Declined;
-        }
-        if (status == 4){
-            this.status = Status.Authorized;
-        }
-        if (status == 5){
-            this.status = Status.Released;
-        }
-        if (status == 6){
-            this.status = Status.Archived;
-        }
-    }
+
 }

@@ -484,6 +484,7 @@ public class DataController {
                         rs.getInt(1),
                         rs.getString(2),
                         rs.getInt(3)));
+                topicList.get(topicList.size()-1).setParent(DBLoadTopic(rs.getInt(3))); // small test 2
             }
             mainController.setStatus("Successfully loaded!");
             con.close();

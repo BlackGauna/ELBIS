@@ -52,6 +52,9 @@ public class FXMLController_Save
         topics= mainController.getAllTopics();
         topicChoice.getItems().addAll(topics);
 
+        Topic test = topics.get(4).getParent();
+        System.out.println(test.getName());
+
 
     }
 }
