@@ -194,7 +194,7 @@ public class FXMLController_Editor
             );
 
             // get File of chosen pdf path
-            File pdf= fileChooser.showOpenDialog(new Stage());
+            File pdf= fileChooser.showSaveDialog(new Stage());
 
 
 
