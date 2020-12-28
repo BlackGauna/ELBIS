@@ -132,15 +132,19 @@ public class DataController {
     //Load the last article
     public static final String LOAD_LAST_ARTICLE_ID = "SELECT " + COLUMN_ARTICLE_ID + " FROM " + TABLE_ARTICLE +
             " ORDER BY " + COLUMN_ARTICLE_ID + " DESC LIMIT 1 ";
-    // Check if user exists in database
+    //Check if user exists in database
     public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? AND " + COLUMN_USER_PASSWORD + " = ?";
-    // Load all articles
+    //Load all articles
     public static final String LOAD_ALL_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE;
-    // Load own articles
-    public static final String LOAD_OWN_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_AUTHOR_ID + " = ";
-    // Load all users
+    //Load own articles by ID
+    public static final String LOAD_OWN_ARTICLES_BY_ID = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_AUTHOR_ID + " = ?";
+    //Load own articles by Email
+    public static final String LOAD_OWN_ARTICLES_BY_EMAIL = "SELECT * FROM " + TABLE_ARTICLE + " INNER JOIN " + TABLE_USER + " ON " + COLUMN_ARTICLE_PUBLISHER_ID + " = " + COLUMN_USER_ID + " WHERE " + COLUMN_USER_EMAIL + " = ?";
+    //Load all articles which are in submitted state
+    public static final String LOAD_ALL_SUBMITTED_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_STATUS + " = 2";
+    //Load all users
     public static final String LOAD_ALL_USERS = "SELECT * FROM " + TABLE_USER;
-    // Load all topics
+    //Load all topics
     public static final String LOAD_ALL_TOPICS = "SELECT * FROM " + TABLE_TOPIC;
 
 
@@ -153,13 +157,12 @@ public class DataController {
 
     //METHODS--------------------------------------------------------------------------------------------------------
 
-//TODO SET STATUSES FOR METHODS
-
     //Article creation
     public boolean DBSendNewArticle(String title, String content, int topic, String publisherComment) {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Creating new Article...");
             PreparedStatement pst = con.prepareStatement(SEND_NEW_ARTICLE);
             pst.setString(1, title);
             pst.setString(2, content);
@@ -169,14 +172,17 @@ public class DataController {
             int affectedRows = pst.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("Couldn't save article!");
+                mainController.setStatus("Couldn't create Article!");
+                throw new SQLException("Couldn't create Article!");
             } else
-                System.out.println("Successful submit!");
+                System.out.println("Successfully created!");
+                mainController.setStatus("Successfully created!");
             con.close();
             return true;
 
         } catch (SQLException e) {
-            System.out.println("Couldn't save article: " + e.getMessage());
+            mainController.setStatus("Couldn't create Article!");
+            System.out.println("Couldn't create Article: " + e.getMessage());
             return false;
         }
     }
@@ -185,6 +191,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Creating new Article...");
             PreparedStatement pst = con.prepareStatement(SEND_NEW_ARTICLE);
 
             pst.setString(1, article.getTitle());
@@ -195,14 +202,17 @@ public class DataController {
             int affectedRows = pst.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("Couldn't save article!");
+                mainController.setStatus("Couldn't create Article!");
+                throw new SQLException("Couldn't create Article!");
             } else
-                System.out.println("Successful submit!");
+                mainController.setStatus("Successfully created!");
+                System.out.println("Successfully created!");
             con.close();
             return true;
 
         } catch (SQLException e) {
-            System.out.println("Couldn't save article: " + e.getMessage());
+            mainController.setStatus("Couldn't create Article!");
+            System.out.println("Couldn't create article: " + e.getMessage());
             return false;
         }
     }
@@ -213,14 +223,17 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Creating new Topic...");
             PreparedStatement pst = con.prepareStatement(SEND_NEW_TOPIC);
 
             pst.setString(1, name);
             pst.setString(2, parentTopic);
 
             pst.execute();
+            mainController.setStatus("Successfully created!");
             con.close();
         } catch (SQLException e) {
+            mainController.setStatus("Couldn't create Topic!");
             System.out.println("Couldn't create topic: " + e.getMessage());
         }
     }
@@ -230,6 +243,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Creating new User...");
             PreparedStatement pst = con.prepareStatement(SEND_NEW_USER);
             pst.setString(1, email);
             pst.setString(2, password);
@@ -241,14 +255,17 @@ public class DataController {
             int affectedRows = pst.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("Couldn't save User!");
+                mainController.setStatus("Couldn't create User!");
+                throw new SQLException("Couldn't create User!");
             } else
-                System.out.println("User successfully added!");
+                mainController.setStatus("Successfully created!");
+                System.out.println("Successfully created!");
             con.close();
             return true;
 
         } catch (SQLException e) {
-            System.out.println("Couldn't save User: " + e.getMessage());
+            mainController.setStatus("Couldn't create User!");
+            System.out.println("Couldn't create User: " + e.getMessage());
             return false;
         }
 
@@ -259,6 +276,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Loading Article...");
             PreparedStatement pst = con.prepareStatement(LOAD_ARTICLE);
             pst.setInt(1, id);
             pst.execute();
@@ -272,9 +290,11 @@ public class DataController {
                 article.setPublisherComment(rs.getString(4));
                 article.setExpireDate(rs.getString(5));
             }
+            mainController.setStatus("Successfully loaded!");
             con.close();
             return article;
         } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Article!");
             System.out.println("Couldn't load Article: " + e.getMessage());
             return null;
         }
@@ -285,6 +305,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Loading last created Article...");
             PreparedStatement pst = con.prepareStatement(LOAD_LAST_ARTICLE_ID);
             ResultSet rs = pst.executeQuery();
             int id = 0;
@@ -294,9 +315,11 @@ public class DataController {
             }
 
             Article article = DBLoadArticle(id);
+            mainController.setStatus("Successfully loaded!");
             con.close();
             return article;
         } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Article!");
             System.out.println("Couldn't load Article: " + e.getMessage());
             return null;
         }
@@ -307,6 +330,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Loading all Articles...");
             PreparedStatement pst = con.prepareStatement(LOAD_ALL_ARTICLES);
             ResultSet rs = pst.executeQuery();
             ObservableList<Article> articleList = FXCollections.observableArrayList();
@@ -321,9 +345,11 @@ public class DataController {
                         rs.getInt(8),
                         rs.getString(11)));
             }
+            mainController.setStatus("Successfully loaded!");
             con.close();
             return articleList;
         } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Articles!");
             System.out.println("Couldn't load Articles: " + e.getMessage());
             return null;
         }
@@ -333,7 +359,8 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            PreparedStatement pst = con.prepareStatement(LOAD_OWN_ARTICLES + authorId);
+            mainController.setStatus("Loading Articles...");
+            PreparedStatement pst = con.prepareStatement(LOAD_OWN_ARTICLES_BY_ID + authorId);
             ResultSet rs = pst.executeQuery();
             ObservableList<Article> articleList = FXCollections.observableArrayList();
 
@@ -347,9 +374,69 @@ public class DataController {
                         rs.getInt(8),
                         rs.getString(11)));
             }
+            mainController.setStatus("Successfully loaded!");
             con.close();
             return articleList;
         } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Articles!");
+            System.out.println("Couldn't load Articles: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public ObservableList DBLoadOwnArticles(String userEmail) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Loading Articles...");
+            PreparedStatement pst = con.prepareStatement(LOAD_OWN_ARTICLES_BY_EMAIL + userEmail);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                articleList.add(new Article(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getInt(8),
+                        rs.getString(11)));
+            }
+            mainController.setStatus("Successfully loaded!");
+            con.close();
+            return articleList;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Articles!");
+            System.out.println("Couldn't load Articles: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public ObservableList DBLoadAllSubmittedArticles() {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Loading Articles...");
+            PreparedStatement pst = con.prepareStatement(LOAD_ALL_SUBMITTED_ARTICLES);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                articleList.add(new Article(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getInt(8),
+                        rs.getString(11)));
+            }
+            mainController.setStatus("Successfully loaded!");
+            con.close();
+            return articleList;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Articles!");
             System.out.println("Couldn't load Articles: " + e.getMessage());
             return null;
         }
@@ -360,6 +447,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Loading Users...");
             PreparedStatement pst = con.prepareStatement(LOAD_ALL_USERS);
             ResultSet rs = pst.executeQuery();
             ObservableList<User> userList = FXCollections.observableArrayList();
@@ -371,9 +459,11 @@ public class DataController {
                         rs.getString(5),
                         rs.getString(6)));
             }
+            mainController.setStatus("Successfully loaded!");
             con.close();
             return userList;
         } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Users!");
             System.out.println("Couldn't load Users: " + e.getMessage());
             return null;
         }
@@ -384,6 +474,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Loading Topics...");
             PreparedStatement pst = con.prepareStatement(LOAD_ALL_TOPICS);
             ResultSet rs = pst.executeQuery();
             ObservableList<Topic> topicList = FXCollections.observableArrayList();
@@ -394,9 +485,11 @@ public class DataController {
                         rs.getString(2),
                         rs.getInt(3)));
             }
+            mainController.setStatus("Successfully loaded!");
             con.close();
             return topicList;
         } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Topics!");
             System.out.println("Couldn't load Topics: " + e.getMessage());
             return null;
         }
@@ -407,6 +500,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Loading Topics...");
             PreparedStatement pst = con.prepareStatement(LOAD_TOPIC);
             pst.setInt(1, id);
             pst.execute();
@@ -419,9 +513,11 @@ public class DataController {
                 topic.setParentTopic(rs.getInt(2));
 
             }
+            mainController.setStatus("Successfully loaded!");
             con.close();
             return topic;
         } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Topics!");
             System.out.println("Couldn't load Topic: " + e.getMessage());
             return null;
         }
@@ -433,6 +529,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Loading User...");
             PreparedStatement pst = con.prepareStatement(LOAD_USER_BY_ID);
             pst.setInt(1, id);
             pst.execute();
@@ -465,9 +562,11 @@ public class DataController {
                     mainController.setStatus("Couldn't load user Role - default set");
                 }
             }
+            mainController.setStatus("Successfully loaded!");
             con.close();
             return user;
         } catch (SQLException e) {
+            mainController.setStatus("Couldn't load User!");
             System.out.println("Couldn't load User: " + e.getMessage());
             return null;
         }
@@ -479,6 +578,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Loading User...");
             PreparedStatement pst = con.prepareStatement(LOAD_USER_BY_EMAIL);
             pst.setString(1, email);
             pst.execute();
@@ -511,9 +611,11 @@ public class DataController {
                     mainController.setStatus("Couldn't load user Role - default set");
                 }
             }
+            mainController.setStatus("Successfully loaded!");
             con.close();
             return user;
         } catch (SQLException e) {
+            mainController.setStatus("Couldn't load User!");
             System.out.println("Couldn't load User: " + e.getMessage());
             return null;
         }
@@ -526,6 +628,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Editing Article...");
             PreparedStatement pst = con.prepareStatement(EDIT_ARTICLE);
             con.setAutoCommit(false);
 
@@ -538,10 +641,12 @@ public class DataController {
 
             if (affectedRows == 1) {
                 con.commit();
-                System.out.println("Successful!");
+                mainController.setStatus("Successfully edited!");
+                System.out.println("Successfully edited!");
                 return true;
             } else {
-                System.out.println("Failed!");
+                mainController.setStatus("Failed to edit!");
+                System.out.println("Failed to edit!");
                 con.rollback();
                 con.setAutoCommit(true);
                 con.close();
@@ -549,21 +654,26 @@ public class DataController {
             }
 
         } catch (Exception e) {
+            mainController.setStatus("Failed to edit!");
             System.out.println("Article edit exception: " + e.getMessage());
             try {
+                mainController.setStatus("Performing rollback");
                 System.out.println("Performing rollback");
                 con.rollback();
                 return false;
             } catch (SQLException e2) {
-                System.out.println("Oh boy! Things are really bad! " + e2.getMessage());
+                mainController.setStatus("Couldn't rollback!");
+                System.out.println("Couldn't rollback! " + e2.getMessage());
                 return false;
             }
         } finally {
             try {
+                mainController.setStatus("Resetting default commit behavior");
                 System.out.println("Resetting default commit behavior");
                 con.setAutoCommit(true);
                 con.close();
             } catch (SQLException e) {
+                mainController.setStatus("Couldn't reset auto-commit!");
                 System.out.println("Couldn't reset auto-commit! " + e.getMessage());
             }
         }
@@ -574,6 +684,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Editing User...");
             PreparedStatement pst = con.prepareStatement(EDIT_USER);
             con.setAutoCommit(false);
 
@@ -590,11 +701,13 @@ public class DataController {
 
             if (affectedRows == 1) {
                 con.commit();
-                System.out.println("Successful!");
+                mainController.setStatus("Successfully edited!");
+                System.out.println("Successfully edited!");
                 con.close();
                 return true;
             } else {
-                System.out.println("Failed!");
+                mainController.setStatus("Failed to edit!");
+                System.out.println("Failed to edit!");
                 con.rollback();
                 con.setAutoCommit(true);
                 con.close();
@@ -602,21 +715,26 @@ public class DataController {
             }
 
         } catch (Exception e) {
+            mainController.setStatus("Failed to edit!");
             System.out.println("User edit exception: " + e.getMessage());
             try {
+                mainController.setStatus("Performing rollback");
                 System.out.println("Performing rollback");
                 con.rollback();
                 return false;
             } catch (SQLException e2) {
-                System.out.println("Oh boy! Things are really bad! " + e2.getMessage());
+                mainController.setStatus("Couldn't rollback!");
+                System.out.println("Couldn't rollback! " + e2.getMessage());
                 return false;
             }
         } finally {
             try {
+                mainController.setStatus("Resetting default commit behavior");
                 System.out.println("Resetting default commit behavior");
                 con.setAutoCommit(true);
                 con.close();
             } catch (SQLException e) {
+                mainController.setStatus("Couldn't reset auto-commit!");
                 System.out.println("Couldn't reset auto-commit! " + e.getMessage());
             }
         }
@@ -627,6 +745,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Editing Topic...");
             PreparedStatement pst = con.prepareStatement(EDIT_TOPIC);
             con.setAutoCommit(false);
 
@@ -638,11 +757,13 @@ public class DataController {
 
             if (affectedRecords == 1) {
                 con.commit();
-                System.out.println("Successful!");
+                mainController.setStatus("Successfully Edited!");
+                System.out.println("Successfully Edited!");
                 con.close();
                 return true;
             } else {
-                System.out.println("Failed!");
+                mainController.setStatus("Failed to Edit!");
+                System.out.println("Failed to Edit!");
                 con.rollback();
                 con.setAutoCommit(true);
                 con.close();
@@ -650,21 +771,26 @@ public class DataController {
             }
 
         } catch (Exception e) {
+            mainController.setStatus("Failed to Edit!");
             System.out.println("Topic edit exception: " + e.getMessage());
             try {
+                mainController.setStatus("Performing rollback");
                 System.out.println("Performing rollback");
                 con.rollback();
                 return false;
             } catch (SQLException e2) {
-                System.out.println("Oh boy! Things are really bad! " + e2.getMessage());
+                mainController.setStatus("Couldn't rollback!");
+                System.out.println("Couldn't rollback! " + e2.getMessage());
                 return false;
             }
         } finally {
             try {
+                mainController.setStatus("Resetting default commit behavior");
                 System.out.println("Resetting default commit behavior");
                 con.setAutoCommit(true);
                 con.close();
             } catch (SQLException e) {
+                mainController.setStatus("Couldn't reset auto-commit!");
                 System.out.println("Couldn't reset auto-commit! " + e.getMessage());
             }
 
@@ -677,6 +803,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Loading recent Articles...");
             PreparedStatement pst = con.prepareStatement(LOAD_RECENT_ARTICLE);
             ResultSet rs = pst.executeQuery();
 
@@ -691,10 +818,12 @@ public class DataController {
                 article.setExpireDate(rs.getString(5));
                 articles.add(article);
             }
+            mainController.setStatus("Successfully loaded!");
             con.close();
             return articles;
         } catch (SQLException e) {
-            System.out.println("Getting recent articles failed: " + e.getMessage());
+            mainController.setStatus("Couldn't load recent Articles!");
+            System.out.println("Couldn't load recent Articles: " + e.getMessage());
             return null;
         }
 
@@ -705,19 +834,23 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
+            mainController.setStatus("Checking User...");
             PreparedStatement pst = con.prepareStatement(CHECK_USER);
             pst.setString(1, email);
             pst.setString(2, pw);
 
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
+                mainController.setStatus("Success!");
                 con.close();
                 return true;
             }
 
         } catch (SQLException e) {
+            mainController.setStatus("Failed to check!");
             e.printStackTrace();
         }
+        mainController.setStatus("Something is not right!");
         con.close();
         return false;
     }
