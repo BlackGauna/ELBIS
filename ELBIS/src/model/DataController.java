@@ -110,7 +110,7 @@ public class DataController {
             ", " + COLUMN_USER_DATE_OF_BIRTH +  ", " + COLUMN_USER_PASSWORD + " FROM " +
             TABLE_USER + " WHERE " + COLUMN_USER_ID + " = ?";
     //Load a specific User with Email
-    public static final String LOAD_USER_BY_EMAIL = "SELECT " + COLUMN_USER_ROLE + ", " + COLUMN_USER_EMAIL + ", " + COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
+    public static final String LOAD_USER_BY_EMAIL = "SELECT " + COLUMN_USER_ROLE + ", " + COLUMN_USER_ID + ", " + COLUMN_USER_EMAIL + ", " + COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
             ", " + COLUMN_USER_DATE_OF_BIRTH +  ", " + COLUMN_USER_PASSWORD + " FROM " +
             TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
     //Edit a specific Article with ID
@@ -136,6 +136,8 @@ public class DataController {
     public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? AND " + COLUMN_USER_PASSWORD + " = ?";
     // Load all articles
     public static final String LOAD_ALL_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE;
+    // Load own articles
+    public static final String LOAD_OWN_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_AUTHOR_ID + " = ";
     // Load all users
     public static final String LOAD_ALL_USERS = "SELECT * FROM " + TABLE_USER;
     // Load all topics
@@ -327,6 +329,32 @@ public class DataController {
         }
     }
 
+    public ObservableList DBLoadOwnArticles(int authorId) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            PreparedStatement pst = con.prepareStatement(LOAD_OWN_ARTICLES + authorId);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                articleList.add(new Article(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getInt(8),
+                        rs.getString(11)));
+            }
+            con.close();
+            return articleList;
+        } catch (SQLException e) {
+            System.out.println("Couldn't load Articles: " + e.getMessage());
+            return null;
+        }
+    }
+
     // Get ObservableList of all users
     public ObservableList DBLoadAllUsers() {
         try {
@@ -467,11 +495,11 @@ public class DataController {
             while (rs.next()) {
                 roleId = rs.getInt(1);
                 id = rs.getInt(2);
-                name = rs.getString(3);
-                address = rs.getString(4);
-                gender = rs.getInt(5);
-                dateOfBirth = rs.getString(6);
-                password = rs.getString(7);
+                name = rs.getString(4);
+                address = rs.getString(5);
+                gender = rs.getInt(6);
+                dateOfBirth = rs.getString(7);
+                password = rs.getString(8);
 
             }
             switch (roleId) {

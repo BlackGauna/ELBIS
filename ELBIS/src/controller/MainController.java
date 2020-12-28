@@ -165,7 +165,8 @@ public class MainController extends Application {
         */
 
         ObservableList<Topic> topicList = dc.DBLoadAllTopics();
-        ObservableList<Article> articleList = dc.DBLoadAllArticles();
+        ObservableList<Article> articleList = dc.DBLoadOwnArticles(activeUser.getId());
+//        ObservableList<Article> articleList = dc.DBLoadAllArticles();
 
         for (int i = 0; i < table.getColumns().size(); i++) {
             setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
@@ -186,7 +187,7 @@ public class MainController extends Application {
     public TableView refreshModerationTable(TableView table) {
 
         /*
-        //TODO fill table with DB information
+        //TODO fill tables "New Submissions" and "Manage Articles" with DB information
         //TODO add buttonpanel to delete and edit users per user in table
         */
 
@@ -204,11 +205,6 @@ public class MainController extends Application {
         if (table.getItems().size() == 0) {
             setStatus("Warning: Empty ModerationTable loaded?");
         }
-//        try {
-//            con.close();
-//        } catch (SQLException sqlE){
-//            sqlE.printStackTrace();
-//        }
         return table;
     }
 
@@ -216,7 +212,7 @@ public class MainController extends Application {
     public TableView refreshAdministrationTable(TableView table) {
 
         /*
-        //TODO fill table with DB information
+        //TODO fill table "Manage Roles" with DB information
         //TODO add buttonpanel to promote/degrade users per user in table
         */
 
