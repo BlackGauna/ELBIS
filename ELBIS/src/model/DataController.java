@@ -132,15 +132,19 @@ public class DataController {
     //Load the last article
     public static final String LOAD_LAST_ARTICLE_ID = "SELECT " + COLUMN_ARTICLE_ID + " FROM " + TABLE_ARTICLE +
             " ORDER BY " + COLUMN_ARTICLE_ID + " DESC LIMIT 1 ";
-    // Check if user exists in database
+    //Check if user exists in database
     public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? AND " + COLUMN_USER_PASSWORD + " = ?";
-    // Load all articles
+    //Load all articles
     public static final String LOAD_ALL_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE;
-    // Load own articles
-    public static final String LOAD_OWN_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_AUTHOR_ID + " = ";
-    // Load all users
+    //Load own articles by ID
+    public static final String LOAD_OWN_ARTICLES_BY_ID = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_AUTHOR_ID + " = ?";
+    //Load own articles by Email
+    public static final String LOAD_OWN_ARTICLES_BY_EMAIL = "SELECT * FROM " + TABLE_ARTICLE + " INNER JOIN " + TABLE_USER + " ON " + COLUMN_ARTICLE_PUBLISHER_ID + " = " + COLUMN_USER_ID + " WHERE " + COLUMN_USER_EMAIL + " = ?";
+    //Load all articles which are in submitted state
+    public static final String LOAD_ALL_SUBMITTED_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_STATUS + " = 2";
+    //Load all users
     public static final String LOAD_ALL_USERS = "SELECT * FROM " + TABLE_USER;
-    // Load all topics
+    //Load all topics
     public static final String LOAD_ALL_TOPICS = "SELECT * FROM " + TABLE_TOPIC;
 
 
@@ -333,7 +337,59 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            PreparedStatement pst = con.prepareStatement(LOAD_OWN_ARTICLES + authorId);
+            PreparedStatement pst = con.prepareStatement(LOAD_OWN_ARTICLES_BY_ID + authorId);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                articleList.add(new Article(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getInt(8),
+                        rs.getString(11)));
+            }
+            con.close();
+            return articleList;
+        } catch (SQLException e) {
+            System.out.println("Couldn't load Articles: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public ObservableList DBLoadOwnArticles(String userEmail) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            PreparedStatement pst = con.prepareStatement(LOAD_OWN_ARTICLES_BY_EMAIL + userEmail);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                articleList.add(new Article(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getInt(8),
+                        rs.getString(11)));
+            }
+            con.close();
+            return articleList;
+        } catch (SQLException e) {
+            System.out.println("Couldn't load Articles: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public ObservableList DBLoadAllSubmittedArticles() {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            PreparedStatement pst = con.prepareStatement(LOAD_ALL_SUBMITTED_ARTICLES);
             ResultSet rs = pst.executeQuery();
             ObservableList<Article> articleList = FXCollections.observableArrayList();
 
