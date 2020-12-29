@@ -127,7 +127,21 @@ public class MainController extends Application {
         applicationStage.show();
     }
 
+    /**
+     * open new article in editor
+     */
     public void openEditorScene() {
+        editorController.openNewArticle();
+        editorStage.show();
+    }
+
+    /**
+     * open an article in editor
+     */
+    // TODO: use this method for opening an article in ArticleTable for editing
+    public void openEditorScene(Article article)
+    {
+        editorController.openArticle(article);
         editorStage.show();
     }
 
@@ -241,7 +255,7 @@ public class MainController extends Application {
             result=createArticle(article);
         }else
         {
-            result=dc.DBEditArticle(article.getId(),article.getTitle(),article.getTopic(),article.getContent(),article.getPublisherComment());
+            result=dc.DBEditArticle(article.getId(),article.getTitle(),article.getTopic_int(),article.getContent(),article.getPublisherComment());
         }
 
         Article newArticle= dc.DBLoadLastArticle();

@@ -1,5 +1,7 @@
 package model;
 
+import javafx.collections.ObservableList;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,6 +15,7 @@ public class User {
     private String address;
     private Date dateOfBirth;
     private Gender gender;
+    private ObservableList<Topic> topics; // TODO: implement filling list into DataController when loading user(s). And into user management!
 
     // Ctor_______________________________________________________________________________________________________
     public User() {
@@ -156,5 +159,13 @@ public class User {
         this.name = name;
     }
 
+    public ObservableList<Topic> getTopics()
+    {
+        return topics;
+    }
 
+    public void setTopics(ObservableList<Topic> topics)
+    {
+        this.topics = topics;
+    }
 }

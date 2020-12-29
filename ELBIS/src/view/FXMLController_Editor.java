@@ -2,7 +2,6 @@ package view;
 
 import com.itextpdf.html2pdf.HtmlConverter;
 import controller.MainController;
-import javafx.application.Application;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -48,7 +46,7 @@ public class FXMLController_Editor
     private MainController mainController;
 
     // current Article loaded in editor
-    private Article currentArticle= new Article();
+    private Article currentArticle;
 
     @FXML
     WebView webView;
@@ -101,6 +99,11 @@ public class FXMLController_Editor
     }
 
 
+    public void openNewArticle()
+    {
+        currentArticle= new Article();
+    }
+
     public void openArticle(Article article)
     {
         currentArticle=article;
@@ -142,6 +145,7 @@ public class FXMLController_Editor
             Stage saveDialog = new Stage();
             FXMLController_Save saveController= new FXMLController_Save(mainController);
 
+            // laod FXML and controller
             FXMLLoader saveLoader = new FXMLLoader(getClass().getResource("/view/SavePrompt.fxml"));
             saveLoader.setController(saveController);
             saveLoader.load();
@@ -156,19 +160,19 @@ public class FXMLController_Editor
             saveDialog.initModality(Modality.APPLICATION_MODAL);
 
 
-
             // load current attributes of article
             saveController.saveTitle.setText(currentArticle.getTitle());
             if (currentArticle.getStatus()!=null)
             {
                 saveController.statusChoice.setValue(currentArticle.getStatus());
             }
-            if (currentArticle.getTopic()!=0)
+            if (currentArticle.getTopic_int()!=0)
             {
-
+                saveController.topicChoice.getSelectionModel().select(currentArticle.getTopic_int()-1);
             }
 
-
+            //TODO: update save for Topic and status
+            // TODO: status and topic selection based on user and privileges
             // save button action
             saveController.saveButton.setOnAction(new EventHandler<ActionEvent>()
             {
@@ -183,16 +187,25 @@ public class FXMLController_Editor
                                 "Bitte keinen leeren Titel angeben!");
                         alert.showAndWait();
 
-                    }else if (true)
+                    }else if (saveController.expireDate.getValue()==null)
                     {
-
+                        Alert alert= new Alert(Alert.AlertType.ERROR,
+                                "Bitte ein Ablaufdatum angeben!");
+                        alert.showAndWait();
                     }
                     else
                     {
+                        // update values of current article according to filled in fields
                         currentArticle.setTitle(saveController.saveTitle.getText());
                         currentArticle.setContent(html);
-                        mainController.saveArticle(currentArticle);
+                        currentArticle.setExpireDate(saveController.getExpireDate());
+                        currentArticle.setTopic(saveController.topicChoice.getValue());
+                        // for compatibility of old topic int value. needs to +1 because index in DB starts at 1
+                        currentArticle.setTopic_int(saveController.topicChoice.getSelectionModel().getSelectedIndex()+1);
+                        currentArticle.setStatus(saveController.statusChoice.getValue());
 
+                        // send current Article with updated values to main controller to write into db
+                        mainController.saveArticle(currentArticle);
                         // close window
                         saveDialog.close();
                     }
@@ -214,7 +227,7 @@ public class FXMLController_Editor
             //saveLoader.setController(saveController);
             saveDialog.setScene(saveScene);
 
-            saveDialog.show();
+            saveDialog.showAndWait();
         }
 
 

@@ -1,18 +1,19 @@
 package model;
 
-import java.util.Date;
-
 public class Article {
     // Atrrib_______________________________________________________________________________________________________
-    private int id=0;
+    private int id=0; // if id==0 then Article is regarded as not in db yet
     private String title;
     private String content;
     private String creationDate;
     private String expireDate;
     private String lastEdit;
     private Status status;
-    private int topic;
-    private Topic Topic;
+    private int topic_int;
+    private Topic topic;
+
+
+
     private int author_Id;
     private int publisher_Id;
     private String publisherComment;
@@ -22,13 +23,13 @@ public class Article {
     // Ctor_______________________________________________________________________________________________________
 
     // for ArticleTable
-    public Article(int id, String title, String creationDate, String expireDate, String lastEdit, int topic, String publisherComment) {
+    public Article(int id, String title, String creationDate, String expireDate, String lastEdit, int topic_int, String publisherComment) {
         this.id = id;
         this.title = title;
         this.creationDate = creationDate;
         this.expireDate = expireDate;
         this.lastEdit = lastEdit;
-        this.topic = topic;
+        this.topic_int = topic_int;
         this.publisherComment = publisherComment;
     }
 
@@ -76,12 +77,23 @@ public class Article {
     public void setPublisherComment(String publisherComment) {
         this.publisherComment = publisherComment;
     }
-    public int getTopic() {
+
+    public int getTopic_int() {
+        return topic_int;
+    }
+    public void setTopic_int(int topic_int) {
+        this.topic_int = topic_int;
+    }
+    public Topic getTopic()
+    {
         return topic;
     }
-    public void setTopic(int topic) {
+
+    public void setTopic(Topic topic)
+    {
         this.topic = topic;
     }
+
     public String getLastEdit() {
         return lastEdit;
     }
@@ -106,5 +118,6 @@ public class Article {
     public void setStatus(Status status) {
         this.status = status;
     }
+
 
 }

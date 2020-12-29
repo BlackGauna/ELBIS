@@ -14,6 +14,7 @@ import model.Status;
 import model.Topic;
 
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class FXMLController_Save
@@ -34,6 +35,9 @@ public class FXMLController_Save
     TextField saveTitle;
 
     @FXML
+    DatePicker expireDate;
+
+    @FXML
     ChoiceBox<Status> statusChoice;
 
     @FXML
@@ -51,10 +55,19 @@ public class FXMLController_Save
 
         topics= mainController.getAllTopics();
         topicChoice.getItems().addAll(topics);
+        topicChoice.getSelectionModel().selectFirst();
+        System.out.println(topicChoice.toString());
 
-        Topic test = topics.get(4).getParent();
-        System.out.println(test.getName());
-
+        //Topic test = topics.get(4).getParent();
+        //System.out.println(test.getName());
 
     }
+
+    public String getExpireDate()
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        String expire = expireDate.getValue().format(formatter);
+        return expire;
+    }
+
 }
