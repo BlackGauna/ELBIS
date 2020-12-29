@@ -15,7 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.Article;
+import model.*;
 import netscape.javascript.JSObject;
 
 import javax.imageio.ImageIO;
@@ -160,18 +160,34 @@ public class FXMLController_Editor
             saveDialog.initModality(Modality.APPLICATION_MODAL);
 
 
+            User activeUser= mainController.getActiveUser();
+
+
             // load current attributes of article
             saveController.saveTitle.setText(currentArticle.getTitle());
             if (currentArticle.getStatus()!=null)
             {
                 saveController.statusChoice.setValue(currentArticle.getStatus());
+
             }
+
             if (currentArticle.getTopic_int()!=0)
             {
                 saveController.topicChoice.getSelectionModel().select(currentArticle.getTopic_int()-1);
             }
 
-            //TODO: update save for Topic and status
+            // if only user privileges then limited options for status
+            // but can still see the current status
+            if (activeUser instanceof User && !(activeUser instanceof Administrator || activeUser instanceof Moderator))
+            {
+                saveController.statusChoice.getItems().setAll(Status.Default, Status.Submitted);
+                if (currentArticle.getStatus()==null)
+                {
+                    saveController.statusChoice.setValue(Status.Default);
+                }
+
+            }
+
             // TODO: status and topic selection based on user and privileges
             // save button action
             saveController.saveButton.setOnAction(new EventHandler<ActionEvent>()
@@ -180,6 +196,8 @@ public class FXMLController_Editor
                 public void handle(ActionEvent event)
                 {
                     String titleText= saveController.saveTitle.getText();
+                    Status chosenStatus= saveController.statusChoice.getValue();
+
 
                     if (titleText==null || titleText.matches("^\\s*$"))
                     {
@@ -187,11 +205,26 @@ public class FXMLController_Editor
                                 "Bitte keinen leeren Titel angeben!");
                         alert.showAndWait();
 
+                    }else if (saveController.topicChoice.getValue()==null)
+                    {
+                        Alert alert= new Alert(Alert.AlertType.ERROR,
+                                "Bitte einen Bereich für den Artikel wählen!");
+                        alert.showAndWait();
                     }else if (saveController.expireDate.getValue()==null)
                     {
                         Alert alert= new Alert(Alert.AlertType.ERROR,
                                 "Bitte ein Ablaufdatum angeben!");
                         alert.showAndWait();
+                    }else if (activeUser instanceof User && !(activeUser instanceof Administrator || activeUser instanceof Moderator))
+                    {
+                        // check if user left the status on an invalid status not in their privileges
+                        if (chosenStatus!=Status.Default|| chosenStatus != Status.Submitted)
+                        {
+                            Alert alert= new Alert(Alert.AlertType.ERROR,
+                                    "Sie haben keine Rechte für den aktuellen Status! \n\n"
+                                    + "Setzen Sie ihn auf Submitted, damit ein Redakteur den Artikel prüfen und ggf. freigeben kann.");
+                            alert.showAndWait();
+                        }
                     }
                     else
                     {

@@ -55,8 +55,6 @@ public class FXMLController_Save
 
         topics= mainController.getAllTopics();
         topicChoice.getItems().addAll(topics);
-        topicChoice.getSelectionModel().selectFirst();
-        System.out.println(topicChoice.toString());
 
         //Topic test = topics.get(4).getParent();
         //System.out.println(test.getName());
@@ -66,8 +64,7 @@ public class FXMLController_Save
     public String getExpireDate()
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String expire = expireDate.getValue().format(formatter);
-        return expire;
+        return expireDate.getValue().format(formatter);
     }
 
 }
