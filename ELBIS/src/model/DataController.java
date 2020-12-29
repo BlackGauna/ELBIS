@@ -139,7 +139,7 @@ public class DataController {
     //Load own articles by ID
     public static final String LOAD_OWN_ARTICLES_BY_ID = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_AUTHOR_ID + " = ";
     //Load own articles by Email
-    public static final String LOAD_OWN_ARTICLES_BY_EMAIL = "SELECT * FROM " + TABLE_ARTICLE + " INNER JOIN " + TABLE_USER + " ON " + COLUMN_ARTICLE_PUBLISHER_ID + " = " + COLUMN_USER_ID + " WHERE " + COLUMN_USER_EMAIL + " = ?";
+    public static final String LOAD_OWN_ARTICLES_BY_EMAIL = "SELECT * FROM " + TABLE_ARTICLE + " INNER JOIN " + TABLE_USER + " ON " + COLUMN_ARTICLE_PUBLISHER_ID + " = " + COLUMN_USER_ID + " WHERE " + COLUMN_USER_EMAIL + " = ";
     //Load all articles which are in submitted state
     public static final String LOAD_ALL_SUBMITTED_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_STATUS + " = 2";
     //Load all users
