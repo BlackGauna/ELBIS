@@ -11,10 +11,9 @@ import model.*;
 import java.io.IOException;
 
 
-public class FXMLController_MainApplication {
+public class FXMLController_MainApplication extends ELBIS_FXMLController {
 
     // Atrrib_______________________________________________________________________________________________________
-    MainController mainController;
     //Loaders
     FXMLLoader statusBarLoader;
     FXMLLoader headBarLoader;
@@ -66,9 +65,9 @@ public class FXMLController_MainApplication {
     }
 
     // Methods_______________________________________________________________________________________________________
-    //reference to mainView
+    @Override
     public void setMainController(MainController mainController) {
-        this.mainController = mainController;
+        super.setMainController(mainController);
         headBarController.setMainController(mainController);
     }
 

@@ -1,6 +1,5 @@
 package view;
 
-import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,11 +8,9 @@ import model.Article;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
-public class FXMLController_UserContent implements Initializable {
+public class FXMLController_UserContent extends ELBIS_FXMLController implements Initializable {
 
     // Atrrib_______________________________________________________________________________________________________
-    MainController mainController;
 
     // Ini_______________________________________________________________________________________________________
     @Override
@@ -62,9 +59,6 @@ public class FXMLController_UserContent implements Initializable {
     }
 
     // Methods_______________________________________________________________________________________________________
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
 
     public void refreshUserContent(){
         mainController.setStatus("Refreshing UserContent...");

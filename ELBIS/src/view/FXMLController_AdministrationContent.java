@@ -1,30 +1,21 @@
 package view;
 
-import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import model.DataController;
 import model.Topic;
 
-import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
 import java.util.ResourceBundle;
 
 import static view.sideStageState.createTopic;
 
-public class FXMLController_AdministrationContent implements Initializable {
+public class FXMLController_AdministrationContent extends ELBIS_FXMLController implements Initializable {
     //TODO import Table variables
     //TODO buttonEvents
 
     // Atrrib_______________________________________________________________________________________________________
-    MainController mainController;
-    private Dialog_CreateTopic createTopicDialog;
     // UI_______________________________________________________________________________________________________
     @FXML
     private TableView<Topic> topicTable = new TableView<>();
@@ -54,6 +45,7 @@ public class FXMLController_AdministrationContent implements Initializable {
     void createTopicClicked(ActionEvent event) {
         try {
             mainController.openSideStage(createTopic);
+            refreshAdministrationContent();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,21 +57,12 @@ public class FXMLController_AdministrationContent implements Initializable {
     }
 
     // Methods_______________________________________________________________________________________________________
-    public void createTopic() {
-       // createTopicDialog = new Dialog_CreateTopic(Alert.AlertType.INFORMATION, mainController);
-        //createTopicDialog.showAndWait();
-        refreshAdministrationContent();
-    }
-
     public void refreshAdministrationContent() {
         mainController.setStatus("Refreshing AdministratorContent...");
         setContent_TopicTable(mainController.refreshAdministrationContent_TopicTable(getContent_TopicTable()));
     }
 
     // Getters,Setters_________________________________________________________________________________________________
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
 
     public TableView getContent_TopicTable() {
         return topicTable;

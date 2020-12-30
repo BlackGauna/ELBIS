@@ -1,23 +1,16 @@
 package view;
 
-import controller.Launch;
-import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.sql.SQLException;
 
-public class FXMLController_Login {
+public class FXMLController_Login extends ELBIS_FXMLController {
 
     // Atrrib_______________________________________________________________________________________________________
-    MainController mainController;
 
     // Ini_______________________________________________________________________________________________________
-
-    public void initialize() {
-
-    }
 
     // UI_______________________________________________________________________________________________________
     @FXML
@@ -31,10 +24,6 @@ public class FXMLController_Login {
 
 
     // Methods_______________________________________________________________________________________________________
-    //reference to mainView
-    public void setMainController(MainController mainController){
-        this.mainController = mainController;
-    }
 
     public void loginClicked(ActionEvent event) throws SQLException {
         boolean flag = mainController.login(txtEmail.getText(),txtPassword.getText());

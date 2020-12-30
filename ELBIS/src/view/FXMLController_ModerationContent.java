@@ -1,24 +1,20 @@
 package view;
 
-import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import model.User;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class FXMLController_ModerationContent implements Initializable {
+public class FXMLController_ModerationContent extends ELBIS_FXMLController implements Initializable {
     //TODO import Table variables
     //TODO buttonEvents
 
     // Atrrib_______________________________________________________________________________________________________
-    MainController mainController;
-    //Alert createUserAlert;
-    private Dialog_CreateUser createUserDialog;
+
     // UI_______________________________________________________________________________________________________
     @FXML
     private TableView<User> userTable = new TableView<>();
@@ -54,8 +50,9 @@ public class FXMLController_ModerationContent implements Initializable {
     @FXML
     void createUserClicked(ActionEvent event) {
         try {
-            createUser();
-        } catch (IOException e) {
+            mainController.openSideStage(sideStageState.createUser);
+            refreshModerationContent();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -66,13 +63,6 @@ public class FXMLController_ModerationContent implements Initializable {
     }
 
     // Methods_______________________________________________________________________________________________________
-    public boolean createUser() throws IOException {
-        boolean result = false;
-        createUserDialog = new Dialog_CreateUser(Alert.AlertType.INFORMATION, mainController);
-        createUserDialog.showAndWait();
-        refreshModerationContent();
-        return result;
-    }
 
     public void refreshModerationContent() {
         mainController.setStatus("Refreshing ModeratorContent...");
@@ -80,9 +70,6 @@ public class FXMLController_ModerationContent implements Initializable {
     }
 
     // Getters,Setters_________________________________________________________________________________________________
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
 
     public TableView getContent_UserTable() {
         return userTable;

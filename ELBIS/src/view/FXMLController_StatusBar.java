@@ -3,13 +3,12 @@ package view;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 
-public class FXMLController_StatusBar {
+public class FXMLController_StatusBar extends ELBIS_FXMLController {
 
     // Atrrib_______________________________________________________________________________________________________
     LinkedList<String> statusHist = new LinkedList<String>();

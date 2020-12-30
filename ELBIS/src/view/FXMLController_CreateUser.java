@@ -1,17 +1,13 @@
 package view;
 
-import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.time.format.DateTimeFormatter;
 
-public class FXMLController_CreateUser {
+public class FXMLController_CreateUser extends ELBIS_FXMLController {
 
     // Atrrib_______________________________________________________________________________________________________
-    MainController mainController;
-
-
     // UI_______________________________________________________________________________________________________
 
     @FXML
@@ -59,9 +55,6 @@ public class FXMLController_CreateUser {
     }
 
     // Getters,Setters_________________________________________________________________________________________________
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
 
     public String getEmail() {
         return txtEmail.getText();

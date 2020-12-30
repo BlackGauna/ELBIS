@@ -1,15 +1,14 @@
 package view;
 
-import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-public class FXMLController_HeadBar {
+public class FXMLController_HeadBar extends ELBIS_FXMLController {
     //TODO buttonEvent
 
     // Atrrib_______________________________________________________________________________________________________
-    MainController mainController;
+
     // Ini_______________________________________________________________________________________________________
 
     // UI_______________________________________________________________________________________________________
@@ -33,8 +32,6 @@ public class FXMLController_HeadBar {
         lblRole.setText(role);
     }
     // Getters,Setters_________________________________________________________________________________________________
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
+
 }
 

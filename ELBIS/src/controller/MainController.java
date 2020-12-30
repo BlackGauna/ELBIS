@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.*;
 import view.*;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -60,8 +61,12 @@ public class MainController extends Application {
     private Pane applicationPane;
     private Pane editorPane;
 
-    //CreateTopicDialog
-    private FXMLLoader createTopicPaneLoader;
+    //SideContent
+    private FXMLLoader sideLoader;
+
+    private FXMLController_CreateUser createUserController;
+    private Pane createUserPane;
+
     private FXMLController_CreateTopic createTopicController;
     private Pane createTopicPane;
 
@@ -135,7 +140,7 @@ public class MainController extends Application {
 
     public boolean logout() {
         boolean logout = false;
-        setStatus("Logging out: "+activeUser.getEmail());
+        setStatus("Logging out: " + activeUser.getEmail());
         mainApplicationController.removeTabs();
         openLoginStage();
         this.activeUser = new User();
@@ -188,31 +193,38 @@ public class MainController extends Application {
      * open an article in editor
      */
     // TODO: use this method for opening an article in ArticleTable for editing
-    public void openEditorScene(Article article)
-    {
+    public void openEditorScene(Article article) {
         editorController.openArticle(article);
         editorStage.show();
     }
 
-    public void openSideStage(sideStageState state){
+    public void openSideStage(sideStageState state) {
+        String title = "";
         try {
             switch (state) {
+                //TODO add all side Stages
+                case createUser:
+                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateUser.fxml"));
+                    createUserPane = (Pane) sideLoader.load();
+                    createUserController = sideLoader.getController();
+                    createUserController.setMainController(this);
+                    sideScene = new Scene(createUserPane);
+                    title = "Nutzererstellung";
+                    break;
                 case createTopic:
-                    //load WindowContent
-                    createTopicPaneLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateTopic.fxml"));
-                    createTopicPane = (Pane) createTopicPaneLoader.load();
-                    createTopicController = createTopicPaneLoader.getController();
+                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateTopic.fxml"));
+                    createTopicPane = (Pane) sideLoader.load();
+                    createTopicController = sideLoader.getController();
                     createTopicController.setMainController(this);
                     sideScene = new Scene(createTopicPane);
-                    sideStage.setTitle("Bereichsertellung");
-                    break;
-                case createUser:
+                    title = "Bereichserstellung";
                     break;
             }
+            sideStage.setTitle(title);
             sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             sideStage.setScene(sideScene);
             sideStage.showAndWait();
-        }catch(IOException io){
+        } catch (IOException io) {
             io.printStackTrace();
             setStatus("Could not load SideStage content");
         }
@@ -331,7 +343,7 @@ public class MainController extends Application {
             roleInt = 1;
         } else if (role.equals("Moderator")) {
             roleInt = 2;
-        } else if (role.equals("User")){
+        } else if (role.equals("User")) {
             roleInt = 3;
         }
 
@@ -343,7 +355,7 @@ public class MainController extends Application {
 
     public boolean createArticle(Article article) {
         boolean result = false;
-        result= dc.DBSendNewArticle(article);
+        result = dc.DBSendNewArticle(article);
         return result;
     }
 
@@ -356,7 +368,7 @@ public class MainController extends Application {
             topicInt = 1;
         } else if (parent.equals("Gemeinde")) {
             topicInt = 2;
-        } else if (parent.equals("Industrie")){
+        } else if (parent.equals("Industrie")) {
             topicInt = 3;
         }
 
@@ -370,26 +382,22 @@ public class MainController extends Application {
      *
      ******************************/
 
-    public boolean saveArticle (Article article)
-    {
-        boolean result=false;
-        if (article.getId()==0)
-        {
-            result=createArticle(article);
-        }else
-        {
-            result=dc.DBEditArticle(article.getId(),article.getTitle(),article.getTopic_int(),article.getContent(),article.getPublisherComment());
+    public boolean saveArticle(Article article) {
+        boolean result = false;
+        if (article.getId() == 0) {
+            result = createArticle(article);
+        } else {
+            result = dc.DBEditArticle(article.getId(), article.getTitle(), article.getTopic_int(), article.getContent(), article.getPublisherComment());
         }
 
-        Article newArticle= dc.DBLoadLastArticle();
+        Article newArticle = dc.DBLoadLastArticle();
         editorController.openArticle(newArticle);
 
         return result;
     }
 
-    public ObservableList<Topic> getAllTopics()
-    {
-        ObservableList<Topic> topics= dc.DBLoadAllTopics();
+    public ObservableList<Topic> getAllTopics() {
+        ObservableList<Topic> topics = dc.DBLoadAllTopics();
 
         return topics;
     }

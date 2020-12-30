@@ -1,16 +1,14 @@
 package view;
 
-import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import model.DataController;
 
-public class FXMLController_CreateTopic {
+public class FXMLController_CreateTopic extends ELBIS_FXMLController {
 
     // Atrrib_______________________________________________________________________________________________________
-    MainController mainController;
+
 
     // UI_______________________________________________________________________________________________________
     @FXML
@@ -26,13 +24,11 @@ public class FXMLController_CreateTopic {
 
     // Ini_______________________________________________________________________________________________________
     public void initialize() {
+        //TODO load actual topics
         choiceTopic.getItems().addAll("Organisationen", "Gemeinde", "Industrie");
     }
 
     // Getters,Setters_________________________________________________________________________________________________
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
 
     public String getName() {
         return txtName.getText();
