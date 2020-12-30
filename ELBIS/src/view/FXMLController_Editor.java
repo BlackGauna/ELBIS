@@ -121,12 +121,6 @@ public class FXMLController_Editor
      */
     public class JavaConnector {
 
-        // IO for pdfhtml
-        // save to desktop for now
-        // TODO: add way to choose save location and filename
-
-        final String TARGET= System.getProperty("user.home")+ "/Desktop/";
-        final String DEST = System.getProperty("user.home")+ "\\Desktop\\output.pdf";
 
 
         public void openArticle(String html)
@@ -170,10 +164,13 @@ public class FXMLController_Editor
                 saveController.statusChoice.setValue(currentArticle.getStatus());
 
             }
-
             if (currentArticle.getTopic_int()!=0)
             {
                 saveController.topicChoice.getSelectionModel().select(currentArticle.getTopic_int()-1);
+            }
+            if (currentArticle.getExpireDate()!=null)
+            {
+                saveController.setExpireDate(currentArticle.getExpireDate());
             }
 
             // if only user privileges then limited options for status
@@ -188,7 +185,7 @@ public class FXMLController_Editor
 
             }
 
-            // TODO: status and topic selection based on user and privileges
+            // TODO: topic selection based on user and privileges
             // save button action
             saveController.saveButton.setOnAction(new EventHandler<ActionEvent>()
             {
@@ -290,18 +287,19 @@ public class FXMLController_Editor
 
             try
             {
-                //File file= new File();
                 HtmlConverter.convertToPdf(htmlSource, new FileOutputStream(pdf.getAbsolutePath()));
                 System.out.println("Exported PDF to: "+ pdf.getAbsolutePath());
             } catch (IOException e)
             {
                 e.printStackTrace();
             }
+
+
         }
 
-        public void createPdf(String html, String dest) throws IOException
+        public void createOnePager (File originalPdf)
         {
-            HtmlConverter.convertToPdf(html, new FileOutputStream(dest));
+
         }
 
 
