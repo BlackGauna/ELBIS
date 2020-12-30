@@ -366,7 +366,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            mainController.setStatus("Loading Topics...");
+            //mainController.setStatus("Loading Topic...");
             PreparedStatement pst = con.prepareStatement(LOAD_TOPIC);
             pst.setInt(1, id);
             pst.execute();
@@ -380,11 +380,11 @@ public class DataController {
                 topic.setParent(DBLoadTopic(rs.getInt(2))); //Small test
 
             }
-            mainController.setStatus("Successfully loaded!");
+            //mainController.setStatus("Successfully loaded!");
             con.close();
             return topic;
         } catch (SQLException e) {
-            mainController.setStatus("Couldn't load Topics!");
+            //mainController.setStatus("Couldn't load Topic!");
             System.out.println("Couldn't load Topic: " + e.getMessage());
             return null;
         }
