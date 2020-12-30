@@ -123,6 +123,35 @@ public class MainController extends Application {
     }
 
     // Methods_______________________________________________________________________________________________________
+    public void setStatus(String newStatus) {
+        mainApplicationController.setStatus(newStatus);
+    }
+
+    public boolean logout() {
+        boolean logout = false;
+        setStatus("Logging out: "+activeUser.getEmail());
+        mainApplicationController.removeTabs();
+        openLoginStage();
+        this.activeUser = new User();
+        return logout;
+    }
+
+    public boolean login(String email, String pw) throws SQLException {
+        boolean login = dc.login(email, pw);
+        if (login) {
+            activeUser = dc.DBLoadUserByEmail(email);
+            setStatus("Logged in \"" + activeUser.getEmail() + "\" with password \"" + activeUser.getPassword() + "\"");
+            mainApplicationController.openTabs(activeUser);
+            openApplicationStage();
+        } else if (!login) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Please enter correct email and password");
+            alert.setHeaderText(null);
+            alert.showAndWait();
+        }
+        return login;
+    }
 
     /*****************************
      *
@@ -159,43 +188,13 @@ public class MainController extends Application {
         editorStage.show();
     }
 
-    public void setStatus(String newStatus) {
-        mainApplicationController.setStatus(newStatus);
-    }
-
-    public boolean login(String email, String pw) throws SQLException {
-        boolean login = dc.login(email, pw);
-        if (login) {
-            activeUser = dc.DBLoadUserByEmail(email);
-            setStatus("Logged in \"" + activeUser.getEmail() + "\" with password \"" + activeUser.getPassword() + "\"");
-            mainApplicationController.openTabs(activeUser);
-            openApplicationStage();
-        } else if (!login) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText("Please enter correct email and password");
-            alert.setHeaderText(null);
-            alert.showAndWait();
-        }
-        return login;
-    }
-
-    public boolean logout() {
-        boolean logout = false;
-        setStatus("Logging out: "+activeUser.getEmail());
-        mainApplicationController.removeTabs();
-        openLoginStage();
-        this.activeUser = new User();
-        return logout;
-    }
-
     /******************************
      *
      * Refresh Table methods
      *
      ******************************/
 
-    public TableView refreshArticleTable(TableView table) {
+    public TableView refreshUserContent_ArticleTable(TableView table) {
 
         /*
         //TODO add buttonpanel to delete and edit articles per article in table
@@ -222,7 +221,7 @@ public class MainController extends Application {
         return table;
     }
 
-    public TableView refreshModerationTable(TableView table) {
+    public TableView refreshModerationContent_UserTable(TableView table) {
 
         /*
         //TODO fill tables "New Submissions" and "Manage Articles" with DB information
@@ -250,7 +249,7 @@ public class MainController extends Application {
     }
 
 
-    public TableView refreshAdministrationTable(TableView table) {
+    public TableView refreshAdministrationContent_TopicTable(TableView table) {
 
         /*
         //TODO fill table "Manage Roles" with DB information
@@ -276,30 +275,6 @@ public class MainController extends Application {
             setStatus("Warning: Empty AdministrationTable loaded?");
         }
         return table;
-    }
-
-    public boolean saveArticle (Article article)
-    {
-        boolean result=false;
-        if (article.getId()==0)
-        {
-            result=createArticle(article);
-        }else
-        {
-            result=dc.DBEditArticle(article.getId(),article.getTitle(),article.getTopic_int(),article.getContent(),article.getPublisherComment());
-        }
-
-        Article newArticle= dc.DBLoadLastArticle();
-        editorController.openArticle(newArticle);
-
-        return result;
-    }
-
-    public ObservableList<Topic> getAllTopics()
-    {
-        ObservableList<Topic> topics= dc.DBLoadAllTopics();
-
-        return topics;
     }
 
     /******************************
@@ -357,6 +332,36 @@ public class MainController extends Application {
 
         dc.DBSendNewTopic(name, topicInt);
         return result;
+    }
+
+    /******************************
+     *
+     * Other
+     *
+     ******************************/
+
+    public boolean saveArticle (Article article)
+    {
+        boolean result=false;
+        if (article.getId()==0)
+        {
+            result=createArticle(article);
+        }else
+        {
+            result=dc.DBEditArticle(article.getId(),article.getTitle(),article.getTopic_int(),article.getContent(),article.getPublisherComment());
+        }
+
+        Article newArticle= dc.DBLoadLastArticle();
+        editorController.openArticle(newArticle);
+
+        return result;
+    }
+
+    public ObservableList<Topic> getAllTopics()
+    {
+        ObservableList<Topic> topics= dc.DBLoadAllTopics();
+
+        return topics;
     }
 
     //Getters,Setters_______________________________________________________________________________________________________

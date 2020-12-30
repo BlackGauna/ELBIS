@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class FXMLController_ArticleTable implements Initializable {
+public class FXMLController_UserContent implements Initializable {
 
     // Atrrib_______________________________________________________________________________________________________
     MainController mainController;
@@ -58,8 +58,8 @@ public class FXMLController_ArticleTable implements Initializable {
 
     @FXML
     void refreshClicked(ActionEvent event) {
-        mainController.setStatus("Refreshing ArticleTable...");
-        setTableView(mainController.refreshArticleTable(getTableView()));
+        mainController.setStatus("Refreshing UserContent...");
+        setTableView(mainController.refreshUserContent_ArticleTable(getTableView()));
     }
 
     // Methods_______________________________________________________________________________________________________

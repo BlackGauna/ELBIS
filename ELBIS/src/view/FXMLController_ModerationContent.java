@@ -3,78 +3,84 @@ package view;
 import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import model.DataController;
-import model.Topic;
-
+import model.User;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
 import java.util.ResourceBundle;
 
-public class FXMLController_AdministrationTable implements Initializable {
+public class FXMLController_ModerationContent implements Initializable {
     //TODO import Table variables
     //TODO buttonEvents
 
     // Atrrib_______________________________________________________________________________________________________
     MainController mainController;
-    private Dialog_CreateTopic createTopicDialog;
+    //Alert createUserAlert;
+    private Dialog_CreateUser createUserDialog;
+
 
     // Ini_______________________________________________________________________________________________________
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        topicTable.getColumns().add(new TableColumn<Topic, String>("ID"));
-        topicTable.getColumns().add(new TableColumn<Topic, String>("Name"));
-        topicTable.getColumns().add(new TableColumn<Topic, String>("Parent Topic"));
+
+        userTable.getColumns().add(new TableColumn<User, String>("ID"));
+        userTable.getColumns().add(new TableColumn<User, String>("E-Mail"));
+        userTable.getColumns().add(new TableColumn<User, String>("Name"));
+        userTable.getColumns().add(new TableColumn<User, String>("Gender"));
+        userTable.getColumns().add(new TableColumn<User, String>("Role"));
+        userTable.getColumns().add(new TableColumn<User, String>("Address"));
+        userTable.getColumns().add(new TableColumn<User, String>("Date of Birth"));
         dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }
     // UI_______________________________________________________________________________________________________
     @FXML
-    private TableView<Topic> topicTable = new TableView<>();
+    private TableView<User> userTable = new TableView<>();
 
     @FXML
     private Accordion dropDownAccordion;
 
     @FXML
-    private TitledPane tPane_ManageTopics;
+    private TitledPane tPane_NewSubmissions;
 
     @FXML
-    private TitledPane tPane_ManageRoles;
+    private TitledPane tPane_ManageArticles;
+
+    @FXML
+    private TitledPane tPane_ManageUsers;
 
     @FXML
     private ButtonBar btnBar;
 
     @FXML
-    private Button btnCreateTopic;
+    private Button btn_CreateUser;
 
     @FXML
-    void createTopicClicked(ActionEvent event){
-        try{
-            createTopic();
-        } catch (Exception e) {
+    void createUserClicked(ActionEvent event) {
+        try {
+            createUser();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     // Methods_______________________________________________________________________________________________________
-    public void createTopic(){
-        createTopicDialog = new Dialog_CreateTopic(Alert.AlertType.INFORMATION, mainController);
-        createTopicDialog.show();
+    public boolean createUser() throws IOException {
+        boolean result = false;
+        createUserDialog = new Dialog_CreateUser(Alert.AlertType.INFORMATION, mainController);
+        createUserDialog.showAndWait();
+        return result;
     }
 
     // Getters,Setters_________________________________________________________________________________________________
-    public void setMainController(MainController mainController){
+    public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
     public TableView getTableView() {
-        return topicTable;
+        return userTable;
     }
     public void setTableView(TableView table) {
-        this.topicTable = table;
+        this.userTable = table;
     }
 
 }

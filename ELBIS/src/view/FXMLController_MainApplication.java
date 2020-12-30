@@ -33,9 +33,9 @@ public class FXMLController_MainApplication {
     //Controllers
     FXMLController_StatusBar statusBarController;
     FXMLController_HeadBar headBarController;
-    FXMLController_ArticleTable articleTableController;
-    FXMLController_ModerationTable moderationTableController;
-    FXMLController_AdministrationTable administrationTableController;
+    FXMLController_UserContent articleTableController;
+    FXMLController_ModerationContent moderationTableController;
+    FXMLController_AdministrationContent administrationTableController;
 
     // Ini_______________________________________________________________________________________________________
     // UI_______________________________________________________________________________________________________
@@ -104,7 +104,7 @@ public class FXMLController_MainApplication {
 
     public void addUserTab() throws IOException {
 
-        userTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_ArticleTable.fxml"));
+        userTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_UserContent.fxml"));
         articleTable = (Pane) userTableLoader.load();
         articleTableController = userTableLoader.getController();
         articleTableController.setMainController(mainController);
@@ -115,12 +115,12 @@ public class FXMLController_MainApplication {
 
         tabPane.getTabs().add(userTab);
         //initial load of ArticleTable
-        articleTableController.setTableView(mainController.refreshArticleTable(articleTableController.getTableView()));
+        articleTableController.setTableView(mainController.refreshUserContent_ArticleTable(articleTableController.getTableView()));
 
     }
 
     public void addModeratorTab() throws IOException {
-        moderationTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_ModerationTable.fxml"));
+        moderationTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_ModerationContent.fxml"));
         moderationTable = (Pane) moderationTableLoader.load();
         moderationTableController = moderationTableLoader.getController();
         moderationTableController.setMainController(mainController);
@@ -132,12 +132,12 @@ public class FXMLController_MainApplication {
         tabPane.getTabs().add(moderationTab);
         //initial load of ArticleTable
         //TODO resolve exceptions
-        moderationTableController.setTableView(mainController.refreshModerationTable(moderationTableController.getTableView()));
+        moderationTableController.setTableView(mainController.refreshModerationContent_UserTable(moderationTableController.getTableView()));
 
     }
 
     public void addAdminTab() throws IOException {
-        administrationTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_AdministrationTable.fxml"));
+        administrationTableLoader = new FXMLLoader(getClass().getResource("/view/Pane_AdministrationContent.fxml"));
         administrationTable = (Pane) administrationTableLoader.load();
         administrationTableController = administrationTableLoader.getController();
         administrationTableController.setMainController(mainController);
@@ -149,7 +149,7 @@ public class FXMLController_MainApplication {
         tabPane.getTabs().add(administrationTab);
         //TODO RefreshAdministrationTable
         //initial load of ArticleTable
-        administrationTableController.setTableView(mainController.refreshAdministrationTable(administrationTableController.getTableView()));
+        administrationTableController.setTableView(mainController.refreshAdministrationContent_TopicTable(administrationTableController.getTableView()));
     }
 
 }
