@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
@@ -237,52 +238,44 @@ public class MainController extends Application {
      ******************************/
 
     public TableView refreshUserContent_ArticleTable(TableView table) {
-
         /*
         //TODO add buttonpanel to delete and edit articles per article in table
         */
-
         ObservableList<Article> articleList = dc.DBLoadOwnArticles(activeUser.getId());
-
         // Getter from Article Class
         List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisherComment");
-
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
             ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
         }
-
         table.setItems(articleList);
-
         //Test if table is empty
         if (table.getItems().size() == 0) {
             setStatus("Warning: Empty ArticleTable loaded?");
         }
-
         return table;
     }
 
-    public TableView refreshModerationContent_UserTable(TableView table) {
+    public TreeView refreshUserContent_ArticleTree(TreeView tree){
+        //TODO implement Topics as tree-titles and sort Articles into it
+        return tree;
+    }
 
+    public TableView refreshModerationContent_UserTable(TableView table) {
         /*
         //TODO fill tables "New Submissions" and "Manage Articles" with DB information
-        //TODO add buttonpanel to delete and edit users per user in table
+        //TODO add buttonpanel to delete and edit (JUST) users per user in table
         */
-
         ObservableList<User> userList = dc.DBLoadAllUsers();
-
         // Getter from User Class
         List<String> propertyKeys = Arrays.asList("id", "email", "name", "genderString", "role", "address", "dobString");
-
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
             ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>(propertyKeys.get(i)));
         }
-
         table.setItems(userList);
-
         //Test if table is empty
         if (table.getItems().size() == 0) {
             setStatus("Warning: Empty ModerationTable loaded?");
@@ -290,32 +283,45 @@ public class MainController extends Application {
         return table;
     }
 
+    public TableView refreshModerationContent_SubmissionTable(TableView table){
+        /*
+        //TODO fill table with DB information (All Articles in state "submitted")
+        //TODO add buttonpanel to edit state of an article with a new ModeratorComment
+        */
+        return table;
+    }
+
+    public TableView refreshModerationContent_ArticleTable(TableView table){
+        /*
+        //TODO fill table with DB information (all existing articles)
+        //TODO add buttonpanel to edit state or delete of an article
+        */
+        return table;
+    }
 
     public TableView refreshAdministrationContent_TopicTable(TableView table) {
 
-        /*
-        //TODO fill table "Manage Roles" with DB information
-        //TODO add buttonpanel to promote/degrade users per user in table
-        */
-
         ObservableList<Topic> topicList = dc.DBLoadAllTopics();
-
         // Getter from User Class
         List<String> propertyKeys = Arrays.asList("id", "name", "parentTopicString");
-
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
             ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((propertyKeys.get(i))));
-
         }
-
         table.setItems(topicList);
-
         //Test if table is empty
         if (table.getItems().size() == 0) {
             setStatus("Warning: Empty AdministrationTable loaded?");
         }
+        return table;
+    }
+
+    public TableView refreshAdministrationContent_UserTable(TableView table){
+        /*
+        //TODO fill table "Manage Roles" with DB information (all Users)
+        //TODO add buttonpanel to edit roles of an user or to delete an User
+        */
         return table;
     }
 

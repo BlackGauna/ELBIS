@@ -4,20 +4,23 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import model.User;
+import model.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class FXMLController_ModerationContent extends ELBIS_FXMLController implements Initializable {
-    //TODO import Table variables
-    //TODO buttonEvents
 
     // Atrrib_______________________________________________________________________________________________________
 
     // UI_______________________________________________________________________________________________________
     @FXML
     private TableView<User> userTable = new TableView<>();
+    @FXML
+    private TableView<Article> submissionTable = new TableView<>();
+    @FXML
+    private TableView<Article> articleTable = new TableView<>();
+
     @FXML
     private Accordion dropDownAccordion;
     @FXML
@@ -36,6 +39,17 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
     // Ini_______________________________________________________________________________________________________
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //TODO add Submission-columns to submissionTable
+
+        articleTable.getColumns().add(new TableColumn<Article, String>("ID"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Title"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Created"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Expires"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Last Edit"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Status"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Topic"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Author"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Publisher comment"));
 
         userTable.getColumns().add(new TableColumn<User, String>("ID"));
         userTable.getColumns().add(new TableColumn<User, String>("E-Mail"));
@@ -66,6 +80,8 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
 
     public void refreshModerationContent() {
         mainController.setStatus("Refreshing ModeratorContent...");
+        setContent_SubmissionTable(mainController.refreshModerationContent_SubmissionTable(getContent_SubmissionTable()));
+        setContent_ArticleTable(mainController.refreshModerationContent_ArticleTable(getContent_ArticleTable()));
         setContent_UserTable(mainController.refreshModerationContent_UserTable(getContent_UserTable()));
     }
 
@@ -74,9 +90,22 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
     public TableView getContent_UserTable() {
         return userTable;
     }
-
     public void setContent_UserTable(TableView table) {
         this.userTable = table;
+    }
+
+    public TableView getContent_SubmissionTable() {
+        return submissionTable;
+    }
+    public void setContent_SubmissionTable(TableView table) {
+        this.submissionTable = table;
+    }
+
+    public TableView getContent_ArticleTable() {
+        return articleTable;
+    }
+    public void setContent_ArticleTable(TableView table){
+        this.articleTable = table;
     }
 
 }

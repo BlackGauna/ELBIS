@@ -33,7 +33,7 @@
                               <content>
                                 <AnchorPane>
                                        <children>
-                                          <TreeView layoutX="-1.0" prefHeight="417.0" prefWidth="1164.0" />
+                                          <TreeView fx:id="topicTree" layoutX="-1.0" prefHeight="417.0" prefWidth="1164.0" />
                                        </children>
                                     </AnchorPane>
                               </content>

@@ -31,6 +31,9 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
     private TableView<Article> articleTable = new TableView<>();
 
     @FXML
+    private TreeView<Article> topicTree = new TreeView<>();
+
+    @FXML
     private Accordion dropDownAccordion;
 
     @FXML
@@ -63,6 +66,7 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
     public void refreshUserContent(){
         mainController.setStatus("Refreshing UserContent...");
         setContent_ArticleTable(mainController.refreshUserContent_ArticleTable(getContent_ArticleTable()));
+        setContent_TopicTree(mainController.refreshUserContent_ArticleTree(getContent_TreeView()));
     }
 
     // Getters,Setters_________________________________________________________________________________________________
@@ -73,6 +77,14 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
 
     public void setContent_ArticleTable(TableView table) {
         this.articleTable = table;
+    }
+
+    public TreeView getContent_TreeView(){
+        return topicTree;
+    }
+
+    public void setContent_TopicTree(TreeView tree) {
+        this.topicTree = tree;
     }
 
 

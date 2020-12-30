@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -22,37 +21,18 @@
                           <panes>
                               <TitledPane fx:id="tPane_NewSubmissions" animated="false" prefHeight="827.0" prefWidth="1172.0" text="NewSubmissions">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                  <AnchorPane>
                                        <children>
-                                          <TableView prefHeight="410.0" prefWidth="1164.0">
-                                             <columns>
-                                                <TableColumn prefWidth="116.0" text="Title" />
-                                                <TableColumn prefWidth="45.0" text="id" />
-                                                <TableColumn prefWidth="72.0" text="Status" />
-                                                <TableColumn prefWidth="78.0" text="lifespan" />
-                                                <TableColumn prefWidth="75.0" text="by User" />
-                                                <TableColumn prefWidth="164.0" text="Comment" />
-                                             </columns>
-                                          </TableView>
+                                          <TableView fx:id="submissionTable" prefHeight="410.0" prefWidth="1164.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
                             <TitledPane fx:id="tPane_ManageArticles" animated="false" prefHeight="827.0" prefWidth="1172.0" text="ManageArticles">
                               <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                <AnchorPane>
                                        <children>
-                                          <TableView layoutX="-1.0" layoutY="-1.0" prefHeight="410.0" prefWidth="1164.0">
-                                            <columns>
-                                              <TableColumn prefWidth="116.0" text="Title" />
-                                              <TableColumn prefWidth="45.0" text="id" />
-                                                <TableColumn prefWidth="72.0" text="Status" />
-                                                <TableColumn prefWidth="78.0" text="lifespan" />
-                                                <TableColumn prefWidth="87.0" text="by User" />
-                                                <TableColumn prefWidth="75.0" text="created" />
-                                                <TableColumn prefWidth="94.0" text="Comment" />
-                                            </columns>
-                                          </TableView>
+                                          <TableView fx:id="articleTable" layoutX="-1.0" layoutY="-1.0" prefHeight="410.0" prefWidth="1164.0" />
                                        </children>
                                     </AnchorPane>
                               </content>

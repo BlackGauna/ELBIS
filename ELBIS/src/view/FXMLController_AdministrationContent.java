@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import model.Topic;
+import model.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,6 +19,8 @@ public class FXMLController_AdministrationContent extends ELBIS_FXMLController i
     // UI_______________________________________________________________________________________________________
     @FXML
     private TableView<Topic> topicTable = new TableView<>();
+    @FXML
+    private TableView<User> userTable = new TableView<>();
     @FXML
     private Accordion dropDownAccordion;
     @FXML
@@ -60,6 +62,7 @@ public class FXMLController_AdministrationContent extends ELBIS_FXMLController i
     public void refreshAdministrationContent() {
         mainController.setStatus("Refreshing AdministratorContent...");
         setContent_TopicTable(mainController.refreshAdministrationContent_TopicTable(getContent_TopicTable()));
+        setContent_UserTable(mainController.refreshAdministrationContent_UserTable(getContent_UserTable()));
     }
 
     // Getters,Setters_________________________________________________________________________________________________
@@ -67,9 +70,15 @@ public class FXMLController_AdministrationContent extends ELBIS_FXMLController i
     public TableView getContent_TopicTable() {
         return topicTable;
     }
-
     public void setContent_TopicTable(TableView table) {
         this.topicTable = table;
+    }
+
+    public TableView getContent_UserTable(){
+        return userTable;
+    }
+    public void setContent_UserTable(TableView table){
+        this.userTable = table;
     }
 
 }
