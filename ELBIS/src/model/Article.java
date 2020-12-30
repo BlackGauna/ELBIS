@@ -11,14 +11,11 @@ public class Article {
     private Status status;
     private int topic_int;
     private Topic topic;
-
-
-
+    private String statusString;
+    private String author;
     private int author_Id;
     private int publisher_Id;
     private String publisherComment;
-
-
 
     // Ctor_______________________________________________________________________________________________________
 
@@ -34,7 +31,20 @@ public class Article {
     }
 
     public Article() {
+    }
 
+    // for ArticleTable - LoadOwnArticles
+    public Article(int id, String title, String creationDate, String expireDate, String lastEdit, String status,
+                   Topic topic, String author, String publisherComment) {
+        this.id = id;
+        this.title = title;
+        this.creationDate = creationDate;
+        this.expireDate = expireDate;
+        this.lastEdit = lastEdit;
+        this.statusString = status;
+        this.topic = topic;
+        this.author = author;
+        this.publisherComment = publisherComment;
     }
 
     // Methods_______________________________________________________________________________________________________
@@ -77,7 +87,6 @@ public class Article {
     public void setPublisherComment(String publisherComment) {
         this.publisherComment = publisherComment;
     }
-
     public int getTopic_int() {
         return topic_int;
     }
@@ -88,12 +97,10 @@ public class Article {
     {
         return topic;
     }
-
     public void setTopic(Topic topic)
     {
         this.topic = topic;
     }
-
     public String getLastEdit() {
         return lastEdit;
     }
@@ -118,6 +125,13 @@ public class Article {
     public void setStatus(Status status) {
         this.status = status;
     }
-
-
+    public String getAuthor() {
+        return author;
+    }
+    public String getTopicName(){
+        return topic.getName();
+    }
+    public String getStatusString() {
+        return statusString;
+    }
 }

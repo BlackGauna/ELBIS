@@ -137,7 +137,12 @@ public class DataController {
     //Load all articles
     public static final String LOAD_ALL_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE;
     //Load own articles by ID
-    public static final String LOAD_OWN_ARTICLES_BY_ID = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_AUTHOR_ID + " = ";
+    public static final String LOAD_OWN_ARTICLES_BY_ID = "SELECT a.id, a.title, a.creationDate, a.expireDate, a.lastEdit, s.name, "
+            + "t.id, t.name, t.parentTopic, u1.name as author, a.publisherComment FROM Article a "
+            + "JOIN Status s on a.status = s.id "
+            + "JOIN Topic t on a.topic = t.id "
+            + "JOIN User u1 on a.authorId = u1.id "
+            + "WHERE " + COLUMN_ARTICLE_AUTHOR_ID + " = ";
     //Load own articles by Email
     public static final String LOAD_OWN_ARTICLES_BY_EMAIL = "SELECT * FROM " + TABLE_ARTICLE + " INNER JOIN " + TABLE_USER + " ON " + COLUMN_ARTICLE_PUBLISHER_ID + " = " + COLUMN_USER_ID + " WHERE " + COLUMN_USER_EMAIL + " = ";
     //Load all articles which are in submitted state
@@ -355,6 +360,7 @@ public class DataController {
         }
     }
 
+    // Get ObservableList of all own articles
     public ObservableList DBLoadOwnArticles(int authorId) {
         try {
             con = SQLConnection.ConnectDB();
@@ -368,10 +374,12 @@ public class DataController {
                 articleList.add(new Article(
                         rs.getInt(1),
                         rs.getString(2),
+                        rs.getString(3),
                         rs.getString(4),
                         rs.getString(5),
                         rs.getString(6),
-                        rs.getInt(8),
+                        new Topic(rs.getInt(7),rs.getString(8),rs.getInt(9)),
+                        rs.getString(10),
                         rs.getString(11)));
             }
             mainController.setStatus("Successfully loaded!");
@@ -484,7 +492,7 @@ public class DataController {
                         rs.getInt(1),
                         rs.getString(2),
                         rs.getInt(3)));
-                topicList.get(topicList.size()-1).setParent(DBLoadTopic(rs.getInt(3))); // small test 2
+//                topicList.get(topicList.size()-1).setParent(DBLoadTopic(rs.getInt(3))); // small test 2
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
@@ -512,7 +520,7 @@ public class DataController {
                 topic.setId(id);
                 topic.setName(rs.getString(1));
                 topic.setParentTopic(rs.getInt(2));
-                topic.setParent(DBLoadTopic(rs.getInt(2))); //Small test
+//                topic.setParent(DBLoadTopic(rs.getInt(2))); //Small test
 
             }
             mainController.setStatus("Successfully loaded!");

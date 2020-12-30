@@ -16,18 +16,17 @@ public class FXMLController_ArticleTable implements Initializable {
     MainController mainController;
 
     // Ini_______________________________________________________________________________________________________
-   @Override
+    @Override
    public void initialize(URL url, ResourceBundle resourceBundle) {
-       articleTable.getColumns().add(new TableColumn<Article, String>("id"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("title"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("creationDate"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("expireDate"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("lastEdit"));
-//       articleTable.getColumns().add(new TableColumn<Article, String>("status"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("topic"));
-//       articleTable.getColumns().add(new TableColumn<Article, String>("authorId"));
-//       articleTable.getColumns().add(new TableColumn<Article, String>("publisherId"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("publisherComment"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("ID"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Title"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Created"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Expires"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Last Edit"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Status"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Topic"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Author"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Publisher comment"));
        dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
    }
     // UI_______________________________________________________________________________________________________

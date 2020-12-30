@@ -16,6 +16,8 @@ import view.*;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainController extends Application {
 
@@ -180,20 +182,22 @@ public class MainController extends Application {
 
         ObservableList<Topic> topicList = dc.DBLoadAllTopics();
         ObservableList<Article> articleList = dc.DBLoadOwnArticles(activeUser.getId());
-//        ObservableList<Article> articleList = dc.DBLoadAllArticles();
 
+        // Getter from Article Class
+        List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisherComment");
+
+        // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(((TableColumn<Article, String>) table.getColumns().get(i)).getText()));
-
+            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
         }
 
         table.setItems(articleList);
+
         //Test if table is empty
         if (table.getItems().size() == 0) {
             setStatus("Warning: Empty ArticleTable loaded?");
         }
-
 
         return table;
     }
