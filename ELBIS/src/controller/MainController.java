@@ -287,7 +287,7 @@ public class MainController extends Application {
      *
      ******************************/
 
-    public boolean createUser(String email, String password, String name, String address, String gender, String dateOfBirth) {
+    public boolean createUser(String email, String password, String name, String gender, String role, String address, String dateOfBirth) {
         boolean result = false;
         int genderInt = 0;
 
@@ -298,8 +298,19 @@ public class MainController extends Application {
         } else if (gender.equals("Divers")) {
             genderInt = 3;
         }
+
+        int roleInt = 0;
+
+        if (role.equals("Admin")) {
+            roleInt = 1;
+        } else if (role.equals("Moderator")) {
+            roleInt = 2;
+        } else if (role.equals("User")){
+            roleInt = 3;
+        }
+
         //TODO send actual User
-        result = dc.DBSendNewUser(email, password, name, address, genderInt, dateOfBirth);
+        result = dc.DBSendNewUser(email, password, name, genderInt, roleInt, address, dateOfBirth);
 
         return result;
     }
@@ -312,7 +323,18 @@ public class MainController extends Application {
 
     public boolean createTopic(String name, String parent) {
         boolean result = false;
-        dc.DBSendNewTopic(name, parent);
+
+        int topicInt = 0;
+
+        if (parent.equals("Organisationen")) {
+            topicInt = 1;
+        } else if (parent.equals("Gemeinde")) {
+            topicInt = 2;
+        } else if (parent.equals("Industrie")){
+            topicInt = 3;
+        }
+
+        dc.DBSendNewTopic(name, topicInt);
         return result;
     }
 

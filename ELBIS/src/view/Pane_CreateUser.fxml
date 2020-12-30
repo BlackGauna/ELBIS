@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_CreateUser">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="441.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_CreateUser">
    <children>
       <Label layoutX="115.0" layoutY="68.0" text="eMail" />
       <TextField fx:id="txtEmail" layoutX="231.0" layoutY="64.0" />
@@ -24,9 +19,11 @@
       <Label layoutX="115.0" layoutY="262.0" text="Anschrift" />
       <TextField fx:id="txtAnschrift" layoutX="234.0" layoutY="258.0" />
       <ChoiceBox fx:id="choiceGender" layoutX="233.0" layoutY="298.0" prefWidth="150.0" />
-      <DatePicker fx:id="datefield_birthday" layoutX="234.0" layoutY="333.0" />
+      <ChoiceBox fx:id="choiceRole" layoutX="233.0" layoutY="330.0" prefWidth="150.0" />
+      <DatePicker fx:id="datefield_birthday" layoutX="235.0" layoutY="364.0" />
       <Label layoutX="115.0" layoutY="302.0" text="Geschlecht" />
-      <Label layoutX="114.0" layoutY="337.0" text="Geburtsdatum" />
+      <Label layoutX="115.0" layoutY="335.0" text="Rolle" />
+      <Label layoutX="115.0" layoutY="368.0" text="Geburtsdatum" />
       <Label layoutX="114.0" layoutY="32.0" text="Accountinformation">
          <font>
             <Font name="System Bold" size="14.0" />
@@ -37,6 +34,6 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="btnOK" cancelButton="true" layoutX="484.0" layoutY="367.0" mnemonicParsing="false" onAction="#okClicked" prefHeight="25.0" prefWidth="102.0" text="OK" />
+      <Button fx:id="btnOK" cancelButton="true" layoutX="484.0" layoutY="402.0" mnemonicParsing="false" onAction="#okClicked" prefHeight="25.0" prefWidth="102.0" text="OK" />
    </children>
 </Pane>

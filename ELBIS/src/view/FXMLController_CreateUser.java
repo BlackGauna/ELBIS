@@ -29,6 +29,8 @@ public class FXMLController_CreateUser {
     @FXML
     private ChoiceBox<String> choiceGender;
     @FXML
+    private ChoiceBox<String> choiceRole;
+    @FXML
     private DatePicker datefield_birthday;
     @FXML
     private Button btnOK;
@@ -37,8 +39,7 @@ public class FXMLController_CreateUser {
     void okClicked(ActionEvent event) {
         try {
             //TODO throw exception if any field is empty
-            //TODO integrate Role
-            mainController.createUser(getEmail(), getPassword(), getName(), getAddress(), getGender(), getBirth());
+            mainController.createUser(getEmail(), getPassword(), getName(), getGender(), getRole(), getAddress(), getBirth());
         } catch(Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -49,9 +50,12 @@ public class FXMLController_CreateUser {
         }
     }
 
+
+
     // Ini_______________________________________________________________________________________________________
     public void initialize() {
         choiceGender.getItems().addAll("Maennlich", "Weiblich", "Divers");
+        choiceRole.getItems().addAll("Admin", "Moderator", "User");
     }
 
     // Getters,Setters_________________________________________________________________________________________________
@@ -94,6 +98,10 @@ public class FXMLController_CreateUser {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String birth = datefield_birthday.getValue().format(formatter);
         return birth;
+    }
+
+    private String getRole() {
+        return choiceRole.getValue();
     }
 
 }

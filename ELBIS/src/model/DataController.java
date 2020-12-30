@@ -95,8 +95,8 @@ public class DataController {
             '(' + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + ") VALUES(?, ?)";
     //Create new User
     public static final String SEND_NEW_USER = "INSERT INTO " + TABLE_USER +
-            '(' + COLUMN_USER_EMAIL + ", " + COLUMN_USER_PASSWORD + ", " + COLUMN_USER_NAME + ", " +
-            COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER + ", " + COLUMN_USER_DATE_OF_BIRTH + ") VALUES(?, ?, ?, ?, ?, ?)";
+            '(' + COLUMN_USER_EMAIL + ", " + COLUMN_USER_PASSWORD + ", " + COLUMN_USER_ROLE + ", " + COLUMN_USER_NAME + ", " +
+            COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER + ", " + COLUMN_USER_DATE_OF_BIRTH + ") VALUES(?, ?, ?, ?, ?, ?, ?)";
     //Load a specific Article with ID
     public static final String LOAD_ARTICLE = "SELECT " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
             COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
@@ -222,24 +222,15 @@ public class DataController {
     }
 
     //FINISHED: Topic Creation
-    public void DBSendNewTopic(String name, String parentTopic) {
+    public void DBSendNewTopic(String name, int parentTopic) {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
             mainController.setStatus("Creating new Topic...");
             PreparedStatement pst = con.prepareStatement(SEND_NEW_TOPIC);
 
-            int i = 0;
-            if (parentTopic == "Organisationen"){
-                i = 1;
-            } else if (parentTopic == "Gemeinde"){
-                i = 2;
-            } else if (parentTopic == "Industrie"){
-                i = 3;
-            }
-
             pst.setString(1, name);
-            pst.setInt(2, i);
+            pst.setInt(2, parentTopic);
 
             pst.execute();
             mainController.setStatus("Successfully created!");
@@ -250,19 +241,21 @@ public class DataController {
         }
     }
 
-    //IN PROGRESS: User Creation
-    public boolean DBSendNewUser(String email, String password, String name, String address, int gender, String dateOfBirth) {
+    //FINISHED: User Creation
+    public boolean DBSendNewUser(String email, String password, String name, int gender, int role, String address, String dateOfBirth) {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
             mainController.setStatus("Creating new User...");
             PreparedStatement pst = con.prepareStatement(SEND_NEW_USER);
+
             pst.setString(1, email);
             pst.setString(2, password);
-            pst.setString(3, name);
-            pst.setString(4, address);
-            pst.setInt(5, gender);
-            pst.setString(6, dateOfBirth);
+            pst.setInt(3, role);
+            pst.setString(4, name);
+            pst.setString(5, address);
+            pst.setInt(6, gender);
+            pst.setString(7, dateOfBirth);
 
             int affectedRows = pst.executeUpdate();
 
