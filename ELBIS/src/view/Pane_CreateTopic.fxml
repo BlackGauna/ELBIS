@@ -6,12 +6,12 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_CreateTopic">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="242.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_CreateTopic">
    <children>
-      <Label layoutX="115.0" layoutY="68.0" text="Name" />
-      <TextField fx:id="txtName" layoutX="231.0" layoutY="64.0" />
-      <ChoiceBox fx:id="choiceTopic" layoutX="231.0" layoutY="96.0" prefWidth="150.0" />
-      <Label layoutX="115.0" layoutY="101.0" text="Parent Topic" />
-      <Button fx:id="btnOK" cancelButton="true" layoutX="484.0" layoutY="367.0" mnemonicParsing="false" onAction="#topicOkClicked" prefHeight="25.0" prefWidth="102.0" text="OK" />
+      <Label layoutX="164.0" layoutY="68.0" text="Name" />
+      <TextField fx:id="txtName" layoutX="278.0" layoutY="64.0" />
+      <ChoiceBox fx:id="choiceTopic" layoutX="277.0" layoutY="97.0" prefWidth="150.0" />
+      <Label layoutX="164.0" layoutY="101.0" text="Untergeordnet in..." />
+      <Button fx:id="btnOK" cancelButton="true" layoutX="484.0" layoutY="203.0" mnemonicParsing="false" onAction="#topicOkClicked" prefHeight="25.0" prefWidth="102.0" text="OK" />
    </children>
 </Pane>

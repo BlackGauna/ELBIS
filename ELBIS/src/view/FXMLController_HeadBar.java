@@ -5,8 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 public class FXMLController_HeadBar extends ELBIS_FXMLController {
-    //TODO buttonEvent
-
     // Atrrib_______________________________________________________________________________________________________
 
     // Ini_______________________________________________________________________________________________________

@@ -239,7 +239,7 @@ public class MainController extends Application {
 
     public TableView refreshUserContent_ArticleTable(TableView table) {
         /*
-        //TODO add buttonpanel to delete and edit articles per article in table
+        //TODO add buttonpanel to delete and edit and submit articles per article in table
         */
         ObservableList<Article> articleList = dc.DBLoadOwnArticles(activeUser.getId());
         // Getter from Article Class

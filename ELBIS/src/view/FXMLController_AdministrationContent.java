@@ -12,8 +12,6 @@ import java.util.ResourceBundle;
 import static view.sideStageState.createTopic;
 
 public class FXMLController_AdministrationContent extends ELBIS_FXMLController implements Initializable {
-    //TODO import Table variables
-    //TODO buttonEvents
 
     // Atrrib_______________________________________________________________________________________________________
     // UI_______________________________________________________________________________________________________

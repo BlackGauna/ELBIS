@@ -113,8 +113,9 @@ public class FXMLController_MainApplication extends ELBIS_FXMLController {
         userTab.setContent(articleTable);
 
         tabPane.getTabs().add(userTab);
-        //initial load of ArticleTable
-        articleTableController.setContent_ArticleTable(mainController.refreshUserContent_ArticleTable(articleTableController.getContent_ArticleTable()));
+        //initial load of UserContents
+        //articleTableController.setContent_ArticleTable(mainController.refreshUserContent_ArticleTable(articleTableController.getContent_ArticleTable()));
+        articleTableController.refreshUserContent();
 
     }
 
@@ -129,9 +130,9 @@ public class FXMLController_MainApplication extends ELBIS_FXMLController {
         moderationTab.setContent(moderationTable);
 
         tabPane.getTabs().add(moderationTab);
-        //initial load of ArticleTable
-        //TODO resolve exceptions
-        moderationTableController.setContent_UserTable(mainController.refreshModerationContent_UserTable(moderationTableController.getContent_UserTable()));
+        //initial load of ModerationContents
+        //moderationTableController.setContent_UserTable(mainController.refreshModerationContent_UserTable(moderationTableController.getContent_UserTable()));
+        moderationTableController.refreshModerationContent();
 
     }
 
@@ -146,9 +147,9 @@ public class FXMLController_MainApplication extends ELBIS_FXMLController {
         administrationTab.setContent(administrationTable);
 
         tabPane.getTabs().add(administrationTab);
-        //TODO RefreshAdministrationTable
-        //initial load of ArticleTable
-        administrationTableController.setContent_TopicTable(mainController.refreshAdministrationContent_TopicTable(administrationTableController.getContent_TopicTable()));
+        //initial load of AdministrationContent
+        //administrationTableController.setContent_TopicTable(mainController.refreshAdministrationContent_TopicTable(administrationTableController.getContent_TopicTable()));
+        administrationTableController.refreshAdministrationContent();
     }
 
 }
