@@ -14,6 +14,7 @@ import model.Status;
 import model.Topic;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
@@ -65,6 +66,12 @@ public class FXMLController_Save
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         return expireDate.getValue().format(formatter);
+    }
+
+    public void setExpireDate(String dateString)
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        expireDate.setValue(LocalDate.parse(dateString, formatter));
     }
 
 }
