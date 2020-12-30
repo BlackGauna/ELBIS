@@ -235,8 +235,17 @@ public class DataController {
             mainController.setStatus("Creating new Topic...");
             PreparedStatement pst = con.prepareStatement(SEND_NEW_TOPIC);
 
+            int i = 0;
+            if (parentTopic == "Organisationen"){
+                i = 1;
+            } else if (parentTopic == "Gemeinde"){
+                i = 2;
+            } else if (parentTopic == "Industrie"){
+                i = 3;
+            }
+
             pst.setString(1, name);
-            pst.setString(2, parentTopic);
+            pst.setInt(2, i);
 
             pst.execute();
             mainController.setStatus("Successfully created!");
