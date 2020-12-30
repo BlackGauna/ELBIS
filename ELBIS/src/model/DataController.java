@@ -166,36 +166,31 @@ public class DataController {
 
     //METHODS--------------------------------------------------------------------------------------------------------
 
-    //Article creation
-    public boolean DBSendNewArticle(String title, String content, int topic, String publisherComment) {
+    //FINISHED: Check if user exists in DB
+    public boolean login(String email, String pw) throws SQLException {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            mainController.setStatus("Creating new Article...");
-            PreparedStatement pst = con.prepareStatement(SEND_NEW_ARTICLE);
-            pst.setString(1, title);
-            pst.setString(2, content);
-            pst.setInt(3, topic);
-            pst.setString(4, publisherComment);
-
-            int affectedRows = pst.executeUpdate();
-
-            if (affectedRows == 0) {
-                mainController.setStatus("Couldn't create Article!");
-                throw new SQLException("Couldn't create Article!");
-            } else
-                System.out.println("Successfully created!");
-                mainController.setStatus("Successfully created!");
-            con.close();
-            return true;
-
+            mainController.setStatus("Checking User...");
+            PreparedStatement pst = con.prepareStatement(CHECK_USER);
+            pst.setString(1, email);
+            pst.setString(2, pw);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                mainController.setStatus("Success!");
+                con.close();
+                return true;
+            }
         } catch (SQLException e) {
-            mainController.setStatus("Couldn't create Article!");
-            System.out.println("Couldn't create Article: " + e.getMessage());
-            return false;
+            mainController.setStatus("Failed to check!");
+            e.printStackTrace();
         }
+        mainController.setStatus("Something is not right!");
+        con.close();
+        return false;
     }
 
+    //Status?: Article creation
     public boolean DBSendNewArticle(Article article) {
         try {
             con = SQLConnection.ConnectDB();
@@ -226,8 +221,7 @@ public class DataController {
         }
     }
 
-
-    // Topic Creation
+    //FINISHED: Topic Creation
     public void DBSendNewTopic(String name, String parentTopic) {
         try {
             con = SQLConnection.ConnectDB();
@@ -256,7 +250,7 @@ public class DataController {
         }
     }
 
-    //User Creation
+    //IN PROGRESS: User Creation
     public boolean DBSendNewUser(String email, String password, String name, String address, int gender, String dateOfBirth) {
         try {
             con = SQLConnection.ConnectDB();
@@ -286,10 +280,9 @@ public class DataController {
             System.out.println("Couldn't create User: " + e.getMessage());
             return false;
         }
-
     }
 
-    //Loading an Article
+    //Status?: Loading an Article by id
     public Article DBLoadArticle(int id) {
         try {
             con = SQLConnection.ConnectDB();
@@ -316,9 +309,9 @@ public class DataController {
             System.out.println("Couldn't load Article: " + e.getMessage());
             return null;
         }
-
     }
 
+    //Status?: Loads the last Article
     public Article DBLoadLastArticle() {
         try {
             con = SQLConnection.ConnectDB();
@@ -343,37 +336,7 @@ public class DataController {
         }
     }
 
-    // Get ObservableList of all articles
-    public ObservableList DBLoadAllArticles() {
-        try {
-            con = SQLConnection.ConnectDB();
-            assert con != null;
-            mainController.setStatus("Loading all Articles...");
-            PreparedStatement pst = con.prepareStatement(LOAD_ALL_ARTICLES);
-            ResultSet rs = pst.executeQuery();
-            ObservableList<Article> articleList = FXCollections.observableArrayList();
-
-            while (rs.next()) {
-                articleList.add(new Article(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getInt(8),
-                        rs.getString(11)));
-            }
-            mainController.setStatus("Successfully loaded!");
-            con.close();
-            return articleList;
-        } catch (SQLException e) {
-            mainController.setStatus("Couldn't load Articles!");
-            System.out.println("Couldn't load Articles: " + e.getMessage());
-            return null;
-        }
-    }
-
-    // Get ObservableList of all own articles
+    //FINISHED: Get ObservableList of all own articles by authorId
     public ObservableList DBLoadOwnArticles(int authorId) {
         try {
             con = SQLConnection.ConnectDB();
@@ -405,122 +368,7 @@ public class DataController {
         }
     }
 
-    public ObservableList DBLoadOwnArticles(String userEmail) {
-        try {
-            con = SQLConnection.ConnectDB();
-            assert con != null;
-            mainController.setStatus("Loading Articles...");
-            PreparedStatement pst = con.prepareStatement(LOAD_OWN_ARTICLES_BY_EMAIL + userEmail);
-            ResultSet rs = pst.executeQuery();
-            ObservableList<Article> articleList = FXCollections.observableArrayList();
-
-            while (rs.next()) {
-                articleList.add(new Article(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getInt(8),
-                        rs.getString(11)));
-            }
-            mainController.setStatus("Successfully loaded!");
-            con.close();
-            return articleList;
-        } catch (SQLException e) {
-            mainController.setStatus("Couldn't load Articles!");
-            System.out.println("Couldn't load Articles: " + e.getMessage());
-            return null;
-        }
-    }
-
-    public ObservableList DBLoadAllSubmittedArticles() {
-        try {
-            con = SQLConnection.ConnectDB();
-            assert con != null;
-            mainController.setStatus("Loading Articles...");
-            PreparedStatement pst = con.prepareStatement(LOAD_ALL_SUBMITTED_ARTICLES);
-            ResultSet rs = pst.executeQuery();
-            ObservableList<Article> articleList = FXCollections.observableArrayList();
-
-            while (rs.next()) {
-                articleList.add(new Article(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getInt(8),
-                        rs.getString(11)));
-            }
-            mainController.setStatus("Successfully loaded!");
-            con.close();
-            return articleList;
-        } catch (SQLException e) {
-            mainController.setStatus("Couldn't load Articles!");
-            System.out.println("Couldn't load Articles: " + e.getMessage());
-            return null;
-        }
-    }
-
-    // Get ObservableList of all users
-    public ObservableList DBLoadAllUsers() {
-        try {
-            con = SQLConnection.ConnectDB();
-            assert con != null;
-            mainController.setStatus("Loading Users...");
-            PreparedStatement pst = con.prepareStatement(LOAD_ALL_USERS);
-            ResultSet rs = pst.executeQuery();
-            ObservableList<User> userList = FXCollections.observableArrayList();
-
-            while (rs.next()) {
-                userList.add(new User(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7)));
-            }
-            mainController.setStatus("Successfully loaded!");
-            con.close();
-            return userList;
-        } catch (SQLException e) {
-            mainController.setStatus("Couldn't load Users!");
-            System.out.println("Couldn't load Users: " + e.getMessage());
-            return null;
-        }
-    }
-
-    // Load all topics
-    public ObservableList DBLoadAllTopics() {
-        try {
-            con = SQLConnection.ConnectDB();
-            assert con != null;
-            mainController.setStatus("Loading Topics...");
-            PreparedStatement pst = con.prepareStatement(LOAD_ALL_TOPICS);
-            ResultSet rs = pst.executeQuery();
-            ObservableList<Topic> topicList = FXCollections.observableArrayList();
-
-            while (rs.next()) {
-                topicList.add(new Topic(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3)));
-                topicList.get(topicList.size()-1).setParent(DBLoadTopic(rs.getInt(3))); // small test 2
-            }
-            mainController.setStatus("Successfully loaded!");
-            con.close();
-            return topicList;
-        } catch (SQLException e) {
-            mainController.setStatus("Couldn't load Topics!");
-            System.out.println("Couldn't load Topics: " + e.getMessage());
-            return null;
-        }
-    }
-
-    //Load a topic
+    //Status?: Load a topic
     public Topic DBLoadTopic(int id) {
         try {
             con = SQLConnection.ConnectDB();
@@ -550,56 +398,64 @@ public class DataController {
 
     }
 
-    //Load a User with ID
-    public User DBLoadUserById(int id) {
+    //FINISHED: Get ObservableList of all topics
+    public ObservableList DBLoadAllTopics() {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            mainController.setStatus("Loading User...");
-            PreparedStatement pst = con.prepareStatement(LOAD_USER_BY_ID);
-            pst.setInt(1, id);
-            pst.execute();
-            ResultSet rs = pst.getResultSet();
-            User user;
-            String name = null;
-            String address = null;
-            String dateOfBirth = null;
-            String email = null;
-            String password = null;
-            int gender = 0;
-            int roleId = 0;
-
+            mainController.setStatus("Loading Topics...");
+            PreparedStatement pst = con.prepareStatement(LOAD_ALL_TOPICS);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Topic> topicList = FXCollections.observableArrayList();
 
             while (rs.next()) {
-               roleId = rs.getInt(1);
-                email = rs.getString(2);
-                name = rs.getString(3);
-                address = rs.getString(4);
-                gender = rs.getInt(5);
-                dateOfBirth = rs.getString(6);
-                password = rs.getString(7);
-            }
-            switch (roleId) {
-                case 1 -> user = new Administrator(id,email,name, address, password, dateOfBirth, gender);
-                case 2 -> user = new Moderator(id, email, name, address, password, dateOfBirth, gender);
-                case 3 -> user = new User(id, email, name, address, password, dateOfBirth, gender);
-                default -> {
-                    user = new User();
-                    mainController.setStatus("Couldn't load user Role - default set");
-                }
+                topicList.add(new Topic(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3)));
+                topicList.get(topicList.size()-1).setParent(DBLoadTopic(rs.getInt(3))); // small test 2
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
-            return user;
+            return topicList;
         } catch (SQLException e) {
-            mainController.setStatus("Couldn't load User!");
-            System.out.println("Couldn't load User: " + e.getMessage());
+            mainController.setStatus("Couldn't load Topics!");
+            System.out.println("Couldn't load Topics: " + e.getMessage());
             return null;
         }
-
     }
 
-    //Load a User with ID
+    //FINISHED: Get ObservableList of all users
+    public ObservableList DBLoadAllUsers() {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Loading Users...");
+            PreparedStatement pst = con.prepareStatement(LOAD_ALL_USERS);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<User> userList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                userList.add(new User(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7)));
+            }
+            mainController.setStatus("Successfully loaded!");
+            con.close();
+            return userList;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Users!");
+            System.out.println("Couldn't load Users: " + e.getMessage());
+            return null;
+        }
+    }
+
+    //FINISHED: Load a User with ID (needed for login)
     public User DBLoadUserByEmail(String email) {
         try {
             con = SQLConnection.ConnectDB();
@@ -649,7 +505,7 @@ public class DataController {
 
     }
 
-    //Edit Articles
+    //Status?: Edit Articles
     public boolean DBEditArticle(int id, String newTitle, int newTopic, String newContent, String newPublisherComment) {
         try {
             con = SQLConnection.ConnectDB();
@@ -705,6 +561,128 @@ public class DataController {
         }
     }
 
+    // TODO: DBEditTopic -> edit a topic (name, parentTopic) via UI
+    // TODO: DBEditUser -> edit a user (name, email, pw(?), address, gender)
+
+
+    // Currently unused methods----------------------------------------------------------------------------------------
+
+    //Article creation via title, content, topic, publisherComment
+    public boolean DBSendNewArticle(String title, String content, int topic, String publisherComment) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Creating new Article...");
+            PreparedStatement pst = con.prepareStatement(SEND_NEW_ARTICLE);
+            pst.setString(1, title);
+            pst.setString(2, content);
+            pst.setInt(3, topic);
+            pst.setString(4, publisherComment);
+
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows == 0) {
+                mainController.setStatus("Couldn't create Article!");
+                throw new SQLException("Couldn't create Article!");
+            } else
+                System.out.println("Successfully created!");
+            mainController.setStatus("Successfully created!");
+            con.close();
+            return true;
+
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't create Article!");
+            System.out.println("Couldn't create Article: " + e.getMessage());
+            return false;
+        }
+    }
+    //Get 20 most recent articles
+    public LinkedList<Article> DBLoadRecentArticle() {
+
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Loading recent Articles...");
+            PreparedStatement pst = con.prepareStatement(LOAD_RECENT_ARTICLE);
+            ResultSet rs = pst.executeQuery();
+
+            LinkedList<Article> articles = new LinkedList<>();
+            while (rs.next()) {
+                Article article = new Article();
+
+                article.setTopic_int(rs.getInt(1));
+                article.setTitle(rs.getString(2));
+                article.setContent(rs.getString(3));
+                article.setPublisherComment(rs.getString(4));
+                article.setExpireDate(rs.getString(5));
+                articles.add(article);
+            }
+            mainController.setStatus("Successfully loaded!");
+            con.close();
+            return articles;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't load recent Articles!");
+            System.out.println("Couldn't load recent Articles: " + e.getMessage());
+            return null;
+        }
+
+    }
+    //Edit a topic
+    public boolean DBEditTopic(int id, String newName, String newParentTopic) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Editing Topic...");
+            PreparedStatement pst = con.prepareStatement(EDIT_TOPIC);
+            con.setAutoCommit(false);
+
+            pst.setInt(3, id);
+            pst.setString(1, newName);
+            pst.setString(2, newParentTopic);
+
+            int affectedRecords = pst.executeUpdate();
+
+            if (affectedRecords == 1) {
+                con.commit();
+                mainController.setStatus("Successfully Edited!");
+                System.out.println("Successfully Edited!");
+                con.close();
+                return true;
+            } else {
+                mainController.setStatus("Failed to Edit!");
+                System.out.println("Failed to Edit!");
+                con.rollback();
+                con.setAutoCommit(true);
+                con.close();
+                return false;
+            }
+
+        } catch (Exception e) {
+            mainController.setStatus("Failed to Edit!");
+            System.out.println("Topic edit exception: " + e.getMessage());
+            try {
+                mainController.setStatus("Performing rollback");
+                System.out.println("Performing rollback");
+                con.rollback();
+                return false;
+            } catch (SQLException e2) {
+                mainController.setStatus("Couldn't rollback!");
+                System.out.println("Couldn't rollback! " + e2.getMessage());
+                return false;
+            }
+        } finally {
+            try {
+                mainController.setStatus("Resetting default commit behavior");
+                System.out.println("Resetting default commit behavior");
+                con.setAutoCommit(true);
+                con.close();
+            } catch (SQLException e) {
+                mainController.setStatus("Couldn't reset auto-commit!");
+                System.out.println("Couldn't reset auto-commit! " + e.getMessage());
+            }
+
+        }
+    }
     //Edit User
     public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth) {
         try {
@@ -765,120 +743,138 @@ public class DataController {
             }
         }
     }
-
-    //Edit a topic
-    public boolean DBEditTopic(int id, String newName, String newParentTopic) {
+    //Load a User with ID
+    public User DBLoadUserById(int id) {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            mainController.setStatus("Editing Topic...");
-            PreparedStatement pst = con.prepareStatement(EDIT_TOPIC);
-            con.setAutoCommit(false);
+            mainController.setStatus("Loading User...");
+            PreparedStatement pst = con.prepareStatement(LOAD_USER_BY_ID);
+            pst.setInt(1, id);
+            pst.execute();
+            ResultSet rs = pst.getResultSet();
+            User user;
+            String name = null;
+            String address = null;
+            String dateOfBirth = null;
+            String email = null;
+            String password = null;
+            int gender = 0;
+            int roleId = 0;
 
-            pst.setInt(3, id);
-            pst.setString(1, newName);
-            pst.setString(2, newParentTopic);
 
-            int affectedRecords = pst.executeUpdate();
-
-            if (affectedRecords == 1) {
-                con.commit();
-                mainController.setStatus("Successfully Edited!");
-                System.out.println("Successfully Edited!");
-                con.close();
-                return true;
-            } else {
-                mainController.setStatus("Failed to Edit!");
-                System.out.println("Failed to Edit!");
-                con.rollback();
-                con.setAutoCommit(true);
-                con.close();
-                return false;
-            }
-
-        } catch (Exception e) {
-            mainController.setStatus("Failed to Edit!");
-            System.out.println("Topic edit exception: " + e.getMessage());
-            try {
-                mainController.setStatus("Performing rollback");
-                System.out.println("Performing rollback");
-                con.rollback();
-                return false;
-            } catch (SQLException e2) {
-                mainController.setStatus("Couldn't rollback!");
-                System.out.println("Couldn't rollback! " + e2.getMessage());
-                return false;
-            }
-        } finally {
-            try {
-                mainController.setStatus("Resetting default commit behavior");
-                System.out.println("Resetting default commit behavior");
-                con.setAutoCommit(true);
-                con.close();
-            } catch (SQLException e) {
-                mainController.setStatus("Couldn't reset auto-commit!");
-                System.out.println("Couldn't reset auto-commit! " + e.getMessage());
-            }
-
-        }
-    }
-
-    //Get 20 most recent articles
-    public LinkedList<Article> DBLoadRecentArticle() {
-
-        try {
-            con = SQLConnection.ConnectDB();
-            assert con != null;
-            mainController.setStatus("Loading recent Articles...");
-            PreparedStatement pst = con.prepareStatement(LOAD_RECENT_ARTICLE);
-            ResultSet rs = pst.executeQuery();
-
-            LinkedList<Article> articles = new LinkedList<>();
             while (rs.next()) {
-                Article article = new Article();
-
-                article.setTopic_int(rs.getInt(1));
-                article.setTitle(rs.getString(2));
-                article.setContent(rs.getString(3));
-                article.setPublisherComment(rs.getString(4));
-                article.setExpireDate(rs.getString(5));
-                articles.add(article);
+                roleId = rs.getInt(1);
+                email = rs.getString(2);
+                name = rs.getString(3);
+                address = rs.getString(4);
+                gender = rs.getInt(5);
+                dateOfBirth = rs.getString(6);
+                password = rs.getString(7);
+            }
+            switch (roleId) {
+                case 1 -> user = new Administrator(id,email,name, address, password, dateOfBirth, gender);
+                case 2 -> user = new Moderator(id, email, name, address, password, dateOfBirth, gender);
+                case 3 -> user = new User(id, email, name, address, password, dateOfBirth, gender);
+                default -> {
+                    user = new User();
+                    mainController.setStatus("Couldn't load user Role - default set");
+                }
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
-            return articles;
+            return user;
         } catch (SQLException e) {
-            mainController.setStatus("Couldn't load recent Articles!");
-            System.out.println("Couldn't load recent Articles: " + e.getMessage());
+            mainController.setStatus("Couldn't load User!");
+            System.out.println("Couldn't load User: " + e.getMessage());
             return null;
         }
-
     }
-
-    // Check if user exists in DB
-    public boolean login(String email, String pw) throws SQLException {
+    //Load all submitted articles
+    public ObservableList DBLoadAllSubmittedArticles() {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            mainController.setStatus("Checking User...");
-            PreparedStatement pst = con.prepareStatement(CHECK_USER);
-            pst.setString(1, email);
-            pst.setString(2, pw);
-
+            mainController.setStatus("Loading Articles...");
+            PreparedStatement pst = con.prepareStatement(LOAD_ALL_SUBMITTED_ARTICLES);
             ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                mainController.setStatus("Success!");
-                con.close();
-                return true;
+            ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                articleList.add(new Article(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getInt(8),
+                        rs.getString(11)));
             }
-
+            mainController.setStatus("Successfully loaded!");
+            con.close();
+            return articleList;
         } catch (SQLException e) {
-            mainController.setStatus("Failed to check!");
-            e.printStackTrace();
+            mainController.setStatus("Couldn't load Articles!");
+            System.out.println("Couldn't load Articles: " + e.getMessage());
+            return null;
         }
-        mainController.setStatus("Something is not right!");
-        con.close();
-        return false;
     }
+    //ObservableList of all own articles by email
+    public ObservableList DBLoadOwnArticles(String userEmail) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Loading Articles...");
+            PreparedStatement pst = con.prepareStatement(LOAD_OWN_ARTICLES_BY_EMAIL + userEmail);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Article> articleList = FXCollections.observableArrayList();
 
+            while (rs.next()) {
+                articleList.add(new Article(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getInt(8),
+                        rs.getString(11)));
+            }
+            mainController.setStatus("Successfully loaded!");
+            con.close();
+            return articleList;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Articles!");
+            System.out.println("Couldn't load Articles: " + e.getMessage());
+            return null;
+        }
+    }
+    // Get ObservableList of all articles (needed for moderationTable)
+    public ObservableList DBLoadAllArticles() {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Loading all Articles...");
+            PreparedStatement pst = con.prepareStatement(LOAD_ALL_ARTICLES);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                articleList.add(new Article(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getInt(8),
+                        rs.getString(11)));
+            }
+            mainController.setStatus("Successfully loaded!");
+            con.close();
+            return articleList;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Articles!");
+            System.out.println("Couldn't load Articles: " + e.getMessage());
+            return null;
+        }
+    }
 }
