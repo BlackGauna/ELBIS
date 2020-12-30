@@ -37,29 +37,33 @@ public class MainController extends Application {
     private DataController dc;
     private User activeUser;
 
-    //Loaders
+    //MainLoaders
     private FXMLLoader loginLoader;
     private FXMLLoader mainApplicationLoader;
     private FXMLLoader editorLoader;
-
-    //Controllers
+    //MainControllers
     private FXMLController_Login loginController;
     private FXMLController_MainApplication mainApplicationController;
     private FXMLController_Editor editorController;
-
-    //Stages
+    //MainStages
     private Stage loginStage;
     private Stage applicationStage;
     private Stage editorStage;
-
-    //Scenes
+    private Stage sideStage;
+    //MainScenes
     private Scene loginScene;
     private Scene applicationScene;
     private Scene editorScene;
-    //Panes
+    private Scene sideScene;
+    //MainPanes
     private Pane loginPane;
     private Pane applicationPane;
     private Pane editorPane;
+
+    //CreateTopicDialog
+    private FXMLLoader createTopicPaneLoader;
+    private FXMLController_CreateTopic createTopicController;
+    private Pane createTopicPane;
 
 
     // Ctor_______________________________________________________________________________________________________
@@ -74,6 +78,8 @@ public class MainController extends Application {
         applicationStage.setTitle("Verwaltung");
         applicationStage.setResizable(false);
         editorStage = new Stage(); // Editor Window
+        sideStage = new Stage();
+        sideStage.setResizable(false);
 
     }
 
@@ -85,12 +91,12 @@ public class MainController extends Application {
         try {
             loginStage.getIcons().add(new Image("/ELBIS_graphic/ELBIS_E_small.png"));
             applicationStage.getIcons().add(new Image("/ELBIS_graphic/ELBIS_E_small.png"));
+            sideStage.getIcons().add(new Image("/ELBIS_graphic/ELBIS_E_small.png"));
             //Manage loaders and load their controllers
             loginLoader = new FXMLLoader(getClass().getResource("/view/Pane_Login.fxml"));
             loginPane = (Pane) loginLoader.load();
             loginController = loginLoader.getController();
             loginController.setMainController(this);
-
 
             mainApplicationLoader = new FXMLLoader(getClass().getResource("/view/Pane_MainApplication.fxml"));
             applicationPane = (Pane) mainApplicationLoader.load();
@@ -186,6 +192,30 @@ public class MainController extends Application {
     {
         editorController.openArticle(article);
         editorStage.show();
+    }
+
+    public void openSideStage(sideStageState state){
+        try {
+            switch (state) {
+                case createTopic:
+                    //load WindowContent
+                    createTopicPaneLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateTopic.fxml"));
+                    createTopicPane = (Pane) createTopicPaneLoader.load();
+                    createTopicController = createTopicPaneLoader.getController();
+                    createTopicController.setMainController(this);
+                    sideScene = new Scene(createTopicPane);
+                    sideStage.setTitle("Bereichsertellung");
+                    break;
+                case createUser:
+                    break;
+            }
+            sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
+            sideStage.setScene(sideScene);
+            sideStage.showAndWait();
+        }catch(IOException io){
+            io.printStackTrace();
+            setStatus("Could not load SideStage content");
+        }
     }
 
     /******************************

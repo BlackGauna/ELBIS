@@ -61,6 +61,7 @@
                         <Button mnemonicParsing="false" text="promote User" />
                         <Button mnemonicParsing="false" text="degrade User" />
                         <Button fx:id="btnCreateTopic" mnemonicParsing="false" onAction="#createTopicClicked" text="create Topic" />
+                  <Button fx:id="btnRefresh" mnemonicParsing="false" onAction="#refreshClicked" text="Neu Laden" />
                     </buttons>
                 </ButtonBar>
             </top>

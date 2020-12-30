@@ -49,7 +49,7 @@
             <ButtonBar fx:id="btnBar" buttonOrder="U+FBIX_NCYOA_R" prefHeight="35.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
               <buttons>
                 <Button fx:id="btnCreateArticle" mnemonicParsing="false" onAction="#createArticleClicked" text="Artikel erstellen" />
-                  <Button fx:id="btnRefresh" mnemonicParsing="false" onAction="#refreshClicked" text="Neu Laden" />
+                  <Button fx:id="btnRefresh" minWidth="63.0" mnemonicParsing="false" onAction="#refreshClicked" prefHeight="25.0" text="Neu Laden" />
               </buttons>
             </ButtonBar>
          </top>

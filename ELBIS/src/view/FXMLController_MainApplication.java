@@ -115,7 +115,7 @@ public class FXMLController_MainApplication {
 
         tabPane.getTabs().add(userTab);
         //initial load of ArticleTable
-        articleTableController.setTableView(mainController.refreshUserContent_ArticleTable(articleTableController.getTableView()));
+        articleTableController.setContent_ArticleTable(mainController.refreshUserContent_ArticleTable(articleTableController.getContent_ArticleTable()));
 
     }
 
@@ -132,7 +132,7 @@ public class FXMLController_MainApplication {
         tabPane.getTabs().add(moderationTab);
         //initial load of ArticleTable
         //TODO resolve exceptions
-        moderationTableController.setTableView(mainController.refreshModerationContent_UserTable(moderationTableController.getTableView()));
+        moderationTableController.setContent_UserTable(mainController.refreshModerationContent_UserTable(moderationTableController.getContent_UserTable()));
 
     }
 
@@ -149,7 +149,7 @@ public class FXMLController_MainApplication {
         tabPane.getTabs().add(administrationTab);
         //TODO RefreshAdministrationTable
         //initial load of ArticleTable
-        administrationTableController.setTableView(mainController.refreshAdministrationContent_TopicTable(administrationTableController.getTableView()));
+        administrationTableController.setContent_TopicTable(mainController.refreshAdministrationContent_TopicTable(administrationTableController.getContent_TopicTable()));
     }
 
 }

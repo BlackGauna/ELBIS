@@ -58,8 +58,7 @@ public class FXMLController_UserContent implements Initializable {
 
     @FXML
     void refreshClicked(ActionEvent event) {
-        mainController.setStatus("Refreshing UserContent...");
-        setTableView(mainController.refreshUserContent_ArticleTable(getTableView()));
+        refreshUserContent();
     }
 
     // Methods_______________________________________________________________________________________________________
@@ -67,13 +66,18 @@ public class FXMLController_UserContent implements Initializable {
         this.mainController = mainController;
     }
 
+    public void refreshUserContent(){
+        mainController.setStatus("Refreshing UserContent...");
+        setContent_ArticleTable(mainController.refreshUserContent_ArticleTable(getContent_ArticleTable()));
+    }
+
     // Getters,Setters_________________________________________________________________________________________________
 
-    public TableView getTableView() {
+    public TableView getContent_ArticleTable() {
         return articleTable;
     }
 
-    public void setTableView(TableView table) {
+    public void setContent_ArticleTable(TableView table) {
         this.articleTable = table;
     }
 

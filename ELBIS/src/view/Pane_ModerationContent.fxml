@@ -77,6 +77,7 @@
             <ButtonBar fx:id="btnBar" buttonOrder="U+FBIX_NCYOA_R" prefHeight="35.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
               <buttons>
                 <Button fx:id="btn_CreateUser" mnemonicParsing="false" onAction="#createUserClicked" text="Create User" />
+                  <Button fx:id="btnRefresh" mnemonicParsing="false" onAction="#refreshClicked" text="Neu Laden" />
               </buttons>
             </ButtonBar>
          </top>
