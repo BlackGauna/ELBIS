@@ -1,14 +1,15 @@
 package view;
 
+import controller.MainController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 public class FXMLController_HeadBar {
     //TODO buttonEvent
-    //TODO refresh based on which type of user is logged in
 
     // Atrrib_______________________________________________________________________________________________________
-
+    MainController mainController;
     // Ini_______________________________________________________________________________________________________
 
     // UI_______________________________________________________________________________________________________
@@ -19,7 +20,12 @@ public class FXMLController_HeadBar {
     private Label lblRole;
 
     @FXML
-    private Button btnRefresh;
+    private Button btnLogout;
+
+    @FXML
+    void logoutClicked(ActionEvent event) {
+        mainController.logout();
+    }
 
     // Methods_______________________________________________________________________________________________________
     public void showUser(String user, String role) {
@@ -27,6 +33,8 @@ public class FXMLController_HeadBar {
         lblRole.setText(role);
     }
     // Getters,Setters_________________________________________________________________________________________________
-
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 }
 

@@ -46,7 +46,6 @@ public class FXMLController_MainApplication {
 
     @FXML
     public void initialize() {
-        //TODO Create Head bar and add refresh button
         try {
             //StatusBar
             statusBarLoader = new FXMLLoader(getClass().getResource("/view/StatusBar.fxml"));
@@ -59,6 +58,7 @@ public class FXMLController_MainApplication {
             headBar = (Pane) headBarLoader.load();
             headBarController = headBarLoader.getController();
             borderPane.setTop(headBar);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,6 +69,7 @@ public class FXMLController_MainApplication {
     //reference to mainView
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        headBarController.setMainController(mainController);
     }
 
     public void setStatus(String newStatus) {
@@ -95,6 +96,10 @@ public class FXMLController_MainApplication {
         } catch (IOException io) {
             io.printStackTrace();
         }
+    }
+
+    public void removeTabs(){
+        tabPane.getTabs().removeAll(tabPane.getTabs());
     }
 
     public void addUserTab() throws IOException {

@@ -21,6 +21,16 @@ import java.util.List;
 
 public class MainController extends Application {
 
+    /*
+    TODO create refresh methods for tabs
+    TODO rename refresh methods of each element
+    TODO make sure relogin reloads everything properly
+
+    TODO reminder: fix displacement of columns
+    TODO add buttons to delete or edit on every entry in table
+    TODO maybe show the count of articles under a specific topic on topic views (count articles per topic)
+     */
+
     private static Connection con;
     // Atrrib_______________________________________________________________________________________________________
     //Data
@@ -81,6 +91,7 @@ public class MainController extends Application {
             loginController = loginLoader.getController();
             loginController.setMainController(this);
 
+
             mainApplicationLoader = new FXMLLoader(getClass().getResource("/view/Pane_MainApplication.fxml"));
             applicationPane = (Pane) mainApplicationLoader.load();
             mainApplicationController = mainApplicationLoader.getController();
@@ -96,12 +107,11 @@ public class MainController extends Application {
             loginScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             applicationScene = new Scene(applicationPane);
             applicationScene.getStylesheets().add("/ELBIS_graphic/dark.css");
-            editorScene = new Scene(editorPane);
 
+            editorScene = new Scene(editorPane);
             loginStage.setScene(loginScene);
             applicationStage.setScene(applicationScene);
             editorStage.setScene(editorScene);
-
 
         } catch (IOException io) {
             System.out.println("Couldn't load scene File");
@@ -121,6 +131,8 @@ public class MainController extends Application {
      ******************************/
 
     public void openLoginStage() {
+        editorStage.close();
+        applicationStage.close();
         loginStage.show();
     }
 
@@ -166,6 +178,15 @@ public class MainController extends Application {
             alert.showAndWait();
         }
         return login;
+    }
+
+    public boolean logout() {
+        boolean logout = false;
+        setStatus("Logging out: "+activeUser.getEmail());
+        mainApplicationController.removeTabs();
+        openLoginStage();
+        this.activeUser = new User();
+        return logout;
     }
 
     /******************************
