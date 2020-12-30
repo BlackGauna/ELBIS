@@ -153,7 +153,8 @@ public class DataController {
             + "JOIN role r on u.role = r.id "
             + "JOIN gender g on u.gender = g.id";
     //Load all topics
-    public static final String LOAD_ALL_TOPICS = "SELECT * FROM " + TABLE_TOPIC;
+    public static final String LOAD_ALL_TOPICS = "SELECT t2.id, t2.name, t1.name from Topic t1 "
+            + "JOIN Topic t2 on t1.id=t2.parentTopic";
 
 
     //CONNECTION--------------------------------------------------------------------------------------------------------
@@ -497,7 +498,7 @@ public class DataController {
                 topicList.add(new Topic(
                         rs.getInt(1),
                         rs.getString(2),
-                        rs.getInt(3)));
+                        rs.getString(3)));
                 topicList.get(topicList.size()-1).setParent(DBLoadTopic(rs.getInt(3))); // small test 2
             }
             mainController.setStatus("Successfully loaded!");

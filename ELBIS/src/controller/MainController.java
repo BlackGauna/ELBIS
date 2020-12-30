@@ -238,9 +238,13 @@ public class MainController extends Application {
 
         ObservableList<Topic> topicList = dc.DBLoadAllTopics();
 
+        // Getter from User Class
+        List<String> propertyKeys = Arrays.asList("id", "name", "parentTopicString");
+
+        // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>(((TableColumn<Topic, String>) table.getColumns().get(i)).getText()));
+            ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((propertyKeys.get(i))));
 
         }
 

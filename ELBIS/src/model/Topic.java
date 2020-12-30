@@ -5,6 +5,7 @@ public class Topic {
     private int id;
     private String name;
     private int parentTopic;
+    private String parentTopicString;
 
     private Topic parent;
 
@@ -15,6 +16,12 @@ public class Topic {
         this.id = id;
         this.name = name;
         this.parentTopic = parentTopic;
+    }
+
+    public Topic(int id, String name, String parentTopic) {
+        this.id = id;
+        this.name = name;
+        this.parentTopicString = parentTopic;
     }
 
     public Topic(){
@@ -56,7 +63,9 @@ public class Topic {
         this.parent = parent;
     }
 
-
+    public String getParentTopicString() {
+        return parentTopicString;
+    }
 
     // Methods_________________________________________________________________________________________________________
 

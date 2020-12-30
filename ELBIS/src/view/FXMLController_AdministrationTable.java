@@ -27,9 +27,9 @@ public class FXMLController_AdministrationTable implements Initializable {
     // Ini_______________________________________________________________________________________________________
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        topicTable.getColumns().add(new TableColumn<Topic, String>("id"));
-        topicTable.getColumns().add(new TableColumn<Topic, String>("name"));
-        topicTable.getColumns().add(new TableColumn<Topic, String>("parentTopic"));
+        topicTable.getColumns().add(new TableColumn<Topic, String>("ID"));
+        topicTable.getColumns().add(new TableColumn<Topic, String>("Name"));
+        topicTable.getColumns().add(new TableColumn<Topic, String>("Parent Topic"));
         dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }
     // UI_______________________________________________________________________________________________________
