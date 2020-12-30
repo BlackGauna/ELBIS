@@ -148,7 +148,10 @@ public class DataController {
     //Load all articles which are in submitted state
     public static final String LOAD_ALL_SUBMITTED_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_STATUS + " = 2";
     //Load all users
-    public static final String LOAD_ALL_USERS = "SELECT * FROM " + TABLE_USER;
+    public static final String LOAD_ALL_USERS = "SELECT u.id, u.email, u.name, g.name, r.name, u.address, u.dateOfBirth "
+            + "FROM user u "
+            + "JOIN role r on u.role = r.id "
+            + "JOIN gender g on u.gender = g.id";
     //Load all topics
     public static final String LOAD_ALL_TOPICS = "SELECT * FROM " + TABLE_TOPIC;
 
@@ -464,8 +467,11 @@ public class DataController {
                 userList.add(new User(
                         rs.getInt(1),
                         rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
                         rs.getString(5),
-                        rs.getString(6)));
+                        rs.getString(6),
+                        rs.getString(7)));
             }
             mainController.setStatus("Successfully loaded!");
             con.close();

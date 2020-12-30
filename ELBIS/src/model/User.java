@@ -1,7 +1,6 @@
 package model;
 
 import javafx.collections.ObservableList;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,6 +14,9 @@ public class User {
     private String address;
     private Date dateOfBirth;
     private Gender gender;
+    private String role;
+    private String genderString;
+    private String dobString;
     private ObservableList<Topic> topics; // TODO: implement filling list into DataController when loading user(s). And into user management!
 
     // Ctor_______________________________________________________________________________________________________
@@ -26,11 +28,14 @@ public class User {
         this.address = "default";
     }
 
-    public User(int id, String email, String name, String address) {
+    public User(int id, String email, String name, String gender, String role,  String address, String dob) {
         this.id = id;
         this.email = email;
         this.name = name;
+        this.genderString = gender;
+        this.role = role;
         this.address = address;
+        this.dobString = dob;
     }
 
     public User(int id, String email, String name, String address, String password,String dateOfBirth,int gender) {
@@ -43,8 +48,6 @@ public class User {
        setGender(gender);
     }
 
-
-
     // Methods_______________________________________________________________________________________________________
     public void editArticle(int articleId) {
         //TODO Implement EditArticle - Only if the user is also the creator
@@ -54,25 +57,20 @@ public class User {
         //TODO Implement deleteArticle - Only if the user is also the creator
     }
 
-
     // Getters,Setters_______________________________________________________________________________________________________
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         System.out.println("Changing the User ID is not allowed");
         //this.id = id;
     }
-
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     public String getPassword() {
         String passreturn= "";
         for (int i = 0; i < password.length(); i++){
@@ -80,31 +78,24 @@ public class User {
         }
         return passreturn;
     }
-
     public String getPasswordClear() {
         return password;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
-
     public String getAddress() {
         return address;
     }
-
     public void setAddress(String address) {
         this.address = address;
     }
-
     public Date getDateOfBirth() {
         return dateOfBirth;
     }
-
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
-
     public void setDateOfBirth(String dateOfBirth) {
         try {
             Date date = new SimpleDateFormat("dd.MM.yyyy").parse(dateOfBirth);
@@ -114,11 +105,9 @@ public class User {
         }
 
     }
-
     public Gender getGenderAsGender() {
         return gender;
     }
-
     public int getGenderAsInt() {
         int g;
         if (this.gender == Gender.Maennlich) {
@@ -133,11 +122,9 @@ public class User {
         }
         return g;
     }
-
     public void setGender(Gender gender) {
         this.gender = gender;
     }
-
     public void setGender(int gender) {
         if (gender == 1) {
             this.gender = Gender.Maennlich;
@@ -150,22 +137,27 @@ public class User {
         }
 
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public ObservableList<Topic> getTopics()
     {
         return topics;
     }
-
     public void setTopics(ObservableList<Topic> topics)
     {
         this.topics = topics;
+    }
+    public String getRole() {
+        return role;
+    }
+    public String getGenderString() {
+        return genderString;
+    }
+    public String getDobString() {
+        return dobString;
     }
 }

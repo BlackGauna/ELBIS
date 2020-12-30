@@ -24,12 +24,13 @@ public class FXMLController_ModerationTable implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        userTable.getColumns().add(new TableColumn<User, String>("id"));
-        userTable.getColumns().add(new TableColumn<User, String>("email"));
-        userTable.getColumns().add(new TableColumn<User, String>("name"));
-        userTable.getColumns().add(new TableColumn<User, String>("address"));
-//        userTable.getColumns().add(new TableColumn<User, String>("gender"));
-//        userTable.getColumns().add(new TableColumn<User, String>("dob"));
+        userTable.getColumns().add(new TableColumn<User, String>("ID"));
+        userTable.getColumns().add(new TableColumn<User, String>("E-Mail"));
+        userTable.getColumns().add(new TableColumn<User, String>("Name"));
+        userTable.getColumns().add(new TableColumn<User, String>("Gender"));
+        userTable.getColumns().add(new TableColumn<User, String>("Role"));
+        userTable.getColumns().add(new TableColumn<User, String>("Address"));
+        userTable.getColumns().add(new TableColumn<User, String>("Date of Birth"));
         dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }
     // UI_______________________________________________________________________________________________________

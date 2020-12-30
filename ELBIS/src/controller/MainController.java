@@ -180,7 +180,6 @@ public class MainController extends Application {
         //TODO add buttonpanel to delete and edit articles per article in table
         */
 
-        ObservableList<Topic> topicList = dc.DBLoadAllTopics();
         ObservableList<Article> articleList = dc.DBLoadOwnArticles(activeUser.getId());
 
         // Getter from Article Class
@@ -211,10 +210,13 @@ public class MainController extends Application {
 
         ObservableList<User> userList = dc.DBLoadAllUsers();
 
+        // Getter from User Class
+        List<String> propertyKeys = Arrays.asList("id", "email", "name", "genderString", "role", "address", "dobString");
+
+        // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>(((TableColumn<User, String>) table.getColumns().get(i)).getText()));
-
+            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>(propertyKeys.get(i)));
         }
 
         table.setItems(userList);
