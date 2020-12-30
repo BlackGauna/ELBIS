@@ -20,6 +20,7 @@ public class FXMLController_CreateTopic extends ELBIS_FXMLController {
     @FXML
     void topicOkClicked(ActionEvent event) {
         mainController.createTopic(getName(), getParentTopic());
+        mainController.sideStage.close();
     }
 
     // Ini_______________________________________________________________________________________________________

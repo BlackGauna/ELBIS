@@ -43,6 +43,8 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
             alert.setHeaderText(null);
             alert.showAndWait();
             e.printStackTrace();
+        } finally{
+            mainController.sideStage.close();
         }
     }
 

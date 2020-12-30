@@ -50,7 +50,7 @@ public class MainController extends Application {
     private Stage loginStage;
     private Stage applicationStage;
     private Stage editorStage;
-    private Stage sideStage;
+    public Stage sideStage;
     //MainScenes
     private Scene loginScene;
     private Scene applicationScene;
