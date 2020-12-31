@@ -74,7 +74,7 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
     @FXML
     void createUserClicked(ActionEvent event) {
         try {
-            mainController.openSideStage(sideStageState.createUser);
+            mainController.callSideStage(sideStageState.createUser);
             refreshModerationContent();
         } catch (Exception e) {
             e.printStackTrace();

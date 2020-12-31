@@ -4,14 +4,12 @@ import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.*;
 import view.*;
 
@@ -34,11 +32,11 @@ public class MainController extends Application {
      */
 
     private static Connection con;
+    public Stage sideStage;
     // Atrrib_______________________________________________________________________________________________________
     //Data
     private DataController dc;
     private User activeUser;
-
     //MainLoaders
     private FXMLLoader loginLoader;
     private FXMLLoader mainApplicationLoader;
@@ -51,19 +49,18 @@ public class MainController extends Application {
     private Stage loginStage;
     private Stage applicationStage;
     private Stage editorStage;
-    public Stage sideStage;
     //MainScenes
     private Scene loginScene;
     private Scene applicationScene;
     private Scene editorScene;
-    private Scene sideScene;
+    private Scene sideScene = new Scene(new Pane());
     //MainPanes
     private Pane loginPane;
     private Pane applicationPane;
     private Pane editorPane;
 
     //SideContent
-    private FXMLLoader sideLoader;
+    private FXMLLoader sideLoader = new FXMLLoader();
 
     private FXMLController_CreateUser createUserController;
     private Pane createUserPane;
@@ -199,7 +196,7 @@ public class MainController extends Application {
         editorStage.show();
     }
 
-    public void openSideStage(sideStageState state) {
+    public void callSideStage(sideStageState state) {
         String title = "";
         try {
             switch (state) {
@@ -231,6 +228,29 @@ public class MainController extends Application {
         }
     }
 
+    public void callSideStage(sideStageState state, int id) {
+        String title = "";
+        Boolean editor = false;
+        try {
+            switch (state) {
+                case editArticle:
+                    //TODO throws Exceptions
+                    openEditorScene((Article)dc.DBLoadArticle(id));
+                    editor = true;
+                    break;
+            }
+            if(editor == false) {
+                sideStage.setTitle(title);
+                sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
+                sideStage.setScene(sideScene);
+                sideStage.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            setStatus("Could not load SideStage content");
+        }
+    }
+
     /******************************
      *
      * Refresh Table methods
@@ -245,9 +265,22 @@ public class MainController extends Application {
         // Getter from Article Class
         List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisher", "publisherComment");
         // fill columns with values
+        int id = 0;
+        MainController maincontroller = this;
         for (int i = 0; i < table.getColumns().size(); i++) {
-            setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
+            //Check if button column reached
+            if (!((TableColumn<Article, String>) table.getColumns().get(i)).getText().equals("Actions")) {
+                setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+                ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
+            //createButton via modded Cell class TableActionCell (usable for article Tables)
+            } else {
+                ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
+                    @Override public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
+                        //TODO give actual ID
+                        return new TableActionCell(maincontroller, "Bearbeiten",sideStageState.editArticle);
+                    }
+                });
+            }
         }
         table.setItems(articleList);
         //Test if table is empty
@@ -257,7 +290,7 @@ public class MainController extends Application {
         return table;
     }
 
-    public TreeView refreshUserContent_ArticleTree(TreeView tree){
+    public TreeView refreshUserContent_ArticleTree(TreeView tree) {
         //TODO implement Topics as tree-titles and sort Articles into it
         return tree;
     }
@@ -282,10 +315,10 @@ public class MainController extends Application {
         return table;
     }
 
-    public TableView refreshModerationContent_SubmissionTable(TableView table){
+    public TableView refreshModerationContent_SubmissionTable(TableView table) {
 
         ObservableList<Article> submissionList = dc.DBLoadAllSubmittedArticles();
-        // Getter from Article Class
+        //a Getter from Article Class
         List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisher", "publisherComment");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
@@ -300,7 +333,7 @@ public class MainController extends Application {
         return table;
     }
 
-    public TableView refreshModerationContent_ArticleTable(TableView table){
+    public TableView refreshModerationContent_ArticleTable(TableView table) {
 
         ObservableList<Article> articleList = dc.DBLoadAllArticles();
         // Getter from Article Class
@@ -336,7 +369,7 @@ public class MainController extends Application {
         return table;
     }
 
-    public TableView refreshAdministrationContent_UserTable(TableView table){
+    public TableView refreshAdministrationContent_UserTable(TableView table) {
         /*
         //TODO add buttonpanel to edit roles of an user or to delete an User
         */

@@ -53,7 +53,7 @@ public class FXMLController_AdministrationContent extends ELBIS_FXMLController i
     @FXML
     void createTopicClicked(ActionEvent event) {
         try {
-            mainController.openSideStage(createTopic);
+            mainController.callSideStage(createTopic);
             refreshAdministrationContent();
         } catch (Exception e) {
             e.printStackTrace();

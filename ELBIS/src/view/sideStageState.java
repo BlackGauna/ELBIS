@@ -1,5 +1,5 @@
 package view;
 
 public enum sideStageState {
-    createUser, createTopic
+    createUser, createTopic, editArticle
 }
