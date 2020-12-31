@@ -38,6 +38,15 @@ public class FXMLController_AdministrationContent extends ELBIS_FXMLController i
         topicTable.getColumns().add(new TableColumn<Topic, String>("ID"));
         topicTable.getColumns().add(new TableColumn<Topic, String>("Name"));
         topicTable.getColumns().add(new TableColumn<Topic, String>("Parent Topic"));
+
+        userTable.getColumns().add(new TableColumn<User, String>("ID"));
+        userTable.getColumns().add(new TableColumn<User, String>("E-Mail"));
+        userTable.getColumns().add(new TableColumn<User, String>("Name"));
+        userTable.getColumns().add(new TableColumn<User, String>("Gender"));
+        userTable.getColumns().add(new TableColumn<User, String>("Role"));
+        userTable.getColumns().add(new TableColumn<User, String>("Address"));
+        userTable.getColumns().add(new TableColumn<User, String>("Date of Birth"));
+
         dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }
 

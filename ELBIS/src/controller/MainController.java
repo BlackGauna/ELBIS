@@ -243,7 +243,7 @@ public class MainController extends Application {
         */
         ObservableList<Article> articleList = dc.DBLoadOwnArticles(activeUser.getId());
         // Getter from Article Class
-        List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisherComment");
+        List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisher", "publisherComment");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
@@ -264,7 +264,6 @@ public class MainController extends Application {
 
     public TableView refreshModerationContent_UserTable(TableView table) {
         /*
-        //TODO fill tables "New Submissions" and "Manage Articles" with DB information
         //TODO add buttonpanel to delete and edit (JUST) users per user in table
         */
         ObservableList<User> userList = dc.DBLoadAllUsers();
@@ -284,18 +283,38 @@ public class MainController extends Application {
     }
 
     public TableView refreshModerationContent_SubmissionTable(TableView table){
-        /*
-        //TODO fill table with DB information (All Articles in state "submitted")
-        //TODO add buttonpanel to edit state of an article with a new ModeratorComment
-        */
+
+        ObservableList<Article> submissionList = dc.DBLoadAllSubmittedArticles();
+        // Getter from Article Class
+        List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisher", "publisherComment");
+        // fill columns with values
+        for (int i = 0; i < table.getColumns().size(); i++) {
+            setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
+        }
+        table.setItems(submissionList);
+        //Test if table is empty
+        if (table.getItems().size() == 0) {
+            setStatus("Warning: Empty ModerationTable loaded?");
+        }
         return table;
     }
 
     public TableView refreshModerationContent_ArticleTable(TableView table){
-        /*
-        //TODO fill table with DB information (all existing articles)
-        //TODO add buttonpanel to edit state or delete of an article
-        */
+
+        ObservableList<Article> articleList = dc.DBLoadAllArticles();
+        // Getter from Article Class
+        List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisher", "publisherComment");
+        // fill columns with values
+        for (int i = 0; i < table.getColumns().size(); i++) {
+            setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
+        }
+        table.setItems(articleList);
+        //Test if table is empty
+        if (table.getItems().size() == 0) {
+            setStatus("Warning: Empty ModerationTable loaded?");
+        }
         return table;
     }
 
@@ -319,9 +338,21 @@ public class MainController extends Application {
 
     public TableView refreshAdministrationContent_UserTable(TableView table){
         /*
-        //TODO fill table "Manage Roles" with DB information (all Users)
         //TODO add buttonpanel to edit roles of an user or to delete an User
         */
+        ObservableList<User> userList = dc.DBLoadAllUsers();
+        // Getter from User Class
+        List<String> propertyKeys = Arrays.asList("id", "email", "name", "genderString", "role", "address", "dobString");
+        // fill columns with values
+        for (int i = 0; i < table.getColumns().size(); i++) {
+            setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
+            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>(propertyKeys.get(i)));
+        }
+        table.setItems(userList);
+        //Test if table is empty
+        if (table.getItems().size() == 0) {
+            setStatus("Warning: Empty ModerationTable loaded?");
+        }
         return table;
     }
 

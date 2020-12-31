@@ -107,11 +107,11 @@ public class DataController {
     //Load a specific User with ID
     public static final String LOAD_USER_BY_ID = "SELECT " + COLUMN_USER_ROLE + ", " + COLUMN_USER_EMAIL + ", "
             + COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
-            ", " + COLUMN_USER_DATE_OF_BIRTH +  ", " + COLUMN_USER_PASSWORD + " FROM " +
+            ", " + COLUMN_USER_DATE_OF_BIRTH + ", " + COLUMN_USER_PASSWORD + " FROM " +
             TABLE_USER + " WHERE " + COLUMN_USER_ID + " = ?";
     //Load a specific User with Email
     public static final String LOAD_USER_BY_EMAIL = "SELECT " + COLUMN_USER_ROLE + ", " + COLUMN_USER_ID + ", " + COLUMN_USER_EMAIL + ", " + COLUMN_USER_NAME + ", " + COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER +
-            ", " + COLUMN_USER_DATE_OF_BIRTH +  ", " + COLUMN_USER_PASSWORD + " FROM " +
+            ", " + COLUMN_USER_DATE_OF_BIRTH + ", " + COLUMN_USER_PASSWORD + " FROM " +
             TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
     //Edit a specific Article with ID
     public static final String EDIT_ARTICLE = "UPDATE " + TABLE_ARTICLE + " SET " +
@@ -135,23 +135,38 @@ public class DataController {
     //Check if user exists in database
     public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? AND " + COLUMN_USER_PASSWORD + " = ?";
     //Load all articles
-    public static final String LOAD_ALL_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE;
+    public static final String LOAD_ALL_ARTICLES = "SELECT a.id, a.title, a.creationDate, a.expireDate, a.lastEdit, s.name, " +
+            "t.id, t.name, t.parentTopic, u1.name as author, u2.name as publisher, a.publisherComment " +
+            "FROM Article a " +
+            "JOIN Status s ON a.status = s.id " +
+            "JOIN Topic t ON a.topic = t.id " +
+            "JOIN User u1 ON a.authorId = u1.id " +
+            "LEFT JOIN User u2 ON a.publisherId = u2.id";
     //Load own articles by ID
     public static final String LOAD_OWN_ARTICLES_BY_ID = "SELECT a.id, a.title, a.creationDate, a.expireDate, a.lastEdit, s.name, "
-            + "t.id, t.name, t.parentTopic, u1.name as author, a.publisherComment FROM Article a "
-            + "JOIN Status s on a.status = s.id "
-            + "JOIN Topic t on a.topic = t.id "
-            + "JOIN User u1 on a.authorId = u1.id "
+            + "t.id, t.name, t.parentTopic, u1.name as author, u2.name as publisher, a.publisherComment FROM Article a "
+            + "JOIN Status s ON a.status = s.id "
+            + "JOIN Topic t ON a.topic = t.id "
+            + "JOIN User u1 ON a.authorId = u1.id "
+            + "LEFT JOIN User u2 ON a.publisherId = u2.id "
             + "WHERE " + COLUMN_ARTICLE_AUTHOR_ID + " = ";
     //Load own articles by Email
     public static final String LOAD_OWN_ARTICLES_BY_EMAIL = "SELECT * FROM " + TABLE_ARTICLE + " INNER JOIN " + TABLE_USER + " ON " + COLUMN_ARTICLE_PUBLISHER_ID + " = " + COLUMN_USER_ID + " WHERE " + COLUMN_USER_EMAIL + " = ";
     //Load all articles which are in submitted state
-    public static final String LOAD_ALL_SUBMITTED_ARTICLES = "SELECT * FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_STATUS + " = 2";
+    public static final String LOAD_ALL_SUBMITTED_ARTICLES = "SELECT a.id, a.title, a.creationDate, a.expireDate, a.lastEdit, s.name, " +
+            "t.id, t.name, t.parentTopic, u1.name as author, u2.name as publisher, a.publisherComment " +
+            "FROM Article a " +
+            "JOIN Status s ON a.status = s.id " +
+            "JOIN Topic t ON a.topic = t.id " +
+            "JOIN User u1 ON a.authorId = u1.id " +
+            "LEFT JOIN User u2 ON a.publisherId = u2.id " +
+            "WHERE a.status = 2";
     //Load all users
     public static final String LOAD_ALL_USERS = "SELECT u.id, u.email, u.name, g.name, r.name, u.address, u.dateOfBirth "
             + "FROM user u "
             + "JOIN role r on u.role = r.id "
-            + "JOIN gender g on u.gender = g.id";
+            + "LEFT JOIN gender g on u.gender = g.id";
+
     //Load all topics
     public static final String LOAD_ALL_TOPICS = "SELECT t2.id, t2.name, t1.name from Topic t1 "
             + "JOIN Topic t2 on t1.id=t2.parentTopic";
@@ -160,6 +175,7 @@ public class DataController {
     //CONNECTION--------------------------------------------------------------------------------------------------------
     private Connection con;
     private final MainController mainController;
+
     public DataController(MainController mainController) {
         this.mainController = mainController;
     }
@@ -210,7 +226,7 @@ public class DataController {
                 throw new SQLException("Couldn't create Article!");
             } else
                 mainController.setStatus("Successfully created!");
-                System.out.println("Successfully created!");
+            System.out.println("Successfully created!");
             con.close();
             return true;
 
@@ -264,7 +280,7 @@ public class DataController {
                 throw new SQLException("Couldn't create User!");
             } else
                 mainController.setStatus("Successfully created!");
-                System.out.println("Successfully created!");
+            System.out.println("Successfully created!");
             con.close();
             return true;
 
@@ -347,9 +363,10 @@ public class DataController {
                         rs.getString(4),
                         rs.getString(5),
                         rs.getString(6),
-                        new Topic(rs.getInt(7),rs.getString(8),rs.getInt(9)),
+                        new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)),
                         rs.getString(10),
-                        rs.getString(11)));
+                        rs.getString(11),
+                        rs.getString(12)));
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
@@ -360,6 +377,73 @@ public class DataController {
             return null;
         }
     }
+
+    //Load all submitted articles
+    public ObservableList DBLoadAllSubmittedArticles() {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Loading Articles...");
+            PreparedStatement pst = con.prepareStatement(LOAD_ALL_SUBMITTED_ARTICLES);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                articleList.add(new Article(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)),
+                        rs.getString(10),
+                        rs.getString(11),
+                        rs.getString(12)));
+            }
+            mainController.setStatus("Successfully loaded!");
+            con.close();
+            return articleList;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Articles!");
+            System.out.println("Couldn't load Articles: " + e.getMessage());
+            return null;
+        }
+    }
+
+    //FINISHED: Get ObservableList of all articles (needed for moderationTable)
+    public ObservableList DBLoadAllArticles() {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Loading all Articles...");
+            PreparedStatement pst = con.prepareStatement(LOAD_ALL_ARTICLES);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                articleList.add(new Article(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)),
+                        rs.getString(10),
+                        rs.getString(11),
+                        rs.getString(12)));
+            }
+            mainController.setStatus("Successfully loaded!");
+            con.close();
+            return articleList;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Articles!");
+            System.out.println("Couldn't load Articles: " + e.getMessage());
+            return null;
+        }
+    }
+
 
     //Status?: Load a topic
     public Topic DBLoadTopic(int id) {
@@ -406,7 +490,7 @@ public class DataController {
                         rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3)));
-                topicList.get(topicList.size()-1).setParent(DBLoadTopic(rs.getInt(3))); // small test 2
+                topicList.get(topicList.size() - 1).setParent(DBLoadTopic(rs.getInt(3))); // small test 2
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
@@ -478,7 +562,7 @@ public class DataController {
 
             }
             switch (roleId) {
-                case 1 -> user = new Administrator(id,email,name, address, password, dateOfBirth, gender);
+                case 1 -> user = new Administrator(id, email, name, address, password, dateOfBirth, gender);
                 case 2 -> user = new Moderator(id, email, name, address, password, dateOfBirth, gender);
                 case 3 -> user = new User(id, email, name, address, password, dateOfBirth, gender);
                 default -> {
@@ -589,6 +673,7 @@ public class DataController {
             return false;
         }
     }
+
     //Get 20 most recent articles
     public LinkedList<Article> DBLoadRecentArticle() {
 
@@ -620,6 +705,7 @@ public class DataController {
         }
 
     }
+
     //Edit a topic
     public boolean DBEditTopic(int id, String newName, String newParentTopic) {
         try {
@@ -676,6 +762,7 @@ public class DataController {
 
         }
     }
+
     //Edit User
     public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth) {
         try {
@@ -736,6 +823,7 @@ public class DataController {
             }
         }
     }
+
     //Load a User with ID
     public User DBLoadUserById(int id) {
         try {
@@ -766,7 +854,7 @@ public class DataController {
                 password = rs.getString(7);
             }
             switch (roleId) {
-                case 1 -> user = new Administrator(id,email,name, address, password, dateOfBirth, gender);
+                case 1 -> user = new Administrator(id, email, name, address, password, dateOfBirth, gender);
                 case 2 -> user = new Moderator(id, email, name, address, password, dateOfBirth, gender);
                 case 3 -> user = new User(id, email, name, address, password, dateOfBirth, gender);
                 default -> {
@@ -783,35 +871,9 @@ public class DataController {
             return null;
         }
     }
-    //Load all submitted articles
-    public ObservableList DBLoadAllSubmittedArticles() {
-        try {
-            con = SQLConnection.ConnectDB();
-            assert con != null;
-            mainController.setStatus("Loading Articles...");
-            PreparedStatement pst = con.prepareStatement(LOAD_ALL_SUBMITTED_ARTICLES);
-            ResultSet rs = pst.executeQuery();
-            ObservableList<Article> articleList = FXCollections.observableArrayList();
 
-            while (rs.next()) {
-                articleList.add(new Article(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getInt(8),
-                        rs.getString(11)));
-            }
-            mainController.setStatus("Successfully loaded!");
-            con.close();
-            return articleList;
-        } catch (SQLException e) {
-            mainController.setStatus("Couldn't load Articles!");
-            System.out.println("Couldn't load Articles: " + e.getMessage());
-            return null;
-        }
-    }
+
+
     //ObservableList of all own articles by email
     public ObservableList DBLoadOwnArticles(String userEmail) {
         try {
@@ -819,35 +881,6 @@ public class DataController {
             assert con != null;
             mainController.setStatus("Loading Articles...");
             PreparedStatement pst = con.prepareStatement(LOAD_OWN_ARTICLES_BY_EMAIL + userEmail);
-            ResultSet rs = pst.executeQuery();
-            ObservableList<Article> articleList = FXCollections.observableArrayList();
-
-            while (rs.next()) {
-                articleList.add(new Article(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getInt(8),
-                        rs.getString(11)));
-            }
-            mainController.setStatus("Successfully loaded!");
-            con.close();
-            return articleList;
-        } catch (SQLException e) {
-            mainController.setStatus("Couldn't load Articles!");
-            System.out.println("Couldn't load Articles: " + e.getMessage());
-            return null;
-        }
-    }
-    // Get ObservableList of all articles (needed for moderationTable)
-    public ObservableList DBLoadAllArticles() {
-        try {
-            con = SQLConnection.ConnectDB();
-            assert con != null;
-            mainController.setStatus("Loading all Articles...");
-            PreparedStatement pst = con.prepareStatement(LOAD_ALL_ARTICLES);
             ResultSet rs = pst.executeQuery();
             ObservableList<Article> articleList = FXCollections.observableArrayList();
 

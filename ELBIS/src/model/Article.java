@@ -13,6 +13,7 @@ public class Article {
     private Topic topic;
     private String statusString;
     private String author;
+    private String publisher;
     private int author_Id;
     private int publisher_Id;
     private String publisherComment;
@@ -35,7 +36,7 @@ public class Article {
 
     // for ArticleTable - LoadOwnArticles
     public Article(int id, String title, String creationDate, String expireDate, String lastEdit, String status,
-                   Topic topic, String author, String publisherComment) {
+                   Topic topic, String author, String publisher, String publisherComment) {
         this.id = id;
         this.title = title;
         this.creationDate = creationDate;
@@ -44,6 +45,7 @@ public class Article {
         this.statusString = status;
         this.topic = topic;
         this.author = author;
+        this.publisher = publisher;
         this.publisherComment = publisherComment;
     }
 
@@ -133,5 +135,8 @@ public class Article {
     }
     public String getStatusString() {
         return statusString;
+    }
+    public String getPublisher() {
+        return publisher;
     }
 }

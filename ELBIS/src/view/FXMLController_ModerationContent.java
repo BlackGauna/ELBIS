@@ -39,7 +39,16 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
     // Ini_______________________________________________________________________________________________________
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //TODO add Submission-columns to submissionTable
+        submissionTable.getColumns().add(new TableColumn<Article, String>("ID"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Title"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Created"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Expires"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Last Edit"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Status"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Topic"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Author"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Publisher"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Publisher comment"));
 
         articleTable.getColumns().add(new TableColumn<Article, String>("ID"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Title"));
@@ -49,6 +58,7 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
         articleTable.getColumns().add(new TableColumn<Article, String>("Status"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Topic"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Author"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Publisher"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Publisher comment"));
 
         userTable.getColumns().add(new TableColumn<User, String>("ID"));
