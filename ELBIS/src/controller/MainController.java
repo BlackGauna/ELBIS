@@ -182,7 +182,8 @@ public class MainController extends Application {
     /**
      * open new article in editor
      */
-    public void openEditorScene() {
+    public void openEditorScene() throws Exception
+    {
         editorController.openNewArticle();
         editorStage.show();
     }

@@ -1,6 +1,19 @@
 package view;
 
 import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.io.font.FontConstants;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.geom.Rectangle;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.layout.Canvas;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
 import controller.MainController;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
@@ -21,6 +34,8 @@ import netscape.javascript.JSObject;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import javax.swing.text.StyleConstants;
+import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -99,9 +114,10 @@ public class FXMLController_Editor
     }
 
 
-    public void openNewArticle()
+    public void openNewArticle() throws Exception
     {
         currentArticle= new Article();
+        initialize();
     }
 
     public void openArticle(Article article)
@@ -130,7 +146,7 @@ public class FXMLController_Editor
 
         /**
          * save open article in database
-         * @param html
+         * @param html - html content as String
          * @throws IOException
          */
         public void saveArticle(String html) throws IOException
@@ -268,7 +284,7 @@ public class FXMLController_Editor
          * @param htmlSource - String containing HTML code from editor
          * @author Onur Hokkaömeroglu
          */
-        public void exportPDF(String htmlSource)
+        public void exportPDF(String htmlSource) throws IOException
         {
 
             // create and open  file dialog window
@@ -294,11 +310,62 @@ public class FXMLController_Editor
                 e.printStackTrace();
             }
 
+            createOnePager(pdf);
 
         }
 
-        public void createOnePager (File originalPdf)
+        /**
+         * Creates a One-Pager version of article PDF and adds QR Code,
+         * if PDF has more than one page.
+         * @param originalPdf
+         * @throws IOException
+         * @author Onur Hokkaömeroglu
+         */
+        public void createOnePager (File originalPdf) throws IOException
         {
+
+            PdfReader reader = new PdfReader(originalPdf);
+            PdfDocument origDoc= new PdfDocument(reader);
+
+            if (origDoc.getNumberOfPages()>1)
+            {
+                String onePagerFileName= originalPdf.getParent()+"\\"
+                        + originalPdf.getName().substring(0, originalPdf.getName().lastIndexOf("."))
+                        + "_OnePager.pdf";
+                File onePagerFile= new File(onePagerFileName);
+                PdfWriter writer= new PdfWriter(onePagerFile);
+                PdfDocument onePager= new PdfDocument(writer);
+
+                // copy first page of original pdf to one-pager
+                origDoc.copyPagesTo(1,1,onePager);
+
+                // open a PdfCanvas to manipulate the first page
+                PdfCanvas pdfCanvas = new PdfCanvas(onePager.getFirstPage());
+
+                // add gradient image with transparency
+                ImageData gradientData = ImageDataFactory.create(Thread.currentThread().
+                        getContextClassLoader().getResource("tinymce/gradient.png"));
+                pdfCanvas.addImage(gradientData, PageSize.A4.getLeft(),PageSize.A4.getBottom(),false);
+
+                // add text to bottom with information regarding qr code
+                pdfCanvas.beginText().setFontAndSize(
+                        PdfFontFactory.createFont(FontConstants.HELVETICA),12)
+                        .moveText(PageSize.A4.getLeft()+50,PageSize.A4.getBottom()+30)
+                        .showText("Um den gesamten Artikel zu lesen. scannen Sie den QR-Code:")
+                        .endText();
+
+                // add QR code image
+                ImageData qr = ImageDataFactory.create(Thread.currentThread().
+                        getContextClassLoader().getResource("tinymce/frame.png"));
+                pdfCanvas.addImage(qr, PageSize.A4.getRight()-150,PageSize.A4.getBottom()+10,80,false);
+
+
+                // release canvas and close document
+                pdfCanvas.release();
+                onePager.close();
+                System.out.println("Exported One-Pager to: " + onePagerFile.getAbsolutePath());
+            }
+
 
         }
 

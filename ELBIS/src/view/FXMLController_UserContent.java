@@ -54,7 +54,8 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
     private Button btnCreateArticle;
 
     @FXML
-    void createArticleClicked(ActionEvent event) {
+    void createArticleClicked(ActionEvent event) throws Exception
+    {
         mainController.openEditorScene();
     }
 
