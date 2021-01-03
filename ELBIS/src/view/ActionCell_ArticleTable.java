@@ -20,8 +20,8 @@ public class ActionCell_ArticleTable extends TableCell<Article, Boolean> {
         btn = new Button(label);
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent actionEvent) {
+                mainController.setStatus("Button der ID "+hisArticle.getId()+ " geklickt.");
                 mainController.callSideStage(state, hisArticle.getId());
-                mainController.setStatus("Editor called with: "+hisArticle.getId());
             }
         });
     }

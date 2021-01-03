@@ -76,6 +76,20 @@ public class FXMLController_MainApplication extends ELBIS_FXMLController {
         statusBarController.setStatus("\"" + newStatus + "\"");
     }
 
+    public void refreshAllContent(User user){
+        if (user instanceof Administrator) {
+            articleTableController.refreshUserContent();
+            moderationTableController.refreshModerationContent();
+            administrationTableController.refreshAdministrationContent();
+        } else if (user instanceof Moderator) {
+            articleTableController.refreshUserContent();
+            moderationTableController.refreshModerationContent();
+        } else if (user instanceof User) {
+            articleTableController.refreshUserContent();
+        }
+        mainController.setStatus("Kontent neu geladen");
+    }
+
     public void openTabs(User user) {
         try {
 
