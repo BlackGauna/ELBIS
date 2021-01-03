@@ -16,16 +16,16 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
     @Override
    public void initialize(URL url, ResourceBundle resourceBundle) {
        articleTable.getColumns().add(new TableColumn<Article, String>("ID"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Title"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Created"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Expires"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Last Edit"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Titel"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Erstellt"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Ablauf"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Bearbeitet"));
        articleTable.getColumns().add(new TableColumn<Article, String>("Status"));
        articleTable.getColumns().add(new TableColumn<Article, String>("Topic"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Author"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Publisher"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Publisher comment"));
-       TableColumn actionColumn = new TableColumn<Article, Boolean>("Actions");
+       articleTable.getColumns().add(new TableColumn<Article, String>("Autor"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
+       articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber Kommentar"));
+       TableColumn actionColumn = new TableColumn<Article, Boolean>(" ");
        actionColumn.setSortable(false);
        articleTable.getColumns().add(actionColumn);
 

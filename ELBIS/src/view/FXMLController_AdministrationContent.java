@@ -37,15 +37,15 @@ public class FXMLController_AdministrationContent extends ELBIS_FXMLController i
     public void initialize(URL url, ResourceBundle resourceBundle) {
         topicTable.getColumns().add(new TableColumn<Topic, String>("ID"));
         topicTable.getColumns().add(new TableColumn<Topic, String>("Name"));
-        topicTable.getColumns().add(new TableColumn<Topic, String>("Parent Topic"));
+        topicTable.getColumns().add(new TableColumn<Topic, String>("Eltern-Bereich"));
 
         userTable.getColumns().add(new TableColumn<User, String>("ID"));
         userTable.getColumns().add(new TableColumn<User, String>("E-Mail"));
         userTable.getColumns().add(new TableColumn<User, String>("Name"));
-        userTable.getColumns().add(new TableColumn<User, String>("Gender"));
-        userTable.getColumns().add(new TableColumn<User, String>("Role"));
-        userTable.getColumns().add(new TableColumn<User, String>("Address"));
-        userTable.getColumns().add(new TableColumn<User, String>("Date of Birth"));
+        userTable.getColumns().add(new TableColumn<User, String>("Geschlecht"));
+        userTable.getColumns().add(new TableColumn<User, String>("Rolle"));
+        userTable.getColumns().add(new TableColumn<User, String>("Anschrift"));
+        userTable.getColumns().add(new TableColumn<User, String>("Geburtsdatum"));
 
         dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }

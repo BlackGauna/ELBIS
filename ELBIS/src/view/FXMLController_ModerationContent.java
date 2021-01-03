@@ -40,34 +40,34 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         submissionTable.getColumns().add(new TableColumn<Article, String>("ID"));
-        submissionTable.getColumns().add(new TableColumn<Article, String>("Title"));
-        submissionTable.getColumns().add(new TableColumn<Article, String>("Created"));
-        submissionTable.getColumns().add(new TableColumn<Article, String>("Expires"));
-        submissionTable.getColumns().add(new TableColumn<Article, String>("Last Edit"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Titel"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Erstellt"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Ablauf"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Bearbeitet"));
         submissionTable.getColumns().add(new TableColumn<Article, String>("Status"));
-        submissionTable.getColumns().add(new TableColumn<Article, String>("Topic"));
-        submissionTable.getColumns().add(new TableColumn<Article, String>("Author"));
-        submissionTable.getColumns().add(new TableColumn<Article, String>("Publisher"));
-        submissionTable.getColumns().add(new TableColumn<Article, String>("Publisher comment"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Bereich"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Autor"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
+        submissionTable.getColumns().add(new TableColumn<Article, String>("Herausgeber Kommentar"));
 
         articleTable.getColumns().add(new TableColumn<Article, String>("ID"));
-        articleTable.getColumns().add(new TableColumn<Article, String>("Title"));
-        articleTable.getColumns().add(new TableColumn<Article, String>("Created"));
-        articleTable.getColumns().add(new TableColumn<Article, String>("Expires"));
-        articleTable.getColumns().add(new TableColumn<Article, String>("Last Edit"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Titel"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Erstellt"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Ablauf"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Bearbeitet"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Status"));
-        articleTable.getColumns().add(new TableColumn<Article, String>("Topic"));
-        articleTable.getColumns().add(new TableColumn<Article, String>("Author"));
-        articleTable.getColumns().add(new TableColumn<Article, String>("Publisher"));
-        articleTable.getColumns().add(new TableColumn<Article, String>("Publisher comment"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Bereich"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Autor"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber Kommentar"));
 
         userTable.getColumns().add(new TableColumn<User, String>("ID"));
         userTable.getColumns().add(new TableColumn<User, String>("E-Mail"));
         userTable.getColumns().add(new TableColumn<User, String>("Name"));
-        userTable.getColumns().add(new TableColumn<User, String>("Gender"));
-        userTable.getColumns().add(new TableColumn<User, String>("Role"));
-        userTable.getColumns().add(new TableColumn<User, String>("Address"));
-        userTable.getColumns().add(new TableColumn<User, String>("Date of Birth"));
+        userTable.getColumns().add(new TableColumn<User, String>("Geschlecht"));
+        userTable.getColumns().add(new TableColumn<User, String>("Rolle"));
+        userTable.getColumns().add(new TableColumn<User, String>("Anschrift"));
+        userTable.getColumns().add(new TableColumn<User, String>("Geburtsdatum"));
         dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }
 

@@ -29,7 +29,7 @@
                                     </AnchorPane>
                               </content>
                             </TitledPane>
-                              <TitledPane fx:id="tPane_Topics" animated="false" text="Topics">
+                              <TitledPane fx:id="tPane_Topics" animated="false" text="Bereichsansicht">
                               <content>
                                 <AnchorPane>
                                        <children>
