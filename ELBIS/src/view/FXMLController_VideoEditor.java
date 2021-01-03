@@ -165,6 +165,14 @@ public class FXMLController_VideoEditor
 
     }
 
+    /**
+     * Adds a paragraph to PdfDocument, splitting overflowing content and adding to new page
+     * @param paragraph - Paragraph with content
+     * @param pdfDocument - Document to write to
+     * @param pageNum - Initial page number
+     * @param rectangle - Rectangle where to put paragraph
+     * @author Onur Hokkaömeroglu
+     */
     public void addParagraph (Paragraph paragraph, PdfDocument pdfDocument, int pageNum, Rectangle rectangle)
     {
         PdfPage page = pdfDocument.getFirstPage();
