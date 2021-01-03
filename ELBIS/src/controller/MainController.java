@@ -255,9 +255,9 @@ public class MainController extends Application {
                 case deleteArticle:
                     opensideStage = false;
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("");
-                    alert.setContentText("Sind sie sich sicher das sie diesen Artikel löschen möchten? \n Dies kann nicht rückgängig gemacht werden.");
-                    alert.setHeaderText("Artikel löschen");
+                    alert.setTitle("Artikel löschen");
+                    alert.setContentText(" Dies kann nicht rückgängig gemacht werden.");
+                    alert.setHeaderText("Sind sie sich sicher das sie diesen Artikel löschen möchten?");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK){
                         //TODO actually delete an Article
