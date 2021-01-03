@@ -179,10 +179,15 @@ public class DataController {
             + "FROM user u "
             + "JOIN role r on u.role = r.id "
             + "LEFT JOIN gender g on u.gender = g.id";
-
     //Load all topics
     public static final String LOAD_ALL_TOPICS = "SELECT t2.id, t2.name, t1.name from Topic t1 "
             + "JOIN Topic t2 on t1.id=t2.parentTopic";
+    //Add an allowed topic to a user by ID
+    public static final String ALLOWED_TOPIC_ADD_BY_ID = "INSERT INTO " + TABLE_ALLOWED_TOPICS +
+            '(' + COLUMN_ALLOWED_TOPIC_USER_ID + ", " + COLUMN_ALLOWED_TOPIC_TOPIC_ID + ") VALUES(?, ?)";
+    //Delete an allowed topic from a user by ID
+    public static final String ALLOWED_TOPIC_DELETE_BY_ID = "DELETE FROM " + TABLE_ALLOWED_TOPICS + " WHERE " + COLUMN_ALLOWED_TOPIC_USER_ID + " = ? " + COLUMN_ALLOWED_TOPIC_TOPIC_ID + " = ?";
+
 
 
     //CONNECTION--------------------------------------------------------------------------------------------------------
@@ -985,4 +990,67 @@ public class DataController {
             return null;
         }
     }
+
+    //Add an allowed topic to a user by ID
+    public boolean DBAddAllowedTopic(int userId,int newAllowedTopicId) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Adding allowed topic...");
+            PreparedStatement pst = con.prepareStatement(ALLOWED_TOPIC_ADD_BY_ID);
+
+            pst.setInt(1, userId);
+            pst.setInt(2, newAllowedTopicId);
+
+
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows == 0) {
+                mainController.setStatus("Couldn't add allowed Topic!");
+                throw new SQLException("Couldn't add allowed Topic!");
+            } else
+                mainController.setStatus("Successfully added!");
+            System.out.println("Successfully added!");
+            con.close();
+            return true;
+
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't add allowed Topic!");
+            System.out.println("Couldn't add allowed Topic: " + e.getMessage());
+            return false;
+        }
+    }
+
+    //Delete an allowed topic from a user by ID
+    public boolean DBDeleteAllowedTopic(int userId,int deletedAllowedTopicId) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Deleting allowed topic...");
+            PreparedStatement pst = con.prepareStatement(ALLOWED_TOPIC_DELETE_BY_ID);
+
+            pst.setInt(1, userId);
+            pst.setInt(2, deletedAllowedTopicId);
+
+
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows == 0) {
+                mainController.setStatus("Couldn't delete allowed Topic!");
+                throw new SQLException("Couldn't delete allowed Topic!");
+            } else
+                mainController.setStatus("Successfully deleted!");
+            System.out.println("Successfully deleted!");
+            con.close();
+            return true;
+
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't delete allowed Topic!");
+            System.out.println("Couldn't delete allowed Topic: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+
 }
