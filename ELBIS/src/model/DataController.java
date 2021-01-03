@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 public class DataController {
     //ATTRIBUTES--------------------------------------------------------------------------------------------------------
-
+    // TODO Sort everything according to the database
     // Article
     public static final String TABLE_ARTICLE = "Article";
     public static final String COLUMN_ARTICLE_ID = "id";
@@ -92,7 +92,7 @@ public class DataController {
 
     //QUERIES-----------------------------------------------------------------------------------------------------------
 
-    //The Stuff that we need can be changed anytime to however we want to receive something from the database, do not hesitate to make changes.
+    //TODO Sort the queries
 
     //Create new Article
     public static final String SEND_NEW_ARTICLE = "INSERT INTO " + TABLE_ARTICLE +
@@ -189,6 +189,7 @@ public class DataController {
     //Delete an allowed topic from a user by ID
     public static final String DELETE_ALLOWED_TOPICS_BY_ID = "DELETE FROM " + TABLE_ALLOWED_TOPICS + " WHERE " + COLUMN_ALLOWED_TOPICS_USER_ID + " = ? " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + " = ?";
     //Load Allowed topics for a user by ID
+    //TODO Check if Load works
     public static final String LOAD_ALLOWED_TOPICS_BY_ID = "SELECT " + COLUMN_TOPIC_ID + ", " + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + " FROM " + TABLE_TOPIC + " INNER JOIN " + TABLE_ALLOWED_TOPICS + " ON " + COLUMN_TOPIC_ID + " = " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + " WHERE " + COLUMN_ALLOWED_TOPICS_USER_ID + " = ?";
     //Delete an Article by ID
     public static final String DELETE_ARTICLE_BY_ID = "DELETE FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_ID + " = ?";
@@ -197,8 +198,9 @@ public class DataController {
     //Delete a Topic by ID
     public static final String DELETE_TOPIC_BY_ID = "DELETE FROM " + TABLE_TOPIC + " WHERE " + COLUMN_TOPIC_ID + " = ?";
     //Update database to archive timed out articles
+    //TODO update doesnt work properly
     public static final String UPDATE_ARTICLE_LIST = "UPDATE " + TABLE_ARTICLE + " SET " + COLUMN_ARTICLE_STATUS + " = 6 " + "WHERE expireDate <= datetime('localtime')";
-    //TODO UPDATE ARTICLE LIST DATETIME DOESNT WORK PROPERLY
+
     //CONNECTION--------------------------------------------------------------------------------------------------------
     private Connection con;
     private final MainController mainController;
