@@ -19,7 +19,7 @@
                             <children>
                                 <Accordion fx:id="dropDownAccordion" layoutX="7.0" layoutY="7.0" prefHeight="200.0" prefWidth="1170.0">
                                     <panes>
-                                        <TitledPane fx:id="tPane_ManageTopics" animated="false" prefHeight="827.0" prefWidth="1172.0" text="ManageTopics">
+                                        <TitledPane fx:id="tPane_ManageTopics" animated="false" prefHeight="827.0" prefWidth="1172.0" text="Bereichsverwaltung">
                                             <content>
                                                 <AnchorPane>
                                                     <children>
@@ -29,7 +29,7 @@
                                                 </AnchorPane>
                                             </content>
                                         </TitledPane>
-                                        <TitledPane fx:id="tPane_ManageRoles" animated="false" prefHeight="827.0" prefWidth="1172.0" text="ManageRoles">
+                                        <TitledPane fx:id="tPane_ManageRoles" animated="false" prefHeight="827.0" prefWidth="1172.0" text="Rollenverwaltung">
                                             <content>
                                                 <AnchorPane>
                                                     <children>

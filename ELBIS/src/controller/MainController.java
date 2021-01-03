@@ -282,17 +282,17 @@ public class MainController extends Application {
         MainController maincontroller = this;
         for (int i = 0; i < table.getColumns().size(); i++) {
             //Check if button column reached
-            if (!((TableColumn<Article, String>) table.getColumns().get(i)).getText().equals("Actions")) {
-                setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-                ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
-            //createButton via modded Cell class TableActionCell (usable for article Tables)
-            } else {
+            if (i == 10) {
+                //createButton via modded Cell class TableActionCell (usable for article Tables)
                 ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
                     @Override public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
-                        //TODO give actual ID
-                        return new TableActionCell(maincontroller, "Bearbeiten",sideStageState.editArticle);
+                        return new ActionCell_ArticleTable(maincontroller, "Bearbeiten",sideStageState.editArticle);
                     }
                 });
+            } else {
+                setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+                ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
+
             }
         }
         table.setItems(articleList);

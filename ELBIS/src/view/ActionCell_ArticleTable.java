@@ -8,14 +8,14 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
 import model.Article;
 
-public class TableActionCell extends TableCell<Article, Boolean> {
+public class ActionCell_ArticleTable extends TableCell<Article, Boolean> {
 
     // Atrrib_______________________________________________________________________________________________________
     Button btn;
     MainController mainController;
     Article hisArticle;
     // Ctor_______________________________________________________________________________________________________
-    public TableActionCell(MainController mainController, String label, sideStageState state){
+    public ActionCell_ArticleTable(MainController mainController, String label, sideStageState state){
         this.mainController = mainController;
         btn = new Button(label);
         btn.setOnAction(new EventHandler<ActionEvent>() {
