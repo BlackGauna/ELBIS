@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+
+
+<AnchorPane prefHeight="707.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_VideoEditor">
+   <children>
+      <TextField fx:id="titleLabel" alignment="CENTER" layoutX="106.0" layoutY="30.0" prefHeight="25.0" prefWidth="301.0" promptText="Titel/Überschrift" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#656565" height="224.0" layoutX="32.0" layoutY="73.0" stroke="BLACK" strokeType="INSIDE" width="436.0" />
+      <Canvas height="200.0" layoutX="151.0" layoutY="340.0" width="200.0" />
+      <Label layoutX="232.0" layoutY="175.0" text="Video" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Button fx:id="videoButton" layoutX="355.0" layoutY="272.0" mnemonicParsing="false" text="Video importieren" />
+      <WebView fx:id="textView" layoutX="37.0" layoutY="332.0" prefHeight="319.0" prefWidth="436.0" />
+   </children>
+</AnchorPane>
