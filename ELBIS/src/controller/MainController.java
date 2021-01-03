@@ -21,15 +21,6 @@ import java.util.List;
 
 public class MainController extends Application {
 
-    /*
-    TODO create refresh methods for tabs
-    TODO rename refresh methods of each element
-    TODO make sure relogin reloads everything properly
-
-    TODO reminder: fix displacement of columns
-    TODO add buttons to delete or edit on every entry in table
-    TODO maybe show the count of articles under a specific topic on topic views (count articles per topic)
-     */
 
     private static Connection con;
     public Stage sideStage;
@@ -41,23 +32,28 @@ public class MainController extends Application {
     private FXMLLoader loginLoader;
     private FXMLLoader mainApplicationLoader;
     private FXMLLoader editorLoader;
+    private FXMLLoader videoEditorLoader;
     //MainControllers
     private FXMLController_Login loginController;
     private FXMLController_MainApplication mainApplicationController;
     private FXMLController_Editor editorController;
+    private FXMLController_VideoEditor videoController;
     //MainStages
     private Stage loginStage;
     private Stage applicationStage;
     private Stage editorStage;
+    private Stage videoStage;
     //MainScenes
     private Scene loginScene;
     private Scene applicationScene;
     private Scene editorScene;
     private Scene sideScene = new Scene(new Pane());
+    private Scene videoScene;
     //MainPanes
     private Pane loginPane;
     private Pane applicationPane;
     private Pane editorPane;
+    private Pane videoPane;
 
     //SideContent
     private FXMLLoader sideLoader = new FXMLLoader();
@@ -83,6 +79,8 @@ public class MainController extends Application {
         editorStage = new Stage(); // Editor Window
         sideStage = new Stage();
         sideStage.setResizable(false);
+        videoStage= new Stage();
+
 
     }
 
@@ -111,6 +109,12 @@ public class MainController extends Application {
             editorController = editorLoader.getController();
             editorController.setMainController(this);
 
+            videoEditorLoader = new FXMLLoader(getClass().getResource("/view/Pane_VideoEditor.fxml"));
+            videoPane =  videoEditorLoader.load();
+            videoController = videoEditorLoader.getController();
+
+
+
             //Manage scenes
             loginScene = new Scene(loginPane);
             loginScene.getStylesheets().add("/ELBIS_graphic/dark.css");
@@ -118,9 +122,11 @@ public class MainController extends Application {
             applicationScene.getStylesheets().add("/ELBIS_graphic/dark.css");
 
             editorScene = new Scene(editorPane);
+            videoScene = new Scene(videoPane);
             loginStage.setScene(loginScene);
             applicationStage.setScene(applicationScene);
             editorStage.setScene(editorScene);
+            videoStage.setScene(videoScene);
 
         } catch (IOException io) {
             System.out.println("Couldn't load scene File");
@@ -186,6 +192,12 @@ public class MainController extends Application {
     {
         editorController.openNewArticle();
         editorStage.show();
+        videoStage.show();
+    }
+
+    public void openVideoEditor() throws Exception
+    {
+
     }
 
     /**

@@ -154,6 +154,7 @@ public class FXMLController_Editor
          */
         public void saveArticle(String html) throws IOException
         {
+            // TODO: Add controls for time of expireDate and update Date format
             // setup save dialog window
             Stage saveDialog = new Stage();
             FXMLController_Save saveController= new FXMLController_Save(mainController);
