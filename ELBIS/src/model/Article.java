@@ -17,6 +17,7 @@ public class Article {
     private int author_Id;
     private int publisher_Id;
     private String publisherComment;
+    private int status_int;
 
     // Ctor_______________________________________________________________________________________________________
 
@@ -108,6 +109,12 @@ public class Article {
     }
     public void setLastEdit(String lastEdit) {
         this.lastEdit = lastEdit;
+    }
+    public int getStatus_int() {
+        return status_int;
+    }
+    public void setStatus_int(int status_int) {
+        this.status_int = status_int;
     }
     public Status getStatus() {
         return status;
