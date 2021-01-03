@@ -25,9 +25,12 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
        articleTable.getColumns().add(new TableColumn<Article, String>("Autor"));
        articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
        articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber Kommentar"));
-       TableColumn actionColumn = new TableColumn<Article, Boolean>(" ");
-       actionColumn.setSortable(false);
-       articleTable.getColumns().add(actionColumn);
+       TableColumn editColumn = new TableColumn<Article, Boolean>(" ");
+       editColumn.setSortable(false);
+       articleTable.getColumns().add(editColumn);
+       TableColumn deleteColumn = new TableColumn<Article, Boolean>(" ");
+       deleteColumn.setSortable(false);
+       articleTable.getColumns().add(deleteColumn);
 
        dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
    }

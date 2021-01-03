@@ -18,6 +18,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class MainController extends Application {
 
@@ -79,7 +80,7 @@ public class MainController extends Application {
         editorStage = new Stage(); // Editor Window
         sideStage = new Stage();
         sideStage.setResizable(false);
-        videoStage= new Stage();
+        videoStage = new Stage();
 
 
     }
@@ -110,9 +111,8 @@ public class MainController extends Application {
             editorController.setMainController(this);
 
             videoEditorLoader = new FXMLLoader(getClass().getResource("/view/Pane_VideoEditor.fxml"));
-            videoPane =  videoEditorLoader.load();
+            videoPane = videoEditorLoader.load();
             videoController = videoEditorLoader.getController();
-
 
 
             //Manage scenes
@@ -140,6 +140,10 @@ public class MainController extends Application {
     // Methods_______________________________________________________________________________________________________
     public void setStatus(String newStatus) {
         mainApplicationController.setStatus(newStatus);
+    }
+
+    public void refreshAllContent(){
+        mainApplicationController.refreshAllContent(activeUser);
     }
 
     public boolean logout() {
@@ -188,15 +192,13 @@ public class MainController extends Application {
     /**
      * open new article in editor
      */
-    public void openEditorScene() throws Exception
-    {
+    public void openEditorScene() throws Exception {
         editorController.openNewArticle();
         editorStage.show();
         videoStage.show();
     }
 
-    public void openVideoEditor() throws Exception
-    {
+    public void openVideoEditor() throws Exception {
 
     }
 
@@ -243,16 +245,31 @@ public class MainController extends Application {
 
     public void callSideStage(sideStageState state, int id) {
         String title = "";
-        Boolean editor = false;
+        Boolean opensideStage = true;
         try {
             switch (state) {
                 case editArticle:
-                    //TODO throws Exceptions
-                    openEditorScene((Article)dc.DBLoadArticle(id));
-                    editor = true;
+                    openEditorScene((Article) dc.DBLoadArticle(id));
+                    opensideStage = false;
+                    break;
+                case deleteArticle:
+                    opensideStage = false;
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Artikel löschen");
+                    alert.setContentText(" Dies kann nicht rückgängig gemacht werden.");
+                    alert.setHeaderText("Sind sie sich sicher das sie diesen Artikel löschen möchten?");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK){
+                        //TODO actually delete an Article
+                        //dc.DBDeleteArticle(id);
+                        setStatus("Artikel gelöscht.");
+                    } else {
+                        setStatus("Aktion abgebrochen.");
+                    }
+                    refreshAllContent();
                     break;
             }
-            if(editor == false) {
+            if (opensideStage == true) {
                 sideStage.setTitle(title);
                 sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
                 sideStage.setScene(sideScene);
@@ -285,12 +302,21 @@ public class MainController extends Application {
             if (i == 10) {
                 //createButton via modded Cell class TableActionCell (usable for article Tables)
                 ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
-                    @Override public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
-                        return new ActionCell_ArticleTable(maincontroller, "Bearbeiten",sideStageState.editArticle);
+                    @Override
+                    public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
+                        return new ActionCell_ArticleTable(maincontroller, "Bearbeiten", sideStageState.editArticle);
+                    }
+                });
+            } else if (i == 11) {
+                //deletebutton
+                ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
+                    @Override
+                    public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
+                        return new ActionCell_ArticleTable(maincontroller, "Löschen", sideStageState.deleteArticle);
                     }
                 });
             } else {
-                setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+                //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
 
             }
@@ -317,7 +343,7 @@ public class MainController extends Application {
         List<String> propertyKeys = Arrays.asList("id", "email", "name", "genderString", "role", "address", "dobString");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
+            //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
             ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>(propertyKeys.get(i)));
         }
         table.setItems(userList);
@@ -335,7 +361,7 @@ public class MainController extends Application {
         List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisher", "publisherComment");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+            //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
             ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
         }
         table.setItems(submissionList);
@@ -353,7 +379,7 @@ public class MainController extends Application {
         List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisher", "publisherComment");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+            //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
             ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
         }
         table.setItems(articleList);
@@ -371,7 +397,7 @@ public class MainController extends Application {
         List<String> propertyKeys = Arrays.asList("id", "name", "parentTopicString");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
+            //setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
             ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((propertyKeys.get(i))));
         }
         table.setItems(topicList);
@@ -391,7 +417,7 @@ public class MainController extends Application {
         List<String> propertyKeys = Arrays.asList("id", "email", "name", "genderString", "role", "address", "dobString");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
+            //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
             ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>(propertyKeys.get(i)));
         }
         table.setItems(userList);
