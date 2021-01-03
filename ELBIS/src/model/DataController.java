@@ -225,7 +225,7 @@ public class DataController {
             pst.setInt(4, article.getStatus_int());
             pst.setInt(5, article.getTopic_int());
             pst.setInt(6,article.getAuthor_Id());
-            pst.setString(8, article.getPublisherComment());
+            pst.setString(7, article.getPublisherComment());
 
             int affectedRows = pst.executeUpdate();
 
