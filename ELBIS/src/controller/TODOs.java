@@ -4,6 +4,7 @@ public class TODOs {
 
     //_____CONTROLLER_____
     /*
+    TODO write a check method that checks if expiry date of articles is reached and update status to archived
     TODO make sure relogin reloads everything properly (NO BUGS SO FAR)
     TODO add buttons
         TODO ... to edit state of an article

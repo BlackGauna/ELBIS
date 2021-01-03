@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 public class DataController {
     //ATTRIBUTES--------------------------------------------------------------------------------------------------------
-
+    // TODO Sort everything according to the database
     // Article
     public static final String TABLE_ARTICLE = "Article";
     public static final String COLUMN_ARTICLE_ID = "id";
@@ -92,7 +92,7 @@ public class DataController {
 
     //QUERIES-----------------------------------------------------------------------------------------------------------
 
-    //The Stuff that we need can be changed anytime to however we want to receive something from the database, do not hesitate to make changes.
+    //TODO Sort the queries
 
     //Create new Article
     public static final String SEND_NEW_ARTICLE = "INSERT INTO " + TABLE_ARTICLE +
@@ -107,8 +107,9 @@ public class DataController {
             '(' + COLUMN_USER_EMAIL + ", " + COLUMN_USER_PASSWORD + ", " + COLUMN_USER_ROLE + ", " + COLUMN_USER_NAME + ", " +
             COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER + ", " + COLUMN_USER_DATE_OF_BIRTH + ") VALUES(?, ?, ?, ?, ?, ?, ?)";
     //Load a specific Article with ID
-    public static final String LOAD_ARTICLE = "SELECT " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
-            COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
+    public static final String LOAD_ARTICLE = "SELECT " + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_CREATION_DATE +  ", " + COLUMN_ARTICLE_EXPIRE_DATE + ", "
+            + COLUMN_ARTICLE_LAST_EDIT + ", " + COLUMN_ARTICLE_STATUS + ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_AUTHOR_ID + ", " + COLUMN_ARTICLE_PUBLISHER_ID + ", "
+            + COLUMN_ARTICLE_PUBLISHER_COMMENT + " FROM " + TABLE_ARTICLE +
             " WHERE " + COLUMN_ARTICLE_ID + " = ?";
     //Load a specific Topic with ID
     public static final String LOAD_TOPIC = "SELECT " + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + " FROM " +
@@ -188,6 +189,7 @@ public class DataController {
     //Delete an allowed topic from a user by ID
     public static final String DELETE_ALLOWED_TOPICS_BY_ID = "DELETE FROM " + TABLE_ALLOWED_TOPICS + " WHERE " + COLUMN_ALLOWED_TOPICS_USER_ID + " = ? " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + " = ?";
     //Load Allowed topics for a user by ID
+    //TODO Check if Load works
     public static final String LOAD_ALLOWED_TOPICS_BY_ID = "SELECT " + COLUMN_TOPIC_ID + ", " + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + " FROM " + TABLE_TOPIC + " INNER JOIN " + TABLE_ALLOWED_TOPICS + " ON " + COLUMN_TOPIC_ID + " = " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + " WHERE " + COLUMN_ALLOWED_TOPICS_USER_ID + " = ?";
     //Delete an Article by ID
     public static final String DELETE_ARTICLE_BY_ID = "DELETE FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_ID + " = ?";
@@ -195,6 +197,9 @@ public class DataController {
     public static final String DELETE_USER_BY_ID = "DELETE FROM " + TABLE_USER + " WHERE " + COLUMN_USER_ID + " = ?";
     //Delete a Topic by ID
     public static final String DELETE_TOPIC_BY_ID = "DELETE FROM " + TABLE_TOPIC + " WHERE " + COLUMN_TOPIC_ID + " = ?";
+    //Update database to archive timed out articles
+    //TODO update doesnt work properly
+    public static final String UPDATE_ARTICLE_LIST = "UPDATE " + TABLE_ARTICLE + " SET " + COLUMN_ARTICLE_STATUS + " = 6 " + "WHERE expireDate <= datetime('localtime')";
 
     //CONNECTION--------------------------------------------------------------------------------------------------------
     private Connection con;
@@ -331,11 +336,17 @@ public class DataController {
             Article article = new Article();
             while (rs.next()) {
                 article.setId(id);
-                article.setTopic_int(rs.getInt(1));
-                article.setTitle(rs.getString(2));
-                article.setContent(rs.getString(3));
-                article.setPublisherComment(rs.getString(4));
-                article.setExpireDate(rs.getString(5));
+                article.setTitle(rs.getString(1));
+                article.setContent(rs.getString(2));
+                article.setCreationDate(rs.getString(3));
+                article.setExpireDate(rs.getString(4));
+                article.setLastEdit(rs.getString(5));
+                article.setStatus_int(rs.getInt(6));
+                article.setTopic_int(rs.getInt(7));
+                article.setAuthor_Id(rs.getInt(8));
+                article.setPublisher_Id(rs.getInt(9));
+                article.setPublisherComment(rs.getString(10));
+
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
@@ -1168,6 +1179,29 @@ public class DataController {
         }
     }
 
+    //Archive timed out Articles
+    public boolean DBUpdateAllArticles() {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Updating Article List...");
+            PreparedStatement pst = con.prepareStatement(UPDATE_ARTICLE_LIST);
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows == 0) {
+                mainController.setStatus("No timed out articles");
+                throw new SQLException("Couldn't update!");
+            } else
+                mainController.setStatus("Successfully updated!");
+            System.out.println("Successfully updated!");
+            con.close();
+            return true;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't update!");
+            System.out.println("Couldn't update: " + e.getMessage());
+            return false;
+        }
+    }
 
 
 }
