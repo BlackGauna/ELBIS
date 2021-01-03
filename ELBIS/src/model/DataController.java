@@ -1052,6 +1052,7 @@ public class DataController {
         }
     }
 
+    //Load Allowed topics for a user by ID
     public ObservableList DBLoadAllAllowedTopics(int userId) {
         try {
             con = SQLConnection.ConnectDB();
