@@ -135,15 +135,17 @@ public class DataController {
     //Check if user exists in database
     public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? AND " + COLUMN_USER_PASSWORD + " = ?";
     //Load all articles
-    public static final String LOAD_ALL_ARTICLES = "SELECT a.id, a.title, a.creationDate, a.expireDate, a.lastEdit, s.name, " +
-            "t.id, t.name, t.parentTopic, u1.name as author, u2.name as publisher, a.publisherComment " +
-            "FROM Article a " +
-            "JOIN Status s ON a.status = s.id " +
-            "JOIN Topic t ON a.topic = t.id " +
-            "JOIN User u1 ON a.authorId = u1.id " +
-            "LEFT JOIN User u2 ON a.publisherId = u2.id";
+    public static final String LOAD_ALL_ARTICLES = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
+            + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
+            + "t.id, t.name, t.parentTopic, u1.name as author, u2.name as publisher, a.publisherComment "
+            + "FROM Article a "
+            + "JOIN Status s ON a.status = s.id "
+            + "JOIN Topic t ON a.topic = t.id "
+            + "JOIN User u1 ON a.authorId = u1.id "
+            + "LEFT JOIN User u2 ON a.publisherId = u2.id";
     //Load own articles by ID
-    public static final String LOAD_OWN_ARTICLES_BY_ID = "SELECT a.id, a.title, a.creationDate, a.expireDate, a.lastEdit, s.name, "
+    public static final String LOAD_OWN_ARTICLES_BY_ID = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
+            + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
             + "t.id, t.name, t.parentTopic, u1.name as author, u2.name as publisher, a.publisherComment FROM Article a "
             + "JOIN Status s ON a.status = s.id "
             + "JOIN Topic t ON a.topic = t.id "
@@ -153,14 +155,15 @@ public class DataController {
     //Load own articles by Email
     public static final String LOAD_OWN_ARTICLES_BY_EMAIL = "SELECT * FROM " + TABLE_ARTICLE + " INNER JOIN " + TABLE_USER + " ON " + COLUMN_ARTICLE_PUBLISHER_ID + " = " + COLUMN_USER_ID + " WHERE " + COLUMN_USER_EMAIL + " = ";
     //Load all articles which are in submitted state
-    public static final String LOAD_ALL_SUBMITTED_ARTICLES = "SELECT a.id, a.title, a.creationDate, a.expireDate, a.lastEdit, s.name, " +
-            "t.id, t.name, t.parentTopic, u1.name as author, u2.name as publisher, a.publisherComment " +
-            "FROM Article a " +
-            "JOIN Status s ON a.status = s.id " +
-            "JOIN Topic t ON a.topic = t.id " +
-            "JOIN User u1 ON a.authorId = u1.id " +
-            "LEFT JOIN User u2 ON a.publisherId = u2.id " +
-            "WHERE a.status = 2";
+    public static final String LOAD_ALL_SUBMITTED_ARTICLES = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
+            + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
+            + "t.id, t.name, t.parentTopic, u1.name as author, u2.name as publisher, a.publisherComment "
+            + "FROM Article a "
+            + "JOIN Status s ON a.status = s.id "
+            + "JOIN Topic t ON a.topic = t.id "
+            + "JOIN User u1 ON a.authorId = u1.id "
+            + "LEFT JOIN User u2 ON a.publisherId = u2.id "
+            + "WHERE a.status = 2";
     //Load all users
     public static final String LOAD_ALL_USERS = "SELECT u.id, u.email, u.name, g.name, r.name, u.address, u.dateOfBirth "
             + "FROM user u "
