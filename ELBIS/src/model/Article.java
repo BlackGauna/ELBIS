@@ -133,6 +133,7 @@ public class Article {
     }
     public void setStatus(Status status) {
         this.status = status;
+        setStatus_int(status.getStatusCode());
     }
     public String getAuthor() {
         return author;

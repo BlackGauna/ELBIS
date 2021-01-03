@@ -116,7 +116,7 @@ public class DataController {
             TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
     //Edit a specific Article with ID
     public static final String EDIT_ARTICLE = "UPDATE " + TABLE_ARTICLE + " SET " +
-            COLUMN_ARTICLE_ID + " = ?, " + COLUMN_ARTICLE_TITLE + " = ?, " + COLUMN_ARTICLE_CONTENT + " = ?, " + COLUMN_ARTICLE_EXPIRE_DATE + " = ?, " + COLUMN_ARTICLE_LAST_EDIT + " =?, "
+              COLUMN_ARTICLE_TITLE + " = ?, " + COLUMN_ARTICLE_CONTENT + " = ?, " + COLUMN_ARTICLE_EXPIRE_DATE + " = ?, "
             + COLUMN_ARTICLE_STATUS + " = ?, " + COLUMN_ARTICLE_TOPIC + " = ?, " + COLUMN_ARTICLE_AUTHOR_ID + " = ?, "
             + COLUMN_ARTICLE_PUBLISHER_ID + " = ?, " + COLUMN_ARTICLE_PUBLISHER_COMMENT + " = ? WHERE " + COLUMN_ARTICLE_ID + " = ?";
     //Be careful with the UPDATE commands, if it is left empty it can update all tables and wipe the database.
@@ -604,10 +604,70 @@ public class DataController {
             pst.setString(2, newTitle);
             pst.setString(3, newContent);
             pst.setString(4,newExpireDate);
-            pst.setString(5, newLastEdit);
             pst.setInt(6, newStatus);
             pst.setInt(7, newTopic);
             pst.setString(8, newPublisherComment);
+
+
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows == 1) {
+                con.commit();
+                mainController.setStatus("Successfully edited!");
+                System.out.println("Successfully edited!");
+                return true;
+            } else {
+                mainController.setStatus("Failed to edit!");
+                System.out.println("Failed to edit!");
+                con.rollback();
+                con.setAutoCommit(true);
+                con.close();
+                return false;
+            }
+
+        } catch (Exception e) {
+            mainController.setStatus("Failed to edit!");
+            System.out.println("Article edit exception: " + e.getMessage());
+            try {
+                mainController.setStatus("Performing rollback");
+                System.out.println("Performing rollback");
+                con.rollback();
+                return false;
+            } catch (SQLException e2) {
+                mainController.setStatus("Couldn't rollback!");
+                System.out.println("Couldn't rollback! " + e2.getMessage());
+                return false;
+            }
+        } finally {
+            try {
+                mainController.setStatus("Resetting default commit behavior");
+                System.out.println("Resetting default commit behavior");
+                con.setAutoCommit(true);
+                con.close();
+            } catch (SQLException e) {
+                mainController.setStatus("Couldn't reset auto-commit!");
+                System.out.println("Couldn't reset auto-commit! " + e.getMessage());
+            }
+        }
+    }
+
+    public boolean DBEditArticle(Article article) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Editing Article...");
+            PreparedStatement pst = con.prepareStatement(EDIT_ARTICLE);
+            con.setAutoCommit(false);
+
+            pst.setString(1, article.getTitle());
+            pst.setString(2, article.getContent());
+            pst.setString(3,article.getExpireDate());
+            pst.setInt(4, article.getStatus_int());
+            pst.setInt(5, article.getTopic_int());
+            pst.setInt(6, article.getAuthor_Id());
+            pst.setInt(7, article.getPublisher_Id());
+            pst.setString(8, article.getPublisherComment());
+            pst.setInt(9, article.getId());
 
 
             int affectedRows = pst.executeUpdate();

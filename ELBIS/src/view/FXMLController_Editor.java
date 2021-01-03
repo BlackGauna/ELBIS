@@ -6,14 +6,10 @@ import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
-import com.itextpdf.layout.Canvas;
-import com.itextpdf.layout.element.Image;
-import com.itextpdf.layout.element.Paragraph;
 import controller.MainController;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
@@ -34,8 +30,6 @@ import netscape.javascript.JSObject;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import javax.swing.text.StyleConstants;
-import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,7 +55,7 @@ public class FXMLController_Editor
     private MainController mainController;
 
     // current Article loaded in editor
-    private Article currentArticle;
+    private Article currentArticle= new Article();
 
     @FXML
     WebView webView;
@@ -100,6 +94,7 @@ public class FXMLController_Editor
             // now load the page
             webEngine.load(url.toString());
 
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -107,23 +102,31 @@ public class FXMLController_Editor
 
     }
 
-
     //reference to mainView
     public void setMainController(MainController mainController){
         this.mainController = mainController;
     }
 
 
-    public void openNewArticle() throws Exception
+
+///------EDITOR METHODS----------------------------------------------------------------------///
+
+    public void openNewArticle()
     {
         currentArticle= new Article();
-        initialize();
+        javaConnector.openArticle("");
     }
 
     public void openArticle(Article article)
     {
         currentArticle=article;
-        javaConnector.openArticle(article.getContent());
+        if (currentArticle.getContent()!=null)
+        {
+            javaConnector.openArticle(article.getContent());
+        }else
+        {
+            javaConnector.openArticle("");
+        }
     }
 
     public void openArticle (String html)
@@ -210,7 +213,19 @@ public class FXMLController_Editor
                 {
                     String titleText= saveController.saveTitle.getText();
                     Status chosenStatus= saveController.statusChoice.getValue();
+                    System.out.println(chosenStatus);
 
+                    if (!(activeUser instanceof Moderator))
+                    {
+                        // check if user left the status on an invalid status not in their privileges
+                        if (chosenStatus!=Status.Default && chosenStatus != Status.Submitted)
+                        {
+                            Alert alert= new Alert(Alert.AlertType.ERROR,
+                                    "Sie haben keine Rechte für den aktuellen Status! \n\n"
+                                            + "Setzen Sie ihn auf Submitted, damit ein Redakteur den Artikel prüfen und ggf. freigeben kann.");
+                            alert.showAndWait();
+                        }
+                    }
 
                     if (titleText==null || titleText.matches("^\\s*$"))
                     {
@@ -228,16 +243,6 @@ public class FXMLController_Editor
                         Alert alert= new Alert(Alert.AlertType.ERROR,
                                 "Bitte ein Ablaufdatum angeben!");
                         alert.showAndWait();
-                    }else if (activeUser instanceof User && !(activeUser instanceof Administrator || activeUser instanceof Moderator))
-                    {
-                        // check if user left the status on an invalid status not in their privileges
-                        if (chosenStatus!=Status.Default|| chosenStatus != Status.Submitted)
-                        {
-                            Alert alert= new Alert(Alert.AlertType.ERROR,
-                                    "Sie haben keine Rechte für den aktuellen Status! \n\n"
-                                    + "Setzen Sie ihn auf Submitted, damit ein Redakteur den Artikel prüfen und ggf. freigeben kann.");
-                            alert.showAndWait();
-                        }
                     }
                     else
                     {
@@ -250,12 +255,16 @@ public class FXMLController_Editor
                         currentArticle.setTopic_int(saveController.topicChoice.getSelectionModel().getSelectedIndex()+1);
                         currentArticle.setStatus(saveController.statusChoice.getValue());
 
+                        System.out.println(activeUser.getId());
+                        currentArticle.setAuthor_Id(activeUser.getId());
+
                         // send current Article with updated values to main controller to write into db
                         mainController.saveArticle(currentArticle);
                         // close window
                         saveDialog.close();
-                    }
 
+                    }
+                    openArticle(currentArticle.getContent());
                 }
             });
 
@@ -269,11 +278,12 @@ public class FXMLController_Editor
             });
 
 
+
             Scene saveScene= new Scene(saveController.anchorPane);
             //saveLoader.setController(saveController);
             saveDialog.setScene(saveScene);
 
-            saveDialog.showAndWait();
+            saveDialog.show();
         }
 
 

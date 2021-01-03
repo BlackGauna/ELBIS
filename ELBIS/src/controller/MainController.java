@@ -457,12 +457,12 @@ public class MainController extends Application {
         boolean result = false;
         if (article.getId() == 0) {
             result = createArticle(article);
+            Article newArticle = dc.DBLoadLastArticle();
+            editorController.openArticle(newArticle);
         } else {
-            result = dc.DBEditArticle(article.getId(), article.getTitle(), article.getTopic_int(), article.getContent(), article.getPublisherComment());
-        }
+            result = dc.DBEditArticle(article);
 
-        Article newArticle = dc.DBLoadLastArticle();
-        editorController.openArticle(newArticle);
+        }
 
         return result;
     }
