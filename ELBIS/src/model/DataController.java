@@ -80,12 +80,12 @@ public class DataController {
     public static final int INDEX_USER_DATE_OF_BIRTH = 8;
     //allowed_topics
     public static final String TABLE_ALLOWED_TOPICS = "allowed_topics";
-    public static final String COLUMN_ALLOWED_TOPIC_ENTRY = "id";
-    public static final String COLUMN_ALLOWED_TOPIC_USER_ID = "userId";
-    public static final String COLUMN_ALLOWED_TOPIC_TOPIC_ID = "topicId";
-    public static final int INDEX_ALLOWED_TOPIC_ENTRY = 1;
-    public static final int INDEX_ALLOWED_TOPIC_USER_ID = 2;
-    public static final int INDEX_ALLOWED_TOPIC_TOPIC_ID = 3;
+    public static final String COLUMN_ALLOWED_TOPICS_ENTRY = "id";
+    public static final String COLUMN_ALLOWED_TOPICS_USER_ID = "userId";
+    public static final String COLUMN_ALLOWED_TOPICS_TOPIC_ID = "topicId";
+    public static final int INDEX_ALLOWED_TOPICS_ENTRY = 1;
+    public static final int INDEX_ALLOWED_TOPICS_USER_ID = 2;
+    public static final int INDEX_ALLOWED_TOPICS_TOPIC_ID = 3;
     // More ordering types?
     public static final int ORDER_BY_ASCENDING = 1;
     public static final int ORDER_BY_DESCENDING = 2;
@@ -183,12 +183,18 @@ public class DataController {
     public static final String LOAD_ALL_TOPICS = "SELECT t2.id, t2.name, t1.name from Topic t1 "
             + "JOIN Topic t2 on t1.id=t2.parentTopic";
     //Add an allowed topic to a user by ID
-    public static final String ALLOWED_TOPIC_ADD_BY_ID = "INSERT INTO " + TABLE_ALLOWED_TOPICS +
-            '(' + COLUMN_ALLOWED_TOPIC_USER_ID + ", " + COLUMN_ALLOWED_TOPIC_TOPIC_ID + ") VALUES(?, ?)";
+    public static final String ADD_ALLOWED_TOPICS_BY_ID = "INSERT INTO " + TABLE_ALLOWED_TOPICS +
+            '(' + COLUMN_ALLOWED_TOPICS_USER_ID + ", " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + ") VALUES(?, ?)";
     //Delete an allowed topic from a user by ID
-    public static final String ALLOWED_TOPIC_DELETE_BY_ID = "DELETE FROM " + TABLE_ALLOWED_TOPICS + " WHERE " + COLUMN_ALLOWED_TOPIC_USER_ID + " = ? " + COLUMN_ALLOWED_TOPIC_TOPIC_ID + " = ?";
-
-
+    public static final String DELETE_ALLOWED_TOPICS_BY_ID = "DELETE FROM " + TABLE_ALLOWED_TOPICS + " WHERE " + COLUMN_ALLOWED_TOPICS_USER_ID + " = ? " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + " = ?";
+    //Load Allowed topics for a user by ID
+    public static final String LOAD_ALLOWED_TOPICS_BY_ID = "SELECT " + COLUMN_TOPIC_ID + ", " + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + " FROM " + TABLE_TOPIC + " INNER JOIN " + TABLE_ALLOWED_TOPICS + " ON " + COLUMN_TOPIC_ID + " = " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + " WHERE " + COLUMN_ALLOWED_TOPICS_USER_ID + " = ?";
+    //Delete an Article by ID
+    public static final String DELETE_ARTICLE_BY_ID = "DELETE FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_ID + " = ?";
+    //Delete a User by ID
+    public static final String DELETE_USER_BY_ID = "DELETE FROM " + TABLE_USER + " WHERE " + COLUMN_USER_ID + " = ?";
+    //Delete a Topic by ID
+    public static final String DELETE_TOPIC_BY_ID = "DELETE FROM " + TABLE_TOPIC + " WHERE " + COLUMN_TOPIC_ID + " = ?";
 
     //CONNECTION--------------------------------------------------------------------------------------------------------
     private Connection con;
@@ -997,7 +1003,7 @@ public class DataController {
             con = SQLConnection.ConnectDB();
             assert con != null;
             mainController.setStatus("Adding allowed topic...");
-            PreparedStatement pst = con.prepareStatement(ALLOWED_TOPIC_ADD_BY_ID);
+            PreparedStatement pst = con.prepareStatement(ADD_ALLOWED_TOPICS_BY_ID);
 
             pst.setInt(1, userId);
             pst.setInt(2, newAllowedTopicId);
@@ -1027,7 +1033,7 @@ public class DataController {
             con = SQLConnection.ConnectDB();
             assert con != null;
             mainController.setStatus("Deleting allowed topic...");
-            PreparedStatement pst = con.prepareStatement(ALLOWED_TOPIC_DELETE_BY_ID);
+            PreparedStatement pst = con.prepareStatement(DELETE_ALLOWED_TOPICS_BY_ID);
 
             pst.setInt(1, userId);
             pst.setInt(2, deletedAllowedTopicId);
@@ -1047,6 +1053,117 @@ public class DataController {
         } catch (SQLException e) {
             mainController.setStatus("Couldn't delete allowed Topic!");
             System.out.println("Couldn't delete allowed Topic: " + e.getMessage());
+            return false;
+        }
+    }
+
+    //Load Allowed topics for a user by ID
+    public ObservableList DBLoadAllowedTopics(int userId) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Loading allowed Topics...");
+            PreparedStatement pst = con.prepareStatement(LOAD_ALLOWED_TOPICS_BY_ID);
+            pst.setInt(1,userId);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Topic> topicList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                topicList.add(new Topic(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getInt(3)));
+            }
+            mainController.setStatus("Successfully loaded!");
+            con.close();
+            return topicList;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't load allowed Topics!");
+            System.out.println("Couldn't load allowed Topics: " + e.getMessage());
+            return null;
+        }
+    }
+
+    //Delete a User by ID
+    public boolean DBDeleteUser(int userId) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Deleting User...");
+            PreparedStatement pst = con.prepareStatement(DELETE_USER_BY_ID);
+
+            pst.setInt(1, userId);
+
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows == 0) {
+                mainController.setStatus("Couldn't delete User!");
+                throw new SQLException("Couldn't delete User!");
+            } else
+                mainController.setStatus("Successfully deleted!");
+            System.out.println("Successfully deleted!");
+            con.close();
+            return true;
+
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't delete User!");
+            System.out.println("Couldn't delete User: " + e.getMessage());
+            return false;
+        }
+    }
+
+    //Delete an Article by ID
+    public boolean DBDeleteArticle(int articleId) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Deleting Article...");
+            PreparedStatement pst = con.prepareStatement(DELETE_ARTICLE_BY_ID);
+
+            pst.setInt(1, articleId);
+
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows == 0) {
+                mainController.setStatus("Couldn't delete Article!");
+                throw new SQLException("Couldn't delete Article!");
+            } else
+                mainController.setStatus("Successfully deleted!");
+            System.out.println("Successfully deleted!");
+            con.close();
+            return true;
+
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't delete Article!");
+            System.out.println("Couldn't delete Article: " + e.getMessage());
+            return false;
+        }
+    }
+
+    //Delete a Topic by ID
+    public boolean DBDeleteTopic(int topicId) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Deleting Topic...");
+            PreparedStatement pst = con.prepareStatement(DELETE_TOPIC_BY_ID);
+
+            pst.setInt(1, topicId);
+
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows == 0) {
+                mainController.setStatus("Couldn't delete Topic!");
+                throw new SQLException("Couldn't delete Topic!");
+            } else
+                mainController.setStatus("Successfully deleted!");
+            System.out.println("Successfully deleted!");
+            con.close();
+            return true;
+
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't delete Topic!");
+            System.out.println("Couldn't delete Topic: " + e.getMessage());
             return false;
         }
     }
