@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
 import java.util.LinkedList;
+import java.time.LocalTime;
 
 public class DataController {
     //ATTRIBUTES--------------------------------------------------------------------------------------------------------
@@ -195,7 +196,9 @@ public class DataController {
     public static final String DELETE_USER_BY_ID = "DELETE FROM " + TABLE_USER + " WHERE " + COLUMN_USER_ID + " = ?";
     //Delete a Topic by ID
     public static final String DELETE_TOPIC_BY_ID = "DELETE FROM " + TABLE_TOPIC + " WHERE " + COLUMN_TOPIC_ID + " = ?";
-
+    //Update database to archive timed out articles
+    public static final String UPDATE_ARTICLE_LIST = "UPDATE " + TABLE_ARTICLE + " SET " + COLUMN_ARTICLE_STATUS + " = 6 " + "WHERE expireDate <= datetime('localtime')";
+    //TODO UPDATE ARTICLE LIST DATETIME DOESNT WORK PROPERLY
     //CONNECTION--------------------------------------------------------------------------------------------------------
     private Connection con;
     private final MainController mainController;
@@ -1168,6 +1171,29 @@ public class DataController {
         }
     }
 
+    //Archive timed out Articles
+    public boolean DBUpdateAllArticles() {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Updating Article List...");
+            PreparedStatement pst = con.prepareStatement(UPDATE_ARTICLE_LIST);
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows == 0) {
+                mainController.setStatus("No timed out articles");
+                throw new SQLException("Couldn't update!");
+            } else
+                mainController.setStatus("Successfully updated!");
+            System.out.println("Successfully updated!");
+            con.close();
+            return true;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't update!");
+            System.out.println("Couldn't update: " + e.getMessage());
+            return false;
+        }
+    }
 
 
 }
