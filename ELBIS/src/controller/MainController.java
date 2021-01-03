@@ -365,13 +365,13 @@ public class MainController extends Application {
                 @Override
                 public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
                     //TODO fix userSubmit
-                    return new ActionCell_ArticleTable(maincontroller, "Herausgeben", sideStageState.deleteArticle);
+                    return new ActionCell_ArticleTable(maincontroller, "Herausgeben", sideStageState.userSubmit);
                 }
             });
         }
             else {
                 //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-                ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
+                ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String)(propertyKeys.get(i))));
 
             }
         }
