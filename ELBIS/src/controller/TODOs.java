@@ -22,6 +22,7 @@ public class TODOs {
     TODO Update loadUser methods to update the topic List of a user
     TODO Methods to Delete Users/Topic/Articles fully from Database
     TODO Method updateDatabase to be called in dataController constructor (gets every article and sets the status properly - compares teh dates ... for example if expired)
+    TODO Every time a status or topic is laoded as int, it needs to be loaded as Topic or Status object
 
     TODO maybe a method to just change the status of an article (with no chance to change anything else)
      */
