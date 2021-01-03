@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
 import java.util.LinkedList;
-import java.time.LocalTime;
 
 public class DataController {
     //ATTRIBUTES--------------------------------------------------------------------------------------------------------
@@ -108,8 +107,9 @@ public class DataController {
             '(' + COLUMN_USER_EMAIL + ", " + COLUMN_USER_PASSWORD + ", " + COLUMN_USER_ROLE + ", " + COLUMN_USER_NAME + ", " +
             COLUMN_USER_ADDRESS + ", " + COLUMN_USER_GENDER + ", " + COLUMN_USER_DATE_OF_BIRTH + ") VALUES(?, ?, ?, ?, ?, ?, ?)";
     //Load a specific Article with ID
-    public static final String LOAD_ARTICLE = "SELECT " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
-            COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
+    public static final String LOAD_ARTICLE = "SELECT " + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_CREATION_DATE +  ", " + COLUMN_ARTICLE_EXPIRE_DATE + ", "
+            + COLUMN_ARTICLE_LAST_EDIT + ", " + COLUMN_ARTICLE_STATUS + ", " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_AUTHOR_ID + ", " + COLUMN_ARTICLE_PUBLISHER_ID + ", "
+            + COLUMN_ARTICLE_PUBLISHER_COMMENT + " FROM " + TABLE_ARTICLE +
             " WHERE " + COLUMN_ARTICLE_ID + " = ?";
     //Load a specific Topic with ID
     public static final String LOAD_TOPIC = "SELECT " + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + " FROM " +
@@ -334,11 +334,17 @@ public class DataController {
             Article article = new Article();
             while (rs.next()) {
                 article.setId(id);
-                article.setTopic_int(rs.getInt(1));
-                article.setTitle(rs.getString(2));
-                article.setContent(rs.getString(3));
-                article.setPublisherComment(rs.getString(4));
-                article.setExpireDate(rs.getString(5));
+                article.setTitle(rs.getString(1));
+                article.setContent(rs.getString(2));
+                article.setCreationDate(rs.getString(3));
+                article.setExpireDate(rs.getString(4));
+                article.setLastEdit(rs.getString(5));
+                article.setStatus_int(rs.getInt(6));
+                article.setTopic_int(rs.getInt(7));
+                article.setAuthor_Id(rs.getInt(8));
+                article.setPublisher_Id(rs.getInt(9));
+                article.setPublisherComment(rs.getString(10));
+
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
