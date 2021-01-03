@@ -318,7 +318,7 @@ public class MainController extends Application {
 
         ObservableList<Article> articleList = dc.DBLoadOwnArticles(activeUser.getId());
         // Getter from Article Class
-        List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisher", "publisherComment");
+        List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "status", "topicName", "author", "publisher", "publisherComment");
         // fill columns with values
         int id = 0;
         MainController maincontroller = this;
@@ -375,11 +375,11 @@ public class MainController extends Application {
         */
         ObservableList<User> userList = dc.DBLoadAllUsers();
         // Getter from User Class
-        List<String> propertyKeys = Arrays.asList("id", "email", "name", "genderString", "role", "address", "dobString");
+        List<String> propertyKeys = Arrays.asList("id", "email", "name", "gender", "role", "address", "dateOfBirth");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>(propertyKeys.get(i)));
+            setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
+            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String)(propertyKeys.get(i))));
         }
         table.setItems(userList);
         //Test if table is empty
@@ -393,11 +393,11 @@ public class MainController extends Application {
 
         ObservableList<Article> submissionList = dc.DBLoadAllSubmittedArticles();
         //a Getter from Article Class
-        List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisher", "publisherComment");
+        List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "status", "topicName", "author", "publisher", "publisherComment");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
+            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String)(propertyKeys.get(i))));
         }
         table.setItems(submissionList);
         //Test if table is empty
@@ -411,11 +411,11 @@ public class MainController extends Application {
 
         ObservableList<Article> articleList = dc.DBLoadAllArticles();
         // Getter from Article Class
-        List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisher", "publisherComment");
+        List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "status", "topicName", "author", "publisher", "publisherComment");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
+            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String)(propertyKeys.get(i))));
         }
         table.setItems(articleList);
         //Test if table is empty
@@ -433,7 +433,7 @@ public class MainController extends Application {
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             //setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((propertyKeys.get(i))));
+            ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((String)(propertyKeys.get(i))));
         }
         table.setItems(topicList);
         //Test if table is empty
@@ -449,11 +449,11 @@ public class MainController extends Application {
         */
         ObservableList<User> userList = dc.DBLoadAllUsers();
         // Getter from User Class
-        List<String> propertyKeys = Arrays.asList("id", "email", "name", "genderString", "role", "address", "dobString");
+        List<String> propertyKeys = Arrays.asList("id", "email", "name", "gender", "role", "address", "dateOfBirth");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>(propertyKeys.get(i)));
+            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String)(propertyKeys.get(i))));
         }
         table.setItems(userList);
         //Test if table is empty

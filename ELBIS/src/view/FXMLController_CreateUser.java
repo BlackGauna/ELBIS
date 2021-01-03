@@ -1,8 +1,12 @@
 package view;
 
+import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import model.Administrator;
+import model.Moderator;
+
 import java.time.format.DateTimeFormatter;
 
 public class FXMLController_CreateUser extends ELBIS_FXMLController {
@@ -53,7 +57,7 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
     // Ini_______________________________________________________________________________________________________
     public void initialize() {
         choiceGender.getItems().addAll("Maennlich", "Weiblich", "Divers");
-        choiceRole.getItems().addAll("Admin", "Moderator", "User");
+        choiceRole.getItems().addAll("User");
     }
 
     // Getters,Setters_________________________________________________________________________________________________
@@ -99,4 +103,11 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
         return choiceRole.getValue();
     }
 
+    @Override
+    public void setMainController(MainController mainController) {
+        super.setMainController(mainController);
+        if(mainController.getActiveUser() instanceof Administrator){
+            choiceRole.getItems().addAll("Moderator", "Administrator");
+        }
+    }
 }

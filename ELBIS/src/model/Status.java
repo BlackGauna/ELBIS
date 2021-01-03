@@ -23,11 +23,9 @@ public enum Status {
 		return STATUSCODE;
 	}
 
-
 	@Override
 	public String toString()
 	{
-
 		return STATUSNAME;
 	}
 }

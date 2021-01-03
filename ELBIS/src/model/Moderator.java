@@ -6,6 +6,7 @@ public class Moderator extends User {
 
     public Moderator() {
         super();
+        this.role = "Moderator";
     }
 
     public Moderator(int id, String email, String name, String gender, String role,  String address, String dob) {
@@ -15,4 +16,10 @@ public class Moderator extends User {
     public Moderator(int id, String email, String name, String address,String password,String dateOfBirth,int gender) {
         super(id, email, name, address, password, dateOfBirth, gender);
     }
+
+    @Override
+    public String toString() {
+        return (name + " (" + email + ")");
+    }
+
 }

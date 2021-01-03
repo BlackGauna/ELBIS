@@ -148,7 +148,7 @@ public class DataController {
     //Load all articles
     public static final String LOAD_ALL_ARTICLES = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
             + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
-            + "t.id, t.name, t.parentTopic, u1.name as author, u2.name as publisher, a.publisherComment "
+            + "t.id, t.name, t.parentTopic, u1.email as author, u2.email as publisher, a.publisherComment "
             + "FROM Article a "
             + "JOIN Status s ON a.status = s.id "
             + "JOIN Topic t ON a.topic = t.id "
@@ -157,7 +157,8 @@ public class DataController {
     //Load own articles by ID
     public static final String LOAD_OWN_ARTICLES_BY_ID = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
             + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
-            + "t.id, t.name, t.parentTopic, u1.name as author, u2.name as publisher, a.publisherComment FROM Article a "
+            + "t.id, t.name, t.parentTopic, u1.email as author, u2.email as publisher, a.publisherComment "
+            + "FROM Article a "
             + "JOIN Status s ON a.status = s.id "
             + "JOIN Topic t ON a.topic = t.id "
             + "JOIN User u1 ON a.authorId = u1.id "
@@ -168,7 +169,7 @@ public class DataController {
     //Load all articles which are in submitted state
     public static final String LOAD_ALL_SUBMITTED_ARTICLES = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
             + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
-            + "t.id, t.name, t.parentTopic, u1.name as author, u2.name as publisher, a.publisherComment "
+            + "t.id, t.name, t.parentTopic, u1.email as author, u2.email as publisher, a.publisherComment "
             + "FROM Article a "
             + "JOIN Status s ON a.status = s.id "
             + "JOIN Topic t ON a.topic = t.id "
@@ -176,7 +177,7 @@ public class DataController {
             + "LEFT JOIN User u2 ON a.publisherId = u2.id "
             + "WHERE a.status = 2";
     //Load all users
-    public static final String LOAD_ALL_USERS = "SELECT u.id, u.email, u.name, g.name, r.name, u.address, u.dateOfBirth "
+    public static final String LOAD_ALL_USERS = "SELECT r.id, u.id, u.email, u.name, g.name, u.address, u.dateOfBirth "
             + "FROM user u "
             + "JOIN role r on u.role = r.id "
             + "LEFT JOIN gender g on u.gender = g.id";
@@ -247,9 +248,9 @@ public class DataController {
             pst.setString(1, article.getTitle());
             pst.setString(2, article.getContent());
             pst.setString(3, article.getExpireDate());
-            pst.setInt(4, article.getStatus_int());
-            pst.setInt(5, article.getTopic_int());
-            pst.setInt(6,article.getAuthor_Id());
+            pst.setInt(4, article.getStatusID());
+            pst.setInt(5, article.getTopicID());
+            pst.setInt(6,article.getAuthorID());
             pst.setString(7, article.getPublisherComment());
 
             int affectedRows = pst.executeUpdate();
@@ -342,10 +343,10 @@ public class DataController {
                 article.setCreationDate(rs.getString(3));
                 article.setExpireDate(rs.getString(4));
                 article.setLastEdit(rs.getString(5));
-                article.setStatus_int(rs.getInt(6));
-                article.setTopic_int(rs.getInt(7));
-                article.setAuthor_Id(rs.getInt(8));
-                article.setPublisher_Id(rs.getInt(9));
+                article.setStatusByID(rs.getInt(6));
+                article.setTopic(DBLoadTopic(rs.getInt(7)));
+                article.setAuthor(DBLoadUserById(rs.getInt(8)));
+                article.setPublisher(DBLoadUserById(rs.getInt(9)));
                 article.setPublisherComment(rs.getString(10));
 
             }
@@ -395,17 +396,18 @@ public class DataController {
             ObservableList<Article> articleList = FXCollections.observableArrayList();
 
             while (rs.next()) {
-                articleList.add(new Article(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12)));
+                Article temp = new Article();
+                temp.setId(rs.getInt(1));
+                temp.setTitle(rs.getString(2));
+                temp.setCreationDate(rs.getString(3));
+                temp.setExpireDate(rs.getString(4));
+                temp.setLastEdit(rs.getString(5));
+                temp.setStatusByString(rs.getString(6));
+                temp.setTopic(new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)));
+                temp.setAuthor(DBLoadUserByEmail(rs.getString(10)));
+                temp.setPublisher(DBLoadUserByEmail(rs.getString(11)));
+                temp.setPublisherComment(rs.getString(12));
+                articleList.add(temp);
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
@@ -428,17 +430,18 @@ public class DataController {
             ObservableList<Article> articleList = FXCollections.observableArrayList();
 
             while (rs.next()) {
-                articleList.add(new Article(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12)));
+                Article temp = new Article();
+                temp.setId(rs.getInt(1));
+                temp.setTitle(rs.getString(2));
+                temp.setCreationDate(rs.getString(3));
+                temp.setExpireDate(rs.getString(4));
+                temp.setLastEdit(rs.getString(5));
+                temp.setStatusByString(rs.getString(6));
+                temp.setTopic(new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)));
+                temp.setAuthor(DBLoadUserByEmail(rs.getString(10)));
+                temp.setPublisher(DBLoadUserByEmail(rs.getString(11)));
+                temp.setPublisherComment(rs.getString(12));
+                articleList.add(temp);
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
@@ -461,17 +464,18 @@ public class DataController {
             ObservableList<Article> articleList = FXCollections.observableArrayList();
 
             while (rs.next()) {
-                articleList.add(new Article(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12)));
+                Article temp = new Article();
+                temp.setId(rs.getInt(1));
+                temp.setTitle(rs.getString(2));
+                temp.setCreationDate(rs.getString(3));
+                temp.setExpireDate(rs.getString(4));
+                temp.setLastEdit(rs.getString(5));
+                temp.setStatusByString(rs.getString(6));
+                temp.setTopic(new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)));
+                temp.setAuthor(DBLoadUserByEmail(rs.getString(10)));
+                temp.setPublisher(DBLoadUserByEmail(rs.getString(11)));
+                temp.setPublisherComment(rs.getString(12));
+                articleList.add(temp);
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
@@ -552,14 +556,25 @@ public class DataController {
             ObservableList<User> userList = FXCollections.observableArrayList();
 
             while (rs.next()) {
-                userList.add(new User(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7)));
+                int roleId = 0;
+                User temp;
+                roleId = rs.getInt(1);
+                switch(roleId){
+                    case 1 -> temp = new Administrator();
+                    case 2 -> temp = new Moderator();
+                    case 3 -> temp = new User();
+                    default -> {
+                        temp = new User();
+                        mainController.setStatus("Couldn't load user Role - default set");
+                    }
+                }
+                temp.setId(rs.getInt(2));
+                temp.setEmail(rs.getString(3));
+                temp.setName(rs.getString(4));
+                temp.setGender(rs.getString(5));
+                temp.setAddress(rs.getString(6));
+                temp.setDateOfBirth(rs.getString(7));
+                userList.add(temp);
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
@@ -693,10 +708,10 @@ public class DataController {
             pst.setString(1, article.getTitle());
             pst.setString(2, article.getContent());
             pst.setString(3,article.getExpireDate());
-            pst.setInt(4, article.getStatus_int());
-            pst.setInt(5, article.getTopic_int());
-            pst.setInt(6, article.getAuthor_Id());
-            pst.setInt(7, article.getPublisher_Id());
+            pst.setInt(4, article.getStatusID());
+            pst.setInt(5, article.getTopicID());
+            pst.setInt(6, article.getAuthorID());
+            pst.setInt(7, article.getPublisherID());
             pst.setString(8, article.getPublisherComment());
             pst.setInt(9, article.getId());
 
@@ -793,7 +808,7 @@ public class DataController {
             while (rs.next()) {
                 Article article = new Article();
 
-                article.setTopic_int(rs.getInt(1));
+                article.setTopicID(rs.getInt(1));
                 article.setTitle(rs.getString(2));
                 article.setContent(rs.getString(3));
                 article.setPublisherComment(rs.getString(4));
@@ -934,7 +949,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            mainController.setStatus("Loading User...");
+            mainController.setStatus("Loading User "+id +" ...");
             PreparedStatement pst = con.prepareStatement(LOAD_USER_BY_ID);
             pst.setInt(1, id);
             pst.execute();
