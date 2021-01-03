@@ -78,6 +78,14 @@ public class DataController {
     public static final int INDEX_USER_ADDRESS = 6;
     public static final int INDEX_USER_GENDER = 7;
     public static final int INDEX_USER_DATE_OF_BIRTH = 8;
+    //allowed_topics
+    public static final String TABLE_ALLOWED_TOPICS = "allowed_topics";
+    public static final String COLUMN_ALLOWED_TOPIC_ENTRY = "id";
+    public static final String COLUMN_ALLOWED_TOPIC_USER_ID = "userId";
+    public static final String COLUMN_ALLOWED_TOPIC_TOPIC_ID = "topicId";
+    public static final int INDEX_ALLOWED_TOPIC_ENTRY = 1;
+    public static final int INDEX_ALLOWED_TOPIC_USER_ID = 2;
+    public static final int INDEX_ALLOWED_TOPIC_TOPIC_ID = 3;
     // More ordering types?
     public static final int ORDER_BY_ASCENDING = 1;
     public static final int ORDER_BY_DESCENDING = 2;
