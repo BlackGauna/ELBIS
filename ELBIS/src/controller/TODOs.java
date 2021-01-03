@@ -8,6 +8,7 @@ public class TODOs {
     TODO add buttons
         TODO ... to delete articles
         TODO ... to edit state of an article
+        TODO ... to submit an article
         TODO ... to manage user Roles
 
     TODO maybe show the count of articles under a specific topic on topic views (count articles per topic)
@@ -27,5 +28,6 @@ public class TODOs {
     TODO create SideView
         TODO ... to edit state of an article
         TODO ... to degrade and promote Users
+        TODO ... to submit an article
      */
 }
