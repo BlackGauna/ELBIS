@@ -88,8 +88,9 @@ public class DataController {
 
     //Create new Article
     public static final String SEND_NEW_ARTICLE = "INSERT INTO " + TABLE_ARTICLE +
-            '(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_TOPIC +
-            ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ") VALUES(?, ?, ?, ?)";
+            '(' + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + ", " + COLUMN_ARTICLE_STATUS + ", "
+            + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_AUTHOR_ID + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ") "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?)";
     //Create new Topic
     public static final String SEND_NEW_TOPIC = "INSERT INTO " + TABLE_TOPIC +
             '(' + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + ") VALUES(?, ?)";
@@ -115,8 +116,9 @@ public class DataController {
             TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
     //Edit a specific Article with ID
     public static final String EDIT_ARTICLE = "UPDATE " + TABLE_ARTICLE + " SET " +
-            COLUMN_ARTICLE_TITLE + " = ?, " + COLUMN_ARTICLE_TOPIC + " = ?, " + COLUMN_ARTICLE_CONTENT + " = ?, "
-            + COLUMN_ARTICLE_PUBLISHER_COMMENT + " = ? WHERE " + COLUMN_ARTICLE_ID + " = ?";
+            COLUMN_ARTICLE_ID + " = ?, " + COLUMN_ARTICLE_TITLE + " = ?, " + COLUMN_ARTICLE_CONTENT + " = ?, " + COLUMN_ARTICLE_EXPIRE_DATE + " = ?, " + COLUMN_ARTICLE_LAST_EDIT + " =?, "
+            + COLUMN_ARTICLE_STATUS + " = ?, " + COLUMN_ARTICLE_TOPIC + " = ?, " + COLUMN_ARTICLE_AUTHOR_ID + " = ?, "
+            + COLUMN_ARTICLE_PUBLISHER_ID + " = ?, " + COLUMN_ARTICLE_PUBLISHER_COMMENT + " = ? WHERE " + COLUMN_ARTICLE_ID + " = ?";
     //Be careful with the UPDATE commands, if it is left empty it can update all tables and wipe the database.
     //Edit a specific User with ID
     public static final String EDIT_USER = "UPDATE " + TABLE_USER + " SET " + COLUMN_USER_EMAIL +
@@ -219,8 +221,11 @@ public class DataController {
 
             pst.setString(1, article.getTitle());
             pst.setString(2, article.getContent());
-            pst.setInt(3, article.getTopic_int());
-            pst.setString(4, article.getPublisherComment());
+            pst.setString(3, article.getExpireDate());
+            pst.setInt(4, article.getStatus_int());
+            pst.setInt(5, article.getTopic_int());
+            pst.setInt(6,article.getAuthor_Id());
+            pst.setString(8, article.getPublisherComment());
 
             int affectedRows = pst.executeUpdate();
 
@@ -586,7 +591,8 @@ public class DataController {
     }
 
     //Status?: Edit Articles
-    public boolean DBEditArticle(int id, String newTitle, int newTopic, String newContent, String newPublisherComment) {
+    public boolean DBEditArticle(int id, String newTitle, String newContent, String newExpireDate, String newLastEdit, int newStatus,
+                                 int newTopic, String newPublisherComment) {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
@@ -594,11 +600,16 @@ public class DataController {
             PreparedStatement pst = con.prepareStatement(EDIT_ARTICLE);
             con.setAutoCommit(false);
 
-            pst.setInt(5, id);
-            pst.setString(1, newTitle);
-            pst.setInt(2, newTopic);
+            pst.setInt(1, id);
+            pst.setString(2, newTitle);
             pst.setString(3, newContent);
-            pst.setString(4, newPublisherComment);
+            pst.setString(4,newExpireDate);
+            pst.setString(5, newLastEdit);
+            pst.setInt(6, newStatus);
+            pst.setInt(7, newTopic);
+            pst.setString(8, newPublisherComment);
+
+
             int affectedRows = pst.executeUpdate();
 
             if (affectedRows == 1) {
