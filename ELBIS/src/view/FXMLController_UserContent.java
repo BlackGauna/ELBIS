@@ -31,6 +31,9 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
        TableColumn deleteColumn = new TableColumn<Article, Boolean>(" ");
        deleteColumn.setSortable(false);
        articleTable.getColumns().add(deleteColumn);
+        TableColumn submitColumn = new TableColumn<Article, Boolean>(" ");
+        submitColumn.setSortable(false);
+        articleTable.getColumns().add(submitColumn);
 
        dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
    }

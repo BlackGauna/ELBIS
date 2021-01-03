@@ -254,20 +254,46 @@ public class MainController extends Application {
                     break;
                 case deleteArticle:
                     opensideStage = false;
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Artikel löschen");
-                    alert.setContentText(" Dies kann nicht rückgängig gemacht werden.");
-                    alert.setHeaderText("Sind sie sich sicher das sie diesen Artikel löschen möchten?");
-                    Optional<ButtonType> result = alert.showAndWait();
-                    if (result.get() == ButtonType.OK){
+                    Alert deleteAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    deleteAlert.setTitle("Artikel löschen");
+                    deleteAlert.setContentText(" Dies kann nicht rückgängig gemacht werden.");
+                    deleteAlert.setHeaderText("Sind sie sich sicher das sie diesen Artikel löschen möchten?");
+                    Optional<ButtonType> deleteResult = deleteAlert.showAndWait();
+                    if (deleteResult.get() == ButtonType.OK){
                         //TODO actually delete an Article
                         //dc.DBDeleteArticle(id);
                         setStatus("Artikel gelöscht.");
                     } else {
                         setStatus("Aktion abgebrochen.");
                     }
-                    refreshAllContent();
                     break;
+                case userSubmit:
+                    opensideStage = false;
+                    Article article = dc.DBLoadArticle(id);
+                    Alert submitAlert;
+                    if(article.getStatus().getStatusCode() > 1){
+                        submitAlert = new Alert(Alert.AlertType.INFORMATION);
+                        submitAlert.setTitle("Veröffentlichung anfragen");
+                        submitAlert.setContentText("Bitte überprüfen sie den Beitragsstatus und ggf. den Kommentar.");
+                        submitAlert.setHeaderText("Der Beitrag wurde bereits zur Veröffentlichung freigegeben oder veröffentlicht.");
+                        submitAlert.showAndWait();
+                    } else {
+                        submitAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                        submitAlert.setTitle("Veröffentlichung anfragen");
+                        submitAlert.setContentText("Der Beitrag kann im Folgenden von einem Moderator überprüft werden.");
+                        submitAlert.setHeaderText("Sind sie sich sicher das sie diesen Artikel veröffentlichen möchten?");
+                        Optional<ButtonType> submitResult = submitAlert.showAndWait();
+                        if (submitResult.get() == ButtonType.OK) {
+                            //TODO loadArticle does not load properly yet
+                            article.setStatus(Status.Submitted);
+                            dc.DBEditArticle(article);
+                            setStatus("Artikel " + id + " zur veröffentlichung freigegeben.");
+                        } else {
+                            setStatus("Aktion abgebrochen.");
+                        }
+                    }
+                    break;
+
             }
             if (opensideStage == true) {
                 sideStage.setTitle(title);
@@ -275,6 +301,7 @@ public class MainController extends Application {
                 sideStage.setScene(sideScene);
                 sideStage.showAndWait();
             }
+            refreshAllContent();
         } catch (Exception e) {
             e.printStackTrace();
             setStatus("Could not load SideStage content");
@@ -288,9 +315,7 @@ public class MainController extends Application {
      ******************************/
 
     public TableView refreshUserContent_ArticleTable(TableView table) {
-        /*
-        //TODO add buttonpanel to delete and edit and submit articles per article in table
-        */
+
         ObservableList<Article> articleList = dc.DBLoadOwnArticles(activeUser.getId());
         // Getter from Article Class
         List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "statusString", "topicName", "author", "publisher", "publisherComment");
@@ -315,7 +340,17 @@ public class MainController extends Application {
                         return new ActionCell_ArticleTable(maincontroller, "Löschen", sideStageState.deleteArticle);
                     }
                 });
-            } else {
+            } else if (i == 12) {
+            //deletebutton
+            ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
+                @Override
+                public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
+                    //TODO fix userSubmit
+                    return new ActionCell_ArticleTable(maincontroller, "Herausgeben", sideStageState.deleteArticle);
+                }
+            });
+        }
+            else {
                 //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>(propertyKeys.get(i)));
 

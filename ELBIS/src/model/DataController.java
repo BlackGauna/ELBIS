@@ -211,6 +211,7 @@ public class DataController {
 
     //METHODS--------------------------------------------------------------------------------------------------------
 
+    // TODO Every time a status or topic is laoded as int, it needs to be loaded as Topic or Status object
     //FINISHED: Check if user exists in DB
     public boolean login(String email, String pw) throws SQLException {
         try {
