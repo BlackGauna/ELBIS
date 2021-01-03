@@ -34,27 +34,32 @@ public class MainController extends Application {
     private FXMLLoader mainApplicationLoader;
     private FXMLLoader editorLoader;
     private FXMLLoader videoEditorLoader;
+    private FXMLLoader selectorLoader;
     //MainControllers
     private FXMLController_Login loginController;
     private FXMLController_MainApplication mainApplicationController;
     private FXMLController_Editor editorController;
     private FXMLController_VideoEditor videoController;
+    private FXMLController_EditorSelector selectorController;
     //MainStages
     private Stage loginStage;
     private Stage applicationStage;
     private Stage editorStage;
     private Stage videoStage;
+    private Stage selectorStage;
     //MainScenes
     private Scene loginScene;
     private Scene applicationScene;
     private Scene editorScene;
     private Scene sideScene = new Scene(new Pane());
     private Scene videoScene;
+    private Scene selectorScene;
     //MainPanes
     private Pane loginPane;
     private Pane applicationPane;
     private Pane editorPane;
     private Pane videoPane;
+    private Pane selectorPane;
 
     //SideContent
     private FXMLLoader sideLoader = new FXMLLoader();
@@ -81,6 +86,7 @@ public class MainController extends Application {
         sideStage = new Stage();
         sideStage.setResizable(false);
         videoStage = new Stage();
+        selectorStage= new Stage();
 
 
     }
@@ -114,6 +120,11 @@ public class MainController extends Application {
             videoPane = videoEditorLoader.load();
             videoController = videoEditorLoader.getController();
 
+            selectorLoader = new FXMLLoader(getClass().getResource("/view/Pane_EditorSelector.fxml"));
+            selectorPane = selectorLoader.load();
+            selectorController= selectorLoader.getController();
+            selectorController.setMainController(this);
+
 
             //Manage scenes
             loginScene = new Scene(loginPane);
@@ -123,10 +134,13 @@ public class MainController extends Application {
 
             editorScene = new Scene(editorPane);
             videoScene = new Scene(videoPane);
+            selectorScene = new Scene(selectorPane);
+
             loginStage.setScene(loginScene);
             applicationStage.setScene(applicationScene);
             editorStage.setScene(editorScene);
             videoStage.setScene(videoScene);
+            selectorStage.setScene(selectorScene);
 
         } catch (IOException io) {
             System.out.println("Couldn't load scene File");
@@ -195,11 +209,16 @@ public class MainController extends Application {
     public void openEditorScene() throws Exception {
         editorController.openNewArticle();
         editorStage.show();
-        videoStage.show();
+        selectorStage.close();
     }
 
     public void openVideoEditor() throws Exception {
+        videoStage.show();
+        selectorStage.close();
+    }
 
+    public void openSelector() throws Exception {
+        selectorStage.show();
     }
 
     /**

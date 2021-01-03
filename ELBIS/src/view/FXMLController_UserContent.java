@@ -62,7 +62,7 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
     @FXML
     void createArticleClicked(ActionEvent event) throws Exception
     {
-        mainController.openEditorScene();
+        mainController.openSelector();
     }
 
     @FXML

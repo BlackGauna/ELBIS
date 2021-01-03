@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_EditorSelector">
+   <children>
+      <Button fx:id="standardButton" layoutX="3.0" layoutY="4.0" mnemonicParsing="false" prefHeight="190.0" prefWidth="185.0" text="Standard PDF" onAction="#onStandardButtonClicked" />
+      <Button fx:id="videoButton" layoutX="193.0" layoutY="4.0" mnemonicParsing="false" prefHeight="190.0" prefWidth="202.0" text="Video PDF" onAction="#onVideoButtonClicked"/>
+   </children>
+</AnchorPane>
