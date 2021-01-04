@@ -123,6 +123,7 @@ public class MainController extends Application {
             videoEditorLoader = new FXMLLoader(getClass().getResource("/view/Pane_VideoEditor.fxml"));
             videoPane = videoEditorLoader.load();
             videoController = videoEditorLoader.getController();
+            videoController.setMainController(this);
 
             selectorLoader = new FXMLLoader(getClass().getResource("/view/Pane_EditorSelector.fxml"));
             selectorPane = selectorLoader.load();
@@ -192,6 +193,10 @@ public class MainController extends Application {
     public boolean submitArticle(int articleID, Status status, String comment){
         boolean submitted = false;
         //TODO update an article
+        Article article = dc.DBLoadArticle(articleID);
+        article.setStatus(status);
+        article.setPublisherComment(comment);
+        dc.DBEditArticle(article);
         setStatus("Artikel "+articleID+" wurde: "+status.toString());
         return submitted;
     }
@@ -224,7 +229,14 @@ public class MainController extends Application {
 
     public void openVideoEditor() throws Exception {
         videoStage.show();
+        videoController.setEditorController(editorController);
         selectorStage.close();
+    }
+
+    public void openEditorforVideo()
+    {
+        editorController.openVideoEditor();
+        editorStage.show();
     }
 
     public void openSelector() throws Exception {
@@ -289,9 +301,8 @@ public class MainController extends Application {
                     deleteAlert.setHeaderText("Sind sie sich sicher das sie diesen Artikel löschen möchten?");
                     Optional<ButtonType> deleteResult = deleteAlert.showAndWait();
                     if (deleteResult.get() == ButtonType.OK) {
-                        //TODO actually delete an Article
-                        //dc.DBDeleteArticle(id);
-                        setStatus("Artikel gelöscht.");
+                        dc.DBDeleteArticle(id);
+                        setStatus("Artikel "+id+" gelöscht.");
                     } else {
                         setStatus("Aktion abgebrochen.");
                     }
@@ -313,7 +324,6 @@ public class MainController extends Application {
                         submitAlert.setHeaderText("Sind sie sich sicher das sie diesen Artikel veröffentlichen möchten?");
                         Optional<ButtonType> submitResult = submitAlert.showAndWait();
                         if (submitResult.get() == ButtonType.OK) {
-                            //TODO loadArticle does not load properly yet
                             article.setStatus(Status.Eingereicht);
                             dc.DBEditArticle(article);
                             setStatus("Artikel " + id + " zur veröffentlichung freigegeben.");
@@ -323,7 +333,6 @@ public class MainController extends Application {
                     }
                     break;
                 case manageSubmission:
-                    //TODO create sideView
                     sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ManageSubmission.fxml"));
                     manageSubmissionPane = (Pane) sideLoader.load();
                     manageSubmissionController = sideLoader.getController();
@@ -332,7 +341,6 @@ public class MainController extends Application {
                     sideScene = new Scene(manageSubmissionPane);
                     title = "Nutzererstellung";
                     break;
-
             }
             if (opensideStage == true) {
                 sideStage.setTitle(title);

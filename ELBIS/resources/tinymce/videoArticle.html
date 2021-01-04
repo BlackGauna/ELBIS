@@ -7,7 +7,7 @@
     <script src="tinymce.min.js" referrerpolicy="origin"></script>
 
     <script type="text/javascript">
-      
+
     tinymce.init({
     selector: '#editor',
     content_css: "document",
@@ -38,39 +38,42 @@
     },*/
 
 
-    // custom button to convert editor content to PDF
-
+    // setup custom buttons and configs
     setup: function(editor)
     {
-      editor.ui.registry.addButton('customPDF',
-      {
-          text: 'In PDF',
-          onAction: function (_)
-          {
-            exportPDF(tinyMCE.activeEditor.getContent());
-          }
-      });
-      editor.ui.registry.addButton('ImageImp',
-      {
-          text: 'Bild einfügen',
-          onAction: function (_)
-          {
-            var imagepath= openImage();
-          }
-      });
-      editor.ui.registry.addButton('customSave',
-      {
-          tooltip: 'Artikel speichern',
-          icon: 'save',
-          onAction: function (_)
-          {
-            saveArticle(tinyMCE.activeEditor.getContent());
-          }
-      });
-      editor.on('init', function(e)
-      {
-        editor.execCommand('mceFullScreen');
-      });
+        // custom button to convert editor content to PDF
+        editor.ui.registry.addButton('customPDF',
+        {
+            text: 'In PDF',
+            onAction: function (_)
+            {
+                exportPDF(tinyMCE.activeEditor.getContent());
+            }
+        });
+        // add custom image import button
+        editor.ui.registry.addButton('ImageImp',
+        {
+            text: 'Bild einfügen',
+            onAction: function (_)
+            {
+                var imagepath= openImage();
+            }
+        });
+        // add custom save button
+        editor.ui.registry.addButton('customSave',
+        {
+            tooltip: 'Artikel speichern',
+            icon: 'save',
+            onAction: function (_)
+            {
+                saveArticleForVideo(tinyMCE.activeEditor.getContent());
+            }
+        });
+        // put editor in fullscreen on initialization
+        editor.on('init', function(e)
+        {
+            editor.execCommand('mceFullScreen');
+        });
     },
 
 
@@ -90,10 +93,6 @@
     	javaConnector.exportPDF(text);
     }
 
-    function saveArticle(text)
-    {
-        javaConnector.saveArticle(text);
-    }
 
     function saveArticleForVideo(text)
     {
@@ -130,9 +129,9 @@
 </head>
 
 <body>
-    <form method="post">
+<form method="post">
     <textarea id="editor">
     </textarea>
-    </form>
+</form>
 </body>
 </html>

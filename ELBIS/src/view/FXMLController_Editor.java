@@ -57,9 +57,12 @@ public class FXMLController_Editor
     // current Article loaded in editor
     private Article currentArticle= new Article();
 
+    private String html;
+
+    private String editorPath;
+
     @FXML
     WebView webView;
-
 
 
     @FXML
@@ -68,7 +71,8 @@ public class FXMLController_Editor
         try
         {
             // html source for the WebView
-            URL url= Thread.currentThread().getContextClassLoader().getResource("tinymce/tinymce_test.html");
+            //URL url= Thread.currentThread().getContextClassLoader().getResource("tinymce/tinymce_test.html");
+            editorPath="/tinymce/tinymce_test.html";
 
             // setup WebView and WebEngine
             final WebEngine webEngine= webView.getEngine();
@@ -91,8 +95,11 @@ public class FXMLController_Editor
             } ));
 
 
+            // System.out.println("Slash: "+this.getClass().getResource(editorPath));
+            // System.out.println(this.getClass().getResource("tinymce/tinymce_test.html"));
+
             // now load the page
-            webEngine.load(url.toString());
+            webEngine.load(this.getClass().getResource(editorPath).toString());
 
 
         }catch (Exception e)
@@ -107,9 +114,22 @@ public class FXMLController_Editor
         this.mainController = mainController;
     }
 
+    public String getHtml()
+    {
+        return html;
+    }
 
+    public void setHtml(String html)
+    {
+        this.html = html;
+    }
 
-///------EDITOR METHODS----------------------------------------------------------------------///
+    ///------EDITOR METHODS----------------------------------------------------------------------///
+    public void openVideoEditor()
+    {
+        editorPath="/tinymce/videoArticle.html";
+        webView.getEngine().load(this.getClass().getResource(editorPath).toString());
+    }
 
     public void openNewArticle()
     {
@@ -194,9 +214,10 @@ public class FXMLController_Editor
                 saveController.setExpireDate(currentArticle.getExpireDate());
             }
 
+            // TODO: topic selection based on user and privileges
             // if only user privileges then limited options for status
             // but can still see the current status
-            if (activeUser instanceof User && !(activeUser instanceof Administrator || activeUser instanceof Moderator))
+            if (activeUser instanceof User && !(activeUser instanceof Moderator))
             {
                 saveController.statusChoice.getItems().setAll(Status.Offen, Status.Eingereicht);
                 if (currentArticle.getStatus()==null)
@@ -204,9 +225,13 @@ public class FXMLController_Editor
                     saveController.statusChoice.setValue(Status.Offen);
                 }
 
+                if (activeUser.getTopics()!=null)
+                {
+                    saveController.topicChoice.getItems().setAll(activeUser.getTopics());
+                }
+
             }
 
-            // TODO: topic selection based on user and privileges
             // save button action
             saveController.saveButton.setOnAction(new EventHandler<ActionEvent>()
             {
@@ -288,6 +313,11 @@ public class FXMLController_Editor
             saveDialog.show();
         }
 
+
+        public void saveArticleForVideo(String html)
+        {
+            setHtml(html);
+        }
 
 
         /**
