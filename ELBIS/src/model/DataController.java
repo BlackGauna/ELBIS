@@ -305,12 +305,12 @@ public class DataController {
     //FINISHED: User Creation
     public boolean DBSendNewUser(String email, String password, String name, int gender, int role, String address, String dateOfBirth) {
         try {
+            User user = DBLoadUserByEmail(email);
             con = SQLConnection.ConnectDB();
             assert con != null;
             mainController.setStatus("Creating new User...");
             String hashedpw = BCrypt.hashpw(password, BCrypt.gensalt(12));
             PreparedStatement pst = con.prepareStatement(SEND_NEW_USER);
-            User user = DBLoadUserByEmail(email);
             if(user.getEmail() == email ){
                 mainController.setStatus("User already Exists");
                 System.out.println("User already Exists");
