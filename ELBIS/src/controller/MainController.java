@@ -445,9 +445,6 @@ public class MainController extends Application {
     }
 
     public TableView refreshModerationContent_UserTable(TableView table) {
-        /*
-        //TODO add buttonpanel to delete and edit (JUST) users per user in table
-        */
         MainController maincontroller = this;
         ObservableList<User> userList = dc.DBLoadAllUsers();
         // Getter from User Class
@@ -560,7 +557,6 @@ public class MainController extends Application {
     }
 
     public TableView refreshAdministrationContent_TopicTable(TableView table) {
-
         ObservableList<Topic> topicList = dc.DBLoadAllTopics();
         // Getter from User Class
         List<String> propertyKeys = Arrays.asList("id", "name", "parentTopicString");
