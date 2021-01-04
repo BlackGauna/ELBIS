@@ -1,7 +1,5 @@
 package model;
 
-import java.sql.SQLOutput;
-
 public class Article {
     // Atrrib_______________________________________________________________________________________________________
     private int id = 0; // if id==0 then Article is regarded as not in db yet
@@ -130,7 +128,7 @@ public class Article {
     public void setStatusByID(int statusID) {
         switch (statusID) {
             case 1:
-                this.setStatus(Status.Offen);
+                this.setStatus(Status.Entwurf);
                 break;
             case 2:
                 this.setStatus(Status.Eingereicht);
@@ -157,7 +155,7 @@ public class Article {
 
     public boolean setStatusByString(String status){
         if(status.equals("Default")){
-            setStatus(Status.Offen);
+            setStatus(Status.Entwurf);
             return true;
         } else if(status.equals("Submitted")){
             setStatus(Status.Eingereicht);

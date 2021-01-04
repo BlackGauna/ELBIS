@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.util.Iterator;
 
 /**
@@ -219,10 +218,10 @@ public class FXMLController_Editor
             // but can still see the current status
             if (activeUser instanceof User && !(activeUser instanceof Moderator))
             {
-                saveController.statusChoice.getItems().setAll(Status.Offen, Status.Eingereicht);
+                saveController.statusChoice.getItems().setAll(Status.Entwurf, Status.Eingereicht);
                 if (currentArticle.getStatus()==null)
                 {
-                    saveController.statusChoice.setValue(Status.Offen);
+                    saveController.statusChoice.setValue(Status.Entwurf);
                 }
 
                 if (activeUser.getTopics()!=null)
@@ -245,7 +244,7 @@ public class FXMLController_Editor
                     if (!(activeUser instanceof Moderator))
                     {
                         // check if user left the status on an invalid status not in their privileges
-                        if (chosenStatus!=Status.Offen && chosenStatus != Status.Eingereicht)
+                        if (chosenStatus!=Status.Entwurf && chosenStatus != Status.Eingereicht)
                         {
                             Alert alert= new Alert(Alert.AlertType.ERROR,
                                     "Sie haben keine Rechte für den aktuellen Status! \n\n"

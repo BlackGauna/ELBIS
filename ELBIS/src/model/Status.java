@@ -1,7 +1,7 @@
 package model;
 
 public enum Status {
-	Offen(1),
+	Entwurf(1),
 	Eingereicht(2),
 	Abgelehnt(3),
 	Autorisiert(4),
