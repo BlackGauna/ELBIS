@@ -211,7 +211,6 @@ public class DataController {
 
     public DataController(MainController mainController) {
         this.mainController = mainController;
-        DBUpdateAllArticles();
     }
 
     //METHODS--------------------------------------------------------------------------------------------------------
