@@ -8,7 +8,7 @@ import model.Status;
 public class FXMLController_ManageSubmission extends ELBIS_FXMLController {
 
     // Atrrib_______________________________________________________________________________________________________
-
+    int articleId = 0;
     // Ini_______________________________________________________________________________________________________
 
     // UI_______________________________________________________________________________________________________
@@ -25,7 +25,7 @@ public class FXMLController_ManageSubmission extends ELBIS_FXMLController {
     void authorizeClicked(ActionEvent event) {
         try {
             //TODO throw exception if any field is empty
-            //mainController.submitArticle(Status.Öffentlich,getTxtComment());
+            mainController.submitArticle(articleId,Status.Öffentlich,getTxtComment());
             mainController.sideStage.close();
         } catch(Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -42,7 +42,7 @@ public class FXMLController_ManageSubmission extends ELBIS_FXMLController {
     void declineClicked(ActionEvent event) {
         try {
             //TODO throw exception if any field is empty
-            //mainController.submitArticle(Status.Abgelehnt,getTxtComment());
+            mainController.submitArticle(articleId,Status.Abgelehnt,getTxtComment());
             mainController.sideStage.close();
         } catch(Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -57,5 +57,8 @@ public class FXMLController_ManageSubmission extends ELBIS_FXMLController {
     // Getters,Setters_________________________________________________________________________________________________
     public String getTxtComment(){
         return txtComment.getText();
+    }
+    public void setArticleId(int articleID){
+        this.articleId = articleID;
     }
 }

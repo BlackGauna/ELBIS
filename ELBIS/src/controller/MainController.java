@@ -70,6 +70,9 @@ public class MainController extends Application {
     private FXMLController_CreateTopic createTopicController;
     private Pane createTopicPane;
 
+    private FXMLController_ManageSubmission manageSubmissionController;
+    private Pane manageSubmissionPane;
+
 
     // Ctor_______________________________________________________________________________________________________
     public MainController() {
@@ -77,7 +80,7 @@ public class MainController extends Application {
         dc = new DataController(this);
         // ###### Create Stages ######
         loginStage = new Stage(); // Login window
-        loginStage.setTitle("Login");
+        loginStage.setTitle("Anmeldung");
         loginStage.setResizable(false);
         applicationStage = new Stage(); // Application Window
         applicationStage.setTitle("Verwaltung");
@@ -172,6 +175,7 @@ public class MainController extends Application {
         boolean login = dc.login(email, pw);
         if (login) {
             activeUser = dc.DBLoadUserByEmail(email);
+            activeUser.setTopics(dc.DBLoadAllowedTopics(activeUser.getId()));
             setStatus("Logged in \"" + activeUser.getEmail() + "\" with password \"" + activeUser.getPassword() + "\"");
             mainApplicationController.openTabs(activeUser);
             openApplicationStage();
@@ -183,6 +187,13 @@ public class MainController extends Application {
             alert.showAndWait();
         }
         return login;
+    }
+
+    public boolean submitArticle(int articleID, Status status, String comment){
+        boolean submitted = false;
+        //TODO update an article
+        setStatus("Artikel "+articleID+" wurde: "+status.toString());
+        return submitted;
     }
 
     /*****************************
@@ -313,6 +324,13 @@ public class MainController extends Application {
                     break;
                 case manageSubmission:
                     //TODO create sideView
+                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ManageSubmission.fxml"));
+                    manageSubmissionPane = (Pane) sideLoader.load();
+                    manageSubmissionController = sideLoader.getController();
+                    manageSubmissionController.setMainController(this);
+                    manageSubmissionController.setArticleId(id);
+                    sideScene = new Scene(manageSubmissionPane);
+                    title = "Nutzererstellung";
                     break;
 
             }
@@ -388,7 +406,7 @@ public class MainController extends Application {
         List<String> propertyKeys = Arrays.asList("id", "name", "parentTopicString");
 
         for (int i = 0; i<table.getColumns().size(); i++){
-            setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
+            //setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
             ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((String) (propertyKeys.get(i))));
         }
 
@@ -411,7 +429,7 @@ public class MainController extends Application {
         List<String> propertyKeys = Arrays.asList("id", "email", "name", "gender", "role", "address", "dateOfBirth");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
+            //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
             ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String) (propertyKeys.get(i))));
         }
         table.setItems(userList);
