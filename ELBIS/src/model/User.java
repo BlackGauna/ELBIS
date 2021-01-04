@@ -22,8 +22,8 @@ public class User {
     // Ctor_______________________________________________________________________________________________________
     public User() {
         this.id = 0;
-        this.email = "None";
-        this.name = " ";
+        this.email = "Kein";
+        this.name = "";
         this.password = "default";
         this.address = "default";
     }

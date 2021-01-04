@@ -49,6 +49,12 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
         submissionTable.getColumns().add(new TableColumn<Article, String>("Autor"));
         submissionTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
         submissionTable.getColumns().add(new TableColumn<Article, String>("Herausgeber Kommentar"));
+        TableColumn openColumn = new TableColumn<Article, Boolean>(" ");
+        openColumn.setSortable(false);
+        submissionTable.getColumns().add(openColumn);
+        TableColumn manageSubmitColumn = new TableColumn<Article, Boolean>(" ");
+        manageSubmitColumn.setSortable(false);
+        submissionTable.getColumns().add(manageSubmitColumn);
 
         articleTable.getColumns().add(new TableColumn<Article, String>("ID"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Titel"));
@@ -60,6 +66,12 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
         articleTable.getColumns().add(new TableColumn<Article, String>("Autor"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber Kommentar"));
+        TableColumn editColumn = new TableColumn<Article, Boolean>(" ");
+        editColumn.setSortable(false);
+        articleTable.getColumns().add(editColumn);
+        TableColumn deleteColumn = new TableColumn<Article, Boolean>(" ");
+        deleteColumn.setSortable(false);
+        articleTable.getColumns().add(deleteColumn);
 
         userTable.getColumns().add(new TableColumn<User, String>("ID"));
         userTable.getColumns().add(new TableColumn<User, String>("E-Mail"));

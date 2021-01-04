@@ -197,10 +197,10 @@ public class FXMLController_Editor
             // but can still see the current status
             if (activeUser instanceof User && !(activeUser instanceof Administrator || activeUser instanceof Moderator))
             {
-                saveController.statusChoice.getItems().setAll(Status.Default, Status.Submitted);
+                saveController.statusChoice.getItems().setAll(Status.Offen, Status.Eingereicht);
                 if (currentArticle.getStatus()==null)
                 {
-                    saveController.statusChoice.setValue(Status.Default);
+                    saveController.statusChoice.setValue(Status.Offen);
                 }
 
             }
@@ -219,7 +219,7 @@ public class FXMLController_Editor
                     if (!(activeUser instanceof Moderator))
                     {
                         // check if user left the status on an invalid status not in their privileges
-                        if (chosenStatus!=Status.Default && chosenStatus != Status.Submitted)
+                        if (chosenStatus!=Status.Offen && chosenStatus != Status.Eingereicht)
                         {
                             Alert alert= new Alert(Alert.AlertType.ERROR,
                                     "Sie haben keine Rechte für den aktuellen Status! \n\n"

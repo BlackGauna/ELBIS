@@ -1,12 +1,12 @@
 package model;
 
 public enum Status {
-	Default (1),
-	Submitted(2),
-	Declined(3),
-	Authorized(4),
-	Released(5),
-	Archived(6);
+	Offen(1),
+	Eingereicht(2),
+	Abgelehnt(3),
+	Autorisiert(4),
+	Öffentlich(5),
+	Archiviert(6);
 
 	private final int STATUSCODE;
 

@@ -305,13 +305,16 @@ public class MainController extends Application {
                         Optional<ButtonType> submitResult = submitAlert.showAndWait();
                         if (submitResult.get() == ButtonType.OK) {
                             //TODO loadArticle does not load properly yet
-                            article.setStatus(Status.Submitted);
+                            article.setStatus(Status.Eingereicht);
                             dc.DBEditArticle(article);
                             setStatus("Artikel " + id + " zur veröffentlichung freigegeben.");
                         } else {
                             setStatus("Aktion abgebrochen.");
                         }
                     }
+                    break;
+                case manageSubmission:
+                    //TODO create sideView
                     break;
 
             }
@@ -335,13 +338,11 @@ public class MainController extends Application {
      ******************************/
 
     public TableView refreshUserContent_ArticleTable(TableView table) {
-
+        MainController maincontroller = this;
         ObservableList<Article> articleList = dc.DBLoadOwnArticles(activeUser.getId());
         // Getter from Article Class
         List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "status", "topicName", "author", "publisher", "publisherComment");
         // fill columns with values
-        int id = 0;
-        MainController maincontroller = this;
         for (int i = 0; i < table.getColumns().size(); i++) {
             //Check if button column reached
             if (i == 10) {
@@ -408,14 +409,33 @@ public class MainController extends Application {
     }
 
     public TableView refreshModerationContent_SubmissionTable(TableView table) {
-
+        MainController maincontroller = this;
         ObservableList<Article> submissionList = dc.DBLoadAllSubmittedArticles();
         //a Getter from Article Class
         List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "status", "topicName", "author", "publisher", "publisherComment");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
+            //Check if button column reached
+            if (i == 10) {
+                //createButton via modded Cell class TableActionCell (usable for article Tables)
+                ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
+                    @Override
+                    public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
+                        return new ActionCell_ArticleTable(maincontroller, "Öffnen", sideStageState.editArticle);
+                    }
+                });
+            } else if ( i == 11){
+                ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
+                    @Override
+                    public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
+                        return new ActionCell_ArticleTable(maincontroller, "Verwalten", sideStageState.manageSubmission);
+                    }
+                });
+            }
+            else {
+                //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+                ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
+            }
         }
         table.setItems(submissionList);
         //Test if table is empty
@@ -426,14 +446,35 @@ public class MainController extends Application {
     }
 
     public TableView refreshModerationContent_ArticleTable(TableView table) {
-
+        MainController maincontroller = this;
         ObservableList<Article> articleList = dc.DBLoadAllArticles();
         // Getter from Article Class
         List<String> propertyKeys = Arrays.asList("id", "title", "creationDate", "expireDate", "lastEdit", "status", "topicName", "author", "publisher", "publisherComment");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
+            //Check if button column reached
+            if (i == 10) {
+                //createButton via modded Cell class TableActionCell (usable for article Tables)
+                ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
+                    @Override
+                    public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
+                        return new ActionCell_ArticleTable(maincontroller, "Bearbeiten", sideStageState.editArticle);
+                    }
+                });
+            } else if (i == 11) {
+                //deletebutton
+                ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
+                    @Override
+                    public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
+                        return new ActionCell_ArticleTable(maincontroller, "Löschen", sideStageState.deleteArticle);
+                    }
+                });
+            }
+                else {
+                    //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+                    ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
+                }
+
         }
         table.setItems(articleList);
         //Test if table is empty

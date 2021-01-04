@@ -1,5 +1,7 @@
 package model;
 
+import java.sql.SQLOutput;
+
 public class Article {
     // Atrrib_______________________________________________________________________________________________________
     private int id = 0; // if id==0 then Article is regarded as not in db yet
@@ -128,22 +130,22 @@ public class Article {
     public void setStatusByID(int statusID) {
         switch (statusID) {
             case 1:
-                this.setStatus(Status.Default);
+                this.setStatus(Status.Offen);
                 break;
             case 2:
-                this.setStatus(Status.Submitted);
+                this.setStatus(Status.Eingereicht);
                 break;
             case 3:
-                this.setStatus(Status.Declined);
+                this.setStatus(Status.Abgelehnt);
                 break;
             case 4:
-                this.setStatus(Status.Authorized);
+                this.setStatus(Status.Autorisiert);
                 break;
             case 5:
-                this.setStatus(Status.Released);
+                this.setStatus(Status.Öffentlich);
                 break;
             case 6:
-                this.setStatus(Status.Archived);
+                this.setStatus(Status.Archiviert);
                 break;
             default:
                 break;
@@ -154,30 +156,31 @@ public class Article {
     }
 
     public boolean setStatusByString(String status){
-        if(status.equals(Status.Default.toString())){
-            setStatus(Status.Default);
+        if(status.equals("Default")){
+            setStatus(Status.Offen);
             return true;
-        } else if(status.equals(Status.Submitted.toString())){
-            setStatus(Status.Submitted);
-            return true;
-        }
-        else if(status.equals(Status.Declined.toString())){
-            setStatus(Status.Declined);
+        } else if(status.equals("Submitted")){
+            setStatus(Status.Eingereicht);
             return true;
         }
-        else if(status.equals(Status.Authorized.toString())){
-            setStatus(Status.Authorized);
+        else if(status.equals("Declined")){
+            setStatus(Status.Abgelehnt);
             return true;
         }
-        else if(status.equals(Status.Released.toString())){
-            setStatus(Status.Released);
+        else if(status.equals("Authorized")){
+            setStatus(Status.Autorisiert);
             return true;
         }
-        else if(status.equals(Status.Archived.toString())){
-            setStatus(Status.Archived);
+        else if(status.equals("Released")){
+            setStatus(Status.Öffentlich);
+            return true;
+        }
+        else if(status.equals("Archived")){
+            setStatus(Status.Archiviert);
             return true;
         }
         else{
+            System.out.println("Couldnt set Status: "+ status);
             return false;
         }
     }

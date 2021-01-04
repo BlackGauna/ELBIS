@@ -65,6 +65,5 @@
 
 .list-cell,
 .table-row-cell{
-    
     -fx-table-cell-border-color:transparent;
 }
