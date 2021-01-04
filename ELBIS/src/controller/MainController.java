@@ -81,7 +81,8 @@ public class MainController extends Application {
         loginStage.setResizable(false);
         applicationStage = new Stage(); // Application Window
         applicationStage.setTitle("Verwaltung");
-        applicationStage.setResizable(false);
+        applicationStage.setMinHeight(840); //DONT CHANGE
+        applicationStage.setMinWidth(1220); //DONT CHANGE
         editorStage = new Stage(); // Editor Window
         sideStage = new Stage();
         sideStage.setResizable(false);

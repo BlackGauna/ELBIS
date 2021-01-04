@@ -6,36 +6,32 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_UserContent">
-   <children>
-      <BorderPane prefWidth="1200.0">
-         <center>
-            <Accordion fx:id="dropDownAccordion" prefHeight="670.0">
-              <panes>
-                <TitledPane fx:id="tPane_MyArticles" animated="false" text="Meine Artikel">
-                  <content>
-                        <TableView fx:id="articleTable" />
-                  </content>
-                </TitledPane>
-                  <TitledPane fx:id="tPane_Topics" animated="false" text="Bereichsansicht">
-                  <content>
-                        <TreeView fx:id="topicTree" />
-                  </content>
-                  </TitledPane>
-              </panes>
-            </Accordion>
-         </center>
-         <top>
-            <ButtonBar fx:id="btnBar" buttonOrder="U+FBIX_NCYOA_R" prefHeight="35.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
-              <buttons>
-                <Button fx:id="btnCreateArticle" mnemonicParsing="false" onAction="#createArticleClicked" text="Artikel erstellen" />
-                  <Button fx:id="btnRefresh" minWidth="63.0" mnemonicParsing="false" onAction="#refreshClicked" prefHeight="25.0" text="Neu Laden" />
-              </buttons>
-            </ButtonBar>
-         </top>
-      </BorderPane>
-   </children>
-</AnchorPane>
+
+<BorderPane minWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_UserContent">
+   <center>
+      <Accordion fx:id="dropDownAccordion" prefHeight="670.0">
+        <panes>
+          <TitledPane fx:id="tPane_MyArticles" animated="false" text="Meine Artikel">
+            <content>
+                  <TableView fx:id="articleTable" />
+            </content>
+          </TitledPane>
+            <TitledPane fx:id="tPane_Topics" animated="false" text="Bereichsansicht">
+            <content>
+                  <TreeView fx:id="topicTree" />
+            </content>
+            </TitledPane>
+        </panes>
+      </Accordion>
+   </center>
+   <top>
+      <ButtonBar fx:id="btnBar" buttonOrder="U+FBIX_NCYOA_R" prefHeight="35.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+        <buttons>
+          <Button fx:id="btnCreateArticle" mnemonicParsing="false" onAction="#createArticleClicked" text="Artikel erstellen" />
+            <Button fx:id="btnRefresh" minWidth="63.0" mnemonicParsing="false" onAction="#refreshClicked" prefHeight="25.0" text="Neu Laden" />
+        </buttons>
+      </ButtonBar>
+   </top>
+</BorderPane>
