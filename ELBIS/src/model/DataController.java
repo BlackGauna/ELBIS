@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
 import java.util.LinkedList;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class DataController {
     //ATTRIBUTES--------------------------------------------------------------------------------------------------------
@@ -144,7 +145,7 @@ public class DataController {
     public static final String LOAD_LAST_ARTICLE_ID = "SELECT " + COLUMN_ARTICLE_ID + " FROM " + TABLE_ARTICLE +
             " ORDER BY " + COLUMN_ARTICLE_ID + " DESC LIMIT 1 ";
     //Check if user exists in database
-    public static final String CHECK_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ? AND " + COLUMN_USER_PASSWORD + " = ?";
+    public static final String CHECK_USER = "SELECT password FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
     //Load all articles
     public static final String LOAD_ALL_ARTICLES = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
             + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
@@ -228,12 +229,13 @@ public class DataController {
             mainController.setStatus("Checking User...");
             PreparedStatement pst = con.prepareStatement(CHECK_USER);
             pst.setString(1, email);
-            pst.setString(2, pw);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                mainController.setStatus("Success!");
-                con.close();
-                return true;
+                if(BCrypt.checkpw(pw, rs.getString(1))){
+                    mainController.setStatus("Success!");
+                    con.close();
+                    return true;
+                }
             }
         } catch (SQLException e) {
             mainController.setStatus("Failed to check!");
@@ -304,10 +306,10 @@ public class DataController {
             con = SQLConnection.ConnectDB();
             assert con != null;
             mainController.setStatus("Creating new User...");
+            String hashedpw = BCrypt.hashpw(password, BCrypt.gensalt(12));
             PreparedStatement pst = con.prepareStatement(SEND_NEW_USER);
-
             pst.setString(1, email);
-            pst.setString(2, password);
+            pst.setString(2, hashedpw);
             pst.setInt(3, role);
             pst.setString(4, name);
             pst.setString(5, address);
