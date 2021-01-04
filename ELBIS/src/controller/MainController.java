@@ -123,6 +123,7 @@ public class MainController extends Application {
             videoEditorLoader = new FXMLLoader(getClass().getResource("/view/Pane_VideoEditor.fxml"));
             videoPane = videoEditorLoader.load();
             videoController = videoEditorLoader.getController();
+            videoController.setMainController(this);
 
             selectorLoader = new FXMLLoader(getClass().getResource("/view/Pane_EditorSelector.fxml"));
             selectorPane = selectorLoader.load();
@@ -224,7 +225,14 @@ public class MainController extends Application {
 
     public void openVideoEditor() throws Exception {
         videoStage.show();
+        videoController.setEditorController(editorController);
         selectorStage.close();
+    }
+
+    public void openEditorforVideo()
+    {
+        editorController.openVideoEditor();
+        editorStage.show();
     }
 
     public void openSelector() throws Exception {

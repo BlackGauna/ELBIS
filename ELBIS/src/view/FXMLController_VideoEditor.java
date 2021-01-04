@@ -1,11 +1,14 @@
 package view;
 
+import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.*;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.IBlockElement;
+import com.itextpdf.layout.element.IElement;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.layout.LayoutArea;
 import com.itextpdf.layout.layout.LayoutContext;
@@ -17,8 +20,12 @@ import com.itextpdf.layout.renderer.DocumentRenderer;
 import com.itextpdf.layout.renderer.IRenderer;
 import com.itextpdf.layout.renderer.ParagraphRenderer;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -26,8 +33,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
-public class FXMLController_VideoEditor
+public class FXMLController_VideoEditor extends ELBIS_FXMLController
 {
     @FXML
     TextField titleField;
@@ -38,13 +46,50 @@ public class FXMLController_VideoEditor
     @FXML
     Button videoButton;
 
+    @FXML
+    WebView articleView;
+
     final static String DESKTOP = System.getProperty("user.home")+ "\\Desktop\\";
     final static String SAMPLE = DESKTOP + "sample.pdf";
     final static String DEST = System.getProperty("user.home")+ "\\Desktop\\output.pdf";
 
+    private FXMLController_Editor editor;
+    private Stage editorStage;
+    private Pane editorPane;
+    private Scene editorScene;
+    private FXMLLoader editorLoader;
+    private FXMLController_Editor editorController;
+
     String schemaPath= "/tinymce/schema.pdf";
     String videoPath;
     File temp;
+
+    String html;
+
+    @FXML
+    public void initialize() throws IOException
+    {
+        /*editorStage= new Stage();
+        editorLoader= new FXMLLoader(this.getClass().getResource("/view/Pane_Editor.fxml"));
+        editorPane = (Pane) editorLoader.load();
+        editorController = editorLoader.getController();
+
+        editorScene= new Scene(editorPane);
+        editorStage.setScene(editorScene);
+
+        editorStage.show();*/
+
+
+    }
+
+    public void setEditorController(FXMLController_Editor editorController)
+    {
+       this.editorController= editorController;
+    }
+    public void openArticleEditor()
+    {
+        mainController.openEditorforVideo();
+    }
 
     public void getVideoPath()
     {
@@ -66,80 +111,76 @@ public class FXMLController_VideoEditor
             videoPath= video.getAbsolutePath();
         }
 
-
     }
 
     public File writeVideo (File file) throws IOException
     {
-        temp= new File(file.getParent()+"\\temp.pdf");
-        // writer
-        PdfWriter writer = new PdfWriter(temp);
+            temp= new File(file.getParent()+"\\temp.pdf");
+            // writer
+            PdfWriter writer = new PdfWriter(temp);
 
 
 
-        PdfReader reader = new PdfReader(schemaPath);
-        PdfDocument sample = new PdfDocument(reader, writer);
-        Document sampleDoc = new Document(sample);
+            PdfReader reader = new PdfReader(schemaPath);
+            PdfDocument sample = new PdfDocument(reader, writer);
+            Document sampleDoc = new Document(sample);
 
-        PdfPage page = sample.getFirstPage();
-        PdfDictionary pageDic = new PdfDictionary(page.getPdfObject());
-        PdfArray annots = pageDic.getAsArray(PdfName.Annots);
-
-
-        PdfName richmedia = new PdfName("RichMediaContent");
-        // Annot 17 0 R
-        PdfDictionary array = annots.getAsDictionary(0);
-        // Assets 26 0 R
-        PdfDictionary assets = array.getAsDictionary(richmedia);
-
-        // Instances 21 0 R
-        PdfName configs = new PdfName("Configurations");
-        PdfDictionary config = assets.getAsArray(configs).getAsDictionary(0);
-
-        PdfName instancesName = new PdfName("Instances");
-        PdfName assetName = new PdfName("Asset");
-        // Dictionary 22 0 R
-        PdfDictionary dict = config.getAsArray(instancesName).getAsDictionary(0);
-
-        // Asset 23 0 R
-        PdfDictionary asset = dict.getAsDictionary(assetName);
-        System.out.println(asset);
-
-        PdfDictionary ef = asset.getAsDictionary(PdfName.EF);
-        System.out.println(ef);
-
-        // get the video as bytestream in F
-        PdfObject f = ef.get(PdfName.F);
-        PdfStream content = ef.getAsStream(PdfName.F);
-
-        byte[] video = reader.readStreamBytes(content, false);
-
-        // test output
-        try (FileOutputStream out = new FileOutputStream(DESKTOP + "mamama.mp4"))
-        {
-            out.write(video);
-        }
+            PdfPage page = sample.getFirstPage();
+            PdfDictionary pageDic = new PdfDictionary(page.getPdfObject());
+            PdfArray annots = pageDic.getAsArray(PdfName.Annots);
 
 
-        // test overwrite embedded video with another video
-        byte[] inputBytes;
+            PdfName richmedia = new PdfName("RichMediaContent");
+            // Annot 17 0 R
+            PdfDictionary array = annots.getAsDictionary(0);
+            // Assets 26 0 R
+            PdfDictionary assets = array.getAsDictionary(richmedia);
+
+            // Instances 21 0 R
+            PdfName configs = new PdfName("Configurations");
+            PdfDictionary config = assets.getAsArray(configs).getAsDictionary(0);
+
+            PdfName instancesName = new PdfName("Instances");
+            PdfName assetName = new PdfName("Asset");
+            // Dictionary 22 0 R
+            PdfDictionary dict = config.getAsArray(instancesName).getAsDictionary(0);
+
+            // Asset 23 0 R
+            PdfDictionary asset = dict.getAsDictionary(assetName);
+            System.out.println(asset);
+
+            PdfDictionary ef = asset.getAsDictionary(PdfName.EF);
+            System.out.println(ef);
+
+            // get the video as bytestream in F
+            PdfObject f = ef.get(PdfName.F);
+            PdfStream content = ef.getAsStream(PdfName.F);
+
+            byte[] video = reader.readStreamBytes(content, false);
+
+            // test output
+            try (FileOutputStream out = new FileOutputStream(DESKTOP + "mamama.mp4"))
+            {
+                out.write(video);
+            }
 
 
-        FileInputStream fin = new FileInputStream(videoPath);
-        inputBytes = fin.readAllBytes();
+            // overwrite embedded video with another video
+            byte[] inputBytes;
+            // Input the video as byte array
+            FileInputStream fin = new FileInputStream(videoPath);
+            inputBytes = fin.readAllBytes();
 
-        content.setData(inputBytes);
+            // set the content stream's video with new video
+            content.setData(inputBytes);
+            ef.put(PdfName.F, content);
 
-
-
-        ef.put(PdfName.F, content);
-
-
+        /* test output
         content= ef.getAsStream(PdfName.F);
         byte[] outBytes;
         outBytes = content.getBytes();
 
-        /*// test output
+        // test output
         try (FileOutputStream out = new FileOutputStream(DESKTOP + "pipipi.mp4"))
         {
             out.write(outBytes);
@@ -147,13 +188,13 @@ public class FXMLController_VideoEditor
 
 
 
-        sample.close();
+            sample.close();
 
-        reader.close();
-        writer.close();
+            reader.close();
+            writer.close();
 
 
-        return temp;
+            return temp;
     }
 
     public void exportPDF() throws IOException
@@ -181,38 +222,15 @@ public class FXMLController_VideoEditor
                 "\n" +
                 "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo";
 
-        String html = "<p>Lorem ipsum dolor sit amet, consectetuer adipiscing \n" +
-                "elit. Aenean commodo ligula eget dolor. Aenean massa \n" +
-                "<strong>strong</strong>. Cum sociis natoque penatibus \n" +
-                "et magnis dis parturient montes, nascetur ridiculus \n" +
-                "mus. Donec quam felis, ultricies nec, pellentesque \n" +
-                "eu, pretium quis, sem. Nulla consequat massa quis \n" +
-                "enim. Donec pede justo, fringilla vel, aliquet nec, \n" +
-                "vulputate eget, arcu. In enim justo, rhoncus ut, \n" +
-                "imperdiet a, venenatis vitae, justo. Nullam dictum \n" +
-                "felis eu pede <a class=\"external ext\" href=\"#\">link</a> \n" +
-                "mollis pretium. Integer tincidunt. Cras dapibus. \n" +
-                "Vivamus elementum semper nisi. Aenean vulputate \n" +
-                "eleifend tellus. Aenean leo ligula, porttitor eu, \n" +
-                "consequat vitae, eleifend ac, enim. Aliquam lorem ante, \n" +
-                "dapibus in, viverra quis, feugiat a, tellus. Phasellus \n" +
-                "viverra nulla ut metus varius laoreet. Quisque rutrum. \n" +
-                "Aenean imperdiet. Etiam ultricies nisi vel augue. \n" +
-                "Curabitur ullamcorper ultricies nisi.</p>\n" +
-                "\n" +
-                "<h1>Lorem ipsum dolor sit amet consectetuer adipiscing \n" +
-                "elit</h1>\n" +
-                "\n" +
-                "<h2>Aenean commodo ligula eget dolor aenean massa</h2>\n" +
-                "\n" +
-                "<p>Lorem ipsum dolor sit amet, consectetuer adipiscing \n" +
-                "elit. Aenean commodo ligula eget dolor. Aenean massa. \n" +
-                "Cum sociis natoque penatibus et magnis dis parturient \n" +
-                "montes, nascetur ridiculus mus. Donec quam felis, \n" +
-                "ultricies nec, pellentesque eu, pretium quis, sem.</p>\n" +
-                "\n" +
-                "<h2>Aenean commodo ligula eget dolor aenean massa</h2>\n" +
-                "\n";
+
+        html= editorController.getHtml();
+
+        List<IElement> elements= HtmlConverter.convertToElements(html);
+
+        for (int i = 0; i < elements.size(); i++)
+        {
+            System.out.println(elements.get(i).toString());
+        }
 
         // create and open  file dialog window
         FileChooser fileChooser = new FileChooser();
@@ -228,8 +246,89 @@ public class FXMLController_VideoEditor
         // get File of chosen pdf path
         File pdf= fileChooser.showSaveDialog(new Stage());
 
+        if (pdf!=null)
+        {
+            PdfReader reader;
+            if (videoPath!=null)
+            {
+                reader= new PdfReader(writeVideo(pdf));
+            }else
+            {
+                reader= new PdfReader(schemaPath);
+            }
 
-        PdfReader reader= new PdfReader(writeVideo(pdf));
+            PdfWriter writer = new PdfWriter(pdf);
+
+            PdfDocument schema= new PdfDocument(reader);
+            PdfDocument resultDoc = new PdfDocument(writer.setSmartMode(true));
+
+            PageSize docSize= resultDoc.getDefaultPageSize();
+
+            Document document = new Document(resultDoc);
+            //document.setMargins(50,40,40,40);
+
+            schema.copyPagesTo(1,1,resultDoc);
+
+            Paragraph titleParagraph= new Paragraph(titleField.getText());
+            titleParagraph.setHorizontalAlignment(HorizontalAlignment.CENTER);
+            titleParagraph.setVerticalAlignment(VerticalAlignment.MIDDLE);
+            titleParagraph.setTextAlignment(TextAlignment.CENTER);
+            titleParagraph.setMarginTop(30);
+            titleParagraph.setFontSize(24);
+
+            PdfCanvas pdfCanvas = new PdfCanvas(resultDoc.getFirstPage());
+
+            Rectangle rectangle = new Rectangle(docSize.getLeft(),docSize.getTop()-150, docSize.getWidth(),100);
+
+            Canvas canvas = new Canvas(pdfCanvas, resultDoc, rectangle);
+
+
+            Paragraph textParagraph = (Paragraph) elements.get(0);
+
+
+
+            //textParagraph.setMargins(50,40,40,40);
+            Rectangle textRec= new Rectangle(docSize.getLeft(),docSize.getBottom(),docSize.getWidth(),400);
+            textRec.applyMargins(50,40,40,40, false);
+
+
+            addParagraph(textParagraph, resultDoc, 1, textRec);
+
+
+
+            canvas.add(titleParagraph);
+            canvas.close();
+            pdfCanvas.release();
+
+
+            resultDoc.close();
+            schema.close();
+            reader.close();
+            writer.close();
+
+            if (temp!=null)
+            {
+                System.out.println(temp.delete());
+
+            }
+        }
+
+    }
+
+    private void writeTextFromElements(File pdfDest, List<IElement> htmlElements) throws IOException
+    {
+        File pdf= pdfDest;
+        List<IElement> elements=htmlElements;
+
+        PdfReader reader;
+        if (videoPath!=null)
+        {
+            reader= new PdfReader(writeVideo(pdf));
+        }else
+        {
+            reader= new PdfReader(schemaPath);
+        }
+
         PdfWriter writer = new PdfWriter(pdf);
 
         PdfDocument schema= new PdfDocument(reader);
@@ -255,13 +354,8 @@ public class FXMLController_VideoEditor
 
         Canvas canvas = new Canvas(pdfCanvas, resultDoc, rectangle);
 
-        /*System.out.println(resultDoc.getDefaultPageSize().getLeft());
-        System.out.println(resultDoc.getDefaultPageSize().getRight());
-        System.out.println(resultDoc.getDefaultPageSize().getTop());
-        System.out.println(resultDoc.getDefaultPageSize().getBottom());*/
 
-
-        Paragraph textParagraph = new Paragraph(text);
+        Paragraph textParagraph = (Paragraph) elements.get(0);
         //textParagraph.setMargins(50,40,40,40);
         Rectangle textRec= new Rectangle(docSize.getLeft(),docSize.getBottom(),docSize.getWidth(),400);
         textRec.applyMargins(50,40,40,40, false);
@@ -269,12 +363,7 @@ public class FXMLController_VideoEditor
 
         addParagraph(textParagraph, resultDoc, 1, textRec);
 
-        //ParagraphRenderer rest = addParagraph(textParagraph, resultDoc, 1, textRec);
 
-
-
-        //restCanvas.getRenderer().addChild(rest.setParent(restCanvas.getRenderer()));
-        //fitString(resultDoc,textParagraph, 1, textRec);
 
         canvas.add(titleParagraph);
         canvas.close();
@@ -287,13 +376,9 @@ public class FXMLController_VideoEditor
         writer.close();
 
         System.out.println(temp.delete());
-
-
-
     }
-
     /**
-     * Adds a paragraph to PdfDocument, splitting overflowing content and adding to new page
+     * Adds a paragraph to PdfDocument, splitting overflowing content and adding it to new pages recursively
      * @param paragraph - Paragraph with content
      * @param pdfDocument - Document to write to
      * @param pageNum - Initial page number
