@@ -895,32 +895,41 @@ public class DataController {
             mainController.setStatus("Editing User...");
             PreparedStatement pst = con.prepareStatement(EDIT_USER);
             con.setAutoCommit(false);
+            User user = new User();
+            user = DBLoadUserById(id);
 
-            if(id != 0) {
-                pst.setInt(8, id);
-            }
+            pst.setInt(8, id);
+
             if(newEmail != null || !newEmail.isBlank() ||!newEmail.equals("")){
                 pst.setString(1, newEmail);
+            }else{
+                pst.setString(1,user.getEmail());
             }
+
             if(newPassword != null || !newPassword.isBlank()|| !newPassword.equals("")){
                 String hashedpw = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
                 pst.setString(2, hashedpw);
+            }else{
+                pst.setString(2,user.getPassword());
             }
             if(newName != null || !newName.isBlank() || !newName.equals("")){
                 pst.setString(3, newName);
+            }else{
+                pst.setString(3,user.getName());
             }
             if(newAddress != null || !newAddress.isBlank()|| !newAddress.equals("")){
                 pst.setString(4, newAddress);
+            }else{
+                pst.setString(4,user.getAddress());
             }
-            if(newGender != 0) {
                 pst.setInt(5, newGender);
-            }
+
             if(newDateOfBirth != null || !newDateOfBirth.isBlank()||!newDateOfBirth.equals("")){
                 pst.setString(6, newDateOfBirth);
+            }else{
+                pst.setString(6,user.getDateOfBirth());
             }
-            if(newRole != 0) {
                 pst.setInt(7, newRole);
-            }
 
 
             int affectedRows = pst.executeUpdate();
