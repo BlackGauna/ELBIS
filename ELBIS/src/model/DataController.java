@@ -310,13 +310,21 @@ public class DataController {
             mainController.setStatus("Creating new User...");
             String hashedpw = BCrypt.hashpw(password, BCrypt.gensalt(12));
             PreparedStatement pst = con.prepareStatement(SEND_NEW_USER);
-            pst.setString(1, email);
-            pst.setString(2, hashedpw);
-            pst.setInt(3, role);
-            pst.setString(4, name);
-            pst.setString(5, address);
-            pst.setInt(6, gender);
-            pst.setString(7, dateOfBirth);
+            User user = DBLoadUserByEmail(email);
+            if(user.getEmail() == email ){
+                mainController.setStatus("User already Exists");
+                System.out.println("User already Exists");
+                con.close();
+                return false;
+            }else{
+                pst.setString(1, email);
+                pst.setString(2, hashedpw);
+                pst.setInt(3, role);
+                pst.setString(4, name);
+                pst.setString(5, address);
+                pst.setInt(6, gender);
+                pst.setString(7, dateOfBirth);
+            }
 
             int affectedRows = pst.executeUpdate();
 
