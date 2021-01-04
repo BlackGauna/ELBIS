@@ -69,9 +69,9 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
         TableColumn editColumn = new TableColumn<Article, Boolean>(" ");
         editColumn.setSortable(false);
         articleTable.getColumns().add(editColumn);
-        TableColumn deleteColumn = new TableColumn<Article, Boolean>(" ");
-        deleteColumn.setSortable(false);
-        articleTable.getColumns().add(deleteColumn);
+        TableColumn deleteArticleColumn = new TableColumn<Article, Boolean>(" ");
+        deleteArticleColumn.setSortable(false);
+        articleTable.getColumns().add(deleteArticleColumn);
 
         userTable.getColumns().add(new TableColumn<User, String>("ID"));
         userTable.getColumns().add(new TableColumn<User, String>("E-Mail"));
@@ -80,6 +80,10 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
         userTable.getColumns().add(new TableColumn<User, String>("Rolle"));
         userTable.getColumns().add(new TableColumn<User, String>("Anschrift"));
         userTable.getColumns().add(new TableColumn<User, String>("Geburtsdatum"));
+        TableColumn deleteUserColumn = new TableColumn<User, Boolean>(" ");
+        deleteUserColumn.setSortable(false);
+        userTable.getColumns().add(deleteUserColumn);
+
         dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }
 

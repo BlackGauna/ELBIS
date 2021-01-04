@@ -299,11 +299,11 @@ public class MainController extends Application {
                     break;
                 case deleteArticle:
                     opensideStage = false;
-                    Alert deleteAlert = new Alert(Alert.AlertType.CONFIRMATION);
-                    deleteAlert.setTitle("Artikel löschen");
-                    deleteAlert.setContentText(" Dies kann nicht rückgängig gemacht werden.");
-                    deleteAlert.setHeaderText("Sind sie sich sicher das sie diesen Artikel löschen möchten?");
-                    Optional<ButtonType> deleteResult = deleteAlert.showAndWait();
+                    Alert deleteArticleAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    deleteArticleAlert.setTitle("Artikel löschen");
+                    deleteArticleAlert.setContentText(" Dies kann nicht rückgängig gemacht werden.");
+                    deleteArticleAlert.setHeaderText("Sind sie sich sicher das sie diesen Artikel löschen möchten?");
+                    Optional<ButtonType> deleteResult = deleteArticleAlert.showAndWait();
                     if (deleteResult.get() == ButtonType.OK) {
                         dc.DBDeleteArticle(id);
                         setStatus("Artikel "+id+" gelöscht.");
@@ -344,6 +344,20 @@ public class MainController extends Application {
                     manageSubmissionController.setArticleId(id);
                     sideScene = new Scene(manageSubmissionPane);
                     title = "Nutzererstellung";
+                    break;
+                case deleteUser:
+                    opensideStage = false;
+                    Alert deleteUserAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    deleteUserAlert.setTitle("Nutzer löschen");
+                    deleteUserAlert.setContentText("Dies kann nicht rückgängig gemacht werden.");
+                    deleteUserAlert.setHeaderText("Sind sie sich sicher das sie diesen Nutzer löschen möchten?");
+                    Optional<ButtonType> deleteUserResult = deleteUserAlert.showAndWait();
+                    if (deleteUserResult.get() == ButtonType.OK) {
+                        dc.DBDeleteUser(id);
+                        setStatus("Nutzer "+id+" gelöscht.");
+                    } else {
+                        setStatus("Aktion abgebrochen.");
+                    }
                     break;
             }
             if (opensideStage == true) {
@@ -436,13 +450,26 @@ public class MainController extends Application {
         /*
         //TODO add buttonpanel to delete and edit (JUST) users per user in table
         */
+        MainController maincontroller = this;
         ObservableList<User> userList = dc.DBLoadAllUsers();
         // Getter from User Class
         List<String> propertyKeys = Arrays.asList("id", "email", "name", "gender", "role", "address", "dateOfBirth");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String) (propertyKeys.get(i))));
+            //Check if button column reached
+            if (i == 7) {
+                //createButton via modded Cell class TableActionCell (usable for article Tables)
+                ((TableColumn<User, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>>() {
+                    @Override
+                    public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
+                        return new ActionCell_UserTable(maincontroller, "Löschen", sideStageState.deleteUser);
+                    }
+                });
+            }
+            else {
+                //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
+                ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String) (propertyKeys.get(i))));
+            }
         }
         table.setItems(userList);
         //Test if table is empty

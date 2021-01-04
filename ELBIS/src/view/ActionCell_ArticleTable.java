@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
 import model.Article;
+import model.Status;
 
 public class ActionCell_ArticleTable extends TableCell<Article, Boolean> {
 
@@ -33,6 +34,9 @@ public class ActionCell_ArticleTable extends TableCell<Article, Boolean> {
         super.updateItem(item, empty);
         if (!empty) {
             hisArticle = (Article) getTableView().getItems().get(getIndex());
+            if(hisArticle.getStatus() == Status.Eingereicht && btn.getText().equals("Herausgeben")){
+                btn.setDisable(true);
+            }
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             setGraphic(btn);
         } else {
