@@ -453,7 +453,6 @@ public class MainController extends Application {
         for (int i = 0; i < table.getColumns().size(); i++) {
             //Check if button column reached
             if (i == 7) {
-                //createButton via modded Cell class TableActionCell (usable for article Tables)
                 ((TableColumn<User, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>>() {
                     @Override
                     public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
@@ -461,7 +460,6 @@ public class MainController extends Application {
                     }
                 });
             }else if (i == 8) {
-                //createButton via modded Cell class TableActionCell (usable for article Tables)
                 ((TableColumn<User, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>>() {
                     @Override
                     public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
@@ -557,13 +555,25 @@ public class MainController extends Application {
     }
 
     public TableView refreshAdministrationContent_TopicTable(TableView table) {
+        MainController maincontroller = this;
         ObservableList<Topic> topicList = dc.DBLoadAllTopics();
         // Getter from User Class
         List<String> propertyKeys = Arrays.asList("id", "name", "parentTopicString");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            //setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((String) (propertyKeys.get(i))));
+            //Check if button column reached
+            if (i == 3) {
+                ((TableColumn<Topic, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Topic, Boolean>, TableCell<Topic, Boolean>>() {
+                    @Override
+                    public TableCell<Topic, Boolean> call(TableColumn<Topic, Boolean> BooleanTableColumn) {
+                        return new ActionCell_TopicTable(maincontroller, "editme", sideStageState.editArticle);
+                    }
+                });
+            }
+            else {
+                //setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
+                ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((String) (propertyKeys.get(i))));
+            }
         }
         table.setItems(topicList);
         //Test if table is empty
@@ -688,7 +698,9 @@ public class MainController extends Application {
         }
 
         //TODO update an actual User
-        //result = dc.DBEditUser(id, email, password, name , address, genderInt,dateOfBirth, roleInt);
+        setStatus("TRIED TO EDIT USER###############################################\n"+
+                id + email + password +name);
+        result = dc.DBEditUser(id, email, password, name , address, genderInt,dateOfBirth, roleInt);
 
         return result;
     }
