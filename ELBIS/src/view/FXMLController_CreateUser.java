@@ -38,17 +38,21 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
     @FXML
     void okClicked(ActionEvent event) {
         try {
-            //TODO throw exception if any field is empty
-            mainController.createUser(getEmail(), getPassword(), getName(), getGender(), getRole(), getAddress(), getBirth());
+            if(!getEmail().equals("") && !getPassword().equals("")&& !getName().equals("")&& !getGender().equals("")&&!getRole().equals("")&& !getAddress().equals("")&& !getBirth().equals("")){
+                mainController.createUser(getEmail(), getPassword(), getName(), getGender(), getRole(), getAddress(), getBirth());
+                mainController.sideStage.close();
+            } else{
+            throw new Exception("Empty field noticed");
+            }
         } catch(Exception e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Achtung");
             alert.setContentText("Bitte überprüfen sie ihre Eingaben auf Vollständigkeit");
             alert.setHeaderText(null);
             alert.showAndWait();
-            e.printStackTrace();
+            //e.printStackTrace();
         } finally{
-            mainController.sideStage.close();
+
         }
     }
 
