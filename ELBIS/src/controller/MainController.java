@@ -86,6 +86,7 @@ public class MainController extends Application {
         applicationStage.setTitle("Verwaltung");
         applicationStage.setMinHeight(840); //DONT CHANGE
         applicationStage.setMinWidth(1220); //DONT CHANGE
+        applicationStage.setMaximized(true);
         editorStage = new Stage(); // Editor Window
         sideStage = new Stage();
         sideStage.setResizable(false);
@@ -182,7 +183,7 @@ public class MainController extends Application {
         if (login) {
             activeUser = dc.DBLoadUserByEmail(email);
             activeUser.setTopics(dc.DBLoadAllowedTopics(activeUser.getId()));
-            setStatus("Logged in \"" + activeUser.getEmail() + "\" with password \"" + activeUser.getPassword() + "\"");
+            setStatus("Logged in \"" + activeUser.getEmail());
             mainApplicationController.openTabs(activeUser);
             openApplicationStage();
         } else if (!login) {
@@ -194,18 +195,6 @@ public class MainController extends Application {
         }
         return login;
     }
-
-    public boolean submitArticle(int articleID, Status status, String comment){
-        boolean submitted = false;
-        //TODO update an article
-        Article article = dc.DBLoadArticle(articleID);
-        article.setStatus(status);
-        article.setPublisherComment(comment);
-        dc.DBEditArticle(article);
-        setStatus("Artikel "+articleID+" wurde: "+status.toString());
-        return submitted;
-    }
-
     /*****************************
      *
      * OPen-Up Methods
@@ -238,8 +227,7 @@ public class MainController extends Application {
         selectorStage.close();
     }
 
-    public void openEditorforVideo()
-    {
+    public void openEditorforVideo() {
         editorController.openVideoEditor();
         editorStage.show();
     }
@@ -266,6 +254,7 @@ public class MainController extends Application {
                     createUserPane = (Pane) sideLoader.load();
                     createUserController = sideLoader.getController();
                     createUserController.setMainController(this);
+                    createUserController.setUserID(0);
                     sideScene = new Scene(createUserPane);
                     title = "Nutzererstellung";
                     break;
@@ -306,7 +295,7 @@ public class MainController extends Application {
                     Optional<ButtonType> deleteResult = deleteArticleAlert.showAndWait();
                     if (deleteResult.get() == ButtonType.OK) {
                         dc.DBDeleteArticle(id);
-                        setStatus("Artikel "+id+" gelöscht.");
+                        setStatus("Artikel " + id + " gelöscht.");
                     } else {
                         setStatus("Aktion abgebrochen.");
                     }
@@ -354,10 +343,21 @@ public class MainController extends Application {
                     Optional<ButtonType> deleteUserResult = deleteUserAlert.showAndWait();
                     if (deleteUserResult.get() == ButtonType.OK) {
                         dc.DBDeleteUser(id);
-                        setStatus("Nutzer "+id+" gelöscht.");
+                        setStatus("Nutzer " + id + " gelöscht.");
                     } else {
                         setStatus("Aktion abgebrochen.");
                     }
+                    break;
+                case editUser:
+                    //Calls new User Pane and checks differencies
+                    //TODO does DB check diffe
+                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateUser.fxml"));
+                    createUserPane = (Pane) sideLoader.load();
+                    createUserController = sideLoader.getController();
+                    createUserController.setMainController(this);
+                    createUserController.setUserID(id);
+                    sideScene = new Scene(createUserPane);
+                    title = "Nutzerbearbeitung";
                     break;
             }
             if (opensideStage == true) {
@@ -431,7 +431,7 @@ public class MainController extends Application {
 
         List<String> propertyKeys = Arrays.asList("id", "name", "parentTopicString");
 
-        for (int i = 0; i<table.getColumns().size(); i++){
+        for (int i = 0; i < table.getColumns().size(); i++) {
             //setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
             ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((String) (propertyKeys.get(i))));
         }
@@ -441,8 +441,6 @@ public class MainController extends Application {
         if (table.getItems().size() == 0) {
             setStatus("Warning: Empty TopicTable loaded?");
         }
-
-
         return table;
     }
 
@@ -463,6 +461,14 @@ public class MainController extends Application {
                     @Override
                     public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
                         return new ActionCell_UserTable(maincontroller, "Löschen", sideStageState.deleteUser);
+                    }
+                });
+            }else if (i == 8) {
+                //createButton via modded Cell class TableActionCell (usable for article Tables)
+                ((TableColumn<User, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>>() {
+                    @Override
+                    public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
+                        return new ActionCell_UserTable(maincontroller, "Bearbeiten", sideStageState.editUser);
                     }
                 });
             }
@@ -495,15 +501,14 @@ public class MainController extends Application {
                         return new ActionCell_ArticleTable(maincontroller, "Öffnen", sideStageState.editArticle);
                     }
                 });
-            } else if ( i == 11){
+            } else if (i == 11) {
                 ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
                     @Override
                     public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
                         return new ActionCell_ArticleTable(maincontroller, "Verwalten", sideStageState.manageSubmission);
                     }
                 });
-            }
-            else {
+            } else {
                 //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
             }
@@ -540,11 +545,10 @@ public class MainController extends Application {
                         return new ActionCell_ArticleTable(maincontroller, "Löschen", sideStageState.deleteArticle);
                     }
                 });
+            } else {
+                //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
+                ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
             }
-                else {
-                    //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-                    ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
-                }
 
         }
         table.setItems(articleList);
@@ -620,8 +624,6 @@ public class MainController extends Application {
         } else if (role.equals("User")) {
             roleInt = 3;
         }
-
-        //TODO send actual User
         result = dc.DBSendNewUser(email, password, name, genderInt, roleInt, address, dateOfBirth);
 
         return result;
@@ -656,6 +658,46 @@ public class MainController extends Application {
      *
      ******************************/
 
+    public boolean submitArticle(int articleID, Status status, String comment) {
+        boolean submitted = false;
+        //TODO update an article
+        Article article = dc.DBLoadArticle(articleID);
+        article.setStatus(status);
+        article.setPublisherComment(comment);
+        dc.DBEditArticle(article);
+        setStatus("Artikel " + articleID + " wurde: " + status.toString());
+        return submitted;
+    }
+
+    public boolean editUser(int id,String email, String password, String name, String gender, String role, String address, String dateOfBirth) {
+        boolean result = false;
+        User editedUser = dc.DBLoadUserById(id);
+
+        int genderInt = 0;
+        if (gender.equals("Maennlich")) {
+            genderInt = 1;
+        } else if (gender.equals("Weiblich")) {
+            genderInt = 2;
+        } else if (gender.equals("Divers")) {
+            genderInt = 3;
+        }
+
+        int roleInt = 0;
+        if (role.equals("Admin")) {
+            roleInt = 1;
+        } else if (role.equals("Moderator")) {
+            roleInt = 2;
+        } else if (role.equals("User")) {
+            roleInt = 3;
+        }
+
+        //TODO update an actual User
+        //result = dc.DBEditUser(id, email, password, name , address, genderInt,dateOfBirth, roleInt);
+
+        return result;
+    }
+
+
     public boolean saveArticle(Article article) {
         boolean result = false;
         if (article.getId() == 0) {
@@ -676,8 +718,7 @@ public class MainController extends Application {
         return topics;
     }
 
-    public Topic getTopic(int topicId)
-    {
+    public Topic getTopic(int topicId) {
         return dc.DBLoadTopic(topicId);
     }
 
