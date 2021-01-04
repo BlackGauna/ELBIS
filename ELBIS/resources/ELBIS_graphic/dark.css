@@ -51,6 +51,10 @@
     -fx-font-weight: none;
 }
 
+.table-row-cell {
+    -fx-cell-size: 24px;
+}
+
 .list-cell:even,
 .list-cell:odd,
 .table-row-cell:even,

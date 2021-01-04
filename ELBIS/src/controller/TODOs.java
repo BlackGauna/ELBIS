@@ -7,6 +7,9 @@ public class TODOs {
     TODO add buttons
         TODO ... to delete Users (Moderator) (ONLY USERS CAN BE DELETED BY AN MODERATOR)
         TODO ... to manage user Roles (Admin)
+        TODO ... to show Comment
+
+    TODO on Articlesave and edit a wrong topic gets saved
 
     TODO make sure relogin reloads everything properly (empty login fields on logout)
     TODO check db boolean on create User if e-mail already exists
@@ -14,7 +17,6 @@ public class TODOs {
     TODO create useful setStatus
 
     TODO maybe - wenn ein Artikel autorisiert wurde ist er vom User veröffentlichbar?
-    TODO maybe - Buttons nicht mehr anklickbar wenn bereits autorisiert?
     TODO maybe - show the count of articles under a specific topic on topic views (count articles per topic)
      */
 

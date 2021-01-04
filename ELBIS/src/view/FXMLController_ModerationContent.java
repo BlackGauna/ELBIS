@@ -48,7 +48,9 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
         submissionTable.getColumns().add(new TableColumn<Article, String>("Bereich"));
         submissionTable.getColumns().add(new TableColumn<Article, String>("Autor"));
         submissionTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
-        submissionTable.getColumns().add(new TableColumn<Article, String>("Herausgeber Kommentar"));
+        TableColumn commentColumn = new TableColumn<Article, Boolean>("Herausgeber Kommentar");
+        commentColumn.setPrefWidth(150);
+        submissionTable.getColumns().add(commentColumn);
         TableColumn openColumn = new TableColumn<Article, Boolean>(" ");
         openColumn.setSortable(false);
         submissionTable.getColumns().add(openColumn);
@@ -65,13 +67,18 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
         articleTable.getColumns().add(new TableColumn<Article, String>("Bereich"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Autor"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
-        articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber Kommentar"));
+        TableColumn commentColumn2 = new TableColumn<Article, Boolean>("Herausgeber Kommentar");
+        commentColumn2.setPrefWidth(150);
+        articleTable.getColumns().add(commentColumn2);
         TableColumn editArticleColumn = new TableColumn<Article, Boolean>(" ");
         editArticleColumn.setSortable(false);
         articleTable.getColumns().add(editArticleColumn);
         TableColumn deleteArticleColumn = new TableColumn<Article, Boolean>(" ");
         deleteArticleColumn.setSortable(false);
         articleTable.getColumns().add(deleteArticleColumn);
+        TableColumn showCommentColumn2 = new TableColumn<Article, Boolean>(" ");
+        showCommentColumn2.setSortable(false);
+        articleTable.getColumns().add(showCommentColumn2);
 
         userTable.getColumns().add(new TableColumn<User, String>("ID"));
         userTable.getColumns().add(new TableColumn<User, String>("E-Mail"));

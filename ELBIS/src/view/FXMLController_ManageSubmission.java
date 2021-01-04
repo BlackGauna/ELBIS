@@ -13,7 +13,7 @@ public class FXMLController_ManageSubmission extends ELBIS_FXMLController {
 
     // UI_______________________________________________________________________________________________________
     @FXML
-    private TextArea txtComment;
+    private TextField txtComment;
 
     @FXML
     private Button btnAuthorize;

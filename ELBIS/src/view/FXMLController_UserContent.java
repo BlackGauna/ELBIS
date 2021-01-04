@@ -46,7 +46,9 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
         articleTable.getColumns().add(new TableColumn<Article, String>("Topic"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Autor"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
-        articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber Kommentar"));
+        TableColumn commentColumn = new TableColumn<Article, Boolean>("Herausgeber Kommentar");
+        commentColumn.setPrefWidth(150);
+        articleTable.getColumns().add(commentColumn);
         TableColumn editColumn = new TableColumn<Article, Boolean>(" ");
         editColumn.setSortable(false);
         articleTable.getColumns().add(editColumn);
@@ -56,6 +58,9 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
         TableColumn submitColumn = new TableColumn<Article, Boolean>(" ");
         submitColumn.setSortable(false);
         articleTable.getColumns().add(submitColumn);
+        TableColumn showCommentColumn = new TableColumn<Article, Boolean>(" ");
+        showCommentColumn.setSortable(false);
+        articleTable.getColumns().add(showCommentColumn);
 
         topicTable.getColumns().add(new TableColumn<Topic, String>("ID"));
         topicTable.getColumns().add(new TableColumn<Topic, String>("Bereich"));

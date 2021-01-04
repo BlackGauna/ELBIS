@@ -2,14 +2,14 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_ManageSubmission">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="146.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_ManageSubmission">
    <children>
-      <TextArea fx:id="txtComment" layoutX="14.0" layoutY="37.0" prefHeight="302.0" prefWidth="573.0" />
       <Label layoutX="12.0" layoutY="14.0" text="Kommentar zu Entscheidung eingeben:" />
-      <Button fx:id="btnAuthorize" layoutX="170.0" layoutY="361.0" mnemonicParsing="false" onAction="#authorizeClicked" text="Beitrag Autorisieren" />
-      <Button fx:id="btnDecline" layoutX="306.0" layoutY="361.0" mnemonicParsing="false" onAction="#declineClicked" text="Beitrag Ablehnen" />
+      <Button fx:id="btnAuthorize" layoutX="165.0" layoutY="92.0" mnemonicParsing="false" onAction="#authorizeClicked" text="Beitrag Autorisieren" />
+      <Button fx:id="btnDecline" layoutX="301.0" layoutY="92.0" mnemonicParsing="false" onAction="#declineClicked" text="Beitrag Ablehnen" />
+      <TextField fx:id="txtComment" layoutX="14.0" layoutY="38.0" prefHeight="25.0" prefWidth="564.0" />
    </children>
 </Pane>

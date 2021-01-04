@@ -34,7 +34,7 @@ public class ActionCell_ArticleTable extends TableCell<Article, Boolean> {
         super.updateItem(item, empty);
         if (!empty) {
             hisArticle = (Article) getTableView().getItems().get(getIndex());
-            if(hisArticle.getStatus() == Status.Eingereicht && btn.getText().equals("Herausgeben")){
+            if((hisArticle.getStatus() == Status.Eingereicht || hisArticle.getStatus() == Status.Autorisiert || hisArticle.getStatus() == Status.Öffentlich) && btn.getText().equals("Herausgeben")){
                 btn.setDisable(true);
             }
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);

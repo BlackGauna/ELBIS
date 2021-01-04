@@ -54,7 +54,8 @@ public class FXMLController_Save
         statusChoice.getItems().addAll(Status.values());
         statusChoice.getSelectionModel().selectFirst();
 
-        topics= mainController.getAllTopics();
+        //topics= mainController.getAllTopics();
+        topics = mainController.getActiveUser().getTopics();
         topicChoice.getItems().addAll(topics);
 
         // Test for all Topics

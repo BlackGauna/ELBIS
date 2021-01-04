@@ -14,4 +14,5 @@ public enum sideStageState {
     deleteArticle,
     userSubmit,
     manageSubmission,
+    showComment
 }

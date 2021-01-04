@@ -22,7 +22,6 @@ import java.util.Optional;
 
 public class MainController extends Application {
 
-
     private static Connection con;
     public Stage sideStage;
     // Atrrib_______________________________________________________________________________________________________
@@ -189,9 +188,11 @@ public class MainController extends Application {
         if (login) {
             activeUser = dc.DBLoadUserByEmail(email);
             if(activeUser instanceof Moderator || activeUser instanceof Administrator){
+                System.out.println("ALL TOPICS#############################################");
                 activeUser.setTopics(dc.DBLoadAllTopics());
             }
             else{
+                System.out.println("JUST SOME TOPICS#############################################");
                 activeUser.setTopics(dc.DBLoadAllowedTopics(activeUser.getId()));
             }
             setStatus("Logged in \"" + activeUser.getEmail());
@@ -403,6 +404,25 @@ public class MainController extends Application {
                     sideScene = new Scene(createTopicPane);
                     title = "Bereichsbearbeitung";
                     break;
+                case showComment:
+                    opensideStage = false;
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Kommentar Anzeigen");
+
+                    TextArea statusArea = new TextArea();
+                    statusArea.setWrapText(true);
+                    statusArea.setEditable(false);
+
+                    statusArea.setText(dc.DBLoadArticle(id).getPublisherComment());
+
+                    alert.getDialogPane().setContent(statusArea);
+                    alert.setResizable(true);
+
+                    alert.setHeaderText("Herausgeberkommentar");
+                    statusArea.selectPositionCaret(statusArea.getLength());
+                    statusArea.deselect();
+                    alert.showAndWait();
+                    break;
             }
             if (opensideStage == true) {
                 sideStage.setTitle(title);
@@ -452,11 +472,19 @@ public class MainController extends Application {
                 ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
                     @Override
                     public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
-                        //TODO fix userSubmit
                         return new ActionCell_ArticleTable(maincontroller, "Herausgeben", sideStageState.userSubmit);
                     }
                 });
-            } else {
+            } else if (i == 13) {
+                //deletebutton
+                ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
+                    @Override
+                    public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
+                        return new ActionCell_ArticleTable(maincontroller, "Kommentar anzeigen", sideStageState.showComment);
+                    }
+                });
+            }
+         else {
                 //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
             }
@@ -471,7 +499,8 @@ public class MainController extends Application {
 
     public TableView refreshUserContent_TopicTable(TableView table) {
 
-        ObservableList<Topic> topicList = dc.DBLoadAllowedTopics(activeUser.getId());
+        //ObservableList<Topic> topicList = dc.DBLoadAllowedTopics(activeUser.getId());
+        ObservableList<Topic> topicList = activeUser.getTopics();
 
         List<String> propertyKeys = Arrays.asList("id", "name", "parent");
 
@@ -555,7 +584,8 @@ public class MainController extends Application {
                         return new ActionCell_ArticleTable(maincontroller, "Verwalten", sideStageState.manageSubmission);
                     }
                 });
-            } else {
+            }
+            else {
                 //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
             }
@@ -592,7 +622,16 @@ public class MainController extends Application {
                         return new ActionCell_ArticleTable(maincontroller, "Löschen", sideStageState.deleteArticle);
                     }
                 });
-            } else {
+            } else if (i == 12) {
+                //deletebutton
+                ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
+                    @Override
+                    public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
+                        return new ActionCell_ArticleTable(maincontroller, "Kommentar anzeigen", sideStageState.showComment);
+                    }
+                });
+            }
+            else {
                 //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
             }
@@ -720,15 +759,6 @@ public class MainController extends Application {
             roleInt = 0;
         }
 
-        //TODO update an actual User
-        setStatus("Edited User with information:");
-        setStatus("id: "+ id);
-        setStatus("email: "+ email);
-        setStatus("name: "+name);
-        setStatus("address: "+address);
-        setStatus("genderInt: "+genderInt);
-        setStatus("dob: " +dateOfBirth);
-        setStatus("roleInt: "+roleInt);
         result = dc.DBEditUser(id, email, name , address, genderInt,dateOfBirth, roleInt);
 
         return result;
@@ -783,6 +813,7 @@ public class MainController extends Application {
         Article article = dc.DBLoadArticle(articleID);
         article.setStatus(status);
         article.setPublisherComment(comment);
+        article.setPublisher(activeUser);
         dc.DBEditArticle(article);
         setStatus("Artikel " + articleID + " wurde: " + status.toString());
         return submitted;
@@ -812,12 +843,6 @@ public class MainController extends Application {
         }
 
         return result;
-    }
-
-    public ObservableList<Topic> getAllTopics() {
-        ObservableList<Topic> topics = dc.DBLoadAllowedTopics(activeUser.getId());
-
-        return topics;
     }
 
     public Topic getTopic(int topicId) {
