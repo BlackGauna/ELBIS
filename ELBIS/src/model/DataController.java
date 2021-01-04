@@ -831,8 +831,9 @@ public class DataController {
     }
 
     //Edit a topic
-    public boolean DBEditTopic(int id, String newName, String newParentTopic) {
+    public boolean DBEditTopic(int id, String newName, int newParentTopic) {
         try {
+            Topic topic = DBLoadTopic(id);
             con = SQLConnection.ConnectDB();
             assert con != null;
             mainController.setStatus("Editing Topic...");
@@ -840,9 +841,17 @@ public class DataController {
             con.setAutoCommit(false);
 
             pst.setInt(3, id);
-            pst.setString(1, newName);
-            pst.setString(2, newParentTopic);
 
+            if(!newName.isBlank()) {
+                pst.setString(1, newName);
+            }else{
+                pst.setString(1,topic.getName());
+            }
+            if(newParentTopic != 0) {
+                pst.setInt(2, newParentTopic);
+            }else{
+                pst.setInt(2,topic.getParentTopic());
+            }
             int affectedRecords = pst.executeUpdate();
 
             if (affectedRecords == 1) {
@@ -919,13 +928,21 @@ public class DataController {
             }else{
                 pst.setString(3,user.getAddress());
             }
+            if(newGender != 0) {
                 pst.setInt(4, newGender);
+            }else{
+                pst.setInt(4,user.getGenderAsInt());
+            }
             if(!newDateOfBirth.isBlank()){
                 pst.setString(5, newDateOfBirth);
             }else{
                 pst.setString(5,user.getDateOfBirth());
             }
+            if(newRole != 0) {
                 pst.setInt(6, newRole);
+            }else{
+                pst.setInt(6,user.getRoleAsInt());
+            }
 
 
             int affectedRows = pst.executeUpdate();
