@@ -6,23 +6,20 @@ public class TODOs {
     /*
     TODO add buttons
         TODO ... to delete Users (Moderator) (ONLY USERS CAN BE DELETED BY AN MODERATOR)
-        TODO ... to change Passwords
         TODO ... to manage user Roles (Admin)
 
-    TODO maybe show the count of articles under a specific topic on topic views (count articles per topic)
-    TODO make sure relogin reloads everything properly (NO BUGS SO FAR)
-    TODO empty login fields on logout (create new LoginView)
-    TODO Fix Topic DataClass
+    TODO make sure relogin reloads everything properly (empty login fields on logout)
+    TODO check db boolean on create User if e-mail already exists
+    TODO clear setStatus
+    TODO create useful setStatus
 
     TODO maybe - wenn ein Artikel autorisiert wurde ist er vom User veröffentlichbar?
     TODO maybe - Buttons nicht mehr anklickbar wenn bereits autorisiert?
+    TODO maybe - show the count of articles under a specific topic on topic views (count articles per topic)
      */
 
     //_____DB_____
     /*
-    TODO Update loadUser methods to update the topic List of a user
-    TODO solution for editUser on empty fields *OR* Force user to retype any information on editing a user
-    TODO check if Email is already used on User creation -> maybe open alert if already used? *OR* throw custom Exception
      */
 
     //_____UI_____
@@ -30,8 +27,6 @@ public class TODOs {
     TODO create SideView
         TODO ... to edit state of an article
         TODO ... to degrade and promote Users
-        TODO ... to submit an article
-    TODO just sent side-view content when all fields are filled
     TODO Switch software-Mode
      */
 }

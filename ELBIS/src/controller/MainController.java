@@ -188,7 +188,12 @@ public class MainController extends Application {
         boolean login = dc.login(email, pw);
         if (login) {
             activeUser = dc.DBLoadUserByEmail(email);
-            activeUser.setTopics(dc.DBLoadAllowedTopics(activeUser.getId()));
+            if(activeUser instanceof Moderator || activeUser instanceof Administrator){
+                activeUser.setTopics(dc.DBLoadAllTopics());
+            }
+            else{
+                activeUser.setTopics(dc.DBLoadAllowedTopics(activeUser.getId()));
+            }
             setStatus("Logged in \"" + activeUser.getEmail());
             mainApplicationController.openTabs(activeUser);
             openApplicationStage();
@@ -268,6 +273,7 @@ public class MainController extends Application {
                     createTopicPane = (Pane) sideLoader.load();
                     createTopicController = sideLoader.getController();
                     createTopicController.setMainController(this);
+                    createTopicController.setTopicID(0);
                     sideScene = new Scene(createTopicPane);
                     title = "Bereichserstellung";
                     break;
@@ -386,6 +392,17 @@ public class MainController extends Application {
                     sideScene = new Scene(changePasswordPane);
                     title = "Nutzer-Passwort ändern";
                     break;
+                case editTopic:
+                    //use createTopic to edit via id
+                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateTopic.fxml"));
+                    createTopicPane = (Pane) sideLoader.load();
+                    createTopicController = sideLoader.getController();
+                    createTopicController.setMainController(this);
+                    createTopicController.setTopicID(id);
+                    createTopicController.setCurrentTopic(dc.DBLoadTopic(id));
+                    sideScene = new Scene(createTopicPane);
+                    title = "Bereichsbearbeitung";
+                    break;
             }
             if (opensideStage == true) {
                 sideStage.setTitle(title);
@@ -456,7 +473,7 @@ public class MainController extends Application {
 
         ObservableList<Topic> topicList = dc.DBLoadAllowedTopics(activeUser.getId());
 
-        List<String> propertyKeys = Arrays.asList("id", "name", "parentTopicString");
+        List<String> propertyKeys = Arrays.asList("id", "name", "parent");
 
         for (int i = 0; i < table.getColumns().size(); i++) {
             //setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
@@ -593,11 +610,18 @@ public class MainController extends Application {
         MainController maincontroller = this;
         ObservableList<Topic> topicList = dc.DBLoadAllTopics();
         // Getter from User Class
-        List<String> propertyKeys = Arrays.asList("id", "name", "parentTopicString");
+        List<String> propertyKeys = Arrays.asList("id", "name", "parent");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             //Check if button column reached
             if (i == 3) {
+                ((TableColumn<Topic, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Topic, Boolean>, TableCell<Topic, Boolean>>() {
+                    @Override
+                    public TableCell<Topic, Boolean> call(TableColumn<Topic, Boolean> BooleanTableColumn) {
+                        return new ActionCell_TopicTable(maincontroller, "Bearbeiten", sideStageState.editTopic);
+                    }
+                });
+            }else if (i == 4) {
                 ((TableColumn<Topic, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Topic, Boolean>, TableCell<Topic, Boolean>>() {
                     @Override
                     public TableCell<Topic, Boolean> call(TableColumn<Topic, Boolean> BooleanTableColumn) {
@@ -640,7 +664,7 @@ public class MainController extends Application {
 
     /******************************
      *
-     *  Creation methods
+     *  Creation and edit methods
      *
      ******************************/
 
@@ -667,58 +691,6 @@ public class MainController extends Application {
         }
         result = dc.DBSendNewUser(email, password, name, genderInt, roleInt, address, dateOfBirth);
 
-        return result;
-    }
-
-    public boolean createArticle(Article article) {
-        boolean result = false;
-        result = dc.DBSendNewArticle(article);
-        return result;
-    }
-
-    public boolean createTopic(String name, String parent) {
-        boolean result = false;
-
-        int topicInt = 0;
-
-        if (parent.equals("Organisationen")) {
-            topicInt = 1;
-        } else if (parent.equals("Gemeinde")) {
-            topicInt = 2;
-        } else if (parent.equals("Industrie")) {
-            topicInt = 3;
-        }
-
-        dc.DBSendNewTopic(name, topicInt);
-        return result;
-    }
-
-    /******************************
-     *
-     * Other
-     *
-     ******************************/
-
-    public boolean submitArticle(int articleID, Status status, String comment) {
-        boolean submitted = false;
-        //TODO update an article
-        Article article = dc.DBLoadArticle(articleID);
-        article.setStatus(status);
-        article.setPublisherComment(comment);
-        dc.DBEditArticle(article);
-        setStatus("Artikel " + articleID + " wurde: " + status.toString());
-        return submitted;
-    }
-
-    public boolean changePassword(int userID,String password){
-        boolean result = false;
-        try{
-            setStatus("Password to: "+ password);
-            result = dc.DBChangePassword(userID, password);
-        } catch (SQLException sql){
-            sql.printStackTrace();
-        } finally{
-        }
         return result;
     }
 
@@ -757,12 +729,76 @@ public class MainController extends Application {
         setStatus("genderInt: "+genderInt);
         setStatus("dob: " +dateOfBirth);
         setStatus("roleInt: "+roleInt);
-        //TODO make editUser work properly
         result = dc.DBEditUser(id, email, name , address, genderInt,dateOfBirth, roleInt);
 
         return result;
     }
 
+    public boolean createArticle(Article article) {
+        boolean result = false;
+        result = dc.DBSendNewArticle(article);
+        return result;
+    }
+
+    public boolean createTopic(String name, String parent) {
+        boolean result = false;
+        ObservableList<Topic> topicList = dc.DBLoadAllTopics();
+        Topic currentTopic;
+        int topicInt = 0;
+
+        for(int i = 0; i<topicList.size(); i++){
+            currentTopic = topicList.get(i);
+            if (currentTopic.getName().equals(parent)){
+                topicInt = currentTopic.getId();
+            }
+        }
+        dc.DBSendNewTopic(name, topicInt);
+        return result;
+    }
+    public boolean editTopic(int id, String name, String parent) {
+
+        boolean result = false;
+        ObservableList<Topic> topicList = dc.DBLoadAllTopics();
+        Topic currentTopic;
+        int topicInt = 0;
+
+        for(int i = 0; i<topicList.size(); i++){
+            currentTopic = topicList.get(i);
+            if (currentTopic.getName().equals(parent)){
+                topicInt = currentTopic.getId();
+            }
+        }
+        result = dc.DBEditTopic(id,name,topicInt);
+        return result;
+    }
+
+    /******************************
+     *
+     * Other
+     *
+     ******************************/
+
+    public boolean submitArticle(int articleID, Status status, String comment) {
+        boolean submitted = false;
+        Article article = dc.DBLoadArticle(articleID);
+        article.setStatus(status);
+        article.setPublisherComment(comment);
+        dc.DBEditArticle(article);
+        setStatus("Artikel " + articleID + " wurde: " + status.toString());
+        return submitted;
+    }
+
+    public boolean changePassword(int userID,String password){
+        boolean result = false;
+        try{
+            setStatus("Password to: "+ password);
+            result = dc.DBChangePassword(userID, password);
+        } catch (SQLException sql){
+            sql.printStackTrace();
+        } finally{
+        }
+        return result;
+    }
 
     public boolean saveArticle(Article article) {
         boolean result = false;
@@ -792,6 +828,7 @@ public class MainController extends Application {
     public User getActiveUser() {
         return activeUser;
     }
+
 
 
 }

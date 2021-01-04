@@ -4,27 +4,18 @@ public class Topic {
     // Atrrib_______________________________________________________________________________________________________
     private int id;
     private String name;
-    private int parentTopic;
-    private String parentTopicString;
-
     private Topic parent;
 
 
-
     // Ctor_______________________________________________________________________________________________________
-    public Topic(int id, String name, int parentTopic) {
+
+    public Topic(int id, String name, Topic parentTopic) {
         this.id = id;
         this.name = name;
-        this.parentTopic = parentTopic;
+        this.parent = parentTopic;
     }
 
-    public Topic(int id, String name, String parentTopic) {
-        this.id = id;
-        this.name = name;
-        this.parentTopicString = parentTopic;
-    }
-
-    public Topic(){
+    public Topic() {
 
     }
 
@@ -45,34 +36,27 @@ public class Topic {
         this.name = name;
     }
 
-    public int getParentTopic() {
-        return parentTopic;
+    public int getParentID() {
+        return parent.getId();
     }
 
-    public void setParentTopic(int parentTopic) {
-        this.parentTopic = parentTopic;
+    public void setParent(Topic parentTopic) {
+        this.parent = parentTopic;
     }
 
-    public Topic getParent()
-    {
+    public Topic getParent() {
         return parent;
     }
 
-    public void setParent(Topic parent)
-    {
-        this.parent = parent;
-    }
-
-    public String getParentTopicString() {
-        return parentTopicString;
+    public String getParentName() {
+        return parent.getName();
     }
 
     // Methods_________________________________________________________________________________________________________
 
     // for ChoiceBox in save prompt of editor
     @Override
-    public String toString()
-    {
+    public String toString() {
         return name;
     }
 }

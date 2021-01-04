@@ -189,7 +189,7 @@ public class DataController {
             "JOIN user u ON a.userId = u.id " +
             "WHERE a.topicId = ";
     //Load all topics
-    public static final String LOAD_ALL_TOPICS = "SELECT t2.id, t2.name, t1.name from Topic t2 "
+    public static final String LOAD_ALL_TOPICS = "SELECT t2.id, t2.name, t1.id from Topic t2 "
             + "LEFT JOIN Topic t1 on t1.id=t2.parentTopic";
     //Add an allowed topic to a user by ID
     public static final String ADD_ALLOWED_TOPICS_BY_ID = "INSERT INTO " + TABLE_ALLOWED_TOPICS +
@@ -197,7 +197,7 @@ public class DataController {
     //Delete an allowed topic from a user by ID
     public static final String DELETE_ALLOWED_TOPICS_BY_ID = "DELETE FROM " + TABLE_ALLOWED_TOPICS + " WHERE " + COLUMN_ALLOWED_TOPICS_USER_ID + " = ? " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + " = ?";
     //Load Allowed topics for a user by ID
-    public static final String LOAD_ALLOWED_TOPICS_BY_ID = "SELECT a.id, t1.name, t2.name FROM " + TABLE_ALLOWED_TOPICS + " a" +
+    public static final String LOAD_ALLOWED_TOPICS_BY_ID = "SELECT a.id, t1.name, t2.id FROM " + TABLE_ALLOWED_TOPICS + " a" +
             " JOIN topic t1 on a.topicId = t1.id " +
             " JOIN topic t2 on t2.id = t1.parentTopic " +
             " WHERE a.userId = ";
@@ -422,7 +422,7 @@ public class DataController {
                 temp.setExpireDate(rs.getString(4));
                 temp.setLastEdit(rs.getString(5));
                 temp.setStatusByString(rs.getString(6));
-                temp.setTopic(new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)));
+                temp.setTopic(new Topic(rs.getInt(7), rs.getString(8), DBLoadTopic(rs.getInt(9))));
                 temp.setAuthor(DBLoadUserByEmail(rs.getString(10)));
                 temp.setPublisher(DBLoadUserByEmail(rs.getString(11)));
                 temp.setPublisherComment(rs.getString(12));
@@ -456,7 +456,7 @@ public class DataController {
                 temp.setExpireDate(rs.getString(4));
                 temp.setLastEdit(rs.getString(5));
                 temp.setStatusByString(rs.getString(6));
-                temp.setTopic(new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)));
+                temp.setTopic(new Topic(rs.getInt(7), rs.getString(8), DBLoadTopic(rs.getInt(9))));
                 temp.setAuthor(DBLoadUserByEmail(rs.getString(10)));
                 temp.setPublisher(DBLoadUserByEmail(rs.getString(11)));
                 temp.setPublisherComment(rs.getString(12));
@@ -490,7 +490,7 @@ public class DataController {
                 temp.setExpireDate(rs.getString(4));
                 temp.setLastEdit(rs.getString(5));
                 temp.setStatusByString(rs.getString(6));
-                temp.setTopic(new Topic(rs.getInt(7), rs.getString(8), rs.getInt(9)));
+                temp.setTopic(new Topic(rs.getInt(7), rs.getString(8), DBLoadTopic(rs.getInt(9))));
                 temp.setAuthor(DBLoadUserByEmail(rs.getString(10)));
                 temp.setPublisher(DBLoadUserByEmail(rs.getString(11)));
                 temp.setPublisherComment(rs.getString(12));
@@ -522,7 +522,7 @@ public class DataController {
 
                 topic.setId(id);
                 topic.setName(rs.getString(1));
-                topic.setParentTopic(rs.getInt(2));
+                //topic.setParentTopic(rs.getInt(2));
                 topic.setParent(DBLoadTopic(rs.getInt(2))); //Small test
 
             }
@@ -550,7 +550,7 @@ public class DataController {
                 topicList.add(new Topic(
                         rs.getInt(1),
                         rs.getString(2),
-                        rs.getString(3)));
+                        DBLoadTopic(rs.getInt(3))));
                 topicList.get(topicList.size() - 1).setParent(DBLoadTopic(rs.getInt(3))); // small test 2
             }
             mainController.setStatus("Successfully loaded!");
@@ -860,7 +860,7 @@ public class DataController {
             if(newParentTopic != 0) {
                 pst.setInt(2, newParentTopic);
             }else{
-                pst.setInt(2,topic.getParentTopic());
+                pst.setInt(2,topic.getParentID());
             }
             int affectedRecords = pst.executeUpdate();
 
@@ -1182,7 +1182,7 @@ public class DataController {
                 topicList.add(new Topic(
                         rs.getInt(1),
                         rs.getString(2),
-                        rs.getString(3)));
+                        DBLoadTopic(rs.getInt(3))));
             }
             mainController.setStatus("Successfully loaded!");
             con.close();
