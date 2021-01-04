@@ -1322,23 +1322,23 @@ public class DataController {
                 int affectedRows = pst.executeUpdate();
 
                 if (affectedRows == 0) {
+                    mainController.setStatus("Couldn't change Password!");
                     con.rollback();
                     con.setAutoCommit(true);
-                    mainController.setStatus("Couldn't change Password!");
                     con.close();
                     throw new SQLException("Couldn't change Password!");
                 } else{
-                    con.commit();
                     mainController.setStatus("Successfully changed!");
                     System.out.println("Successfully changed!");
+                    con.commit();
                     con.close();
                     return true;
                 }
             }else{
-                con.rollback();
-                con.setAutoCommit(true);
                 mainController.setStatus("Password cannot be empty!");
                 System.out.println("Password cannot be empty");
+                con.rollback();
+                con.setAutoCommit(true);
                 con.close();
                 return false;
             }
