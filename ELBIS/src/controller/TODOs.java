@@ -4,8 +4,6 @@ public class TODOs {
 
     //_____CONTROLLER_____
     /*
-    TODO create UserActionCells
-    TODO create TopicActionCells
     TODO add buttons
         TODO ... to delete Users (Moderator) (ONLY USERS CAN BE DELETED BY AN MODERATOR)
         TODO ... to manage user Roles (Admin)

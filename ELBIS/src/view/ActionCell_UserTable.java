@@ -6,24 +6,24 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
-import model.Article;
+import model.User;
 
-public class ActionCell_ArticleTable extends TableCell<Article, Boolean> {
+public class ActionCell_UserTable extends TableCell<User, Boolean> {
 
     // Atrrib_______________________________________________________________________________________________________
     Button btn;
     MainController mainController;
-    Article hisArticle;
+    User hisUser;
 
     // Ctor_______________________________________________________________________________________________________
-    public ActionCell_ArticleTable(MainController mainController, String label, sideStageState state) {
+    public ActionCell_UserTable(MainController mainController, String label, sideStageState state) {
         this.mainController = mainController;
         btn = new Button(label);
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                mainController.setStatus("Aktion der ArtikelID " + hisArticle.getId() + " ausgeführt.");
-                mainController.callSideStage(state, hisArticle.getId());
+                mainController.setStatus("Aktion auf UserID " + hisUser.getId() + " ausgeführt.");
+                mainController.callSideStage(state, hisUser.getId());
             }
         });
     }
@@ -32,7 +32,7 @@ public class ActionCell_ArticleTable extends TableCell<Article, Boolean> {
     protected void updateItem(Boolean item, boolean empty) {
         super.updateItem(item, empty);
         if (!empty) {
-            hisArticle = (Article) getTableView().getItems().get(getIndex());
+            hisUser = (User) getTableView().getItems().get(getIndex());
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             setGraphic(btn);
         } else {

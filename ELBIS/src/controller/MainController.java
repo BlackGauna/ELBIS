@@ -261,7 +261,6 @@ public class MainController extends Application {
         String title = "";
         try {
             switch (state) {
-                //TODO add all side Stages
                 case createUser:
                     sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateUser.fxml"));
                     createUserPane = (Pane) sideLoader.load();
