@@ -202,7 +202,8 @@ public class DataController {
     public static final String DELETE_TOPIC_BY_ID = "DELETE FROM " + TABLE_TOPIC + " WHERE " + COLUMN_TOPIC_ID + " = ?";
     //Update database to archive timed out articles
     //TODO update doesnt work properly
-    public static final String UPDATE_ARTICLE_STATUS = "UPDATE " + TABLE_ARTICLE + " SET " + COLUMN_ARTICLE_STATUS + " = 6 " + "WHERE expireDate <= datetime('now','localtime')";
+    public static final String UPDATE_EXPIRED_ARTICLE_STATUS = "UPDATE " + TABLE_ARTICLE + " SET " + COLUMN_ARTICLE_STATUS + " = 6 " + "WHERE expireDate <= datetime('now','localtime')";
+    public static final String UPDATE_AUTHORIZED_ARTICLE_STATUS = "UPDATE " + TABLE_ARTICLE + " SET " + COLUMN_ARTICLE_STATUS + " = 5 " + "WHERE status = 4";
 
     //CONNECTION--------------------------------------------------------------------------------------------------------
     private Connection con;
@@ -1200,16 +1201,29 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            mainController.setStatus("Updating Article List...");
-            PreparedStatement pst = con.prepareStatement(UPDATE_ARTICLE_STATUS);
+            mainController.setStatus("Updating Expired Articles...");
+            PreparedStatement pst = con.prepareStatement(UPDATE_EXPIRED_ARTICLE_STATUS);
             int affectedRows = pst.executeUpdate();
 
             if (affectedRows == 0) {
-                mainController.setStatus("No timed out articles");
+                mainController.setStatus("No expired articles");
                 throw new SQLException("Couldn't update!");
             } else
                 mainController.setStatus("Successfully updated!");
             System.out.println("Successfully updated!");
+
+            mainController.setStatus("Updating Authorized Articles...");
+            PreparedStatement pst2 = con.prepareStatement(UPDATE_AUTHORIZED_ARTICLE_STATUS);
+            int affectedRows2 = pst2.executeUpdate();
+
+            if (affectedRows2 == 0) {
+                mainController.setStatus("No authorized articles");
+                throw new SQLException("Couldn't update!");
+            } else
+                mainController.setStatus("Successfully updated!");
+            System.out.println("Successfully updated!");
+
+
             con.close();
             return true;
         } catch (SQLException e) {
