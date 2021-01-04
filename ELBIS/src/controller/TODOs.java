@@ -27,5 +27,7 @@ public class TODOs {
         TODO ... to edit state of an article
         TODO ... to degrade and promote Users
         TODO ... to submit an article
+    TODO just sent side-view content when all fields are filled
+    TODO Switch software-Mode
      */
 }

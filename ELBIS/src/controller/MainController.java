@@ -148,8 +148,6 @@ public class MainController extends Application {
             io.printStackTrace();
         }
         openLoginStage();
-
-
     }
 
     // Methods_______________________________________________________________________________________________________
