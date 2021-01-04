@@ -133,7 +133,7 @@ public class DataController {
     //Edit a specific User with ID
     public static final String EDIT_USER = "UPDATE " + TABLE_USER + " SET " + COLUMN_USER_EMAIL +
             " = ?, " + COLUMN_USER_PASSWORD + " = ?, " + COLUMN_USER_NAME + " = ?, " + COLUMN_USER_ADDRESS + " = ?, " + COLUMN_USER_GENDER +
-            " = ?, " + COLUMN_USER_DATE_OF_BIRTH + " = ? WHERE " + COLUMN_USER_ID + " = ?";
+            " = ?, " + COLUMN_USER_DATE_OF_BIRTH + " = ?, " + COLUMN_USER_ROLE +  " = ?, WHERE " + COLUMN_USER_ID + " = ?";
     //Edit a specific Topic with ID
     public static final String EDIT_TOPIC = "UPDATE " + TABLE_TOPIC + " SET " +
             COLUMN_TOPIC_NAME + "= ?, " + COLUMN_TOPIC_PARENT_ID + " = ? WHERE " + COLUMN_TOPIC_ID + " = ?";
@@ -888,7 +888,7 @@ public class DataController {
     }
 
     //Edit User
-    public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth) {
+    public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth, int newRole) {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
@@ -896,13 +896,31 @@ public class DataController {
             PreparedStatement pst = con.prepareStatement(EDIT_USER);
             con.setAutoCommit(false);
 
-            pst.setInt(7, id);
-            pst.setString(1, newEmail);
-            pst.setString(2, newPassword);
-            pst.setString(3, newName);
-            pst.setString(4, newAddress);
-            pst.setInt(5, newGender);
-            pst.setString(6, newDateOfBirth);
+            if(id != 0) {
+                pst.setInt(8, id);
+            }
+            if(newEmail != null && !newEmail.trim().isEmpty()){
+                pst.setString(1, newEmail);
+            }
+            if(newPassword != null && !newPassword.trim().isEmpty()){
+                String hashedpw = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
+                pst.setString(2, hashedpw);
+            }
+            if(newName != null && !newName.trim().isEmpty()){
+                pst.setString(3, newName);
+            }
+            if(newAddress != null && !newAddress.trim().isEmpty()){
+                pst.setString(4, newAddress);
+            }
+            if(newGender != 0) {
+                pst.setInt(5, newGender);
+            }
+            if(newDateOfBirth != null && !newDateOfBirth.trim().isEmpty()){
+                pst.setString(6, newDateOfBirth);
+            }
+            if(newRole != 0) {
+                pst.setInt(7, newRole);
+            }
 
 
             int affectedRows = pst.executeUpdate();
