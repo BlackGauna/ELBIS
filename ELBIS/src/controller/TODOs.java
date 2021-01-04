@@ -18,7 +18,7 @@ public class TODOs {
     /*
     TODO Update loadUser methods to update the topic List of a user
     TODO Method for moderators to authorize or decline articles
-    TODO Method updateAllArticles to change status to declined
+    TODO Method for declined articles to be able to be changed and resubmitted.
      */
 
     //_____UI_____

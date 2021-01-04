@@ -1197,7 +1197,7 @@ public class DataController {
         }
     }
 
-    //Archive timed out Articles
+    //Updates the Articles database for expired and publishes authorized articles
     public boolean DBUpdateAllArticles() {
         try {
             con = SQLConnection.ConnectDB();
