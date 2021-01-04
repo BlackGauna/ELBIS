@@ -202,7 +202,7 @@ public class DataController {
     public static final String DELETE_TOPIC_BY_ID = "DELETE FROM " + TABLE_TOPIC + " WHERE " + COLUMN_TOPIC_ID + " = ?";
     //Update database to archive timed out articles
     //TODO update doesnt work properly
-    public static final String UPDATE_ARTICLE_LIST = "UPDATE " + TABLE_ARTICLE + " SET " + COLUMN_ARTICLE_STATUS + " = 6 " + "WHERE expireDate <= datetime('localtime')";
+    public static final String UPDATE_ARTICLE_STATUS = "UPDATE " + TABLE_ARTICLE + " SET " + COLUMN_ARTICLE_STATUS + " = 6 " + "WHERE expireDate <= datetime('now','localtime')";
 
     //CONNECTION--------------------------------------------------------------------------------------------------------
     private Connection con;
@@ -1201,7 +1201,7 @@ public class DataController {
             con = SQLConnection.ConnectDB();
             assert con != null;
             mainController.setStatus("Updating Article List...");
-            PreparedStatement pst = con.prepareStatement(UPDATE_ARTICLE_LIST);
+            PreparedStatement pst = con.prepareStatement(UPDATE_ARTICLE_STATUS);
             int affectedRows = pst.executeUpdate();
 
             if (affectedRows == 0) {
