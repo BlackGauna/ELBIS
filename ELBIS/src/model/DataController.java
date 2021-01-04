@@ -133,7 +133,7 @@ public class DataController {
     //Edit a specific User with ID
     public static final String EDIT_USER = "UPDATE " + TABLE_USER + " SET " + COLUMN_USER_EMAIL +
             " = ?, " + COLUMN_USER_PASSWORD + " = ?, " + COLUMN_USER_NAME + " = ?, " + COLUMN_USER_ADDRESS + " = ?, " + COLUMN_USER_GENDER +
-            " = ?, " + COLUMN_USER_DATE_OF_BIRTH + " = ?, " + COLUMN_USER_ROLE +  " = ?, WHERE " + COLUMN_USER_ID + " = ?";
+            " = ?, " + COLUMN_USER_DATE_OF_BIRTH + " = ?, " + COLUMN_USER_ROLE +  " = ? WHERE " + COLUMN_USER_ID + " = ?";
     //Edit a specific Topic with ID
     public static final String EDIT_TOPIC = "UPDATE " + TABLE_TOPIC + " SET " +
             COLUMN_TOPIC_NAME + "= ?, " + COLUMN_TOPIC_PARENT_ID + " = ? WHERE " + COLUMN_TOPIC_ID + " = ?";
@@ -899,23 +899,23 @@ public class DataController {
             if(id != 0) {
                 pst.setInt(8, id);
             }
-            if(newEmail != null && !newEmail.trim().isEmpty()){
+            if(newEmail != null && !newEmail.isBlank()){
                 pst.setString(1, newEmail);
             }
-            if(newPassword != null && !newPassword.trim().isEmpty()){
+            if(newPassword != null && !newPassword.isBlank()){
                 String hashedpw = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
                 pst.setString(2, hashedpw);
             }
-            if(newName != null && !newName.trim().isEmpty()){
+            if(newName != null && !newName.isBlank()){
                 pst.setString(3, newName);
             }
-            if(newAddress != null && !newAddress.trim().isEmpty()){
+            if(newAddress != null && !newAddress.isBlank()){
                 pst.setString(4, newAddress);
             }
             if(newGender != 0) {
                 pst.setInt(5, newGender);
             }
-            if(newDateOfBirth != null && !newDateOfBirth.trim().isEmpty()){
+            if(newDateOfBirth != null && !newDateOfBirth.isBlank()){
                 pst.setString(6, newDateOfBirth);
             }
             if(newRole != 0) {
