@@ -6,6 +6,8 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
+import model.Administrator;
+import model.Moderator;
 import model.User;
 
 public class ActionCell_UserTable extends TableCell<User, Boolean> {
@@ -32,7 +34,15 @@ public class ActionCell_UserTable extends TableCell<User, Boolean> {
     protected void updateItem(Boolean item, boolean empty) {
         super.updateItem(item, empty);
         if (!empty) {
-            hisUser = (User) getTableView().getItems().get(getIndex());
+            hisUser = getTableView().getItems().get(getIndex());
+            if (hisUser instanceof Moderator || hisUser instanceof Administrator) {
+                if (mainController.getActiveUser() instanceof Moderator) {
+                    btn.setDisable(true);
+                }
+                if (mainController.getActiveUser() instanceof Administrator) {
+                    btn.setDisable(false);
+                }
+            }
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             setGraphic(btn);
         } else {

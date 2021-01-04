@@ -5,9 +5,7 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
-
 
 <BorderPane minWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.FXMLController_UserContent">
    <center>
@@ -18,7 +16,7 @@
                   <TableView fx:id="articleTable" />
             </content>
           </TitledPane>
-            <TitledPane fx:id="tPane_Topics" animated="false" text="Bereichsansicht">
+            <TitledPane fx:id="tPane_Topics" animated="false" text="Bereichsrechte">
             <content>
                   <TableView fx:id="topicTable" />
             </content>

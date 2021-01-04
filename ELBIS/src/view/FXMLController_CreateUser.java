@@ -12,6 +12,9 @@ import java.time.format.DateTimeFormatter;
 public class FXMLController_CreateUser extends ELBIS_FXMLController {
 
     // Atrrib_______________________________________________________________________________________________________
+
+    int userID = 0; //User 0 means a new user gets created
+
     // UI_______________________________________________________________________________________________________
 
     @FXML
@@ -38,12 +41,18 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
     @FXML
     void okClicked(ActionEvent event) {
         try {
-            if(!getEmail().equals("") && !getPassword().equals("")&& !getName().equals("")&& !getGender().equals("")&&!getRole().equals("")&& !getAddress().equals("")&& !getBirth().equals("")){
-                mainController.createUser(getEmail(), getPassword(), getName(), getGender(), getRole(), getAddress(), getBirth());
-                mainController.sideStage.close();
-            } else{
-            throw new Exception("Empty field noticed");
+            if(userID == 0){
+                if(!getEmail().equals("") && !getPassword().equals("")&& !getName().equals("")&& !getGender().equals("")&&!getRole().equals("")&& !getAddress().equals("")&& !getBirth().equals("")){
+                    mainController.createUser(getEmail(), getPassword(), getName(), getGender(), getRole(), getAddress(), getBirth());
+                    mainController.sideStage.close();
+                } else{
+                    throw new Exception("Empty field noticed");
+                }
+            } else {
+                    mainController.editUser(userID ,getEmail(), getPassword(), getName(), getGender(), getRole(), getAddress(), getBirth());
+                    mainController.sideStage.close();
             }
+
         } catch(Exception e){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Achtung");
@@ -105,6 +114,10 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
 
     private String getRole() {
         return choiceRole.getValue();
+    }
+
+    public void setUserID(int id){
+        this.userID = id;
     }
 
     @Override
