@@ -40,13 +40,10 @@ public class PdfTest
     public void writeVideo (String path) throws IOException
     {
         // writer
-        PdfWriter writer = new PdfWriter(path);
-        PdfDocument pdf = new PdfDocument(writer.setSmartMode(true));
-        Document document = new Document(pdf);
-
-
         PdfReader reader = new PdfReader(SAMPLE);
-        PdfDocument sample= new PdfDocument(reader);
+        PdfWriter writer = new PdfWriter(DEST);
+
+        PdfDocument sample= new PdfDocument(reader,writer);
         Document sampleDoc= new Document(sample);
 
         PdfPage page= sample.getFirstPage();
@@ -78,9 +75,10 @@ public class PdfTest
 
         // get the video as bytestream in F
         PdfObject f =  ef.get(PdfName.F);
-        PdfStream content =ef.getAsStream(PdfName.F);
+        PdfStream content = ef.getAsStream(PdfName.F);
+        System.out.println(content);
 
-        byte[] video =  reader.readStreamBytes(content,false);
+        byte[] video =  ((PdfStream) f).getBytes(false);
 
         // test output
         try (FileOutputStream out = new FileOutputStream(TARGET + "test.mp4"))
@@ -91,34 +89,36 @@ public class PdfTest
 
         // test overwrite embedded video with another video
         byte[] inputBytes;
-        FileInputStream fin = new FileInputStream(TARGET + "input.mp4");
+        FileInputStream fin = new FileInputStream(TARGET + "mamama.mp4");
         inputBytes=fin.readAllBytes();
+
 
         content.setData(inputBytes);
 
+        try (FileOutputStream out = new FileOutputStream(TARGET + "bytes.mp4"))
+        {
+            out.write(content.getBytes());
+        }
+
         ef.put(PdfName.F, content);
 
+        try (FileOutputStream out = new FileOutputStream(TARGET + "FFF.mp4"))
+        {
+            out.write(((PdfStream) f).getBytes());
+        }
+
+
+
+
+
+        sampleDoc.close();
+        sample.close();
 
 
 
 
         // test copy page
         //sample.copyPagesTo(1,1, pdf);
-
-
-
-        pdf.addNewPage();
-        Rectangle rectangle = new Rectangle(0,0,400,800);
-
-        pdf.getFirstPage();
-        PdfCanvas canvas = new PdfCanvas(pdf.getFirstPage());
-
-        canvas.rectangle(rectangle);
-        canvas.stroke();
-        canvas.release();
-
-
-
 
 
 
@@ -176,7 +176,7 @@ public class PdfTest
         };
         pdf.getFirstPage().addAnnotation(annoation);*/
 
-        document.close();
+        //document.close();
 
     }
 

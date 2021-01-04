@@ -2,10 +2,7 @@ package view;
 
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfPage;
-import com.itextpdf.kernel.pdf.PdfReader;
-import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.*;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
@@ -26,6 +23,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class FXMLController_VideoEditor
@@ -36,9 +35,130 @@ public class FXMLController_VideoEditor
     @FXML
     Button saveButton;
 
+    @FXML
+    Button videoButton;
+
+    final static String DESKTOP = System.getProperty("user.home")+ "\\Desktop\\";
+    final static String SAMPLE = DESKTOP + "sample.pdf";
+    final static String DEST = System.getProperty("user.home")+ "\\Desktop\\output.pdf";
+
+    String schemaPath= "/tinymce/schema.pdf";
+    String videoPath;
+    File temp;
+
+    public void getVideoPath()
+    {
+        // create and open  file dialog window
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("PDF-Pfad auswählen");
+
+        // Extension filter to only show MP4s
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("MP4 Videos", "*.mp4")
+        );
+
+        fileChooser.setInitialDirectory(new File(DESKTOP));
+        // get File of chosen pdf path
+        File video= fileChooser.showOpenDialog(new Stage());
+
+        if(video!=null)
+        {
+            videoPath= video.getAbsolutePath();
+        }
+
+
+    }
+
+    public File writeVideo (File file) throws IOException
+    {
+        temp= new File(file.getParent()+"\\temp.pdf");
+        // writer
+        PdfWriter writer = new PdfWriter(temp);
+
+
+
+        PdfReader reader = new PdfReader(schemaPath);
+        PdfDocument sample = new PdfDocument(reader, writer);
+        Document sampleDoc = new Document(sample);
+
+        PdfPage page = sample.getFirstPage();
+        PdfDictionary pageDic = new PdfDictionary(page.getPdfObject());
+        PdfArray annots = pageDic.getAsArray(PdfName.Annots);
+
+
+        PdfName richmedia = new PdfName("RichMediaContent");
+        // Annot 17 0 R
+        PdfDictionary array = annots.getAsDictionary(0);
+        // Assets 26 0 R
+        PdfDictionary assets = array.getAsDictionary(richmedia);
+
+        // Instances 21 0 R
+        PdfName configs = new PdfName("Configurations");
+        PdfDictionary config = assets.getAsArray(configs).getAsDictionary(0);
+
+        PdfName instancesName = new PdfName("Instances");
+        PdfName assetName = new PdfName("Asset");
+        // Dictionary 22 0 R
+        PdfDictionary dict = config.getAsArray(instancesName).getAsDictionary(0);
+
+        // Asset 23 0 R
+        PdfDictionary asset = dict.getAsDictionary(assetName);
+        System.out.println(asset);
+
+        PdfDictionary ef = asset.getAsDictionary(PdfName.EF);
+        System.out.println(ef);
+
+        // get the video as bytestream in F
+        PdfObject f = ef.get(PdfName.F);
+        PdfStream content = ef.getAsStream(PdfName.F);
+
+        byte[] video = reader.readStreamBytes(content, false);
+
+        // test output
+        try (FileOutputStream out = new FileOutputStream(DESKTOP + "mamama.mp4"))
+        {
+            out.write(video);
+        }
+
+
+        // test overwrite embedded video with another video
+        byte[] inputBytes;
+
+
+        FileInputStream fin = new FileInputStream(videoPath);
+        inputBytes = fin.readAllBytes();
+
+        content.setData(inputBytes);
+
+
+
+        ef.put(PdfName.F, content);
+
+
+        content= ef.getAsStream(PdfName.F);
+        byte[] outBytes;
+        outBytes = content.getBytes();
+
+        /*// test output
+        try (FileOutputStream out = new FileOutputStream(DESKTOP + "pipipi.mp4"))
+        {
+            out.write(outBytes);
+        }*/
+
+
+
+        sample.close();
+
+        reader.close();
+        writer.close();
+
+
+        return temp;
+    }
 
     public void exportPDF() throws IOException
     {
+
         String text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   \n" +
                 "\n" +
                 "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   \n" +
@@ -103,15 +223,17 @@ public class FXMLController_VideoEditor
                 new FileChooser.ExtensionFilter("PDF Dateien", "*.pdf")
         );
 
+        fileChooser.setInitialDirectory(new File(DESKTOP));
+
         // get File of chosen pdf path
         File pdf= fileChooser.showSaveDialog(new Stage());
 
 
-        PdfReader reader= new PdfReader("/tinymce/schema.pdf");
+        PdfReader reader= new PdfReader(writeVideo(pdf));
         PdfWriter writer = new PdfWriter(pdf);
 
         PdfDocument schema= new PdfDocument(reader);
-        PdfDocument resultDoc = new PdfDocument(writer);
+        PdfDocument resultDoc = new PdfDocument(writer.setSmartMode(true));
 
         PageSize docSize= resultDoc.getDefaultPageSize();
 
@@ -139,7 +261,6 @@ public class FXMLController_VideoEditor
         System.out.println(resultDoc.getDefaultPageSize().getBottom());*/
 
 
-
         Paragraph textParagraph = new Paragraph(text);
         //textParagraph.setMargins(50,40,40,40);
         Rectangle textRec= new Rectangle(docSize.getLeft(),docSize.getBottom(),docSize.getWidth(),400);
@@ -158,8 +279,14 @@ public class FXMLController_VideoEditor
         canvas.add(titleParagraph);
         canvas.close();
         pdfCanvas.release();
-        resultDoc.close();
 
+
+        resultDoc.close();
+        schema.close();
+        reader.close();
+        writer.close();
+
+        System.out.println(temp.delete());
 
 
 
