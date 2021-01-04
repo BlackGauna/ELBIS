@@ -19,6 +19,7 @@ public class TODOs {
     //_____DB_____
     /*
     TODO Update loadUser methods to update the topic List of a user
+    TODO solution for editUser on empty fields *OR* Force user to retype any information on editing a user
      */
 
     //_____UI_____
