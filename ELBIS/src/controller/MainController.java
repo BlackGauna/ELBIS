@@ -144,8 +144,13 @@ public class MainController extends Application {
             loginStage.setScene(loginScene);
             applicationStage.setScene(applicationScene);
             editorStage.setScene(editorScene);
+            editorStage.initOwner(applicationStage);
             videoStage.setScene(videoScene);
+            videoStage.initOwner(applicationStage);
             selectorStage.setScene(selectorScene);
+            selectorStage.initOwner(applicationStage);
+            sideStage.initOwner(applicationStage);
+
 
         } catch (IOException io) {
             System.out.println("Couldn't load scene File");
