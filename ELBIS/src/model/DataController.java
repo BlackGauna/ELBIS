@@ -156,7 +156,7 @@ public class DataController {
             + "LEFT JOIN User u2 ON a.publisherId = u2.id";
     //Load own articles by ID
     public static final String LOAD_OWN_ARTICLES_BY_ID = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
-            + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
+            + "a.expireDate, (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
             + "t.id, t.name, t.parentTopic, u1.email as author, u2.email as publisher, a.publisherComment "
             + "FROM Article a "
             + "JOIN Status s ON a.status = s.id "
@@ -181,6 +181,10 @@ public class DataController {
             + "FROM user u "
             + "JOIN role r on u.role = r.id "
             + "LEFT JOIN gender g on u.gender = g.id";
+    //Load all users by a specific topic
+    public static final String LOAD_ALL_USER_BY_TOPIC = "SELECT u.email FROM allowed_topics a " +
+            "JOIN user u ON a.userId = u.id " +
+            "WHERE a.topicId = ";
     //Load all topics
     public static final String LOAD_ALL_TOPICS = "SELECT t2.id, t2.name, t1.name from Topic t2 "
             + "LEFT JOIN Topic t1 on t1.id=t2.parentTopic";
@@ -211,7 +215,6 @@ public class DataController {
 
     public DataController(MainController mainController) {
         this.mainController = mainController;
-        DBUpdateAllArticles();
     }
 
     //METHODS--------------------------------------------------------------------------------------------------------
@@ -761,10 +764,6 @@ public class DataController {
         }
     }
 
-    // TODO: DBEditTopic -> edit a topic (name, parentTopic) via UI
-    // TODO: DBEditUser -> edit a user (name, email, pw(?), address, gender)
-
-
     // Currently unused methods----------------------------------------------------------------------------------------
 
     //Article creation via title, content, topic, publisherComment
@@ -995,6 +994,41 @@ public class DataController {
         }
     }
 
+    // ObservableList of all user per topic
+    public ObservableList DBLoadUserByTopic(String topicId) {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Loading Users...");
+            PreparedStatement pst = con.prepareStatement(LOAD_ALL_USER_BY_TOPIC + topicId);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<User> userByTopicList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                int roleId = 0;
+                User temp;
+                roleId = rs.getInt(1);
+                switch (roleId) {
+                    case 1 -> temp = new Administrator();
+                    case 2 -> temp = new Moderator();
+                    case 3 -> temp = new User();
+                    default -> {
+                        temp = new User();
+                        mainController.setStatus("Couldn't load user Role - default set");
+                    }
+                }
+                temp.setEmail(rs.getString(1));
+                userByTopicList.add(temp);
+            }
+            mainController.setStatus("Successfully loaded!");
+            con.close();
+            return userByTopicList;
+        } catch (SQLException e) {
+            mainController.setStatus("Couldn't load Users!");
+            System.out.println("Couldn't load Users: " + e.getMessage());
+            return null;
+        }
+    }
 
 
     //ObservableList of all own articles by email
