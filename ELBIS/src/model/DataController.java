@@ -147,7 +147,7 @@ public class DataController {
     //Check if user exists in database
     public static final String CHECK_USER = "SELECT password FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
     //Changes Password of a user with ID
-    public static final String CHANGE_PASSWORD = "UPDATE" + TABLE_USER + " SET " + COLUMN_USER_PASSWORD + " = ? WHERE " + COLUMN_USER_ID + " = ?";
+    public static final String CHANGE_PASSWORD = "UPDATE " + TABLE_USER + " SET " + COLUMN_USER_PASSWORD + " = ? WHERE " + COLUMN_USER_ID + " = ?";
     //Load all articles
     public static final String LOAD_ALL_ARTICLES = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
             + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
@@ -601,7 +601,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            mainController.setStatus("Loading User...");
+            //mainController.setStatus("Loading User...");
             PreparedStatement pst = con.prepareStatement(LOAD_USER_BY_EMAIL);
             pst.setString(1, email);
             pst.execute();
@@ -1355,16 +1355,6 @@ public class DataController {
                 mainController.setStatus("Couldn't rollback!");
                 System.out.println("Couldn't rollback! " + e2.getMessage());
                 return false;
-            }
-        } finally {
-            try {
-                mainController.setStatus("Resetting default commit behavior");
-                System.out.println("Resetting default commit behavior");
-                con.setAutoCommit(true);
-                con.close();
-            } catch (SQLException e) {
-                mainController.setStatus("Couldn't reset auto-commit!");
-                System.out.println("Couldn't reset auto-commit! " + e.getMessage());
             }
         }
     }

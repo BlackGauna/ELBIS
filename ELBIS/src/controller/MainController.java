@@ -712,9 +712,13 @@ public class MainController extends Application {
 
     public boolean changePassword(int userID,String password){
         boolean result = false;
-        //TODO implement password change
-        //result = dc.DBChangePassword(userID, password);
-        sideStage.close();
+        try{
+            setStatus("Password to: "+ password);
+            result = dc.DBChangePassword(userID, password);
+        } catch (SQLException sql){
+            sql.printStackTrace();
+        } finally{
+        }
         return result;
     }
 

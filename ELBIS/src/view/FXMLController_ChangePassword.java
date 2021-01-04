@@ -2,9 +2,7 @@ package view;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 public class FXMLController_ChangePassword extends ELBIS_FXMLController {
     // Atrrib_______________________________________________________________________________________________________
@@ -14,21 +12,27 @@ public class FXMLController_ChangePassword extends ELBIS_FXMLController {
     private Button btnOk;
 
     @FXML
-    private TextField txtPassword;
+    private PasswordField txtPassword;
 
     @FXML
-    private TextField txtPassword2;
+    private PasswordField txtPassword2;
 
     @FXML
     void okClicked(ActionEvent event) {
-        mainController.changePassword(userID ,getPassword());
+        boolean result = mainController.changePassword(userID ,getPassword());
+        if (result == true){
+            mainController.sideStage.close();
+        } else{
+
+        }
     }
 
     // Ini_______________________________________________________________________________________________________
     // Getters,Setters_________________________________________________________________________________________________
 
     public String getPassword() {
-        String password = "none";
+        String password = "";
+        System.out.println("matching passwords: "+txtPassword.getText() + " *with* " + txtPassword2.getText());
         if (txtPassword.getText().equals(txtPassword2.getText()) && !txtPassword.getText().equals("")) {
             password = txtPassword.getText();
         } else {
