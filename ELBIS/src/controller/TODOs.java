@@ -6,6 +6,7 @@ public class TODOs {
     /*
     TODO add buttons
         TODO ... to delete Users (Moderator) (ONLY USERS CAN BE DELETED BY AN MODERATOR)
+        TODO ... to change Passwords
         TODO ... to manage user Roles (Admin)
 
     TODO maybe show the count of articles under a specific topic on topic views (count articles per topic)
@@ -20,6 +21,7 @@ public class TODOs {
     /*
     TODO Update loadUser methods to update the topic List of a user
     TODO solution for editUser on empty fields *OR* Force user to retype any information on editing a user
+    TODO check if Email is already used on User creation -> maybe open alert if already used? *OR* throw custom Exception
      */
 
     //_____UI_____
