@@ -176,6 +176,7 @@ public class FXMLController_Editor
 
             User activeUser= mainController.getActiveUser();
 
+            // currentArticle.setTopic(mainController.getTopic(1));
 
             // load current attributes of article
             saveController.saveTitle.setText(currentArticle.getTitle());
@@ -184,9 +185,9 @@ public class FXMLController_Editor
                 saveController.statusChoice.setValue(currentArticle.getStatus());
 
             }
-            if (currentArticle.getTopicID()!=0)
+            if (currentArticle.getTopic()!=null)
             {
-                saveController.topicChoice.getSelectionModel().select(currentArticle.getTopicID()-1);
+                //saveController.topicChoice.getSelectionModel().select(currentArticle.getTopic());
             }
             if (currentArticle.getExpireDate()!=null)
             {

@@ -605,6 +605,11 @@ public class MainController extends Application {
         return topics;
     }
 
+    public Topic getTopic(int topicId)
+    {
+        return dc.DBLoadTopic(topicId);
+    }
+
     //Getters,Setters_______________________________________________________________________________________________________
     public User getActiveUser() {
         return activeUser;

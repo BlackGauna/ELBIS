@@ -517,7 +517,7 @@ public class DataController {
         }
 
     }
-
+    // TODO: Need to be fixed. Only loading topic from id 4 onwards. See System.out at @link view.FXMLController_Save#61
     //FINISHED: Get ObservableList of all topics
     public ObservableList DBLoadAllTopics() {
         try {
