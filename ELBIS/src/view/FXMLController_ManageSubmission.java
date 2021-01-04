@@ -24,15 +24,17 @@ public class FXMLController_ManageSubmission extends ELBIS_FXMLController {
     @FXML
     void authorizeClicked(ActionEvent event) {
         try {
-            //TODO throw exception if any field is empty
+            if(!getTxtComment().equals("")){
             mainController.submitArticle(articleId,Status.Öffentlich,getTxtComment());
             mainController.sideStage.close();
+            } else{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Achtung");
+                alert.setContentText("Bitte geben sie einen (längeren) Kommentar ein.");
+                alert.setHeaderText(null);
+                alert.showAndWait();
+            }
         } catch(Exception e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText("Bitte geben sie einen Kommentar ein.");
-            alert.setHeaderText(null);
-            alert.showAndWait();
             e.printStackTrace();
         } finally{
         }
@@ -41,15 +43,17 @@ public class FXMLController_ManageSubmission extends ELBIS_FXMLController {
     @FXML
     void declineClicked(ActionEvent event) {
         try {
-            //TODO throw exception if any field is empty
-            mainController.submitArticle(articleId,Status.Abgelehnt,getTxtComment());
-            mainController.sideStage.close();
+            if(!getTxtComment().equals("")){
+                mainController.submitArticle(articleId,Status.Abgelehnt,getTxtComment());
+                mainController.sideStage.close();
+            } else{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Achtung");
+                alert.setContentText("Bitte geben sie einen (längeren) Kommentar ein.");
+                alert.setHeaderText(null);
+                alert.showAndWait();
+            }
         } catch(Exception e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText("Bitte geben sie einen Kommentar ein.");
-            alert.setHeaderText(null);
-            alert.showAndWait();
             e.printStackTrace();
         } finally{
         }
