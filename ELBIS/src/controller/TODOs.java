@@ -12,13 +12,13 @@ public class TODOs {
 
     TODO maybe show the count of articles under a specific topic on topic views (count articles per topic)
     TODO make sure relogin reloads everything properly (NO BUGS SO FAR)
+     TODO Method for moderators to authorize or decline articles
      */
 
     //_____DB_____
     /*
     TODO Update loadUser methods to update the topic List of a user
-    TODO Method for moderators to authorize or decline articles
-    TODO Method for declined articles to be able to be changed and resubmitted.
+
      */
 
     //_____UI_____
