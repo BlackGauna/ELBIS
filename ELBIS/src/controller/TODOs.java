@@ -18,7 +18,7 @@ public class TODOs {
     /*
     TODO Update loadUser methods to update the topic List of a user
     TODO Method updateAllArticles to be called in dataController constructor (gets every article and sets the status properly - compares the dates ... for example if expired)
-        TODO ... only update an Article to "Released" if the status is "Authorized"
+    TODO Method for moderators to authorize or decline articles
      */
 
     //_____UI_____
