@@ -182,8 +182,8 @@ public class DataController {
             + "JOIN role r on u.role = r.id "
             + "LEFT JOIN gender g on u.gender = g.id";
     //Load all topics
-    public static final String LOAD_ALL_TOPICS = "SELECT t2.id, t2.name, t1.name from Topic t1 "
-            + "JOIN Topic t2 on t1.id=t2.parentTopic";
+    public static final String LOAD_ALL_TOPICS = "SELECT t2.id, t2.name, t1.name from Topic t2 "
+            + "LEFT JOIN Topic t1 on t1.id=t2.parentTopic";
     //Add an allowed topic to a user by ID
     public static final String ADD_ALLOWED_TOPICS_BY_ID = "INSERT INTO " + TABLE_ALLOWED_TOPICS +
             '(' + COLUMN_ALLOWED_TOPICS_USER_ID + ", " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + ") VALUES(?, ?)";
