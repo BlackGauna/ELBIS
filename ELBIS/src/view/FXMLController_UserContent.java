@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 import model.Article;
+import model.Topic;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,7 +20,7 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
     @FXML
     private TableView<Article> articleTable = new TableView<>();
     @FXML
-    private TreeView<Article> topicTree = new TreeView<>();
+    private TableView<Topic> topicTable = new TableView<>();
     @FXML
     private Accordion dropDownAccordion;
     @FXML
@@ -56,6 +57,10 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
         submitColumn.setSortable(false);
         articleTable.getColumns().add(submitColumn);
 
+        topicTable.getColumns().add(new TableColumn<Topic, String>("ID"));
+        topicTable.getColumns().add(new TableColumn<Topic, String>("Bereich"));
+        topicTable.getColumns().add(new TableColumn<Topic, String>("Eltern-Bereich"));
+
         dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }
 
@@ -74,7 +79,7 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
     public void refreshUserContent() {
         mainController.setStatus("Refreshing UserContent...");
         setContent_ArticleTable(mainController.refreshUserContent_ArticleTable(getContent_ArticleTable()));
-        setContent_TopicTree(mainController.refreshUserContent_ArticleTree(getContent_TreeView()));
+        setContent_TopicTable(mainController.refreshUserContent_TopicTable(getContent_TopicTable()));
     }
 
     // Getters,Setters_________________________________________________________________________________________________
@@ -87,13 +92,11 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
         this.articleTable = table;
     }
 
-    public TreeView getContent_TreeView() {
-        return topicTree;
+    public TableView getContent_TopicTable() {
+        return topicTable;
     }
 
-    public void setContent_TopicTree(TreeView tree) {
-        this.topicTree = tree;
+    public void setContent_TopicTable(TableView table) {
+        this.topicTable = table;
     }
-
-
 }

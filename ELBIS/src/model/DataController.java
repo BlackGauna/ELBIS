@@ -190,8 +190,10 @@ public class DataController {
     //Delete an allowed topic from a user by ID
     public static final String DELETE_ALLOWED_TOPICS_BY_ID = "DELETE FROM " + TABLE_ALLOWED_TOPICS + " WHERE " + COLUMN_ALLOWED_TOPICS_USER_ID + " = ? " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + " = ?";
     //Load Allowed topics for a user by ID
-    //TODO Check if Load works
-    public static final String LOAD_ALLOWED_TOPICS_BY_ID = "SELECT " + COLUMN_TOPIC_ID + ", " + COLUMN_TOPIC_NAME + ", " + COLUMN_TOPIC_PARENT_ID + " FROM " + TABLE_TOPIC + " INNER JOIN " + TABLE_ALLOWED_TOPICS + " ON " + COLUMN_TOPIC_ID + " = " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + " WHERE " + COLUMN_ALLOWED_TOPICS_USER_ID + " = ?";
+    public static final String LOAD_ALLOWED_TOPICS_BY_ID = "SELECT a.id, t1.name, t2.name FROM " + TABLE_ALLOWED_TOPICS + " a" +
+            " JOIN topic t1 on a.topicId = t1.id " +
+            " JOIN topic t2 on t2.id = t1.parentTopic " +
+            " WHERE a.userId = ";
     //Delete an Article by ID
     public static final String DELETE_ARTICLE_BY_ID = "DELETE FROM " + TABLE_ARTICLE + " WHERE " + COLUMN_ARTICLE_ID + " = ?";
     //Delete a User by ID
@@ -1089,8 +1091,7 @@ public class DataController {
             con = SQLConnection.ConnectDB();
             assert con != null;
             mainController.setStatus("Loading allowed Topics...");
-            PreparedStatement pst = con.prepareStatement(LOAD_ALLOWED_TOPICS_BY_ID);
-            pst.setInt(1,userId);
+            PreparedStatement pst = con.prepareStatement(LOAD_ALLOWED_TOPICS_BY_ID + userId);
             ResultSet rs = pst.executeQuery();
             ObservableList<Topic> topicList = FXCollections.observableArrayList();
 
@@ -1098,7 +1099,7 @@ public class DataController {
                 topicList.add(new Topic(
                         rs.getInt(1),
                         rs.getString(2),
-                        rs.getInt(3)));
+                        rs.getString(3)));
             }
             mainController.setStatus("Successfully loaded!");
             con.close();

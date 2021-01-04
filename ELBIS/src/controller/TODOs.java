@@ -9,7 +9,6 @@ public class TODOs {
     TODO add buttons
         TODO ... to delete Users (Moderator) (ONLY USERS CAN BE DELETED BY AN MODERATOR)
         TODO ... to manage user Roles (Admin)
-    TODO fill TreeView with Content
 
     TODO maybe show the count of articles under a specific topic on topic views (count articles per topic)
     TODO make sure relogin reloads everything properly (NO BUGS SO FAR)

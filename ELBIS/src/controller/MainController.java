@@ -383,9 +383,25 @@ public class MainController extends Application {
         return table;
     }
 
-    public TreeView refreshUserContent_ArticleTree(TreeView tree) {
-        //TODO implement Topics as tree-titles and sort Articles into it
-        return tree;
+    public TableView refreshUserContent_TopicTable(TableView table) {
+
+        ObservableList<Topic> topicList = dc.DBLoadAllowedTopics(activeUser.getId());
+
+        List<String> propertyKeys = Arrays.asList("id", "name", "parentTopicString");
+
+        for (int i = 0; i<table.getColumns().size(); i++){
+            setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
+            ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((String) (propertyKeys.get(i))));
+        }
+
+        table.setItems(topicList);
+
+        if (table.getItems().size() == 0) {
+            setStatus("Warning: Empty TopicTable loaded?");
+        }
+
+
+        return table;
     }
 
     public TableView refreshModerationContent_UserTable(TableView table) {

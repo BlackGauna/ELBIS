@@ -20,7 +20,7 @@
           </TitledPane>
             <TitledPane fx:id="tPane_Topics" animated="false" text="Bereichsansicht">
             <content>
-                  <TreeView fx:id="topicTree" />
+                  <TableView fx:id="topicTable" />
             </content>
             </TitledPane>
         </panes>
