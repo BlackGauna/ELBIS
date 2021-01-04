@@ -89,24 +89,6 @@ public class User {
         this.address = address;
     }
 
-    /*public Date getDateOfBirthAsDate() {
-        return dateOfBirth;
-    }
-    public String getDateOfBirthAsString() {
-        return dateOfBirth.toString();
-    }
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-        public void setDateOfBirth(String dateOfBirth) {
-        try {
-            Date date = new SimpleDateFormat("dd.MM.yyyy").parse(dateOfBirth);
-            this.dateOfBirth = date;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-    }*/
     public String getDateOfBirth() {
         return dateOfBirth;
     }
@@ -198,6 +180,19 @@ public class User {
 
     public String getRole() {
         return role;
+    }
+
+    public int getRoleAsInt() {
+        if(getRole().equals("User")){
+            return 1;
+        } else if ( getRole().equals("Moderator")){
+            return 2;
+        } else if ( getRole().equals("Administrator")){
+            return 3;
+        } else {
+            System.out.println("Couldnt get Role from "+ getEmail());
+            return 0;
+        }
     }
 
     @Override

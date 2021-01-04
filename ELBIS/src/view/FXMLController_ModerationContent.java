@@ -86,6 +86,10 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
         TableColumn editUserColumn = new TableColumn<User, Boolean>(" ");
         editUserColumn.setSortable(false);
         userTable.getColumns().add(editUserColumn);
+        TableColumn changePasswordColumn = new TableColumn<User, Boolean>(" ");
+        changePasswordColumn.setSortable(false);
+        userTable.getColumns().add(changePasswordColumn);
+
 
         dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }

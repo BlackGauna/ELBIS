@@ -5,22 +5,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import model.Administrator;
-import model.Moderator;
 
 import java.time.format.DateTimeFormatter;
 
-public class FXMLController_CreateUser extends ELBIS_FXMLController {
+public class FXMLController_EditUser extends ELBIS_FXMLController {
 
     // Atrrib_______________________________________________________________________________________________________
+
+    int userID = 0; //User 0 means a new user gets created
 
     // UI_______________________________________________________________________________________________________
 
     @FXML
     private TextField txtEmail;
-    @FXML
-    private PasswordField txtPassword1;
-    @FXML
-    private PasswordField txtPassword2;
     @FXML
     private TextField txtVorname;
     @FXML
@@ -39,12 +36,8 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
     @FXML
     void okClicked(ActionEvent event) {
         try {
-                if(!getEmail().equals("") && !getPassword().equals("")&& !getName().equals("")&& !getGender().equals("")&&!getRole().equals("")&& !getAddress().equals("")&& !getBirth().equals("")){
-                    mainController.createUser(getEmail(), getPassword(), getName(), getGender(), getRole(), getAddress(), getBirth());
-                    mainController.sideStage.close();
-                } else{
-                    throw new Exception("Empty field noticed");
-                }
+            mainController.editUser(userID ,getEmail(), getName(), getGender(), getRole(), getAddress(), getBirth());
+            mainController.sideStage.close();
         } catch(Exception e){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Achtung");
@@ -53,11 +46,8 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
             alert.showAndWait();
             //e.printStackTrace();
         } finally{
-
         }
     }
-
-
 
     // Ini_______________________________________________________________________________________________________
     public void initialize() {
@@ -71,21 +61,6 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
         return txtEmail.getText();
     }
 
-    public String getPassword() {
-        String password = "none";
-        if (txtPassword1.getText().equals(txtPassword2.getText())) {
-            password = txtPassword1.getText();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Passwortbestätigung");
-            alert.setContentText("Die Bestätigung ihres Passworts ist fehlgeschlagen, \n Bitte überprüfen sie ihre Eingabe.");
-            alert.setHeaderText(null);
-            alert.showAndWait();
-        }
-        return password;
-    }
-
-
     public String getName() {
         return txtVorname.getText() + " " + txtNachname.getText();
     }
@@ -95,7 +70,12 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
     }
 
     public String getGender() {
-        return choiceGender.getValue();
+        if (choiceGender.getValue().isBlank()){
+            return "";
+        }
+        else {
+            return choiceGender.getValue();
+        }
     }
 
     public String getBirth() {
@@ -105,7 +85,15 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
     }
 
     private String getRole() {
-        return choiceRole.getValue();
+        if(choiceRole.getValue().isBlank()){
+            return "";
+        } else {
+            return choiceRole.getValue();
+        }
+    }
+
+    public void setUserID(int id){
+        this.userID = id;
     }
 
     @Override

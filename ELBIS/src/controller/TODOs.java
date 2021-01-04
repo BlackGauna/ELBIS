@@ -12,6 +12,7 @@ public class TODOs {
     TODO maybe show the count of articles under a specific topic on topic views (count articles per topic)
     TODO make sure relogin reloads everything properly (NO BUGS SO FAR)
     TODO empty login fields on logout (create new LoginView)
+    TODO Fix Topic DataClass
 
     TODO maybe - wenn ein Artikel autorisiert wurde ist er vom User veröffentlichbar?
     TODO maybe - Buttons nicht mehr anklickbar wenn bereits autorisiert?

@@ -67,11 +67,17 @@ public class MainController extends Application {
     private FXMLController_CreateUser createUserController;
     private Pane createUserPane;
 
+    private FXMLController_EditUser editUserController;
+    private Pane editUserPane;
+
     private FXMLController_CreateTopic createTopicController;
     private Pane createTopicPane;
 
     private FXMLController_ManageSubmission manageSubmissionController;
     private Pane manageSubmissionPane;
+
+    private FXMLController_ChangePassword changePasswordController;
+    private Pane changePasswordPane;
 
 
     // Ctor_______________________________________________________________________________________________________
@@ -254,7 +260,6 @@ public class MainController extends Application {
                     createUserPane = (Pane) sideLoader.load();
                     createUserController = sideLoader.getController();
                     createUserController.setMainController(this);
-                    createUserController.setUserID(0);
                     sideScene = new Scene(createUserPane);
                     title = "Nutzererstellung";
                     break;
@@ -350,12 +355,12 @@ public class MainController extends Application {
                     break;
                 case editUser:
                     //TODO edit User not works properly yet
-                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateUser.fxml"));
-                    createUserPane = (Pane) sideLoader.load();
-                    createUserController = sideLoader.getController();
-                    createUserController.setMainController(this);
-                    createUserController.setUserID(id);
-                    sideScene = new Scene(createUserPane);
+                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_EditUser.fxml"));
+                    editUserPane = (Pane) sideLoader.load();
+                    editUserController = sideLoader.getController();
+                    editUserController.setMainController(this);
+                    editUserController.setUserID(id);
+                    sideScene = new Scene(editUserPane);
                     title = "Nutzerbearbeitung";
                     break;
                 case deleteTopic:
@@ -371,6 +376,15 @@ public class MainController extends Application {
                     } else {
                         setStatus("Aktion abgebrochen.");
                     }
+                    break;
+                case changeUserPassword:
+                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangePassword.fxml"));
+                    changePasswordPane = (Pane) sideLoader.load();
+                    changePasswordController = sideLoader.getController();
+                    changePasswordController.setMainController(this);
+                    changePasswordController.setUserID(id);
+                    sideScene = new Scene(changePasswordPane);
+                    title = "Nutzer-Passwort ändern";
                     break;
             }
             if (opensideStage == true) {
@@ -477,6 +491,14 @@ public class MainController extends Application {
                     @Override
                     public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
                         return new ActionCell_UserTable(maincontroller, "Bearbeiten", sideStageState.editUser);
+                    }
+                });
+            }
+            else if (i == 9) {
+                ((TableColumn<User, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>>() {
+                    @Override
+                    public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
+                        return new ActionCell_UserTable(maincontroller, "Passwort ändern", sideStageState.changeUserPassword);
                     }
                 });
             }
@@ -688,40 +710,51 @@ public class MainController extends Application {
         return submitted;
     }
 
-    public boolean editUser(int id,String email, String password, String name, String gender, String role, String address, String dateOfBirth) {
+    public boolean changePassword(int userID,String password){
+        boolean result = false;
+        //TODO implement password change
+        //result = dc.DBChangePassword(userID, password);
+        sideStage.close();
+        return result;
+    }
+
+    public boolean editUser(int id,String email, String name, String gender, String role, String address, String dateOfBirth) {
         boolean result = false;
         User editedUser = dc.DBLoadUserById(id);
 
-        int genderInt = 0;
+        int genderInt;
         if (gender.equals("Maennlich")) {
             genderInt = 1;
         } else if (gender.equals("Weiblich")) {
             genderInt = 2;
         } else if (gender.equals("Divers")) {
             genderInt = 3;
+        } else {
+            genderInt = 0;
         }
 
-        int roleInt = 0;
+        int roleInt;
         if (role.equals("Admin")) {
             roleInt = 1;
         } else if (role.equals("Moderator")) {
             roleInt = 2;
         } else if (role.equals("User")) {
             roleInt = 3;
+        } else {
+            roleInt = 0;
         }
 
         //TODO update an actual User
-        setStatus("TRIED TO EDIT USER\n###############################################");
+        setStatus("Edited User with information:");
         setStatus("id: "+ id);
         setStatus("email: "+ email);
-        setStatus("password: "+password);
         setStatus("name: "+name);
         setStatus("address: "+address);
         setStatus("genderInt: "+genderInt);
         setStatus("dob: " +dateOfBirth);
         setStatus("roleInt: "+roleInt);
         //TODO make editUser work properly
-        result = dc.DBEditUser(id, email, password, name , address, genderInt,dateOfBirth, roleInt);
+        result = dc.DBEditUser(id, email, name , address, genderInt,dateOfBirth, roleInt);
 
         return result;
     }
