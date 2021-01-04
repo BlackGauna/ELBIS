@@ -3,9 +3,11 @@ package view;
 import controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
+import javafx.scene.layout.StackPane;
 import model.Article;
 
 public class ActionCell_ArticleTable extends TableCell<Article, Boolean> {
@@ -14,13 +16,15 @@ public class ActionCell_ArticleTable extends TableCell<Article, Boolean> {
     Button btn;
     MainController mainController;
     Article hisArticle;
+
     // Ctor_______________________________________________________________________________________________________
-    public ActionCell_ArticleTable(MainController mainController, String label, sideStageState state){
+    public ActionCell_ArticleTable(MainController mainController, String label, sideStageState state) {
         this.mainController = mainController;
         btn = new Button(label);
         btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent actionEvent) {
-                mainController.setStatus("Aktion der ArtikelID "+hisArticle.getId()+ " ausgeführt.");
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                mainController.setStatus("Aktion der ArtikelID " + hisArticle.getId() + " ausgeführt.");
                 mainController.callSideStage(state, hisArticle.getId());
             }
         });

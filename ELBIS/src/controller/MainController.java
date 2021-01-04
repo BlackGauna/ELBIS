@@ -87,7 +87,7 @@ public class MainController extends Application {
         sideStage = new Stage();
         sideStage.setResizable(false);
         videoStage = new Stage();
-        selectorStage= new Stage();
+        selectorStage = new Stage();
 
 
     }
@@ -123,7 +123,7 @@ public class MainController extends Application {
 
             selectorLoader = new FXMLLoader(getClass().getResource("/view/Pane_EditorSelector.fxml"));
             selectorPane = selectorLoader.load();
-            selectorController= selectorLoader.getController();
+            selectorController = selectorLoader.getController();
             selectorController.setMainController(this);
 
 
@@ -157,7 +157,7 @@ public class MainController extends Application {
         mainApplicationController.setStatus(newStatus);
     }
 
-    public void refreshAllContent(){
+    public void refreshAllContent() {
         mainApplicationController.refreshAllContent(activeUser);
     }
 
@@ -279,7 +279,7 @@ public class MainController extends Application {
                     deleteAlert.setContentText(" Dies kann nicht rückgängig gemacht werden.");
                     deleteAlert.setHeaderText("Sind sie sich sicher das sie diesen Artikel löschen möchten?");
                     Optional<ButtonType> deleteResult = deleteAlert.showAndWait();
-                    if (deleteResult.get() == ButtonType.OK){
+                    if (deleteResult.get() == ButtonType.OK) {
                         //TODO actually delete an Article
                         //dc.DBDeleteArticle(id);
                         setStatus("Artikel gelöscht.");
@@ -291,7 +291,7 @@ public class MainController extends Application {
                     opensideStage = false;
                     Article article = dc.DBLoadArticle(id);
                     Alert submitAlert;
-                    if(article.getStatus().getStatusCode() > 1){
+                    if (article.getStatus().getStatusCode() > 1) {
                         submitAlert = new Alert(Alert.AlertType.INFORMATION);
                         submitAlert.setTitle("Veröffentlichung anfragen");
                         submitAlert.setContentText("Bitte überprüfen sie den Beitragsstatus und ggf. den Kommentar.");
@@ -361,19 +361,17 @@ public class MainController extends Application {
                     }
                 });
             } else if (i == 12) {
-            //deletebutton
-            ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
-                @Override
-                public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
-                    //TODO fix userSubmit
-                    return new ActionCell_ArticleTable(maincontroller, "Herausgeben", sideStageState.userSubmit);
-                }
-            });
-        }
-            else {
+                //deletebutton
+                ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
+                    @Override
+                    public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
+                        //TODO fix userSubmit
+                        return new ActionCell_ArticleTable(maincontroller, "Herausgeben", sideStageState.userSubmit);
+                    }
+                });
+            } else {
                 //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-                ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String)(propertyKeys.get(i))));
-
+                ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
             }
         }
         table.setItems(articleList);
@@ -399,7 +397,7 @@ public class MainController extends Application {
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String)(propertyKeys.get(i))));
+            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String) (propertyKeys.get(i))));
         }
         table.setItems(userList);
         //Test if table is empty
@@ -417,7 +415,7 @@ public class MainController extends Application {
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String)(propertyKeys.get(i))));
+            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
         }
         table.setItems(submissionList);
         //Test if table is empty
@@ -435,7 +433,7 @@ public class MainController extends Application {
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String)(propertyKeys.get(i))));
+            ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
         }
         table.setItems(articleList);
         //Test if table is empty
@@ -453,7 +451,7 @@ public class MainController extends Application {
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             //setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((String)(propertyKeys.get(i))));
+            ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((String) (propertyKeys.get(i))));
         }
         table.setItems(topicList);
         //Test if table is empty
@@ -473,7 +471,7 @@ public class MainController extends Application {
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
             //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String)(propertyKeys.get(i))));
+            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String) (propertyKeys.get(i))));
         }
         table.setItems(userList);
         //Test if table is empty

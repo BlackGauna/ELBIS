@@ -1,10 +1,13 @@
 package view;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.util.Callback;
 import model.Article;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -12,61 +15,54 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
 
     // Atrrib_______________________________________________________________________________________________________
 
+    // UI_______________________________________________________________________________________________________
+    @FXML
+    private TableView<Article> articleTable = new TableView<>();
+    @FXML
+    private TreeView<Article> topicTree = new TreeView<>();
+    @FXML
+    private Accordion dropDownAccordion;
+    @FXML
+    private TitledPane tPane_MyArticles;
+    @FXML
+    private TitledPane tPane_Topics;
+    @FXML
+    private ButtonBar btnBar;
+    @FXML
+    private Button btnCreateArticle;
+    @FXML
+    private Button btnRefresh;
+
     // Ini_______________________________________________________________________________________________________
     @Override
-   public void initialize(URL url, ResourceBundle resourceBundle) {
-       articleTable.getColumns().add(new TableColumn<Article, String>("ID"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Titel"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Erstellt"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Ablauf"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Bearbeitet"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Status"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Topic"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Autor"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
-       articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber Kommentar"));
-       TableColumn editColumn = new TableColumn<Article, Boolean>(" ");
-       editColumn.setSortable(false);
-       articleTable.getColumns().add(editColumn);
-       TableColumn deleteColumn = new TableColumn<Article, Boolean>(" ");
-       deleteColumn.setSortable(false);
-       articleTable.getColumns().add(deleteColumn);
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        articleTable.getColumns().add(new TableColumn<Article, String>("ID"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Titel"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Erstellt"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Ablauf"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Bearbeitet"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Status"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Topic"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Autor"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber Kommentar"));
+        TableColumn editColumn = new TableColumn<Article, Boolean>(" ");
+        editColumn.setSortable(false);
+        articleTable.getColumns().add(editColumn);
+        TableColumn deleteColumn = new TableColumn<Article, Boolean>(" ");
+        deleteColumn.setSortable(false);
+        articleTable.getColumns().add(deleteColumn);
         TableColumn submitColumn = new TableColumn<Article, Boolean>(" ");
         submitColumn.setSortable(false);
         articleTable.getColumns().add(submitColumn);
 
-       dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
-   }
-    // UI_______________________________________________________________________________________________________
-    @FXML
-    private TableView<Article> articleTable = new TableView<>();
-
-    @FXML
-    private TreeView<Article> topicTree = new TreeView<>();
-
-    @FXML
-    private Accordion dropDownAccordion;
-
-    @FXML
-    private TitledPane tPane_MyArticles;
-
-    @FXML
-    private TitledPane tPane_Topics;
-
-    @FXML
-    private ButtonBar btnBar;
-
-    @FXML
-    private Button btnCreateArticle;
-
-    @FXML
-    void createArticleClicked(ActionEvent event) throws Exception
-    {
-        mainController.openSelector();
+        dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }
 
     @FXML
-    private Button btnRefresh;
+    void createArticleClicked(ActionEvent event) throws Exception {
+        mainController.openSelector();
+    }
 
     @FXML
     void refreshClicked(ActionEvent event) {
@@ -75,7 +71,7 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
 
     // Methods_______________________________________________________________________________________________________
 
-    public void refreshUserContent(){
+    public void refreshUserContent() {
         mainController.setStatus("Refreshing UserContent...");
         setContent_ArticleTable(mainController.refreshUserContent_ArticleTable(getContent_ArticleTable()));
         setContent_TopicTree(mainController.refreshUserContent_ArticleTree(getContent_TreeView()));
@@ -91,14 +87,13 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
         this.articleTable = table;
     }
 
-    public TreeView getContent_TreeView(){
+    public TreeView getContent_TreeView() {
         return topicTree;
     }
 
     public void setContent_TopicTree(TreeView tree) {
         this.topicTree = tree;
     }
-
 
 
 }
