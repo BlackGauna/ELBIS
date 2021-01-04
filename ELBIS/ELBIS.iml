@@ -14,5 +14,6 @@
     <orderEntry type="library" name="iText7" level="project" />
     <orderEntry type="library" name="sqlite-jdbc" level="project" />
     <orderEntry type="library" name="JavaFX" level="project" />
+    <orderEntry type="library" name="spring-security-4.2.8" level="project" />
   </component>
 </module>
