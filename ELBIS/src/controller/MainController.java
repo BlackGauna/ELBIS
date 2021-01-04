@@ -614,7 +614,7 @@ public class MainController extends Application {
     }
 
     public ObservableList<Topic> getAllTopics() {
-        ObservableList<Topic> topics = dc.DBLoadAllTopics();
+        ObservableList<Topic> topics = dc.DBLoadAllowedTopics(activeUser.getId());
 
         return topics;
     }
