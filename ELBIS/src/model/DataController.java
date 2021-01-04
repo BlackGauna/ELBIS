@@ -136,7 +136,7 @@ public class DataController {
             " = ?, " + COLUMN_USER_DATE_OF_BIRTH + " = ?, " + COLUMN_USER_ROLE +  " = ? WHERE " + COLUMN_USER_ID + " = ?";
     //Edit a specific Topic with ID
     public static final String EDIT_TOPIC = "UPDATE " + TABLE_TOPIC + " SET " +
-            COLUMN_TOPIC_NAME + "= ?, " + COLUMN_TOPIC_PARENT_ID + " = ? WHERE " + COLUMN_TOPIC_ID + " = ?";
+            COLUMN_TOPIC_NAME + " = ?, " + COLUMN_TOPIC_PARENT_ID + " = ? WHERE " + COLUMN_TOPIC_ID + " = ?";
     //Load the 20 most recent Articles in a descending order.
     public static final String LOAD_RECENT_ARTICLE = "SELECT " + COLUMN_ARTICLE_TOPIC + ", " + COLUMN_ARTICLE_TITLE + ", " +
             COLUMN_ARTICLE_CONTENT + ", " + COLUMN_ARTICLE_PUBLISHER_COMMENT + ", " + COLUMN_ARTICLE_EXPIRE_DATE + " FROM " + TABLE_ARTICLE +
@@ -146,6 +146,8 @@ public class DataController {
             " ORDER BY " + COLUMN_ARTICLE_ID + " DESC LIMIT 1 ";
     //Check if user exists in database
     public static final String CHECK_USER = "SELECT password FROM " + TABLE_USER + " WHERE " + COLUMN_USER_EMAIL + " = ?";
+    //Changes Password of a user with ID
+    public static final String CHANGE_PASSWORD = "UPDATE" + TABLE_USER + " SET " + COLUMN_USER_PASSWORD + " = ? WHERE " + COLUMN_USER_ID + " = ?";
     //Load all articles
     public static final String LOAD_ALL_ARTICLES = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
             + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
@@ -897,7 +899,7 @@ public class DataController {
     }
 
     //Edit User
-    public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth, int newRole) {
+    public boolean DBEditUser(int id, String newEmail, String newName, String newAddress, int newGender, String newDateOfBirth, int newRole) {
         try {
             User user = DBLoadUserById(id);
             con = SQLConnection.ConnectDB();
@@ -912,11 +914,6 @@ public class DataController {
                 pst.setString(1, newEmail);
             }else{
                 pst.setString(1,user.getEmail());
-            }
-
-            if(!newPassword.isBlank()){
-                String hashedpw = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
-                pst.setString(2, hashedpw);
             }
             if(!newName.isBlank()){
                 pst.setString(2, newName);
@@ -1310,5 +1307,66 @@ public class DataController {
         }
     }
 
+    //Chane Password with User ID
+    public boolean DBChangePassword(int id, String pw) throws SQLException {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            mainController.setStatus("Changing password...");
+            PreparedStatement pst = con.prepareStatement(CHANGE_PASSWORD);
+            con.setAutoCommit(false);
+            String hashedpw = BCrypt.hashpw(pw, BCrypt.gensalt(12));
+            pst.setInt(2, id);
+            if (!pw.isBlank()){
+                pst.setString(1,hashedpw);
+                int affectedRows = pst.executeUpdate();
+
+                if (affectedRows == 0) {
+                    con.rollback();
+                    con.setAutoCommit(true);
+                    mainController.setStatus("Couldn't change Password!");
+                    con.close();
+                    throw new SQLException("Couldn't change Password!");
+                } else{
+                    con.commit();
+                    mainController.setStatus("Successfully changed!");
+                    System.out.println("Successfully changed!");
+                    con.close();
+                    return true;
+                }
+            }else{
+                con.rollback();
+                con.setAutoCommit(true);
+                mainController.setStatus("Password cannot be empty!");
+                System.out.println("Password cannot be empty");
+                con.close();
+                return false;
+            }
+
+        } catch (Exception e) {
+            mainController.setStatus("Couldn't change Password!");
+            System.out.println("Change password exception: " + e.getMessage());
+            try {
+                mainController.setStatus("Performing rollback");
+                System.out.println("Performing rollback");
+                con.rollback();
+                return false;
+            } catch (SQLException e2) {
+                mainController.setStatus("Couldn't rollback!");
+                System.out.println("Couldn't rollback! " + e2.getMessage());
+                return false;
+            }
+        } finally {
+            try {
+                mainController.setStatus("Resetting default commit behavior");
+                System.out.println("Resetting default commit behavior");
+                con.setAutoCommit(true);
+                con.close();
+            } catch (SQLException e) {
+                mainController.setStatus("Couldn't reset auto-commit!");
+                System.out.println("Couldn't reset auto-commit! " + e.getMessage());
+            }
+        }
+    }
 
 }
