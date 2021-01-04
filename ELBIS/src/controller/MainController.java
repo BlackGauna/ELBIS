@@ -349,8 +349,7 @@ public class MainController extends Application {
                     }
                     break;
                 case editUser:
-                    //Calls new User Pane and checks differencies
-                    //TODO does DB check diffe
+                    //TODO edit User not works properly yet
                     sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateUser.fxml"));
                     createUserPane = (Pane) sideLoader.load();
                     createUserController = sideLoader.getController();
@@ -358,6 +357,20 @@ public class MainController extends Application {
                     createUserController.setUserID(id);
                     sideScene = new Scene(createUserPane);
                     title = "Nutzerbearbeitung";
+                    break;
+                case deleteTopic:
+                    opensideStage = false;
+                    Alert deleteTopicAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    deleteTopicAlert.setTitle("Bereich löschen");
+                    deleteTopicAlert.setContentText("Dies kann nicht rückgängig gemacht werden.");
+                    deleteTopicAlert.setHeaderText("Sind sie sich sicher das sie diesen Bereich löschen möchten?");
+                    Optional<ButtonType> deleteTopicResult = deleteTopicAlert.showAndWait();
+                    if (deleteTopicResult.get() == ButtonType.OK) {
+                        dc.DBDeleteTopic(id);
+                        setStatus("Bereich " + id + " gelöscht.");
+                    } else {
+                        setStatus("Aktion abgebrochen.");
+                    }
                     break;
             }
             if (opensideStage == true) {
@@ -566,7 +579,7 @@ public class MainController extends Application {
                 ((TableColumn<Topic, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Topic, Boolean>, TableCell<Topic, Boolean>>() {
                     @Override
                     public TableCell<Topic, Boolean> call(TableColumn<Topic, Boolean> BooleanTableColumn) {
-                        return new ActionCell_TopicTable(maincontroller, "editme", sideStageState.editArticle);
+                        return new ActionCell_TopicTable(maincontroller, "Löschen", sideStageState.deleteTopic);
                     }
                 });
             }
@@ -698,8 +711,16 @@ public class MainController extends Application {
         }
 
         //TODO update an actual User
-        setStatus("TRIED TO EDIT USER###############################################\n"+
-                id + email + password +name);
+        setStatus("TRIED TO EDIT USER\n###############################################");
+        setStatus("id: "+ id);
+        setStatus("email: "+ email);
+        setStatus("password: "+password);
+        setStatus("name: "+name);
+        setStatus("address: "+address);
+        setStatus("genderInt: "+genderInt);
+        setStatus("dob: " +dateOfBirth);
+        setStatus("roleInt: "+roleInt);
+        //TODO make editUser work properly
         result = dc.DBEditUser(id, email, password, name , address, genderInt,dateOfBirth, roleInt);
 
         return result;

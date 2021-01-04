@@ -899,23 +899,23 @@ public class DataController {
             if(id != 0) {
                 pst.setInt(8, id);
             }
-            if(newEmail != null && !newEmail.isBlank()){
+            if(newEmail != null || !newEmail.isBlank() ||!newEmail.equals("")){
                 pst.setString(1, newEmail);
             }
-            if(newPassword != null && !newPassword.isBlank()){
+            if(newPassword != null || !newPassword.isBlank()|| !newPassword.equals("")){
                 String hashedpw = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
                 pst.setString(2, hashedpw);
             }
-            if(newName != null && !newName.isBlank()){
+            if(newName != null || !newName.isBlank() || !newName.equals("")){
                 pst.setString(3, newName);
             }
-            if(newAddress != null && !newAddress.isBlank()){
+            if(newAddress != null || !newAddress.isBlank()|| !newAddress.equals("")){
                 pst.setString(4, newAddress);
             }
             if(newGender != 0) {
                 pst.setInt(5, newGender);
             }
-            if(newDateOfBirth != null && !newDateOfBirth.isBlank()){
+            if(newDateOfBirth != null || !newDateOfBirth.isBlank()||!newDateOfBirth.equals("")){
                 pst.setString(6, newDateOfBirth);
             }
             if(newRole != 0) {
