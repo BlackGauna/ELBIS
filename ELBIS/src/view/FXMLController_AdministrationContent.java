@@ -42,6 +42,7 @@ public class FXMLController_AdministrationContent extends ELBIS_FXMLController i
         deleteTopicColumn.setSortable(false);
         topicTable.getColumns().add(deleteTopicColumn);
 
+
         userTable.getColumns().add(new TableColumn<User, String>("ID"));
         userTable.getColumns().add(new TableColumn<User, String>("E-Mail"));
         userTable.getColumns().add(new TableColumn<User, String>("Name"));
