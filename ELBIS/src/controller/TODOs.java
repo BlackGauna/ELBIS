@@ -12,9 +12,6 @@ public class TODOs {
 
     TODO maybe show the count of articles under a specific topic on topic views (count articles per topic)
     TODO make sure relogin reloads everything properly (NO BUGS SO FAR)
-    TODO Method for moderators to authorize or decline articles
-
-    TODO Load the logged in users topics on login
     TODO empty login fields on logout (create new LoginView)
 
     TODO maybe - wenn ein Artikel autorisiert wurde ist er vom User veröffentlichbar?
@@ -24,7 +21,6 @@ public class TODOs {
     //_____DB_____
     /*
     TODO Update loadUser methods to update the topic List of a user
-
      */
 
     //_____UI_____
