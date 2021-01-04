@@ -132,7 +132,7 @@ public class DataController {
     //Be careful with the UPDATE commands, if it is left empty it can update all tables and wipe the database.
     //Edit a specific User with ID
     public static final String EDIT_USER = "UPDATE " + TABLE_USER + " SET " + COLUMN_USER_EMAIL +
-            " = ?, " + COLUMN_USER_PASSWORD + " = ?, " + COLUMN_USER_NAME + " = ?, " + COLUMN_USER_ADDRESS + " = ?, " + COLUMN_USER_GENDER +
+            " = ?, " + COLUMN_USER_NAME + " = ?, " + COLUMN_USER_ADDRESS + " = ?, " + COLUMN_USER_GENDER +
             " = ?, " + COLUMN_USER_DATE_OF_BIRTH + " = ?, " + COLUMN_USER_ROLE +  " = ? WHERE " + COLUMN_USER_ID + " = ?";
     //Edit a specific Topic with ID
     public static final String EDIT_TOPIC = "UPDATE " + TABLE_TOPIC + " SET " +
@@ -890,46 +890,42 @@ public class DataController {
     //Edit User
     public boolean DBEditUser(int id, String newEmail, String newPassword, String newName, String newAddress, int newGender, String newDateOfBirth, int newRole) {
         try {
+            User user = DBLoadUserById(id);
             con = SQLConnection.ConnectDB();
             assert con != null;
             mainController.setStatus("Editing User...");
             PreparedStatement pst = con.prepareStatement(EDIT_USER);
             con.setAutoCommit(false);
-            User user = new User();
-            user = DBLoadUserById(id);
 
-            pst.setInt(8, id);
+            pst.setInt(7, id);
 
-            if(newEmail != null || !newEmail.isBlank() ||!newEmail.equals("")){
+            if(!newEmail.isBlank()){
                 pst.setString(1, newEmail);
             }else{
                 pst.setString(1,user.getEmail());
             }
 
-            if(newPassword != null || !newPassword.isBlank()|| !newPassword.equals("")){
+            if(!newPassword.isBlank()){
                 String hashedpw = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
                 pst.setString(2, hashedpw);
-            }else{
-                pst.setString(2,user.getPassword());
             }
-            if(newName != null || !newName.isBlank() || !newName.equals("")){
-                pst.setString(3, newName);
+            if(!newName.isBlank()){
+                pst.setString(2, newName);
             }else{
-                pst.setString(3,user.getName());
+                pst.setString(2,user.getName());
             }
-            if(newAddress != null || !newAddress.isBlank()|| !newAddress.equals("")){
-                pst.setString(4, newAddress);
+            if(!newAddress.isBlank()){
+                pst.setString(3, newAddress);
             }else{
-                pst.setString(4,user.getAddress());
+                pst.setString(3,user.getAddress());
             }
-                pst.setInt(5, newGender);
-
-            if(newDateOfBirth != null || !newDateOfBirth.isBlank()||!newDateOfBirth.equals("")){
-                pst.setString(6, newDateOfBirth);
+                pst.setInt(4, newGender);
+            if(!newDateOfBirth.isBlank()){
+                pst.setString(5, newDateOfBirth);
             }else{
-                pst.setString(6,user.getDateOfBirth());
+                pst.setString(5,user.getDateOfBirth());
             }
-                pst.setInt(7, newRole);
+                pst.setInt(6, newRole);
 
 
             int affectedRows = pst.executeUpdate();
