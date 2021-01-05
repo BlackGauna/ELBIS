@@ -215,6 +215,7 @@ public class MainController extends Application {
     }
 
     public boolean login(String email, String pw) throws SQLException {
+        setStatus("Versuche "+email+" einzuloggen...");
         boolean login = dc.login(email, pw);
         if (login) {
             activeUser = dc.DBLoadUserByEmail(email);
