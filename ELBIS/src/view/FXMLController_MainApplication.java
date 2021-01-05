@@ -4,6 +4,7 @@ import controller.MainController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import model.*;
@@ -164,5 +165,23 @@ public class FXMLController_MainApplication extends ELBIS_FXMLController {
         //administrationTableController.setContent_TopicTable(mainController.refreshAdministrationContent_TopicTable(administrationTableController.getContent_TopicTable()));
         administrationTableController.refreshAdministrationContent();
     }
+    //just some bullshit
+    boolean colourcode = false;
+    @FXML
+    void keyPressed(KeyEvent event) {
+        switch (event.getCode()) {
+            case SHIFT:
+                colourcode = !colourcode;
+                if(colourcode == false){
+                    mainController.setStylepath("/ELBIS_graphic/colourful.css");}
+                else{
+                    mainController.setStylepath("/ELBIS_graphic/dark.css");}
 
+                break;
+            default:
+                break;
+        }
+        System.out.println("stylepath set");
+    }
 }
+

@@ -9,7 +9,7 @@
       <Label text="North Empty yet" BorderPane.alignment="CENTER" />
    </top>
    <center>
-      <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" />
+      <TabPane fx:id="tabPane" onKeyPressed="#keyPressed" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
       <Label text="South Empty yet" BorderPane.alignment="CENTER" />

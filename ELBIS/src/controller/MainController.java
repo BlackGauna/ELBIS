@@ -31,6 +31,7 @@ public class MainController extends Application {
     //Data
     private DataController dc;
     private User activeUser;
+    String stylepath = "/ELBIS_graphic/dark.css";
     //MainLoaders
     private FXMLLoader loginLoader;
     private FXMLLoader mainApplicationLoader;
@@ -189,15 +190,14 @@ public class MainController extends Application {
             //loginScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             //applicationScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             //sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
-
             loginScene.getStylesheets().add(getClass()
-                    .getResource("/ELBIS_graphic/dark.css")
+                    .getResource(stylepath)
                     .toExternalForm());
             applicationScene.getStylesheets().add(getClass()
-                    .getResource("/ELBIS_graphic/dark.css")
+                    .getResource(stylepath)
                     .toExternalForm());
             sideScene.getStylesheets().add(getClass()
-                    .getResource("/ELBIS_graphic/dark.css")
+                    .getResource(stylepath)
                     .toExternalForm());
             setStatus("Es ist nun dunkel.");
 
@@ -1006,6 +1006,9 @@ public class MainController extends Application {
     //Getters,Setters_______________________________________________________________________________________________________
     public User getActiveUser() {
         return activeUser;
+    }
+    public void setStylepath(String path){
+        this.stylepath = path;
     }
 
 }
