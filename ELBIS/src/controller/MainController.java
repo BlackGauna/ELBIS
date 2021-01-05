@@ -323,6 +323,7 @@ public class MainController extends Application {
             } catch (IOException io) {
                 io.printStackTrace();
             }
+            refreshAllContent();
         } else {
             Toolkit.getDefaultToolkit().beep();
             sideStage.requestFocus();
@@ -587,7 +588,11 @@ public class MainController extends Application {
 
     public TableView refreshUserContent_TopicTable(TableView table) {
 
-        //ObservableList<Topic> topicList = dc.DBLoadAllowedTopics(activeUser.getId());
+        if (activeUser instanceof Moderator || activeUser instanceof Administrator) {
+            activeUser.setTopics(dc.DBLoadAllTopics());
+        } else {
+            activeUser.setTopics(dc.DBLoadAllowedTopics(activeUser.getId()));
+        }
         ObservableList<Topic> topicList = activeUser.getTopics();
 
         List<String> propertyKeys = Arrays.asList("id", "name", "parent");
