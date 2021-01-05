@@ -43,7 +43,7 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
         articleTable.getColumns().add(new TableColumn<Article, String>("Ablauf"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Bearbeitet"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Status"));
-        articleTable.getColumns().add(new TableColumn<Article, String>("Topic"));
+        articleTable.getColumns().add(new TableColumn<Article, String>("Bereich"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Autor"));
         articleTable.getColumns().add(new TableColumn<Article, String>("Herausgeber"));
         TableColumn commentColumn = new TableColumn<Article, Boolean>("Herausgeber Kommentar");

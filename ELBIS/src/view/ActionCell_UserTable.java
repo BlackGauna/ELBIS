@@ -16,10 +16,12 @@ public class ActionCell_UserTable extends TableCell<User, Boolean> {
     Button btn;
     MainController mainController;
     User hisUser;
+    sideStageState state;
 
     // Ctor_______________________________________________________________________________________________________
     public ActionCell_UserTable(MainController mainController, String label, sideStageState state) {
         this.mainController = mainController;
+        this.state = state;
         btn = new Button(label);
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -42,6 +44,12 @@ public class ActionCell_UserTable extends TableCell<User, Boolean> {
                 if (mainController.getActiveUser() instanceof Administrator) {
                     btn.setDisable(false);
                 }
+            }
+            switch(state){
+                case allowTopic:
+                case denyTopic:
+                    if(hisUser instanceof Moderator){ btn.setDisable(true);}
+                    break;
             }
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             setGraphic(btn);

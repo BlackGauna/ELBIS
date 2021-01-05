@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
@@ -13,6 +14,7 @@ import javafx.util.Callback;
 import model.*;
 import view.*;
 
+import java.awt.*;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -81,6 +83,9 @@ public class MainController extends Application {
 
     private FXMLController_ChangePassword changePasswordController;
     private Pane changePasswordPane;
+
+    private FXMLController_ChangeUserTopic changeUserTopicController;
+    private Pane changeUserTopicPane;
 
 
     // Ctor_______________________________________________________________________________________________________
@@ -215,7 +220,7 @@ public class MainController extends Application {
     }
 
     public boolean login(String email, String pw) throws SQLException {
-        setStatus("Versuche "+email+" einzuloggen...");
+        setStatus("Versuche " + email + " einzuloggen...");
         boolean login = dc.login(email, pw);
         if (login) {
             activeUser = dc.DBLoadUserByEmail(email);
@@ -231,7 +236,7 @@ public class MainController extends Application {
         } else if (!login) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setContentText("Please enter correct email and password");
+            alert.setContentText("Einlogdaten nicht korrekt. Bitte überprüfen sie ihre Eingabe.");
             alert.setHeaderText(null);
             alert.showAndWait();
         }
@@ -288,192 +293,236 @@ public class MainController extends Application {
     }
 
     public void callSideStage(sideStageState state) {
-        String title = "";
-        ObservableList<String> style = sideScene.getStylesheets();
-        try {
-            switch (state) {
-                case createUser:
-                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateUser.fxml"));
-                    createUserPane = (Pane) sideLoader.load();
-                    createUserController = sideLoader.getController();
-                    createUserController.setMainController(this);
-                    sideScene = new Scene(createUserPane);
-                    title = "Nutzererstellung";
-                    break;
-                case createTopic:
-                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateTopic.fxml"));
-                    createTopicPane = (Pane) sideLoader.load();
-                    createTopicController = sideLoader.getController();
-                    createTopicController.setMainController(this);
-                    createTopicController.setTopicID(0);
-                    sideScene = new Scene(createTopicPane);
-                    title = "Bereichserstellung";
-                    break;
-            }
-            sideScene.getStylesheets().addAll(style);
-            sideStage.setTitle(title);
-            sideStage.setScene(sideScene);
-            sideStage.showAndWait();
-        } catch (IOException io) {
-            io.printStackTrace();
-        }
-    }
-
-    public void callSideStage(sideStageState state, int id) {
-        String title = "";
-        Boolean opensideStage = true;
-        ObservableList<String> style = sideScene.getStylesheets();
-        try {
-            switch (state) {
-                case editArticle:
-                    openEditorScene((Article) dc.DBLoadArticle(id));
-                    setStatus("Der Artikel mit der ID "+id+ " wurde zum bearbeiten geöffnet.");
-                    opensideStage = false;
-                    break;
-                case deleteArticle:
-                    opensideStage = false;
-                    Alert deleteArticleAlert = new Alert(Alert.AlertType.CONFIRMATION);
-                    deleteArticleAlert.setTitle("Artikel löschen");
-                    deleteArticleAlert.setContentText(" Dies kann nicht rückgängig gemacht werden.");
-                    deleteArticleAlert.setHeaderText("Sind sie sich sicher das sie diesen Artikel löschen möchten?");
-                    Optional<ButtonType> deleteResult = deleteArticleAlert.showAndWait();
-                    if (deleteResult.get() == ButtonType.OK) {
-                        dc.DBDeleteArticle(id);
-                        setStatus("Artikel " + id + " gelöscht.");
-                    } else {
-                        setStatus("Aktion abgebrochen.");
-                    }
-                    break;
-                case userSubmit:
-                    opensideStage = false;
-                    Article article = dc.DBLoadArticle(id);
-                    Alert submitAlert;
-                    if (article.getStatus().getStatusCode() > 1) {
-                        submitAlert = new Alert(Alert.AlertType.INFORMATION);
-                        submitAlert.setTitle("Veröffentlichung anfragen");
-                        submitAlert.setContentText("Bitte überprüfen sie den Beitragsstatus und ggf. den Kommentar.");
-                        submitAlert.setHeaderText("Der Beitrag wurde bereits zur Veröffentlichung freigegeben oder veröffentlicht.");
-                        submitAlert.showAndWait();
-                    } else {
-                        submitAlert = new Alert(Alert.AlertType.CONFIRMATION);
-                        submitAlert.setTitle("Veröffentlichung anfragen");
-                        submitAlert.setContentText("Der Beitrag kann im Folgenden von einem Moderator überprüft werden.");
-                        submitAlert.setHeaderText("Sind sie sich sicher das sie diesen Artikel veröffentlichen möchten?");
-                        Optional<ButtonType> submitResult = submitAlert.showAndWait();
-                        if (submitResult.get() == ButtonType.OK) {
-                            article.setStatus(Status.Eingereicht);
-                            dc.DBEditArticle(article);
-                            setStatus("Artikel " + id + " zur veröffentlichung freigegeben.");
-                        } else {
-                            setStatus("Aktion abgebrochen.");
-                        }
-                    }
-                    break;
-                case manageSubmission:
-                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ManageSubmission.fxml"));
-                    manageSubmissionPane = (Pane) sideLoader.load();
-                    manageSubmissionController = sideLoader.getController();
-                    manageSubmissionController.setMainController(this);
-                    manageSubmissionController.setArticleId(id);
-                    sideScene = new Scene(manageSubmissionPane);
-                    title = "Nutzererstellung";
-                    break;
-                case deleteUser:
-                    opensideStage = false;
-                    Alert deleteUserAlert = new Alert(Alert.AlertType.CONFIRMATION);
-                    deleteUserAlert.setTitle("Nutzer löschen");
-                    deleteUserAlert.setContentText("Dies kann nicht rückgängig gemacht werden.");
-                    deleteUserAlert.setHeaderText("Sind sie sich sicher das sie diesen Nutzer löschen möchten?");
-                    Optional<ButtonType> deleteUserResult = deleteUserAlert.showAndWait();
-                    if (deleteUserResult.get() == ButtonType.OK) {
-                        dc.DBDeleteUser(id);
-                        setStatus("Nutzer " + id + " gelöscht.");
-                    } else {
-                        setStatus("Aktion abgebrochen.");
-                    }
-                    break;
-                case editUser:
-                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_EditUser.fxml"));
-                    editUserPane = (Pane) sideLoader.load();
-                    editUserController = sideLoader.getController();
-                    editUserController.setMainController(this);
-                    editUserController.setUserID(id);
-                    sideScene = new Scene(editUserPane);
-                    title = "Nutzerbearbeitung";
-                    break;
-                case deleteTopic:
-                    opensideStage = false;
-                    Alert deleteTopicAlert = new Alert(Alert.AlertType.CONFIRMATION);
-                    deleteTopicAlert.setTitle("Bereich löschen");
-                    deleteTopicAlert.setContentText("Dies kann nicht rückgängig gemacht werden.");
-                    deleteTopicAlert.setHeaderText("Sind sie sich sicher das sie diesen Bereich löschen möchten?");
-                    Optional<ButtonType> deleteTopicResult = deleteTopicAlert.showAndWait();
-                    if (deleteTopicResult.get() == ButtonType.OK) {
-                        dc.DBDeleteTopic(id);
-                        setStatus("Bereich " + id + " gelöscht.");
-                    } else {
-                        setStatus("Aktion abgebrochen.");
-                    }
-                    break;
-                case changeUserPassword:
-                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangePassword.fxml"));
-                    changePasswordPane = (Pane) sideLoader.load();
-                    changePasswordController = sideLoader.getController();
-                    changePasswordController.setMainController(this);
-                    changePasswordController.setUserID(id);
-                    sideScene = new Scene(changePasswordPane);
-                    title = "Nutzer-Passwort ändern";
-                    break;
-                case editTopic:
-                    //use createTopic to edit via id
-                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateTopic.fxml"));
-                    createTopicPane = (Pane) sideLoader.load();
-                    createTopicController = sideLoader.getController();
-                    createTopicController.setMainController(this);
-                    createTopicController.setTopicID(id);
-                    createTopicController.setCurrentTopic(dc.DBLoadTopic(id));
-                    sideScene = new Scene(createTopicPane);
-                    title = "Bereichsbearbeitung";
-                    break;
-                case showComment:
-                    opensideStage = false;
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Kommentar Anzeigen");
-
-                    TextArea statusArea = new TextArea();
-                    statusArea.setWrapText(true);
-                    statusArea.setEditable(false);
-
-                    statusArea.setText(dc.DBLoadArticle(id).getPublisherComment());
-
-                    alert.getDialogPane().setContent(statusArea);
-                    alert.setResizable(true);
-
-                    alert.setHeaderText("Herausgeberkommentar");
-                    statusArea.selectPositionCaret(statusArea.getLength());
-                    statusArea.deselect();
-                    alert.showAndWait();
-                    break;
-                case changeUserRole:
-                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangeUserRole.fxml"));
-                    changeUserRolePane = (Pane) sideLoader.load();
-                    changeUserRoleController = sideLoader.getController();
-                    changeUserRoleController.setMainController(this);
-                    changeUserRoleController.setUserID(id);
-                    sideScene = new Scene(changeUserRolePane);
-                    title = "Nutzer-Rolle ändern";
-                    break;
-            }
-            if (opensideStage == true) {
+        if (!sideStage.isShowing()) {
+            String title = "";
+            ObservableList<String> style = sideScene.getStylesheets();
+            try {
+                switch (state) {
+                    case createUser:
+                        sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateUser.fxml"));
+                        createUserPane = (Pane) sideLoader.load();
+                        createUserController = sideLoader.getController();
+                        createUserController.setMainController(this);
+                        sideScene = new Scene(createUserPane);
+                        title = "Nutzererstellung";
+                        break;
+                    case createTopic:
+                        sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateTopic.fxml"));
+                        createTopicPane = (Pane) sideLoader.load();
+                        createTopicController = sideLoader.getController();
+                        createTopicController.setMainController(this);
+                        createTopicController.setTopicID(0);
+                        sideScene = new Scene(createTopicPane);
+                        title = "Bereichserstellung";
+                        break;
+                }
                 sideScene.getStylesheets().addAll(style);
                 sideStage.setTitle(title);
                 sideStage.setScene(sideScene);
                 sideStage.showAndWait();
+            } catch (IOException io) {
+                io.printStackTrace();
             }
-            refreshAllContent();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+            sideStage.requestFocus();
+        }
+    }
 
+    public void callSideStage(sideStageState state, int id) {
+        if (!sideStage.isShowing()) {
+            String title = "";
+            Boolean opensideStage = true;
+            ObservableList<String> style = sideScene.getStylesheets();
+            try {
+                switch (state) {
+                    case editArticle:
+                        openEditorScene((Article) dc.DBLoadArticle(id));
+                        setStatus("Der Artikel mit der ID " + id + " wurde zum bearbeiten geöffnet.");
+                        opensideStage = false;
+                        break;
+                    case deleteArticle:
+                        opensideStage = false;
+                        Alert deleteArticleAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                        deleteArticleAlert.setTitle("Artikel löschen");
+                        deleteArticleAlert.setContentText(" Dies kann nicht rückgängig gemacht werden.");
+                        deleteArticleAlert.setHeaderText("Sind sie sich sicher das sie diesen Artikel löschen möchten?");
+                        Optional<ButtonType> deleteResult = deleteArticleAlert.showAndWait();
+                        if (deleteResult.get() == ButtonType.OK) {
+                            dc.DBDeleteArticle(id);
+                            setStatus("Artikel " + id + " gelöscht.");
+                        } else {
+                            setStatus("Aktion abgebrochen.");
+                        }
+                        break;
+                    case userSubmit:
+                        opensideStage = false;
+                        Article article = dc.DBLoadArticle(id);
+                        Alert submitAlert;
+                        if (article.getStatus().getStatusCode() > 1) {
+                            submitAlert = new Alert(Alert.AlertType.INFORMATION);
+                            submitAlert.setTitle("Veröffentlichung anfragen");
+                            submitAlert.setContentText("Bitte überprüfen sie den Beitragsstatus und ggf. den Kommentar.");
+                            submitAlert.setHeaderText("Der Beitrag wurde bereits zur Veröffentlichung freigegeben oder veröffentlicht.");
+                            submitAlert.showAndWait();
+                        } else {
+                            submitAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                            submitAlert.setTitle("Veröffentlichung anfragen");
+                            submitAlert.setContentText("Der Beitrag kann im Folgenden von einem Moderator überprüft werden.");
+                            submitAlert.setHeaderText("Sind sie sich sicher das sie diesen Artikel veröffentlichen möchten?");
+                            Optional<ButtonType> submitResult = submitAlert.showAndWait();
+                            if (submitResult.get() == ButtonType.OK) {
+                                article.setStatus(Status.Eingereicht);
+                                dc.DBEditArticle(article);
+                                setStatus("Artikel " + id + " zur veröffentlichung freigegeben.");
+                            } else {
+                                setStatus("Aktion abgebrochen.");
+                            }
+                        }
+                        break;
+                    case manageSubmission:
+                        sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ManageSubmission.fxml"));
+                        manageSubmissionPane = (Pane) sideLoader.load();
+                        manageSubmissionController = sideLoader.getController();
+                        manageSubmissionController.setMainController(this);
+                        manageSubmissionController.setArticleId(id);
+                        sideScene = new Scene(manageSubmissionPane);
+                        title = "Nutzererstellung";
+                        break;
+                    case deleteUser:
+                        opensideStage = false;
+                        Alert deleteUserAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                        deleteUserAlert.setTitle("Nutzer löschen");
+                        deleteUserAlert.setContentText("Dies kann nicht rückgängig gemacht werden.");
+                        deleteUserAlert.setHeaderText("Sind sie sich sicher das sie diesen Nutzer löschen möchten?");
+                        Optional<ButtonType> deleteUserResult = deleteUserAlert.showAndWait();
+                        if (deleteUserResult.get() == ButtonType.OK) {
+                            dc.DBDeleteUser(id);
+                            setStatus("Nutzer " + id + " gelöscht.");
+                        } else {
+                            setStatus("Aktion abgebrochen.");
+                        }
+                        break;
+                    case editUser:
+                        sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_EditUser.fxml"));
+                        editUserPane = (Pane) sideLoader.load();
+                        editUserController = sideLoader.getController();
+                        editUserController.setMainController(this);
+                        editUserController.setUserID(id);
+                        sideScene = new Scene(editUserPane);
+                        title = "Nutzerbearbeitung";
+                        break;
+                    case deleteTopic:
+                        opensideStage = false;
+                        Alert deleteTopicAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                        deleteTopicAlert.setTitle("Bereich löschen");
+                        deleteTopicAlert.setContentText("Dies kann nicht rückgängig gemacht werden.");
+                        deleteTopicAlert.setHeaderText("Sind sie sich sicher das sie diesen Bereich löschen möchten?");
+                        Optional<ButtonType> deleteTopicResult = deleteTopicAlert.showAndWait();
+                        if (deleteTopicResult.get() == ButtonType.OK) {
+                            dc.DBDeleteTopic(id);
+                            setStatus("Bereich " + id + " gelöscht.");
+                        } else {
+                            setStatus("Aktion abgebrochen.");
+                        }
+                        break;
+                    case changeUserPassword:
+                        sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangePassword.fxml"));
+                        changePasswordPane = (Pane) sideLoader.load();
+                        changePasswordController = sideLoader.getController();
+                        changePasswordController.setMainController(this);
+                        changePasswordController.setUserID(id);
+                        sideScene = new Scene(changePasswordPane);
+                        title = "Nutzer-Passwort ändern";
+                        break;
+                    case editTopic:
+                        //use createTopic to edit via id
+                        sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateTopic.fxml"));
+                        createTopicPane = (Pane) sideLoader.load();
+                        createTopicController = sideLoader.getController();
+                        createTopicController.setMainController(this);
+                        createTopicController.setTopicID(id);
+                        createTopicController.setCurrentTopic(dc.DBLoadTopic(id));
+                        sideScene = new Scene(createTopicPane);
+                        title = "Bereichsbearbeitung";
+                        break;
+                    case showComment:
+                        opensideStage = false;
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Kommentar Anzeigen");
+
+                        TextArea statusArea = new TextArea();
+                        statusArea.setWrapText(true);
+                        statusArea.setEditable(false);
+
+                        statusArea.setText(dc.DBLoadArticle(id).getPublisherComment());
+
+                        alert.getDialogPane().setContent(statusArea);
+                        alert.setResizable(true);
+
+                        alert.setHeaderText("Herausgeberkommentar");
+                        statusArea.selectPositionCaret(statusArea.getLength());
+                        statusArea.deselect();
+                        alert.showAndWait();
+                        break;
+                    case changeUserRole:
+                        sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangeUserRole.fxml"));
+                        changeUserRolePane = (Pane) sideLoader.load();
+                        changeUserRoleController = sideLoader.getController();
+                        changeUserRoleController.setMainController(this);
+                        changeUserRoleController.setUserID(id);
+                        sideScene = new Scene(changeUserRolePane);
+                        title = "Nutzer-Rolle ändern";
+                        break;
+                    case allowTopic:
+                        sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangeUserTopic.fxml"));
+                        changeUserTopicPane = (Pane) sideLoader.load();
+                        changeUserTopicController = sideLoader.getController();
+                        changeUserTopicController.setMainController(this);
+                        changeUserTopicController.setUserID(id);
+                        //only give Topics which are not already allowed
+                        ObservableList<Topic> giveTopics = dc.DBLoadAllTopics();
+                        ObservableList<Topic> alreadyGotten = dc.DBLoadAllowedTopics(id);
+                        //giveTopics.removeAll(alreadyGotten);
+                        for (int i = 0; i < alreadyGotten.size(); i++) {
+                            for (int z = 0; z < giveTopics.size(); z++) {
+                                if (alreadyGotten.get(i).getId() == giveTopics.get(z).getId()) {
+                                    giveTopics.remove(z);
+                                    break;
+                                }
+                            }
+                        }
+                        changeUserTopicController.setTopicList(giveTopics);
+                        changeUserTopicController.setState(state);
+                        sideScene = new Scene(changeUserTopicPane);
+                        title = "Nutzer-Bereich ändern";
+                        break;
+                    case denyTopic:
+                        sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangeUserTopic.fxml"));
+                        changeUserTopicPane = (Pane) sideLoader.load();
+                        changeUserTopicController = sideLoader.getController();
+                        changeUserTopicController.setMainController(this);
+                        changeUserTopicController.setUserID(id);
+                        changeUserTopicController.setTopicList(dc.DBLoadAllowedTopics(id));
+                        changeUserTopicController.setState(state);
+                        sideScene = new Scene(changeUserTopicPane);
+                        title = "Nutzer-Bereich ändern";
+                        break;
+                }
+                if (opensideStage == true) {
+                    sideScene.getStylesheets().addAll(style);
+                    sideStage.setTitle(title);
+                    sideStage.setScene(sideScene);
+                    sideStage.showAndWait();
+                }
+                refreshAllContent();
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+            sideStage.requestFocus();
         }
     }
 
@@ -729,6 +778,20 @@ public class MainController extends Application {
                         return new ActionCell_UserTable(maincontroller, "Rolle ändern", sideStageState.changeUserRole);
                     }
                 });
+            } else if (i == 8) {
+                ((TableColumn<User, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>>() {
+                    @Override
+                    public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
+                        return new ActionCell_UserTable(maincontroller, "Bereich zuordnen", sideStageState.allowTopic);
+                    }
+                });
+            } else if (i == 9) {
+                ((TableColumn<User, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>>() {
+                    @Override
+                    public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
+                        return new ActionCell_UserTable(maincontroller, "Bereich entziehen", sideStageState.denyTopic);
+                    }
+                });
             } else {
                 //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String) (propertyKeys.get(i))));
@@ -770,7 +833,7 @@ public class MainController extends Application {
             roleInt = 3;
         }
         result = dc.DBSendNewUser(email, password, name, genderInt, roleInt, address, dateOfBirth);
-        setStatus("Nutzer "+" ("+email+") wurde erstellt.");
+        setStatus("Nutzer " + " (" + email + ") wurde erstellt.");
         return result;
     }
 
@@ -801,7 +864,7 @@ public class MainController extends Application {
         }
 
         result = dc.DBEditUser(id, email, name, address, genderInt, dateOfBirth, roleInt);
-        setStatus("Nutzer "+name+" ("+email+") wurde bearbeitet.");
+        setStatus("Nutzer " + name + " (" + email + ") wurde bearbeitet.");
         return result;
     }
 
@@ -817,14 +880,38 @@ public class MainController extends Application {
             roleInt = 1;
         }
         dc.DBEditUser(userID, editUser.getEmail(), editUser.getName(), editUser.getAddress(), editUser.getGenderAsInt(), editUser.getDateOfBirth().toString(), roleInt);
-        setStatus("Nutzerrolle von "+editUser.getName()+" ("+editUser.getEmail()+") wurde zu \""+Role+"\" geändert.");
+        setStatus("Nutzerrolle von " + editUser.getName() + " (" + editUser.getEmail() + ") wurde zu \"" + Role + "\" geändert.");
+        return result;
+    }
+
+    public boolean allowTopic(int userID, int choosenTopicID) {
+        boolean result = false;
+        //TODO make sure AddAllowedTopic method works
+        result = dc.DBAddAllowedTopic(userID, choosenTopicID);
+        if (result == true) {
+            setStatus("Dem Nutzer " + userID + " wurde ein neuer Bereich zugeordnet. BereichsID: " + choosenTopicID);
+        } else {
+            setStatus("ERROR: Dem Nutzer " + userID + " konnte kein neuer Bereich zugeornet werden.");
+        }
+        return result;
+    }
+
+    public boolean denyTopic(int userID, int choosenTopicID) {
+        boolean result = false;
+        //TODO make sure deleteAllowedTopic method works
+        result = dc.DBDeleteAllowedTopic(userID, choosenTopicID);
+        if (result == true) {
+            setStatus("Dem Nutzer " + userID + " wurde ein neuer Bereich zugeordnet. BereichsID: " + choosenTopicID);
+        } else {
+            setStatus("ERROR: Dem Nutzer " + userID + " konnte kein Bereich entzogen werden.");
+        }
         return result;
     }
 
     public boolean createArticle(Article article) {
         boolean result = false;
         result = dc.DBSendNewArticle(article);
-        setStatus("neuer Artikel (\""+article.getTitle()+"\") wurde gespeichert.");
+        setStatus("neuer Artikel (\"" + article.getTitle() + "\") wurde gespeichert.");
         return result;
     }
 
@@ -841,7 +928,7 @@ public class MainController extends Application {
             }
         }
         dc.DBSendNewTopic(name, topicInt);
-        setStatus("neues Topic angelegt: "+name);
+        setStatus("neues Topic angelegt: " + name);
         return result;
     }
 
@@ -859,7 +946,7 @@ public class MainController extends Application {
             }
         }
         result = dc.DBEditTopic(id, name, topicInt);
-        setStatus("Topic "+id+" bearbeitet.");
+        setStatus("Topic " + id + " bearbeitet.");
         return result;
     }
 
@@ -884,7 +971,7 @@ public class MainController extends Application {
         boolean result = false;
         try {
             result = dc.DBChangePassword(userID, password);
-            setStatus("Passwort von Nutzer "+userID +" wurde geändert.");
+            setStatus("Passwort von Nutzer " + userID + " wurde geändert.");
         } catch (SQLException sql) {
             sql.printStackTrace();
         } finally {
@@ -901,7 +988,7 @@ public class MainController extends Application {
         } else {
             System.out.println(article.getTopic());
             result = dc.DBEditArticle(article);
-            setStatus("Artikel (\""+article.getTitle()+"\") wurde gespeichert.");
+            setStatus("Artikel (\"" + article.getTitle() + "\") wurde gespeichert.");
         }
 
         return result;

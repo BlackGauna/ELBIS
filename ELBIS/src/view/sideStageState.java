@@ -10,6 +10,8 @@ public enum sideStageState {
     createTopic,
     deleteTopic,
     editTopic,
+    allowTopic,
+    denyTopic,
 
     editArticle,
     deleteArticle,
