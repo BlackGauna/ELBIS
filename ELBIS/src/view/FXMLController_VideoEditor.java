@@ -402,6 +402,7 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
 
         canvas.getRenderer().addChild(rendererToAdd.setParent(canvas.getRenderer()));
 
+
         while (result.getStatus() != LayoutResult.FULL)
         {
             rendererToAdd = result.getSplitRenderer();

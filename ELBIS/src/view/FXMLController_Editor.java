@@ -206,7 +206,7 @@ public class FXMLController_Editor
             }
             if (currentArticle.getTopic()!=null)
             {
-                //saveController.topicChoice.getSelectionModel().select(currentArticle.getTopic());
+                saveController.topicChoice.getSelectionModel().select(currentArticle.getTopic());
             }
             if (currentArticle.getExpireDate()!=null)
             {
@@ -239,11 +239,11 @@ public class FXMLController_Editor
                 {
                     String titleText= saveController.saveTitle.getText();
                     Status chosenStatus= saveController.statusChoice.getValue();
-                    System.out.println(chosenStatus);
+                    // System.out.println(chosenStatus);
 
+                    // check if user left the status on an invalid status not in their privileges
                     if (!(activeUser instanceof Moderator))
                     {
-                        // check if user left the status on an invalid status not in their privileges
                         if (chosenStatus!=Status.Entwurf && chosenStatus != Status.Eingereicht)
                         {
                             Alert alert= new Alert(Alert.AlertType.ERROR,
@@ -253,6 +253,7 @@ public class FXMLController_Editor
                         }
                     }
 
+                    // Check empty fields
                     if (titleText==null || titleText.matches("^\\s*$"))
                     {
                         Alert alert= new Alert(Alert.AlertType.ERROR,
@@ -270,7 +271,7 @@ public class FXMLController_Editor
                                 "Bitte ein Ablaufdatum angeben!");
                         alert.showAndWait();
                     }
-                    else
+                    else // write field data to article object and send to db via mainController
                     {
                         // update values of current article according to filled in fields
                         currentArticle.setTitle(saveController.saveTitle.getText());
@@ -281,16 +282,21 @@ public class FXMLController_Editor
                         currentArticle.setTopicID(saveController.topicChoice.getSelectionModel().getSelectedIndex()+1);
                         currentArticle.setStatus(saveController.statusChoice.getValue());
 
-                        System.out.println(activeUser.getId());
+                        // System.out.println(activeUser.getId());
                         currentArticle.setAuthor(activeUser);
 
+                        System.out.println(saveController.topicChoice.getValue());
+                        System.out.println(currentArticle.getTopic());
                         // send current Article with updated values to main controller to write into db
                         mainController.saveArticle(currentArticle);
                         // close window
                         saveDialog.close();
 
-                    }
-                    openArticle(currentArticle.getContent());
+                    } // open article again after saving
+                    /*if (currentArticle.getContent()!=null)
+                    {
+                        openArticle(currentArticle.getContent());
+                    }*/
                 }
             });
 
@@ -302,7 +308,6 @@ public class FXMLController_Editor
                     saveDialog.close();
                 }
             });
-
 
 
             Scene saveScene= new Scene(saveController.anchorPane);

@@ -59,10 +59,10 @@ public class FXMLController_Save
         topicChoice.getItems().addAll(topics);
 
         // Test for all Topics
-        for (int i=0;i<topics.size();i++)
+        /*for (int i=0;i<topics.size();i++)
         {
             System.out.println(topics.get(i).getName());
-        }
+        }*/
 
     }
 
