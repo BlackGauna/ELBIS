@@ -166,7 +166,7 @@ public class FXMLController_MainApplication extends ELBIS_FXMLController {
         administrationTableController.refreshAdministrationContent();
     }
     //just some bullshit
-    boolean colourcode = false;
+    boolean colourcode = true;
     @FXML
     void keyPressed(KeyEvent event) {
         switch (event.getCode()) {
