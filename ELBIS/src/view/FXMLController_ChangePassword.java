@@ -2,9 +2,10 @@ package view;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
-public class FXMLController_ChangePassword extends ELBIS_FXMLController {
+public class FXMLController_ChangePassword extends ELBIS_FXMLController{
     // Atrrib_______________________________________________________________________________________________________
     int userID = 0;
     // UI_______________________________________________________________________________________________________

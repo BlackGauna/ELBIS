@@ -24,6 +24,7 @@ public class MainController extends Application {
 
     private static Connection con;
     public Stage sideStage;
+    public boolean darkMode = false;
     // Atrrib_______________________________________________________________________________________________________
     //Data
     private DataController dc;
@@ -143,9 +144,7 @@ public class MainController extends Application {
 
             //Manage scenes
             loginScene = new Scene(loginPane);
-            loginScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             applicationScene = new Scene(applicationPane);
-            applicationScene.getStylesheets().add("/ELBIS_graphic/dark.css");
 
             editorScene = new Scene(editorPane);
             videoScene = new Scene(videoPane);
@@ -166,6 +165,7 @@ public class MainController extends Application {
             System.out.println("Couldn't load scene File");
             io.printStackTrace();
         }
+        switchDarkMode();
         openLoginStage();
     }
 
@@ -176,6 +176,30 @@ public class MainController extends Application {
 
     public void refreshAllContent() {
         mainApplicationController.refreshAllContent(activeUser);
+    }
+
+    public void switchDarkMode(){
+        darkMode = !darkMode;
+        if(darkMode == true){
+            //loginScene.getStylesheets().add("/ELBIS_graphic/dark.css");
+            //applicationScene.getStylesheets().add("/ELBIS_graphic/dark.css");
+            //sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
+
+            loginScene.getStylesheets().add(getClass()
+                    .getResource("/ELBIS_graphic/dark.css")
+                    .toExternalForm());
+            applicationScene.getStylesheets().add(getClass()
+                    .getResource("/ELBIS_graphic/dark.css")
+                    .toExternalForm());
+            sideScene.getStylesheets().add(getClass()
+                    .getResource("/ELBIS_graphic/dark.css")
+                    .toExternalForm());
+
+        } else if (darkMode == false){
+            loginScene.getStylesheets().clear();
+            applicationScene.getStylesheets().clear();
+            sideScene.getStylesheets().clear();
+        }
     }
 
     public boolean logout() {
@@ -200,6 +224,7 @@ public class MainController extends Application {
             }
             setStatus("Logged in \"" + activeUser.getEmail());
             mainApplicationController.openTabs(activeUser);
+            dc.DBUpdateAllArticles();
             openApplicationStage();
         } else if (!login) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -254,7 +279,6 @@ public class MainController extends Application {
     /**
      * open an article in editor
      */
-    // TODO: use this method for opening an article in ArticleTable for editing
     public void openEditorScene(Article article) {
         editorController.openArticle(article);
         editorStage.show();
@@ -262,6 +286,7 @@ public class MainController extends Application {
 
     public void callSideStage(sideStageState state) {
         String title = "";
+        ObservableList<String> style = sideScene.getStylesheets();
         try {
             switch (state) {
                 case createUser:
@@ -282,8 +307,8 @@ public class MainController extends Application {
                     title = "Bereichserstellung";
                     break;
             }
+            sideScene.getStylesheets().addAll(style);
             sideStage.setTitle(title);
-            sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             sideStage.setScene(sideScene);
             sideStage.showAndWait();
         } catch (IOException io) {
@@ -295,6 +320,7 @@ public class MainController extends Application {
     public void callSideStage(sideStageState state, int id) {
         String title = "";
         Boolean opensideStage = true;
+        ObservableList<String> style = sideScene.getStylesheets();
         try {
             switch (state) {
                 case editArticle:
@@ -437,8 +463,8 @@ public class MainController extends Application {
                     break;
             }
             if (opensideStage == true) {
+                sideScene.getStylesheets().addAll(style);
                 sideStage.setTitle(title);
-                sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
                 sideStage.setScene(sideScene);
                 sideStage.showAndWait();
             }
