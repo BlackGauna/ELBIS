@@ -757,7 +757,6 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            mainController.setStatus("Loading User "+id +" ...");
             PreparedStatement pst = con.prepareStatement(LOAD_USER_BY_ID);
             pst.setInt(1, id);
             pst.execute();

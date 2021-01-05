@@ -77,7 +77,6 @@ public class FXMLController_AdministrationContent extends ELBIS_FXMLController i
 
     // Methods_______________________________________________________________________________________________________
     public void refreshAdministrationContent() {
-        mainController.setStatus("Refreshing AdministratorContent...");
         setContent_TopicTable(mainController.refreshAdministrationContent_TopicTable(getContent_TopicTable()));
         setContent_UserTable(mainController.refreshAdministrationContent_UserTable(getContent_UserTable()));
     }

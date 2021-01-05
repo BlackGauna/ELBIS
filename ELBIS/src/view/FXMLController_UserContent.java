@@ -82,7 +82,6 @@ public class FXMLController_UserContent extends ELBIS_FXMLController implements 
     // Methods_______________________________________________________________________________________________________
 
     public void refreshUserContent() {
-        mainController.setStatus("Refreshing UserContent...");
         setContent_ArticleTable(mainController.refreshUserContent_ArticleTable(getContent_ArticleTable()));
         setContent_TopicTable(mainController.refreshUserContent_TopicTable(getContent_TopicTable()));
     }

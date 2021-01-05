@@ -119,7 +119,6 @@ public class FXMLController_ModerationContent extends ELBIS_FXMLController imple
     // Methods_______________________________________________________________________________________________________
 
     public void refreshModerationContent() {
-        mainController.setStatus("Refreshing ModeratorContent...");
         setContent_SubmissionTable(mainController.refreshModerationContent_SubmissionTable(getContent_SubmissionTable()));
         setContent_ArticleTable(mainController.refreshModerationContent_ArticleTable(getContent_ArticleTable()));
         setContent_UserTable(mainController.refreshModerationContent_UserTable(getContent_UserTable()));

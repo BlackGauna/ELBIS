@@ -206,11 +206,11 @@ public class MainController extends Application {
 
     public boolean logout() {
         boolean logout = false;
+        setStatus("Nutzer ausgeloggt: " + activeUser.getEmail());
         mainApplicationController.removeTabs();
         loginController.clear();
         openLoginStage();
         this.activeUser = new User();
-        setStatus("Nutzer ausgeloggt: " + activeUser.getEmail());
         return logout;
     }
 
@@ -531,7 +531,7 @@ public class MainController extends Application {
         table.setItems(articleList);
         //Test if table is empty
         if (table.getItems().size() == 0) {
-            setStatus("Warning: Empty ArticleTable loaded?");
+            System.out.println("Warning: Empty ArticleTable loaded?");
         }
         return table;
     }
@@ -551,7 +551,7 @@ public class MainController extends Application {
         table.setItems(topicList);
 
         if (table.getItems().size() == 0) {
-            setStatus("Warning: Empty TopicTable loaded?");
+            System.out.println("Warning: Empty TopicTable loaded?");
         }
         return table;
     }

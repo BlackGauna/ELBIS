@@ -10,14 +10,14 @@ public class SQLConnection {
 		{
 			Connection con = DriverManager.getConnection("jdbc:sqlite:src/model/ELBIS_DB.db");
 			if (con != null){
-				System.out.println("Connected to database ELBIS_DB");
+				//System.out.println("Connected to database ELBIS_DB");
 			}
 			return con;
 		} 
 		
 		catch(SQLException e)
 		{
-			System.out.println("An SQL error occurred");
+			System.out.println("An SQL error occurred" +e.getMessage());
 			return null;
 		}	
 	}
