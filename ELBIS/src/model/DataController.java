@@ -155,7 +155,7 @@ public class DataController {
     //Edit a specific Article with ID
     public static final String EDIT_ARTICLE = "UPDATE " + TABLE_ARTICLE + " SET " +
             COLUMN_ARTICLE_TITLE + " = ?, " + COLUMN_ARTICLE_CONTENT + " = ?, " + COLUMN_ARTICLE_EXPIRE_DATE + " = ?, "
-            + COLUMN_ARTICLE_STATUS + " = ?, " + COLUMN_ARTICLE_TOPIC + " = ?, " + COLUMN_ARTICLE_AUTHOR_ID + " = ?, "
+            + COLUMN_ARTICLE_LAST_EDIT + " = datetime('now') " + "," + COLUMN_ARTICLE_STATUS + " = ?, " + COLUMN_ARTICLE_TOPIC + " = ?, " + COLUMN_ARTICLE_AUTHOR_ID + " = ?, "
             + COLUMN_ARTICLE_PUBLISHER_ID + " = ?, " + COLUMN_ARTICLE_PUBLISHER_COMMENT + " = ? WHERE " + COLUMN_ARTICLE_ID + " = ?";
 
     //Update database to archive timed out articles

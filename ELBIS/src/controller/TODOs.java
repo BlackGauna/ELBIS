@@ -22,9 +22,6 @@ public class TODOs {
 
     //_____DB_____
     /*
-
-    TODO last Edit wird beim bearbeiten eines Artikels nicht aktualisiert
-
      */
 
     //_____UI_____
