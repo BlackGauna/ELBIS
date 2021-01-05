@@ -360,6 +360,9 @@ public class MainController extends Application {
                             if (content.substring(0,5).equals("%vid%"))
                             {
                                 openVideoEditor(queryArticle);
+                            }else
+                            {
+                                openEditorScene(dc.DBLoadArticle(id));
                             }
                         }else
                         {

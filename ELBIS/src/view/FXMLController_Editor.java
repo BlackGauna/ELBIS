@@ -212,8 +212,7 @@ public class FXMLController_Editor
             {
                 saveController.setExpireDate(currentArticle.getExpireDate());
             }
-
-            // TODO: topic selection based on user and privileges
+            // TODO: check Status not set when only user
             // if only user privileges then limited options for status
             // but can still see the current status
             if (activeUser instanceof User && !(activeUser instanceof Moderator))
