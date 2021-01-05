@@ -15,7 +15,9 @@ import model.Topic;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.ResourceBundle;
 
 public class FXMLController_Save
@@ -43,6 +45,12 @@ public class FXMLController_Save
 
     @FXML
     ChoiceBox<Topic> topicChoice;
+    @FXML
+    Spinner<Integer> hourSpinner;
+    @FXML
+    Spinner<Integer> minSpinner;
+    @FXML
+    Spinner<Integer> secSpinner;
 
     public FXMLController_Save(MainController mainController)
     {
@@ -64,18 +72,30 @@ public class FXMLController_Save
             System.out.println(topics.get(i).getName());
         }*/
 
+        hourSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,23));
+        minSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,59));
+        secSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,59));
+
     }
 
     public String getExpireDate()
     {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        return expireDate.getValue().format(formatter);
+        LocalDate date= expireDate.getValue();
+        LocalDateTime expire= date.atTime(hourSpinner.getValue(),minSpinner.getValue(),secSpinner.getValue());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return expire.format(formatter);
     }
 
     public void setExpireDate(String dateString)
     {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        expireDate.setValue(LocalDate.parse(dateString, formatter));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime expire= LocalDateTime.parse(dateString, formatter);
+        System.out.println(expire);
+        expireDate.setValue(expire.toLocalDate());
+        hourSpinner.getValueFactory().setValue(expire.getHour());
+        minSpinner.getValueFactory().setValue(expire.getMinute());
+        secSpinner.getValueFactory().setValue(expire.getSecond());
     }
 
 }
