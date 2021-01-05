@@ -12,6 +12,17 @@ public class TODOs {
 
     TODO check db boolean on create User if e-mail already exists
 
+    TODO Refresh buttons not working
+
+    TODO Editor automatisch schließen, sobald ein Artikel erstellt oder bearbeitet wurde
+
+    TODO expireDate Datumformat ändern & Möglichkeit hinzufügen, um Uhrzeit einzufügen (Onur weiß Bescheid)
+    TODO maybe? - @Onur: wenn man im Editor eine PDF erzeugt den Titel als Überschrift in die PDF einfügen (geht das?)
+
+    TODO im Adminbereich: allowed_topics (Dennis)
+
+
+
     TODO maybe - wenn ein Artikel autorisiert wurde ist er vom User veröffentlichbar?
     TODO maybe - show the count of articles under a specific topic on topic views (count articles per topic)
      */
