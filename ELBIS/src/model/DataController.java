@@ -220,7 +220,7 @@ public class DataController {
             TABLE_TOPIC + " WHERE " + COLUMN_TOPIC_ID + " = ?";
 
     //Load Allowed topics for a user by ID
-    public static final String LOAD_ALLOWED_TOPICS_BY_ID = "SELECT a.id, t1.name, t2.id FROM " + TABLE_ALLOWED_TOPICS + " a" +
+    public static final String LOAD_ALLOWED_TOPICS_BY_ID = "SELECT a.id, t1.id, t2.id FROM " + TABLE_ALLOWED_TOPICS + " a" +
             " JOIN topic t1 on a.topicId = t1.id " +
             " JOIN topic t2 on t2.id = t1.parentTopic " +
             " WHERE a.userId = ";
@@ -1075,10 +1075,8 @@ public class DataController {
             ObservableList<Topic> topicList = FXCollections.observableArrayList();
 
             while (rs.next()) {
-                topicList.add(new Topic(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        DBLoadTopic(rs.getInt(3))));
+                topicList.add(
+                        DBLoadTopic(rs.getInt(2)));
             }
             con.close();
             return topicList;

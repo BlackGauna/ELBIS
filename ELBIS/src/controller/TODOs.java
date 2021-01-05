@@ -12,12 +12,19 @@ public class TODOs {
 
     TODO check db boolean on create User if e-mail already exists
 
+    TODO Refresh buttons not working
+
+
+
     TODO maybe - wenn ein Artikel autorisiert wurde ist er vom User veröffentlichbar?
     TODO maybe - show the count of articles under a specific topic on topic views (count articles per topic)
      */
 
     //_____DB_____
     /*
+
+    TODO last Edit wird beim bearbeiten eines Artikels nicht aktualisiert
+
      */
 
     //_____UI_____
