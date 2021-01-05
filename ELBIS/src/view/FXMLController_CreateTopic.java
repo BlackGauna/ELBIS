@@ -22,7 +22,6 @@ public class FXMLController_CreateTopic extends ELBIS_FXMLController {
     private ChoiceBox<String> choiceTopic;
     @FXML
     void topicOkClicked(ActionEvent event) {
-        //TODO open Error Dialog if any field is empty
         if(!getName().equals("") && getParentTopic() != null ){
             if(topicID == 0){
                 mainController.createTopic(getName(), getParentTopic());

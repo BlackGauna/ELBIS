@@ -11,11 +11,9 @@ public class TODOs {
     TODO AllowArticleButtons
 
     TODO check db boolean on create User if e-mail already exists
-    TODO clear setStatus
-    TODO create useful setStatus
+
     TODO maybe - wenn ein Artikel autorisiert wurde ist er vom User veröffentlichbar?
     TODO maybe - show the count of articles under a specific topic on topic views (count articles per topic)
-
      */
 
     //_____DB_____
@@ -24,6 +22,5 @@ public class TODOs {
 
     //_____UI_____
     /*
-    TODO Switch software-Mode
      */
 }
