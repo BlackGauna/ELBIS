@@ -206,7 +206,7 @@ public class FXMLController_Editor
             }
             if (currentArticle.getTopic()!=null)
             {
-                saveController.topicChoice.getSelectionModel().select(currentArticle.getTopic());
+                saveController.topicChoice.setValue(currentArticle.getTopic());
             }
             if (currentArticle.getExpireDate()!=null)
             {
@@ -279,14 +279,15 @@ public class FXMLController_Editor
                         currentArticle.setExpireDate(saveController.getExpireDate());
                         currentArticle.setTopic(saveController.topicChoice.getValue());
                         // for compatibility of old topic int value. needs to +1 because index in DB starts at 1
-                        currentArticle.setTopicID(saveController.topicChoice.getSelectionModel().getSelectedIndex()+1);
                         currentArticle.setStatus(saveController.statusChoice.getValue());
 
                         // System.out.println(activeUser.getId());
                         currentArticle.setAuthor(activeUser);
 
-                        System.out.println(saveController.topicChoice.getValue());
-                        System.out.println(currentArticle.getTopic());
+                        //System.out.println(saveController.topicChoice.getValue());
+                        //System.out.println(currentArticle.getTopic());
+                        //System.out.println(currentArticle.getTopic().getId());
+
                         // send current Article with updated values to main controller to write into db
                         mainController.saveArticle(currentArticle);
                         // close window

@@ -899,6 +899,7 @@ public class MainController extends Application {
             Article newArticle = dc.DBLoadLastArticle();
             editorController.openArticle(newArticle);
         } else {
+            System.out.println(article.getTopic());
             result = dc.DBEditArticle(article);
             setStatus("Artikel (\""+article.getTitle()+"\") wurde gespeichert.");
         }

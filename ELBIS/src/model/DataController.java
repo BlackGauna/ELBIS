@@ -266,7 +266,7 @@ public class DataController {
             pst.setString(2, article.getContent());
             pst.setString(3, article.getExpireDate());
             pst.setInt(4, article.getStatusID());
-            pst.setInt(5, article.getTopicID());
+            pst.setInt(5, article.getTopic().getId());
             pst.setInt(6,article.getAuthorID());
             pst.setString(7, article.getPublisherComment());
 
@@ -470,7 +470,7 @@ public class DataController {
             while (rs.next()) {
                 Article article = new Article();
 
-                article.setTopicID(rs.getInt(1));
+                article.setTopic(DBLoadTopic(rs.getInt(1)));
                 article.setTitle(rs.getString(2));
                 article.setContent(rs.getString(3));
                 article.setPublisherComment(rs.getString(4));
@@ -577,7 +577,7 @@ public class DataController {
             pst.setString(2, article.getContent());
             pst.setString(3,article.getExpireDate());
             pst.setInt(4, article.getStatusID());
-            pst.setInt(5, article.getTopicID());
+            pst.setInt(5, article.getTopic().getId());
             pst.setInt(6, article.getAuthorID());
             pst.setInt(7, article.getPublisherID());
             pst.setString(8, article.getPublisherComment());
