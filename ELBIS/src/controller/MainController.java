@@ -24,6 +24,7 @@ public class MainController extends Application {
 
     private static Connection con;
     public Stage sideStage;
+    public boolean darkMode = false;
     // Atrrib_______________________________________________________________________________________________________
     //Data
     private DataController dc;
@@ -80,7 +81,6 @@ public class MainController extends Application {
 
     private FXMLController_ChangePassword changePasswordController;
     private Pane changePasswordPane;
-
 
 
     // Ctor_______________________________________________________________________________________________________
@@ -143,9 +143,7 @@ public class MainController extends Application {
 
             //Manage scenes
             loginScene = new Scene(loginPane);
-            loginScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             applicationScene = new Scene(applicationPane);
-            applicationScene.getStylesheets().add("/ELBIS_graphic/dark.css");
 
             editorScene = new Scene(editorPane);
             videoScene = new Scene(videoPane);
@@ -166,6 +164,7 @@ public class MainController extends Application {
             System.out.println("Couldn't load scene File");
             io.printStackTrace();
         }
+        switchDarkMode();
         openLoginStage();
     }
 
@@ -176,30 +175,58 @@ public class MainController extends Application {
 
     public void refreshAllContent() {
         mainApplicationController.refreshAllContent(activeUser);
+        setStatus("Kontent neu geladen.");
+    }
+
+    public void switchDarkMode() {
+        darkMode = !darkMode;
+        if (darkMode == true) {
+            //loginScene.getStylesheets().add("/ELBIS_graphic/dark.css");
+            //applicationScene.getStylesheets().add("/ELBIS_graphic/dark.css");
+            //sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
+
+            loginScene.getStylesheets().add(getClass()
+                    .getResource("/ELBIS_graphic/dark.css")
+                    .toExternalForm());
+            applicationScene.getStylesheets().add(getClass()
+                    .getResource("/ELBIS_graphic/dark.css")
+                    .toExternalForm());
+            sideScene.getStylesheets().add(getClass()
+                    .getResource("/ELBIS_graphic/dark.css")
+                    .toExternalForm());
+            setStatus("Es ist nun dunkel.");
+
+        } else if (darkMode == false) {
+            loginScene.getStylesheets().clear();
+            applicationScene.getStylesheets().clear();
+            sideScene.getStylesheets().clear();
+            setStatus("Das Licht wurde eingeschaltet.");
+        }
     }
 
     public boolean logout() {
         boolean logout = false;
-        setStatus("Logging out: " + activeUser.getEmail());
         mainApplicationController.removeTabs();
         loginController.clear();
         openLoginStage();
         this.activeUser = new User();
+        setStatus("Nutzer ausgeloggt: " + activeUser.getEmail());
         return logout;
     }
 
     public boolean login(String email, String pw) throws SQLException {
+        setStatus("Versuche "+email+" einzuloggen...");
         boolean login = dc.login(email, pw);
         if (login) {
             activeUser = dc.DBLoadUserByEmail(email);
-            if(activeUser instanceof Moderator || activeUser instanceof Administrator){
+            if (activeUser instanceof Moderator || activeUser instanceof Administrator) {
                 activeUser.setTopics(dc.DBLoadAllTopics());
-            }
-            else{
+            } else {
                 activeUser.setTopics(dc.DBLoadAllowedTopics(activeUser.getId()));
             }
-            setStatus("Logged in \"" + activeUser.getEmail());
+            setStatus("Nutzer eingeloggt: " + activeUser.getEmail());
             mainApplicationController.openTabs(activeUser);
+            dc.DBUpdateAllArticles();
             openApplicationStage();
         } else if (!login) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -210,6 +237,7 @@ public class MainController extends Application {
         }
         return login;
     }
+
     /*****************************
      *
      * OPen-Up Methods
@@ -254,7 +282,6 @@ public class MainController extends Application {
     /**
      * open an article in editor
      */
-    // TODO: use this method for opening an article in ArticleTable for editing
     public void openEditorScene(Article article) {
         editorController.openArticle(article);
         editorStage.show();
@@ -262,6 +289,7 @@ public class MainController extends Application {
 
     public void callSideStage(sideStageState state) {
         String title = "";
+        ObservableList<String> style = sideScene.getStylesheets();
         try {
             switch (state) {
                 case createUser:
@@ -282,23 +310,24 @@ public class MainController extends Application {
                     title = "Bereichserstellung";
                     break;
             }
+            sideScene.getStylesheets().addAll(style);
             sideStage.setTitle(title);
-            sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             sideStage.setScene(sideScene);
             sideStage.showAndWait();
         } catch (IOException io) {
             io.printStackTrace();
-            setStatus("Could not load SideStage content");
         }
     }
 
     public void callSideStage(sideStageState state, int id) {
         String title = "";
         Boolean opensideStage = true;
+        ObservableList<String> style = sideScene.getStylesheets();
         try {
             switch (state) {
                 case editArticle:
                     openEditorScene((Article) dc.DBLoadArticle(id));
+                    setStatus("Der Artikel mit der ID "+id+ " wurde zum bearbeiten geöffnet.");
                     opensideStage = false;
                     break;
                 case deleteArticle:
@@ -364,7 +393,6 @@ public class MainController extends Application {
                     }
                     break;
                 case editUser:
-                    //TODO edit User not works properly yet
                     sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_EditUser.fxml"));
                     editUserPane = (Pane) sideLoader.load();
                     editUserController = sideLoader.getController();
@@ -437,15 +465,15 @@ public class MainController extends Application {
                     break;
             }
             if (opensideStage == true) {
+                sideScene.getStylesheets().addAll(style);
                 sideStage.setTitle(title);
-                sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
                 sideStage.setScene(sideScene);
                 sideStage.showAndWait();
             }
             refreshAllContent();
         } catch (Exception e) {
             e.printStackTrace();
-            setStatus("Could not load SideStage content");
+
         }
     }
 
@@ -495,8 +523,7 @@ public class MainController extends Application {
                         return new ActionCell_ArticleTable(maincontroller, "Kommentar anzeigen", sideStageState.showComment);
                     }
                 });
-            }
-         else {
+            } else {
                 //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
             }
@@ -544,23 +571,21 @@ public class MainController extends Application {
                         return new ActionCell_UserTable(maincontroller, "Löschen", sideStageState.deleteUser);
                     }
                 });
-            }else if (i == 8) {
+            } else if (i == 8) {
                 ((TableColumn<User, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>>() {
                     @Override
                     public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
                         return new ActionCell_UserTable(maincontroller, "Bearbeiten", sideStageState.editUser);
                     }
                 });
-            }
-            else if (i == 9) {
+            } else if (i == 9) {
                 ((TableColumn<User, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>>() {
                     @Override
                     public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
                         return new ActionCell_UserTable(maincontroller, "Passwort ändern", sideStageState.changeUserPassword);
                     }
                 });
-            }
-            else {
+            } else {
                 //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String) (propertyKeys.get(i))));
             }
@@ -568,7 +593,7 @@ public class MainController extends Application {
         table.setItems(userList);
         //Test if table is empty
         if (table.getItems().size() == 0) {
-            setStatus("Warning: Empty ModerationTable loaded?");
+            System.out.println("Warnung: Empty ModerationTable loaded?");
         }
         return table;
     }
@@ -596,8 +621,7 @@ public class MainController extends Application {
                         return new ActionCell_ArticleTable(maincontroller, "Verwalten", sideStageState.manageSubmission);
                     }
                 });
-            }
-            else {
+            } else {
                 //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
             }
@@ -605,7 +629,7 @@ public class MainController extends Application {
         table.setItems(submissionList);
         //Test if table is empty
         if (table.getItems().size() == 0) {
-            setStatus("Warning: Empty ModerationTable loaded?");
+            System.out.println("Warning: Empty ModerationTable loaded?");
         }
         return table;
     }
@@ -642,8 +666,7 @@ public class MainController extends Application {
                         return new ActionCell_ArticleTable(maincontroller, "Kommentar anzeigen", sideStageState.showComment);
                     }
                 });
-            }
-            else {
+            } else {
                 //setStatus("ArticleTable loading... " + ((TableColumn<Article, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<Article, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Article, String>((String) (propertyKeys.get(i))));
             }
@@ -652,7 +675,7 @@ public class MainController extends Application {
         table.setItems(articleList);
         //Test if table is empty
         if (table.getItems().size() == 0) {
-            setStatus("Warning: Empty ModerationTable loaded?");
+            System.out.println("Warning: Empty ModerationTable loaded?");
         }
         return table;
     }
@@ -672,15 +695,14 @@ public class MainController extends Application {
                         return new ActionCell_TopicTable(maincontroller, "Bearbeiten", sideStageState.editTopic);
                     }
                 });
-            }else if (i == 4) {
+            } else if (i == 4) {
                 ((TableColumn<Topic, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Topic, Boolean>, TableCell<Topic, Boolean>>() {
                     @Override
                     public TableCell<Topic, Boolean> call(TableColumn<Topic, Boolean> BooleanTableColumn) {
                         return new ActionCell_TopicTable(maincontroller, "Löschen", sideStageState.deleteTopic);
                     }
                 });
-            }
-            else {
+            } else {
                 //setStatus("TopicTable loading... " + ((TableColumn<Topic, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<Topic, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<Topic, String>((String) (propertyKeys.get(i))));
             }
@@ -688,7 +710,7 @@ public class MainController extends Application {
         table.setItems(topicList);
         //Test if table is empty
         if (table.getItems().size() == 0) {
-            setStatus("Warning: Empty AdministrationTable loaded?");
+            System.out.println("Warning: Empty AdministrationTable loaded?");
         }
         return table;
     }
@@ -707,8 +729,7 @@ public class MainController extends Application {
                         return new ActionCell_UserTable(maincontroller, "Rolle ändern", sideStageState.changeUserRole);
                     }
                 });
-            }
-            else{
+            } else {
                 //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
                 ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String) (propertyKeys.get(i))));
             }
@@ -716,7 +737,7 @@ public class MainController extends Application {
         table.setItems(userList);
         //Test if table is empty
         if (table.getItems().size() == 0) {
-            setStatus("Warning: Empty ModerationTable loaded?");
+            System.out.println("Warning: Empty ModerationTable loaded?");
         }
         return table;
     }
@@ -749,11 +770,11 @@ public class MainController extends Application {
             roleInt = 3;
         }
         result = dc.DBSendNewUser(email, password, name, genderInt, roleInt, address, dateOfBirth);
-
+        setStatus("Nutzer "+" ("+email+") wurde erstellt.");
         return result;
     }
 
-    public boolean editUser(int id,String email, String name, String gender, String role, String address, String dateOfBirth) {
+    public boolean editUser(int id, String email, String name, String gender, String role, String address, String dateOfBirth) {
         boolean result = false;
         User editedUser = dc.DBLoadUserById(id);
 
@@ -779,29 +800,31 @@ public class MainController extends Application {
             roleInt = 0;
         }
 
-        result = dc.DBEditUser(id, email, name , address, genderInt,dateOfBirth, roleInt);
-
+        result = dc.DBEditUser(id, email, name, address, genderInt, dateOfBirth, roleInt);
+        setStatus("Nutzer "+name+" ("+email+") wurde bearbeitet.");
         return result;
     }
 
-    public boolean changeUserRole(int userID, String Role){
+    public boolean changeUserRole(int userID, String Role) {
         boolean result = false;
         User editUser = dc.DBLoadUserById(userID);
         int roleInt = 0;
-        if(Role.equals("User")){
+        if (Role.equals("User")) {
             roleInt = 3;
-        } else if(Role.equals("Moderator")){
+        } else if (Role.equals("Moderator")) {
             roleInt = 2;
-        } else if(Role.equals("Administrator")){
+        } else if (Role.equals("Administrator")) {
             roleInt = 1;
         }
-        dc.DBEditUser(userID, editUser.getEmail(),editUser.getName(),editUser.getAddress(),editUser.getGenderAsInt(), editUser.getDateOfBirth().toString(),roleInt);
+        dc.DBEditUser(userID, editUser.getEmail(), editUser.getName(), editUser.getAddress(), editUser.getGenderAsInt(), editUser.getDateOfBirth().toString(), roleInt);
+        setStatus("Nutzerrolle von "+editUser.getName()+" ("+editUser.getEmail()+") wurde zu \""+Role+"\" geändert.");
         return result;
     }
 
     public boolean createArticle(Article article) {
         boolean result = false;
         result = dc.DBSendNewArticle(article);
+        setStatus("neuer Artikel (\""+article.getTitle()+"\") wurde gespeichert.");
         return result;
     }
 
@@ -811,15 +834,17 @@ public class MainController extends Application {
         Topic currentTopic;
         int topicInt = 0;
 
-        for(int i = 0; i<topicList.size(); i++){
+        for (int i = 0; i < topicList.size(); i++) {
             currentTopic = topicList.get(i);
-            if (currentTopic.getName().equals(parent)){
+            if (currentTopic.getName().equals(parent)) {
                 topicInt = currentTopic.getId();
             }
         }
         dc.DBSendNewTopic(name, topicInt);
+        setStatus("neues Topic angelegt: "+name);
         return result;
     }
+
     public boolean editTopic(int id, String name, String parent) {
 
         boolean result = false;
@@ -827,13 +852,14 @@ public class MainController extends Application {
         Topic currentTopic;
         int topicInt = 0;
 
-        for(int i = 0; i<topicList.size(); i++){
+        for (int i = 0; i < topicList.size(); i++) {
             currentTopic = topicList.get(i);
-            if (currentTopic.getName().equals(parent)){
+            if (currentTopic.getName().equals(parent)) {
                 topicInt = currentTopic.getId();
             }
         }
-        result = dc.DBEditTopic(id,name,topicInt);
+        result = dc.DBEditTopic(id, name, topicInt);
+        setStatus("Topic "+id+" bearbeitet.");
         return result;
     }
 
@@ -850,18 +876,18 @@ public class MainController extends Application {
         article.setPublisherComment(comment);
         article.setPublisher(activeUser);
         dc.DBEditArticle(article);
-        setStatus("Artikel " + articleID + " wurde: " + status.toString());
+        setStatus("Artikel " + articleID + " wurde auf den Status: \"" + status.toString() + "\" gesetzt.");
         return submitted;
     }
 
-    public boolean changePassword(int userID,String password){
+    public boolean changePassword(int userID, String password) {
         boolean result = false;
-        try{
-            setStatus("Password to: "+ password);
+        try {
             result = dc.DBChangePassword(userID, password);
-        } catch (SQLException sql){
+            setStatus("Passwort von Nutzer "+userID +" wurde geändert.");
+        } catch (SQLException sql) {
             sql.printStackTrace();
-        } finally{
+        } finally {
         }
         return result;
     }
@@ -874,7 +900,7 @@ public class MainController extends Application {
             editorController.openArticle(newArticle);
         } else {
             result = dc.DBEditArticle(article);
-
+            setStatus("Artikel (\""+article.getTitle()+"\") wurde gespeichert.");
         }
 
         return result;
@@ -888,8 +914,6 @@ public class MainController extends Application {
     public User getActiveUser() {
         return activeUser;
     }
-
-
 
 }
 

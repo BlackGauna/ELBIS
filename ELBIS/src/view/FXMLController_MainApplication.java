@@ -87,7 +87,6 @@ public class FXMLController_MainApplication extends ELBIS_FXMLController {
         } else if (user instanceof User) {
             articleTableController.refreshUserContent();
         }
-        mainController.setStatus("Kontent neu geladen");
     }
 
     public void openTabs(User user) {
