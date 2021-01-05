@@ -14,7 +14,11 @@ public class TODOs {
 
     TODO Refresh buttons not working
 
+    TODO Editor automatisch schließen, sobald ein Artikel erstellt oder bearbeitet wurde
 
+    TODO expireDate Datumformat ändern & Möglichkeit hinzufügen, um Uhrzeit einzufügen (Onur weiß Bescheid)
+
+    TODO im Adminbereich: allowed_topics (Dennis)
 
     TODO maybe - wenn ein Artikel autorisiert wurde ist er vom User veröffentlichbar?
     TODO maybe - show the count of articles under a specific topic on topic views (count articles per topic)
