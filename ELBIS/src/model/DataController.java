@@ -238,7 +238,7 @@ public class DataController {
             '(' + COLUMN_ALLOWED_TOPICS_USER_ID + ", " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + ") VALUES(?, ?)";
 
     //Delete an allowed topic from a user by ID
-    public static final String DELETE_ALLOWED_TOPICS_BY_ID = "DELETE FROM " + TABLE_ALLOWED_TOPICS + " WHERE " + COLUMN_ALLOWED_TOPICS_USER_ID + " = ? " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + " = ?";
+    public static final String DELETE_ALLOWED_TOPICS_BY_ID = "DELETE FROM " + TABLE_ALLOWED_TOPICS + " WHERE " + COLUMN_ALLOWED_TOPICS_USER_ID + " = ? AND " + COLUMN_ALLOWED_TOPICS_TOPIC_ID + " = ?";
 
     //Delete a Topic by ID
     public static final String DELETE_TOPIC_BY_ID = "DELETE FROM " + TABLE_TOPIC + " WHERE " + COLUMN_TOPIC_ID + " = ?";
