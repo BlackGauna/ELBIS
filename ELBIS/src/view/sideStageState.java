@@ -5,6 +5,7 @@ public enum sideStageState {
     deleteUser,
     editUser,
     changeUserPassword,
+    changeUserRole,
 
     createTopic,
     deleteTopic,

@@ -44,4 +44,9 @@ public class FXMLController_Login extends ELBIS_FXMLController {
     public String getTxtEmail() {
         return txtEmail.toString();
     }
+
+    public void clear(){
+        txtEmail.setText("");
+        txtPassword.setText("");
+    }
 }

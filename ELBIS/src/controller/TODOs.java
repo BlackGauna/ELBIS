@@ -5,7 +5,6 @@ public class TODOs {
     //_____CONTROLLER_____
     /*
     TODO add buttons
-        TODO ... to delete Users (Moderator) (ONLY USERS CAN BE DELETED BY AN MODERATOR)
         TODO ... to manage user Roles (Admin)
         TODO ... to show Comment
 

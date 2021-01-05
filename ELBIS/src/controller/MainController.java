@@ -69,6 +69,9 @@ public class MainController extends Application {
     private FXMLController_EditUser editUserController;
     private Pane editUserPane;
 
+    private FXMLController_ChangeUserRole changeUserRoleController;
+    private Pane changeUserRolePane;
+
     private FXMLController_CreateTopic createTopicController;
     private Pane createTopicPane;
 
@@ -77,6 +80,7 @@ public class MainController extends Application {
 
     private FXMLController_ChangePassword changePasswordController;
     private Pane changePasswordPane;
+
 
 
     // Ctor_______________________________________________________________________________________________________
@@ -178,6 +182,7 @@ public class MainController extends Application {
         boolean logout = false;
         setStatus("Logging out: " + activeUser.getEmail());
         mainApplicationController.removeTabs();
+        loginController.clear();
         openLoginStage();
         this.activeUser = new User();
         return logout;
@@ -188,11 +193,9 @@ public class MainController extends Application {
         if (login) {
             activeUser = dc.DBLoadUserByEmail(email);
             if(activeUser instanceof Moderator || activeUser instanceof Administrator){
-                System.out.println("ALL TOPICS#############################################");
                 activeUser.setTopics(dc.DBLoadAllTopics());
             }
             else{
-                System.out.println("JUST SOME TOPICS#############################################");
                 activeUser.setTopics(dc.DBLoadAllowedTopics(activeUser.getId()));
             }
             setStatus("Logged in \"" + activeUser.getEmail());
@@ -423,6 +426,15 @@ public class MainController extends Application {
                     statusArea.deselect();
                     alert.showAndWait();
                     break;
+                case changeUserRole:
+                    sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangeUserRole.fxml"));
+                    changeUserRolePane = (Pane) sideLoader.load();
+                    changeUserRoleController = sideLoader.getController();
+                    changeUserRoleController.setMainController(this);
+                    changeUserRoleController.setUserID(id);
+                    sideScene = new Scene(changeUserRolePane);
+                    title = "Nutzer-Rolle ändern";
+                    break;
             }
             if (opensideStage == true) {
                 sideStage.setTitle(title);
@@ -611,7 +623,7 @@ public class MainController extends Application {
                 ((TableColumn<Article, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<Article, Boolean>, TableCell<Article, Boolean>>() {
                     @Override
                     public TableCell<Article, Boolean> call(TableColumn<Article, Boolean> BooleanTableColumn) {
-                        return new ActionCell_ArticleTable(maincontroller, "Bearbeiten", sideStageState.editArticle);
+                        return new ActionCell_ArticleTable(maincontroller, "Öffnen", sideStageState.editArticle);
                     }
                 });
             } else if (i == 11) {
@@ -682,16 +694,24 @@ public class MainController extends Application {
     }
 
     public TableView refreshAdministrationContent_UserTable(TableView table) {
-        /*
-        //TODO add buttonpanel to edit roles of an user or to delete an User
-        */
+        MainController maincontroller = this;
         ObservableList<User> userList = dc.DBLoadAllUsers();
         // Getter from User Class
         List<String> propertyKeys = Arrays.asList("id", "email", "name", "gender", "role", "address", "dateOfBirth");
         // fill columns with values
         for (int i = 0; i < table.getColumns().size(); i++) {
-            //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
-            ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String) (propertyKeys.get(i))));
+            if (i == 7) {
+                ((TableColumn<User, Boolean>) table.getColumns().get(i)).setCellFactory(new Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>>() {
+                    @Override
+                    public TableCell<User, Boolean> call(TableColumn<User, Boolean> BooleanTableColumn) {
+                        return new ActionCell_UserTable(maincontroller, "Rolle ändern", sideStageState.changeUserRole);
+                    }
+                });
+            }
+            else{
+                //setStatus("UserTable loading... " + ((TableColumn<User, String>) table.getColumns().get(i)).getText());
+                ((TableColumn<User, String>) table.getColumns().get(i)).setCellValueFactory(new PropertyValueFactory<User, String>((String) (propertyKeys.get(i))));
+            }
         }
         table.setItems(userList);
         //Test if table is empty
@@ -761,6 +781,21 @@ public class MainController extends Application {
 
         result = dc.DBEditUser(id, email, name , address, genderInt,dateOfBirth, roleInt);
 
+        return result;
+    }
+
+    public boolean changeUserRole(int userID, String Role){
+        boolean result = false;
+        User editUser = dc.DBLoadUserById(userID);
+        int roleInt = 0;
+        if(Role.equals("User")){
+            roleInt = 3;
+        } else if(Role.equals("Moderator")){
+            roleInt = 2;
+        } else if(Role.equals("Administrator")){
+            roleInt = 1;
+        }
+        dc.DBEditUser(userID, editUser.getEmail(),editUser.getName(),editUser.getAddress(),editUser.getGenderAsInt(), editUser.getDateOfBirth().toString(),roleInt);
         return result;
     }
 

@@ -53,6 +53,9 @@ public class FXMLController_AdministrationContent extends ELBIS_FXMLController i
         userTable.getColumns().add(new TableColumn<User, String>("Rolle"));
         userTable.getColumns().add(new TableColumn<User, String>("Anschrift"));
         userTable.getColumns().add(new TableColumn<User, String>("Geburtsdatum"));
+        TableColumn changeRoleColumn = new TableColumn<User, Boolean>(" ");
+        changeRoleColumn.setSortable(false);
+        userTable.getColumns().add(changeRoleColumn);
 
         dropDownAccordion.setExpandedPane(dropDownAccordion.getPanes().get(0));
     }
