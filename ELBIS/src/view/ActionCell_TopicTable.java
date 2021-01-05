@@ -22,7 +22,7 @@ public class ActionCell_TopicTable extends TableCell<Topic, Boolean> {
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                mainController.setStatus("Aktion auf TopicID " + hisTopic.getId() + " ausgeführt.");
+                //mainController.setStatus("Aktion auf TopicID " + hisTopic.getId() + " ausgeführt.");
                 mainController.callSideStage(state, hisTopic.getId());
             }
         });

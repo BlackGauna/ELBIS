@@ -30,6 +30,12 @@ public class FXMLController_ChangeUserTopic extends ELBIS_FXMLController {
                 case denyTopic -> mainController.denyTopic(userID, getChoosenTopicID());
             }
             mainController.sideStage.close();
+        } else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Bereich ändern");
+            alert.setContentText("Bitte wählen sie einen Bereich.");
+            alert.setHeaderText(null);
+            alert.showAndWait();
         }
     }
     // Getters,Setters_________________________________________________________________________________________________

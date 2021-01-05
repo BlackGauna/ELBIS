@@ -26,7 +26,7 @@ public class ActionCell_UserTable extends TableCell<User, Boolean> {
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                mainController.setStatus("Aktion auf UserID " + hisUser.getId() + " ausgeführt.");
+                //mainController.setStatus("Aktion auf UserID " + hisUser.getId() + " ausgeführt.");
                 mainController.callSideStage(state, hisUser.getId());
             }
         });
