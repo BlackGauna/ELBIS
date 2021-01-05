@@ -1,5 +1,6 @@
 package view;
 
+import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
@@ -19,21 +20,30 @@ import com.itextpdf.layout.property.VerticalAlignment;
 import com.itextpdf.layout.renderer.DocumentRenderer;
 import com.itextpdf.layout.renderer.IRenderer;
 import com.itextpdf.layout.renderer.ParagraphRenderer;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import model.Article;
+import model.Moderator;
+import model.Status;
+import model.User;
+import org.springframework.security.access.method.P;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FXMLController_VideoEditor extends ELBIS_FXMLController
 {
@@ -41,10 +51,14 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
     TextField titleField;
 
     @FXML
-    Button saveButton;
+    Button exportButton;
 
     @FXML
     Button videoButton;
+    @FXML
+    Button cancelButton;
+    @FXML
+    Button saveButton;
 
     @FXML
     WebView articleView;
@@ -65,6 +79,8 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
     File temp;
 
     String html;
+    String title;
+    Article currentArticle;
 
     @FXML
     public void initialize() throws IOException
@@ -79,16 +95,207 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
 
         editorStage.show();*/
 
-
     }
 
     public void setEditorController(FXMLController_Editor editorController)
     {
        this.editorController= editorController;
     }
+
     public void openArticleEditor()
     {
         mainController.openEditorforVideo();
+    }
+    @FXML
+    private void closeVideoEditor()
+    {
+        Stage stage = (Stage) cancelButton.getScene().getWindow();
+        stage.close();
+    }
+
+    public void openNewArticle()
+    {
+        currentArticle= new Article();
+    }
+
+    public void openArticle(Article article)
+    {
+        currentArticle=article;
+        String content= article.getContent();
+
+        String regex="%title%([\\s\\S]*)%\\/title%%src%([\\s\\S]*)%\\/src%%article%([\\s\\S]*)%\\/article%";
+        Pattern pattern=Pattern.compile(regex);
+
+        Matcher matcher= pattern.matcher(content);
+
+        if (matcher.find())
+        {
+            titleField.setText(matcher.group(1));
+            videoPath=matcher.group(2);
+            html= matcher.group(3);
+
+            editorController.openArticle(html);
+            System.out.println(matcher.group(1));
+            System.out.println(matcher.group(2));
+            System.out.println(matcher.group(3));
+        }
+
+
+    }
+
+    public void saveArticle() throws IOException
+    {
+        html= editorController.getHtml();
+        String content;
+
+        content= "%vid%"+"%title%" + titleField.getText()+ "%/title%"
+                + "%src%" + videoPath+ "%/src%"
+                + "%article%" + html + "%/article%";
+
+
+        // setup save dialog window
+        Stage saveDialog = new Stage();
+        FXMLController_Save saveController= new FXMLController_Save(mainController);
+
+        // laod FXML and controller
+        FXMLLoader saveLoader = new FXMLLoader(getClass().getResource("/view/SavePrompt.fxml"));
+        saveLoader.setController(saveController);
+        saveLoader.load();
+
+        //FXMLController_Save saveController= saveLoader.getController();
+
+        saveDialog.setTitle("Artikel speichern:");
+
+        // define save stage as modal and set owner window as the editor
+        saveDialog.initOwner(cancelButton.getScene().getWindow());
+        saveDialog.initStyle(StageStyle.UTILITY);
+        saveDialog.initModality(Modality.APPLICATION_MODAL);
+
+
+        User activeUser= mainController.getActiveUser();
+
+
+        //System.out.println("Status: "+ currentArticle.getStatus());
+
+        // load current attributes of article
+        saveController.saveTitle.setText(currentArticle.getTitle());
+        if (currentArticle.getStatus()!=null)
+        {
+            saveController.statusChoice.getSelectionModel().select(currentArticle.getStatus());
+
+        }
+        if (currentArticle.getTopic()!=null)
+        {
+            saveController.topicChoice.setValue(currentArticle.getTopic());
+        }
+        if (currentArticle.getExpireDate()!=null)
+        {
+            saveController.setExpireDate(currentArticle.getExpireDate());
+        }
+
+        // TODO: topic selection based on user and privileges
+        // if only user privileges then limited options for status
+        // but can still see the current status
+        if (activeUser instanceof User && !(activeUser instanceof Moderator))
+        {
+            saveController.statusChoice.getItems().setAll(Status.Entwurf, Status.Eingereicht);
+            if (currentArticle.getStatus()==null)
+            {
+                saveController.statusChoice.setValue(Status.Entwurf);
+            }
+
+            if (activeUser.getTopics()!=null)
+            {
+                saveController.topicChoice.getItems().setAll(activeUser.getTopics());
+            }
+
+        }
+
+        // save button action
+        saveController.saveButton.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                String titleText= saveController.saveTitle.getText();
+                Status chosenStatus= saveController.statusChoice.getValue();
+                // System.out.println(chosenStatus);
+
+                // check if user left the status on an invalid status not in their privileges
+                if (!(activeUser instanceof Moderator))
+                {
+                    if (chosenStatus!=Status.Entwurf && chosenStatus != Status.Eingereicht)
+                    {
+                        Alert alert= new Alert(Alert.AlertType.ERROR,
+                                "Sie haben keine Rechte für den aktuellen Status! \n\n"
+                                        + "Setzen Sie ihn auf Submitted, damit ein Redakteur den Artikel prüfen und ggf. freigeben kann.");
+                        alert.showAndWait();
+                    }
+                }
+
+                // Check empty fields
+                if (titleText==null || titleText.matches("^\\s*$"))
+                {
+                    Alert alert= new Alert(Alert.AlertType.ERROR,
+                            "Bitte keinen leeren Titel angeben!");
+                    alert.showAndWait();
+
+                }else if (saveController.topicChoice.getValue()==null)
+                {
+                    Alert alert= new Alert(Alert.AlertType.ERROR,
+                            "Bitte einen Bereich für den Artikel wählen!");
+                    alert.showAndWait();
+                }else if (saveController.expireDate.getValue()==null)
+                {
+                    Alert alert= new Alert(Alert.AlertType.ERROR,
+                            "Bitte ein Ablaufdatum angeben!");
+                    alert.showAndWait();
+                }
+                else // write field data to article object and send to db via mainController
+                {
+                    // update values of current article according to filled in fields
+                    currentArticle.setTitle(saveController.saveTitle.getText());
+                    currentArticle.setContent(content);
+                    currentArticle.setExpireDate(saveController.getExpireDate());
+                    currentArticle.setTopic(saveController.topicChoice.getValue());
+                    // for compatibility of old topic int value. needs to +1 because index in DB starts at 1
+                    currentArticle.setStatus(saveController.statusChoice.getValue());
+                    currentArticle.setAuthor(activeUser);
+
+                    //System.out.println(saveController.topicChoice.getValue());
+                    //System.out.println(currentArticle.getTopic());
+                    //System.out.println(currentArticle.getTopic().getId());
+                    //System.out.println(currentArticle.getExpireDate());
+
+                    // send current Article with updated values to main controller to write into db
+                    mainController.saveArticle(currentArticle);
+
+                    // close window
+                    saveDialog.close();
+
+                } // open article again after saving
+                    /*if (currentArticle.getContent()!=null)
+                    {
+                        openArticle(currentArticle.getContent());
+                    }*/
+            }
+        });
+
+        saveController.cancelButton.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                saveDialog.close();
+            }
+        });
+
+
+        Scene saveScene= new Scene(saveController.anchorPane);
+        //saveLoader.setController(saveController);
+        saveDialog.setScene(saveScene);
+
+        saveDialog.show();
     }
 
     public void getVideoPath()
@@ -159,10 +366,10 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
             byte[] video = reader.readStreamBytes(content, false);
 
             // test output
-            try (FileOutputStream out = new FileOutputStream(DESKTOP + "mamama.mp4"))
+            /*try (FileOutputStream out = new FileOutputStream(DESKTOP + "mamama.mp4"))
             {
                 out.write(video);
-            }
+            }*/
 
 
             // overwrite embedded video with another video
@@ -197,7 +404,111 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
             return temp;
     }
 
-    public void exportPDF() throws IOException
+    public void exportPDF2() throws IOException
+    {
+        // get contents of HTML editor
+        html= editorController.getHtml();
+
+        // create and open file dialog window
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("PDF-Pfad auswählen");
+        // Extension filter to only show PDFs
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PDF Dateien", "*.pdf")
+        );
+        fileChooser.setInitialDirectory(new File(DESKTOP));
+        // get File of chosen pdf path for saving
+        File pdf= fileChooser.showSaveDialog(new Stage());
+
+
+
+        /*if (html!=null)
+        {
+            tempArticle= new File(pdf.getParent()+"\\temp2.pdf");
+            // writing tempArticle file
+            System.out.println("Writing temp article");
+            HtmlConverter.convertToPdf(html, new FileOutputStream(tempArticle));
+        }*/
+
+        if (pdf!= null)
+        {
+            PdfReader reader;
+            if (videoPath!=null)
+            {
+                reader= new PdfReader(writeVideo(pdf));
+            }else
+            {
+                reader= new PdfReader(schemaPath);
+            }
+
+            PdfWriter writer = new PdfWriter(pdf);
+
+            PdfDocument videoDocument= new PdfDocument(reader);
+            PdfDocument pdfDocument = new PdfDocument(writer.setSmartMode(true));
+
+            //PageSize docSize= pdfDocument.getDefaultPageSize();
+
+            //Document document = new Document(pdfDocument);
+            //document.setMargins(50,40,40,40);
+
+            videoDocument.copyPagesTo(1,1,pdfDocument);
+            videoDocument.close();
+
+            if (temp!=null)
+            {
+                temp.delete();
+            }
+
+            if (html!=null)
+            {
+                File tempArticle= new File(pdf.getParent()+"\\temp2.pdf");
+                // writing tempArticle file
+                System.out.println("Writing temp article");
+                HtmlConverter.convertToPdf(html, new FileOutputStream(tempArticle));
+
+                PdfDocument articleDocument= new PdfDocument(new PdfReader(tempArticle));
+
+                articleDocument.copyPagesTo(1,articleDocument.getNumberOfPages(),pdfDocument);
+                articleDocument.close();
+                tempArticle.delete();
+
+            }
+
+
+            Paragraph titleParagraph= new Paragraph(titleField.getText());
+            titleParagraph.setHorizontalAlignment(HorizontalAlignment.CENTER);
+            //titleParagraph.setVerticalAlignment(VerticalAlignment.MIDDLE);
+            titleParagraph.setTextAlignment(TextAlignment.CENTER);
+            titleParagraph.setMarginTop(30);
+            titleParagraph.setFontSize(24);
+            titleParagraph.setMargins(40,40,40,40);
+
+            PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.getFirstPage());
+
+            PageSize docSize= pdfDocument.getDefaultPageSize();
+            Rectangle rectangle = new Rectangle(docSize.getLeft(),docSize.getTop()-200, docSize.getWidth(),200);
+
+            Canvas canvas = new Canvas(pdfCanvas, pdfDocument, rectangle);
+
+
+            canvas.add(titleParagraph);
+            canvas.close();
+            pdfCanvas.release();
+
+            pdfDocument.close();
+
+            if (temp!=null)
+            {
+                temp.delete();
+            }
+
+
+        }
+
+
+    }
+
+    /*public void exportPDF() throws IOException
     {
 
         String text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   \n" +
@@ -313,7 +624,7 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
             }
         }
 
-    }
+    }*/
 
     private void writeTextFromElements(File pdfDest, List<IElement> htmlElements) throws IOException
     {

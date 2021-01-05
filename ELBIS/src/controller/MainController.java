@@ -103,10 +103,13 @@ public class MainController extends Application {
         applicationStage.setMinWidth(1220); //DONT CHANGE
         applicationStage.setMaximized(true);
         editorStage = new Stage(); // Editor Window
+        editorStage.setTitle("Artikel-Editor");
         sideStage = new Stage();
         sideStage.setResizable(false);
         videoStage = new Stage();
+        videoStage.setTitle("Videoartikel-Editor");
         selectorStage = new Stage();
+        selectorStage.setTitle("Artikelart auswählen");
 
 
     }
@@ -131,16 +134,19 @@ public class MainController extends Application {
             mainApplicationController = mainApplicationLoader.getController();
             mainApplicationController.setMainController(this);
 
+            editorStage.getIcons().add(new Image("/tinymce/index.png"));
             editorLoader = new FXMLLoader(getClass().getResource("/view/Pane_Editor.fxml"));
             editorPane = (Pane) editorLoader.load();
             editorController = editorLoader.getController();
             editorController.setMainController(this);
 
+            videoStage.getIcons().add(new Image("/ELBIS_graphic/ELBIS_E_small.png"));
             videoEditorLoader = new FXMLLoader(getClass().getResource("/view/Pane_VideoEditor.fxml"));
             videoPane = videoEditorLoader.load();
             videoController = videoEditorLoader.getController();
             videoController.setMainController(this);
 
+            selectorStage.getIcons().add(new Image("/ELBIS_graphic/ELBIS_E_small.png"));
             selectorLoader = new FXMLLoader(getClass().getResource("/view/Pane_EditorSelector.fxml"));
             selectorPane = selectorLoader.load();
             selectorController = selectorLoader.getController();
@@ -270,8 +276,16 @@ public class MainController extends Application {
     }
 
     public void openVideoEditor() throws Exception {
-        videoStage.show();
         videoController.setEditorController(editorController);
+        videoController.openNewArticle();
+        videoStage.show();
+        selectorStage.close();
+    }
+
+    public void openVideoEditor(Article article) throws Exception {
+        videoController.setEditorController(editorController);
+        videoController.openArticle(article);
+        videoStage.show();
         selectorStage.close();
     }
 
@@ -338,7 +352,19 @@ public class MainController extends Application {
             try {
                 switch (state) {
                     case editArticle:
-                        openEditorScene((Article) dc.DBLoadArticle(id));
+                        Article queryArticle= dc.DBLoadArticle(id);
+                        String content= queryArticle.getContent();
+
+                        if (content.length()>=6)
+                        {
+                            if (content.substring(0,5).equals("%vid%"))
+                            {
+                                openVideoEditor(queryArticle);
+                            }
+                        }else
+                        {
+                            openEditorScene(dc.DBLoadArticle(id));
+                        }
                         setStatus("Der Artikel mit der ID " + id + " wurde zum bearbeiten geöffnet.");
                         opensideStage = false;
                         break;
