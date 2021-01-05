@@ -910,18 +910,15 @@ public class DataController {
                 con.rollback();
                 return false;
             } catch (SQLException e2) {
-                mainController.setStatus("Couldn't rollback! in DBEditUser with parameters");
                 System.out.println("Couldn't rollback! in DBEditUser with parameters" + e2.getMessage());
                 return false;
             }
         } finally {
             try {
-                mainController.setStatus("Resetting default commit behavior in DBEditUser with parameters");
                 System.out.println("Resetting default commit behavior in DBEditUser with parameters");
                 con.setAutoCommit(true);
                 con.close();
             } catch (SQLException e) {
-                mainController.setStatus("Couldn't reset auto-commit! in DBEditUser with parameters");
                 System.out.println("Couldn't reset auto-commit! in DBEditUser with parameters " + e.getMessage());
             }
         }
