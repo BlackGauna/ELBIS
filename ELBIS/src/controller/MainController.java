@@ -220,7 +220,8 @@ public class MainController extends Application {
         this.activeUser = new User();
     }
 
-    public boolean login(String email, String pw) throws SQLException {
+    public boolean login(String email, String pw) throws SQLException
+    {
         setStatus("Versuche " + email + " einzuloggen...");
         boolean login = dc.login(email, pw);
         if (login) {
@@ -233,6 +234,13 @@ public class MainController extends Application {
             setStatus("Nutzer eingeloggt: " + activeUser.getEmail());
             mainApplicationController.openTabs(activeUser);
             dc.DBUpdateAllArticles();
+            try
+            {
+                exportAuthorized(dc.DBLoadAllArticles());
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
             openApplicationStage();
         } else if (!login) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -979,6 +987,22 @@ public class MainController extends Application {
      * Other
      *
      ******************************/
+
+    public void exportAuthorized(ObservableList<Article> articles) throws IOException
+    {
+        for (int i = 0; i < articles.size(); i++)
+        {
+            Article article= articles.get(i);
+
+            if (article.getStatus()==Status.Öffentlich)
+            {
+                System.out.println(article.getTitle());
+                System.out.println(article.getContent());
+                editorController.autoExport(article);
+            }
+
+        }
+    }
 
     public boolean submitArticle(int articleID, Status status, String comment) {
         boolean submitted = false;
