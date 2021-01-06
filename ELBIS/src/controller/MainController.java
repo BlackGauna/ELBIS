@@ -20,6 +20,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainController extends Application {
 
@@ -236,7 +238,7 @@ public class MainController extends Application {
             mainApplicationController.openTabs(activeUser);
             try
             {
-                exportAuthorized(dc.DBLoadAllArticles());
+                exportAuthorized(dc.DBLoadAllArticlesWithContent());
             } catch (IOException e)
             {
                 e.printStackTrace();
@@ -992,13 +994,33 @@ public class MainController extends Application {
     {
         for (int i = 0; i < articles.size(); i++)
         {
+            videoController.setupEditor();
             Article article= articles.get(i);
-
+            String content= article.getContent();
             if (article.getStatus()==Status.Öffentlich)
             {
-                System.out.println(article.getTitle());
-                System.out.println(article.getContent());
-                editorController.autoExport(article);
+                if (content != null && content.length() >= 6) {
+                    if (content.substring(0, 5).equals("%vid%"))
+                    {
+                        String regex="%title%([\\s\\S]*)%\\/title%%src%([\\s\\S]*)%\\/src%%article%([\\s\\S]*)%\\/article%";
+                        Pattern pattern=Pattern.compile(regex);
+
+                        Matcher matcher= pattern.matcher(content);
+
+                        if (matcher.find())
+                        {
+                            videoController.autoExport(matcher.group(3), article.getTitle(), matcher.group(2));
+                        }
+
+                    } else
+                    {
+                        editorController.autoExport(article);
+                    }
+                } else if (content !=null)
+                {
+                    editorController.autoExport(article);
+                }
+
             }
 
         }

@@ -113,7 +113,6 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
 
             editorStage.setOnCloseRequest(windowEvent ->
             {
-                System.out.println("closed");
                 html=editorController.getHtml();
                 updateArticleView(html);
 
@@ -169,9 +168,10 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
             editorController.setHtml(html);
 
             updateArticleView(html);
-            System.out.println(matcher.group(1));
+
+            /*System.out.println(matcher.group(1));
             System.out.println(matcher.group(2));
-            System.out.println(matcher.group(3));
+            System.out.println(matcher.group(3));*/
         }
 
 
@@ -314,6 +314,8 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
                     // close window
                     saveDialog.close();
 
+                    mainController.refreshAllContent();
+
                 } // open article again after saving
                     /*if (currentArticle.getContent()!=null)
                     {
@@ -395,10 +397,10 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
 
             // Asset 23 0 R
             PdfDictionary asset = dict.getAsDictionary(assetName);
-            System.out.println(asset);
+            //System.out.println(asset);
 
             PdfDictionary ef = asset.getAsDictionary(PdfName.EF);
-            System.out.println(ef);
+            //System.out.println(ef);
 
             // get the video as bytestream in F
             PdfObject f = ef.get(PdfName.F);
@@ -449,6 +451,7 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
      * Build and export a PDF from schema and current editor contents
      * @throws IOException
      */
+
     public void exportPDF2() throws IOException
     {
         // get contents of HTML editor
@@ -464,6 +467,107 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
         fileChooser.setInitialDirectory(new File(DESKTOP));
         // get File of chosen pdf path for saving
         File pdf= fileChooser.showSaveDialog(new Stage());
+
+
+
+        /*if (html!=null)
+        {
+            tempArticle= new File(pdf.getParent()+"\\temp2.pdf");
+            // writing tempArticle file
+            System.out.println("Writing temp article");
+            HtmlConverter.convertToPdf(html, new FileOutputStream(tempArticle));
+        }*/
+
+        if (pdf!= null)
+        {
+            PdfReader reader;
+            if (videoPath!=null)
+            {
+                reader= new PdfReader(writeVideo(pdf));
+            }else
+            {
+                reader= new PdfReader(schemaPath);
+            }
+
+            PdfWriter writer = new PdfWriter(pdf);
+
+            PdfDocument videoDocument= new PdfDocument(reader);
+            PdfDocument pdfDocument = new PdfDocument(writer.setSmartMode(true));
+
+            //PageSize docSize= pdfDocument.getDefaultPageSize();
+
+            //Document document = new Document(pdfDocument);
+            //document.setMargins(50,40,40,40);
+
+            videoDocument.copyPagesTo(1,1,pdfDocument);
+            videoDocument.close();
+
+            if (temp!=null)
+            {
+                temp.delete();
+            }
+
+            if (html!=null)
+            {
+                File tempArticle= new File(pdf.getParent()+"\\temp2.pdf");
+                // writing tempArticle file
+                //System.out.println("Writing temp article");
+                HtmlConverter.convertToPdf(html, new FileOutputStream(tempArticle));
+
+                PdfDocument articleDocument= new PdfDocument(new PdfReader(tempArticle));
+
+                articleDocument.copyPagesTo(1,articleDocument.getNumberOfPages(),pdfDocument);
+                articleDocument.close();
+                tempArticle.delete();
+
+            }
+
+
+            Paragraph titleParagraph= new Paragraph(titleField.getText());
+            titleParagraph.setHorizontalAlignment(HorizontalAlignment.CENTER);
+            //titleParagraph.setVerticalAlignment(VerticalAlignment.MIDDLE);
+            titleParagraph.setTextAlignment(TextAlignment.CENTER);
+            titleParagraph.setMarginTop(50);
+            titleParagraph.setFontSize(24);
+            titleParagraph.setMargins(60,40,40,40);
+
+            PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.getFirstPage());
+
+            PageSize docSize= pdfDocument.getDefaultPageSize();
+            Rectangle rectangle = new Rectangle(docSize.getLeft(),docSize.getTop()-200, docSize.getWidth(),200);
+
+            Canvas canvas = new Canvas(pdfCanvas, pdfDocument, rectangle);
+
+
+            canvas.add(titleParagraph);
+            canvas.close();
+            pdfCanvas.release();
+
+            pdfDocument.close();
+
+            if (temp!=null)
+            {
+                temp.delete();
+            }
+
+            editorController.createOnePager(pdf);
+        }
+
+
+    }
+
+    public void autoExport(String content, String title, String videoSrc) throws IOException
+    {
+        // get contents of HTML editor
+        html= content;
+
+        videoPath=videoSrc;
+
+
+        File folder = new File(DESKTOP+"\\ELBIS_Articles");
+        folder.mkdirs();
+
+        File pdf = new File(folder.getAbsolutePath()+"\\" + title+".pdf");
 
 
 

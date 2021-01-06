@@ -61,6 +61,9 @@ public class FXMLController_Editor
 
     private String editorPath;
 
+    final static String DESKTOP = System.getProperty("user.home")+ "\\Desktop\\";
+
+
     @FXML
     WebView webView;
     private WebEngine webEngine;
@@ -304,6 +307,8 @@ public class FXMLController_Editor
                         // close window
                         saveDialog.close();
 
+                        mainController.refreshAllContent();
+
                     }
                     // open article again after saving
                     /*if (currentArticle.getContent()!=null)
@@ -375,10 +380,9 @@ public class FXMLController_Editor
 
         public void autoExport(Article article) throws IOException
         {
-            File folder = new File("/articles");
+            File folder = new File(DESKTOP+ "\\ELBIS_Articles");
             folder.mkdirs();
 
-            System.out.println(folder.getAbsolutePath());
 
             File pdf = new File(folder.getAbsolutePath()+"\\" + article.getTitle()+".pdf");
 
@@ -396,6 +400,7 @@ public class FXMLController_Editor
                 createOnePager(pdf);
             }
 
+            System.out.println("Exported released articles to: " + folder.getAbsolutePath());
 
         }
 
