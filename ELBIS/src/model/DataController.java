@@ -495,7 +495,7 @@ public class DataController {
             con.close();
             return articleList;
         } catch (SQLException e) {
-            System.out.println("Couldn't load Articles in DBLoadAllArticles: " + e.getMessage());
+            System.out.println("Couldn't load Articles in DBLoadAllArticlesWithContent: " + e.getMessage());
             return null;
         }
     }
