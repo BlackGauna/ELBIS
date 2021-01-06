@@ -12,7 +12,6 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import controller.MainController;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -36,9 +35,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * class containing TinyMCE editor in a JavaFX WebView
@@ -66,6 +63,7 @@ public class FXMLController_Editor
 
     @FXML
     WebView webView;
+    private WebEngine webEngine;
 
 
     @FXML
@@ -74,11 +72,10 @@ public class FXMLController_Editor
         try
         {
             // html source for the WebView
-            //URL url= Thread.currentThread().getContextClassLoader().getResource("tinymce/tinymce_test.html");
-            editorPath="/tinymce/tinymce_test.html";
+            editorPath= "/tinymce/textArticle.html";
 
             // setup WebView and WebEngine
-            final WebEngine webEngine= webView.getEngine();
+            webEngine= webView.getEngine();
 
             webEngine.setJavaScriptEnabled(true);
             webEngine.setUserStyleSheetLocation(Thread.currentThread().getContextClassLoader()
@@ -99,7 +96,7 @@ public class FXMLController_Editor
 
 
             // System.out.println("Slash: "+this.getClass().getResource(editorPath));
-            // System.out.println(this.getClass().getResource("tinymce/tinymce_test.html"));
+            // System.out.println(this.getClass().getResource("tinymce/textArticle.html"));
 
             // now load the page
             webEngine.load(this.getClass().getResource(editorPath).toString());
@@ -132,6 +129,7 @@ public class FXMLController_Editor
     {
         editorPath="/tinymce/videoArticle.html";
         webView.getEngine().load(this.getClass().getResource(editorPath).toString());
+
     }
 
     public void openNewArticle()
@@ -162,7 +160,6 @@ public class FXMLController_Editor
      * Javascript can call functions in this class
      */
     public class JavaConnector {
-
 
 
         public void openArticle(String html)
@@ -270,16 +267,15 @@ public class FXMLController_Editor
                         Alert alert= new Alert(Alert.AlertType.ERROR,
                                 "Bitte ein Ablaufdatum angeben!");
                         alert.showAndWait();
-                    }else if (!(activeUser instanceof Moderator))
+                    }else if (!(activeUser instanceof Moderator) &&
+                            chosenStatus!=Status.Entwurf && chosenStatus != Status.Eingereicht)
                     {
                         // check if user left the status on an invalid status not in their privileges
-                        if (chosenStatus!=Status.Entwurf && chosenStatus != Status.Eingereicht)
-                        {
-                            Alert alert= new Alert(Alert.AlertType.ERROR,
-                                    "Sie haben keine Rechte für den aktuellen Status! \n\n"
-                                            + "Setzen Sie ihn auf Submitted, damit ein Redakteur den Artikel prüfen und ggf. freigeben kann.");
-                            alert.showAndWait();
-                        }
+                        Alert alert= new Alert(Alert.AlertType.ERROR,
+                                "Sie haben keine Rechte für den aktuellen Status! \n\n"
+                                + "Setzen Sie ihn auf Eingereicht, damit ein Redakteur den Artikel prüfen und ggf. freigeben kann.");
+                        alert.showAndWait();
+
                     }
                     else // write field data to article object and send to db via mainController
                     {
@@ -288,14 +284,8 @@ public class FXMLController_Editor
                         currentArticle.setContent(html);
                         currentArticle.setExpireDate(saveController.getExpireDate());
                         currentArticle.setTopic(saveController.topicChoice.getValue());
-                        // for compatibility of old topic int value. needs to +1 because index in DB starts at 1
                         currentArticle.setStatus(saveController.statusChoice.getValue());
                         currentArticle.setAuthor(activeUser);
-
-                        //System.out.println(saveController.topicChoice.getValue());
-                        //System.out.println(currentArticle.getTopic());
-                        //System.out.println(currentArticle.getTopic().getId());
-                        //System.out.println(currentArticle.getExpireDate());
 
                         // send current Article with updated values to main controller to write into db
                         mainController.saveArticle(currentArticle);
@@ -303,7 +293,8 @@ public class FXMLController_Editor
                         // close window
                         saveDialog.close();
 
-                    } // open article again after saving
+                    }
+                    // open article again after saving
                     /*if (currentArticle.getContent()!=null)
                     {
                         openArticle(currentArticle.getContent());

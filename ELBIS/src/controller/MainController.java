@@ -171,6 +171,8 @@ public class MainController extends Application {
             selectorStage.initOwner(applicationStage);
             sideStage.initOwner(applicationStage);
 
+            // videoController.setupEditor();
+
 
         } catch (IOException io) {
             System.out.println("Couldn't load scene File");
@@ -271,25 +273,27 @@ public class MainController extends Application {
      */
     public void openEditorScene() throws Exception {
         editorController.openNewArticle();
-        editorStage.show();
         selectorStage.close();
+        editorStage.show();
     }
 
     public void openVideoEditor() throws Exception {
+        videoController.setupEditor();
         videoController.setEditorController(editorController);
         videoController.openNewArticle();
-        videoStage.show();
         selectorStage.close();
+        videoStage.show();
     }
 
     public void openVideoEditor(Article article) throws Exception {
+        videoController.setupEditor();
         videoController.setEditorController(editorController);
         videoController.openArticle(article);
         videoStage.show();
         selectorStage.close();
     }
 
-    public void openEditorforVideo() {
+    public void openEditorforVideo(String html) {
         editorController.openVideoEditor();
         editorStage.show();
     }

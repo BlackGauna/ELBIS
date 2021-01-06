@@ -78,33 +78,57 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
     String videoPath;
     File temp;
 
-    String html;
+    String html="";
     String title;
     Article currentArticle;
 
     @FXML
     public void initialize() throws IOException
     {
-        /*editorStage= new Stage();
-        editorLoader= new FXMLLoader(this.getClass().getResource("/view/Pane_Editor.fxml"));
-        editorPane = (Pane) editorLoader.load();
-        editorController = editorLoader.getController();
-
-        editorScene= new Scene(editorPane);
-        editorStage.setScene(editorScene);
-
-        editorStage.show();*/
 
     }
 
     public void setEditorController(FXMLController_Editor editorController)
     {
-       this.editorController= editorController;
+       // this.editorController= editorController;
+    }
+
+    public void setupEditor() throws IOException
+    {
+        if (editorController==null)
+        {
+            editorStage= new Stage();
+            editorLoader= new FXMLLoader(this.getClass().getResource("/view/Pane_Editor.fxml"));
+            editorPane = (Pane) editorLoader.load();
+            editorController = editorLoader.getController();
+            editorController.openVideoEditor();
+
+            editorScene= new Scene(editorPane);
+            editorStage.setScene(editorScene);
+            editorStage.setTitle("Video-Artikel Text");
+
+            editorStage.setOnCloseRequest(windowEvent ->
+            {
+                System.out.println("closed");
+                html=editorController.getHtml();
+                updateArticleView(html);
+
+            });
+        }
+
+        // editorStage.show();
+    }
+
+    private void updateArticleView(String html)
+    {
+        articleView.getEngine().loadContent(html);
     }
 
     public void openArticleEditor()
     {
-        mainController.openEditorforVideo();
+        // mainController.openEditorforVideo(html);
+        editorController.openArticle(html);
+        editorStage.show();
     }
     @FXML
     private void closeVideoEditor()
@@ -116,6 +140,10 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
     public void openNewArticle()
     {
         currentArticle= new Article();
+        titleField.setText("");
+        videoPath=null;
+        articleView.getEngine().loadContent("");
+        html="";
     }
 
     public void openArticle(Article article)
@@ -134,7 +162,9 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
             videoPath=matcher.group(2);
             html= matcher.group(3);
 
-            editorController.openArticle(html);
+            editorController.setHtml(html);
+
+            updateArticleView(html);
             System.out.println(matcher.group(1));
             System.out.println(matcher.group(2));
             System.out.println(matcher.group(3));
