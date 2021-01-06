@@ -11,6 +11,8 @@ import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import controller.MainController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -34,7 +36,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * class containing TinyMCE editor in a JavaFX WebView
@@ -201,7 +205,7 @@ public class FXMLController_Editor
             saveController.saveTitle.setText(currentArticle.getTitle());
             if (currentArticle.getStatus()!=null)
             {
-                saveController.statusChoice.getSelectionModel().select(currentArticle.getStatus());
+                saveController.statusChoice.setValue(currentArticle.getStatus());
 
             }
             if (currentArticle.getTopic()!=null)
@@ -212,17 +216,26 @@ public class FXMLController_Editor
             {
                 saveController.setExpireDate(currentArticle.getExpireDate());
             }
-            // TODO: check Status not set when only user
+
             // if only user privileges then limited options for status
             // but can still see the current status
-            if (activeUser instanceof User && !(activeUser instanceof Moderator))
+            if (!(activeUser instanceof Moderator))
             {
-                saveController.statusChoice.getItems().setAll(Status.Entwurf, Status.Eingereicht);
-                if (currentArticle.getStatus()==null)
+                saveController.statusChoice.setItems(FXCollections.observableArrayList
+                        (Status.Entwurf, Status.Eingereicht));
+                // set status according to current article status
+                if (currentArticle.getStatus()==Status.Entwurf)
                 {
-                    saveController.statusChoice.setValue(Status.Entwurf);
+                    saveController.statusChoice.getSelectionModel().selectFirst();
+                }else if (currentArticle.getStatus()==Status.Eingereicht)
+                {
+                    saveController.statusChoice.getSelectionModel().select(1);
+                }else
+                {
+                    saveController.statusChoice.setValue(currentArticle.getStatus());
                 }
 
+                // if only user get the allowed topics of active user
                 if (activeUser.getTopics()!=null)
                 {
                     saveController.topicChoice.getItems().setAll(activeUser.getTopics());
@@ -238,19 +251,7 @@ public class FXMLController_Editor
                 {
                     String titleText= saveController.saveTitle.getText();
                     Status chosenStatus= saveController.statusChoice.getValue();
-                    // System.out.println(chosenStatus);
 
-                    // check if user left the status on an invalid status not in their privileges
-                    if (!(activeUser instanceof Moderator))
-                    {
-                        if (chosenStatus!=Status.Entwurf && chosenStatus != Status.Eingereicht)
-                        {
-                            Alert alert= new Alert(Alert.AlertType.ERROR,
-                                    "Sie haben keine Rechte für den aktuellen Status! \n\n"
-                                            + "Setzen Sie ihn auf Submitted, damit ein Redakteur den Artikel prüfen und ggf. freigeben kann.");
-                            alert.showAndWait();
-                        }
-                    }
 
                     // Check empty fields
                     if (titleText==null || titleText.matches("^\\s*$"))
@@ -269,6 +270,16 @@ public class FXMLController_Editor
                         Alert alert= new Alert(Alert.AlertType.ERROR,
                                 "Bitte ein Ablaufdatum angeben!");
                         alert.showAndWait();
+                    }else if (!(activeUser instanceof Moderator))
+                    {
+                        // check if user left the status on an invalid status not in their privileges
+                        if (chosenStatus!=Status.Entwurf && chosenStatus != Status.Eingereicht)
+                        {
+                            Alert alert= new Alert(Alert.AlertType.ERROR,
+                                    "Sie haben keine Rechte für den aktuellen Status! \n\n"
+                                            + "Setzen Sie ihn auf Submitted, damit ein Redakteur den Artikel prüfen und ggf. freigeben kann.");
+                            alert.showAndWait();
+                        }
                     }
                     else // write field data to article object and send to db via mainController
                     {

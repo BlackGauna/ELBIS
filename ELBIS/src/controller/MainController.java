@@ -355,7 +355,7 @@ public class MainController extends Application {
                         Article queryArticle= dc.DBLoadArticle(id);
                         String content= queryArticle.getContent();
 
-                        if (content.length()>=6)
+                        if (content!=null && content.length()>=6)
                         {
                             if (content.substring(0,5).equals("%vid%"))
                             {
