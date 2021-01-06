@@ -159,6 +159,13 @@ public class FXMLController_Editor
     {
         javaConnector.createOnePager(pdf);
     }
+
+    public void autoExport(Article article) throws IOException
+    {
+        javaConnector.autoExport(article);
+    }
+
+
     /**
      * Helper class for communication between the Javascript and Java
      * Javascript can call functions in this class
@@ -363,6 +370,32 @@ public class FXMLController_Editor
             }
 
             createOnePager(pdf);
+
+        }
+
+        public void autoExport(Article article) throws IOException
+        {
+            File folder = new File("/articles");
+            folder.mkdirs();
+
+            System.out.println(folder.getAbsolutePath());
+
+            File pdf = new File(folder.getAbsolutePath()+"\\" + article.getTitle()+".pdf");
+
+            if (article.getContent()!=null)
+            {
+                try
+                {
+                    HtmlConverter.convertToPdf(article.getContent(), new FileOutputStream(pdf.getAbsolutePath()));
+                    System.out.println("Exported PDF to: "+ pdf.getAbsolutePath());
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+
+                createOnePager(pdf);
+            }
+
 
         }
 
