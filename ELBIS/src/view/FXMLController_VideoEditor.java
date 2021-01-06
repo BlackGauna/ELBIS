@@ -113,7 +113,10 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
 
             editorStage.setOnCloseRequest(windowEvent ->
             {
-                html=editorController.getHtml();
+                if (editorController.getHtml()!=null)
+                {
+                    html=editorController.getHtml();
+                }
                 updateArticleView(html);
 
             });
@@ -129,6 +132,10 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
 
     public void openArticleEditor()
     {
+        if (html!=null)
+        {
+            html="";
+        }
         // mainController.openEditorforVideo(html);
         editorController.openArticle(html);
         editorStage.show();
