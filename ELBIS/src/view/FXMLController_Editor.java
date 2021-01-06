@@ -155,6 +155,10 @@ public class FXMLController_Editor
         javaConnector.openArticle(html);
     }
 
+    public void createOnePager (File pdf) throws IOException
+    {
+        javaConnector.createOnePager(pdf);
+    }
     /**
      * Helper class for communication between the Javascript and Java
      * Javascript can call functions in this class
@@ -466,7 +470,7 @@ public class FXMLController_Editor
 
             String html;
             URI path= image.toURI();
-            imgWidth= Math.min(imgWidth, 800);
+            imgWidth= Math.min(imgWidth, 625);
             html = "<p><img src=\""+ path + "\""
                     +"width="+ "\"" + imgWidth +"px\"" + "/></p>";
 

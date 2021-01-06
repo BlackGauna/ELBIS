@@ -45,6 +45,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * Editor for PDFs with embedded videos
+ * @author Onur Hokkaömeroglu
+ */
 public class FXMLController_VideoEditor extends ELBIS_FXMLController
 {
     @FXML
@@ -85,7 +90,6 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
     @FXML
     public void initialize() throws IOException
     {
-
     }
 
     public void setEditorController(FXMLController_Editor editorController)
@@ -173,11 +177,18 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
 
     }
 
+    /**
+     * Save current article to the Db.
+     * Called when saveButton is clicked
+     * @throws IOException
+     */
     public void saveArticle() throws IOException
     {
         html= editorController.getHtml();
         String content;
 
+        // create content String combining all needed Strings
+        // prefix %vid% for later checking if video article
         content= "%vid%"+"%title%" + titleField.getText()+ "%/title%"
                 + "%src%" + videoPath+ "%/src%"
                 + "%article%" + html + "%/article%";
@@ -434,6 +445,10 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
             return temp;
     }
 
+    /**
+     * Build and export a PDF from schema and current editor contents
+     * @throws IOException
+     */
     public void exportPDF2() throws IOException
     {
         // get contents of HTML editor
@@ -493,7 +508,7 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
             {
                 File tempArticle= new File(pdf.getParent()+"\\temp2.pdf");
                 // writing tempArticle file
-                System.out.println("Writing temp article");
+                //System.out.println("Writing temp article");
                 HtmlConverter.convertToPdf(html, new FileOutputStream(tempArticle));
 
                 PdfDocument articleDocument= new PdfDocument(new PdfReader(tempArticle));
@@ -509,9 +524,9 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
             titleParagraph.setHorizontalAlignment(HorizontalAlignment.CENTER);
             //titleParagraph.setVerticalAlignment(VerticalAlignment.MIDDLE);
             titleParagraph.setTextAlignment(TextAlignment.CENTER);
-            titleParagraph.setMarginTop(30);
+            titleParagraph.setMarginTop(50);
             titleParagraph.setFontSize(24);
-            titleParagraph.setMargins(40,40,40,40);
+            titleParagraph.setMargins(60,40,40,40);
 
             PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.getFirstPage());
 
@@ -532,192 +547,13 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
                 temp.delete();
             }
 
-
+            editorController.createOnePager(pdf);
         }
 
 
     }
 
-    /*public void exportPDF() throws IOException
-    {
 
-        String text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   \n" +
-                "\n" +
-                "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   \n" +
-                "\n" +
-                "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   \n" +
-                "\n" +
-                "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.   \n" +
-                "\n" +
-                "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.   \n" +
-                "\n" +
-                "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.   \n" +
-                "\n" +
-                "Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus.   \n" +
-                "\n" +
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   \n" +
-                "\n" +
-                "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   \n" +
-                "\n" +
-                "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   \n" +
-                "\n" +
-                "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo";
-
-
-        html= editorController.getHtml();
-
-        List<IElement> elements= HtmlConverter.convertToElements(html);
-
-        for (int i = 0; i < elements.size(); i++)
-        {
-            System.out.println(elements.get(i).toString());
-        }
-
-        // create and open  file dialog window
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("PDF-Pfad auswählen");
-
-        // Extension filter to only show PDFs
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("PDF Dateien", "*.pdf")
-        );
-
-        fileChooser.setInitialDirectory(new File(DESKTOP));
-
-        // get File of chosen pdf path
-        File pdf= fileChooser.showSaveDialog(new Stage());
-
-        if (pdf!=null)
-        {
-            PdfReader reader;
-            if (videoPath!=null)
-            {
-                reader= new PdfReader(writeVideo(pdf));
-            }else
-            {
-                reader= new PdfReader(schemaPath);
-            }
-
-            PdfWriter writer = new PdfWriter(pdf);
-
-            PdfDocument schema= new PdfDocument(reader);
-            PdfDocument resultDoc = new PdfDocument(writer.setSmartMode(true));
-
-            PageSize docSize= resultDoc.getDefaultPageSize();
-
-            Document document = new Document(resultDoc);
-            //document.setMargins(50,40,40,40);
-
-            schema.copyPagesTo(1,1,resultDoc);
-
-            Paragraph titleParagraph= new Paragraph(titleField.getText());
-            titleParagraph.setHorizontalAlignment(HorizontalAlignment.CENTER);
-            titleParagraph.setVerticalAlignment(VerticalAlignment.MIDDLE);
-            titleParagraph.setTextAlignment(TextAlignment.CENTER);
-            titleParagraph.setMarginTop(30);
-            titleParagraph.setFontSize(24);
-
-            PdfCanvas pdfCanvas = new PdfCanvas(resultDoc.getFirstPage());
-
-            Rectangle rectangle = new Rectangle(docSize.getLeft(),docSize.getTop()-150, docSize.getWidth(),100);
-
-            Canvas canvas = new Canvas(pdfCanvas, resultDoc, rectangle);
-
-
-            Paragraph textParagraph = (Paragraph) elements.get(0);
-
-
-
-            //textParagraph.setMargins(50,40,40,40);
-            Rectangle textRec= new Rectangle(docSize.getLeft(),docSize.getBottom(),docSize.getWidth(),400);
-            textRec.applyMargins(50,40,40,40, false);
-
-
-            addParagraph(textParagraph, resultDoc, 1, textRec);
-
-
-
-            canvas.add(titleParagraph);
-            canvas.close();
-            pdfCanvas.release();
-
-
-            resultDoc.close();
-            schema.close();
-            reader.close();
-            writer.close();
-
-            if (temp!=null)
-            {
-                System.out.println(temp.delete());
-
-            }
-        }
-
-    }*/
-
-    private void writeTextFromElements(File pdfDest, List<IElement> htmlElements) throws IOException
-    {
-        File pdf= pdfDest;
-        List<IElement> elements=htmlElements;
-
-        PdfReader reader;
-        if (videoPath!=null)
-        {
-            reader= new PdfReader(writeVideo(pdf));
-        }else
-        {
-            reader= new PdfReader(schemaPath);
-        }
-
-        PdfWriter writer = new PdfWriter(pdf);
-
-        PdfDocument schema= new PdfDocument(reader);
-        PdfDocument resultDoc = new PdfDocument(writer.setSmartMode(true));
-
-        PageSize docSize= resultDoc.getDefaultPageSize();
-
-        Document document = new Document(resultDoc);
-        //document.setMargins(50,40,40,40);
-
-        schema.copyPagesTo(1,1,resultDoc);
-
-        Paragraph titleParagraph= new Paragraph(titleField.getText());
-        titleParagraph.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        titleParagraph.setVerticalAlignment(VerticalAlignment.MIDDLE);
-        titleParagraph.setTextAlignment(TextAlignment.CENTER);
-        titleParagraph.setMarginTop(30);
-        titleParagraph.setFontSize(24);
-
-        PdfCanvas pdfCanvas = new PdfCanvas(resultDoc.getFirstPage());
-
-        Rectangle rectangle = new Rectangle(docSize.getLeft(),docSize.getTop()-150, docSize.getWidth(),100);
-
-        Canvas canvas = new Canvas(pdfCanvas, resultDoc, rectangle);
-
-
-        Paragraph textParagraph = (Paragraph) elements.get(0);
-        //textParagraph.setMargins(50,40,40,40);
-        Rectangle textRec= new Rectangle(docSize.getLeft(),docSize.getBottom(),docSize.getWidth(),400);
-        textRec.applyMargins(50,40,40,40, false);
-
-
-        addParagraph(textParagraph, resultDoc, 1, textRec);
-
-
-
-        canvas.add(titleParagraph);
-        canvas.close();
-        pdfCanvas.release();
-
-
-        resultDoc.close();
-        schema.close();
-        reader.close();
-        writer.close();
-
-        System.out.println(temp.delete());
-    }
     /**
      * Adds a paragraph to PdfDocument, splitting overflowing content and adding it to new pages recursively
      * @param paragraph - Paragraph with content
