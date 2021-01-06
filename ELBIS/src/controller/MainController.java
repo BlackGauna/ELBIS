@@ -16,7 +16,6 @@ import view.*;
 
 import java.awt.*;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
@@ -24,14 +23,19 @@ import java.util.Optional;
 
 public class MainController extends Application {
 
-    private static Connection con;
-    public Stage sideStage;
-    public boolean darkMode = false;
     // Atrrib_______________________________________________________________________________________________________
     //Data
-    private DataController dc;
-    private User activeUser;
+    private final DataController dc;
+    //MainStages
+    private final Stage loginStage;
+    private final Stage applicationStage;
+    private final Stage editorStage;
+    private final Stage videoStage;
+    private final Stage selectorStage;
+    public Stage sideStage;
+    public boolean darkMode = false;
     String stylepath = "/ELBIS_graphic/dark.css";
+    private User activeUser;
     //MainLoaders
     private FXMLLoader loginLoader;
     private FXMLLoader mainApplicationLoader;
@@ -44,12 +48,6 @@ public class MainController extends Application {
     private FXMLController_Editor editorController;
     private FXMLController_VideoEditor videoController;
     private FXMLController_EditorSelector selectorController;
-    //MainStages
-    private Stage loginStage;
-    private Stage applicationStage;
-    private Stage editorStage;
-    private Stage videoStage;
-    private Stage selectorStage;
     //MainScenes
     private Scene loginScene;
     private Scene applicationScene;
@@ -111,7 +109,6 @@ public class MainController extends Application {
         selectorStage = new Stage();
         selectorStage.setTitle("Artikelart auswählen");
 
-
     }
 
     // Start_______________________________________________________________________________________________________
@@ -125,18 +122,18 @@ public class MainController extends Application {
             sideStage.getIcons().add(new Image("/ELBIS_graphic/ELBIS_E_small.png"));
             //Manage loaders and load their controllers
             loginLoader = new FXMLLoader(getClass().getResource("/view/Pane_Login.fxml"));
-            loginPane = (Pane) loginLoader.load();
+            loginPane = loginLoader.load();
             loginController = loginLoader.getController();
             loginController.setMainController(this);
 
             mainApplicationLoader = new FXMLLoader(getClass().getResource("/view/Pane_MainApplication.fxml"));
-            applicationPane = (Pane) mainApplicationLoader.load();
+            applicationPane = mainApplicationLoader.load();
             mainApplicationController = mainApplicationLoader.getController();
             mainApplicationController.setMainController(this);
 
             editorStage.getIcons().add(new Image("/tinymce/index.png"));
             editorLoader = new FXMLLoader(getClass().getResource("/view/Pane_Editor.fxml"));
-            editorPane = (Pane) editorLoader.load();
+            editorPane = editorLoader.load();
             editorController = editorLoader.getController();
             editorController.setMainController(this);
 
@@ -151,7 +148,6 @@ public class MainController extends Application {
             selectorPane = selectorLoader.load();
             selectorController = selectorLoader.getController();
             selectorController.setMainController(this);
-
 
             //Manage scenes
             loginScene = new Scene(loginPane);
@@ -173,7 +169,6 @@ public class MainController extends Application {
 
             // videoController.setupEditor();
 
-
         } catch (IOException io) {
             System.out.println("Couldn't load scene File");
             io.printStackTrace();
@@ -194,7 +189,7 @@ public class MainController extends Application {
 
     public void switchDarkMode() {
         darkMode = !darkMode;
-        if (darkMode == true) {
+        if (darkMode) {
             //loginScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             //applicationScene.getStylesheets().add("/ELBIS_graphic/dark.css");
             //sideScene.getStylesheets().add("/ELBIS_graphic/dark.css");
@@ -209,7 +204,7 @@ public class MainController extends Application {
                     .toExternalForm());
             setStatus("Es ist nun dunkel.");
 
-        } else if (darkMode == false) {
+        } else if (!darkMode) {
             loginScene.getStylesheets().clear();
             applicationScene.getStylesheets().clear();
             sideScene.getStylesheets().clear();
@@ -217,14 +212,12 @@ public class MainController extends Application {
         }
     }
 
-    public boolean logout() {
-        boolean logout = false;
+    public void logout() {
         setStatus("Nutzer ausgeloggt: " + activeUser.getEmail());
         mainApplicationController.removeTabs();
         loginController.clear();
         openLoginStage();
         this.activeUser = new User();
-        return logout;
     }
 
     public boolean login(String email, String pw) throws SQLException {
@@ -318,7 +311,7 @@ public class MainController extends Application {
                 switch (state) {
                     case createUser:
                         sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateUser.fxml"));
-                        createUserPane = (Pane) sideLoader.load();
+                        createUserPane = sideLoader.load();
                         createUserController = sideLoader.getController();
                         createUserController.setMainController(this);
                         sideScene = new Scene(createUserPane);
@@ -326,7 +319,7 @@ public class MainController extends Application {
                         break;
                     case createTopic:
                         sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateTopic.fxml"));
-                        createTopicPane = (Pane) sideLoader.load();
+                        createTopicPane = sideLoader.load();
                         createTopicController = sideLoader.getController();
                         createTopicController.setMainController(this);
                         createTopicController.setTopicID(0);
@@ -351,25 +344,21 @@ public class MainController extends Application {
     public void callSideStage(sideStageState state, int id) {
         if (!sideStage.isShowing()) {
             String title = "";
-            Boolean opensideStage = true;
+            boolean opensideStage = true;
             ObservableList<String> style = sideScene.getStylesheets();
             try {
                 switch (state) {
                     case editArticle:
-                        Article queryArticle= dc.DBLoadArticle(id);
-                        String content= queryArticle.getContent();
+                        Article queryArticle = dc.DBLoadArticle(id);
+                        String content = queryArticle.getContent();
 
-                        if (content!=null && content.length()>=6)
-                        {
-                            if (content.substring(0,5).equals("%vid%"))
-                            {
+                        if (content != null && content.length() >= 6) {
+                            if (content.substring(0, 5).equals("%vid%")) {
                                 openVideoEditor(queryArticle);
-                            }else
-                            {
+                            } else {
                                 openEditorScene(dc.DBLoadArticle(id));
                             }
-                        }else
-                        {
+                        } else {
                             openEditorScene(dc.DBLoadArticle(id));
                         }
                         setStatus("Der Artikel mit der ID " + id + " wurde zum bearbeiten geöffnet.");
@@ -416,7 +405,7 @@ public class MainController extends Application {
                         break;
                     case manageSubmission:
                         sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ManageSubmission.fxml"));
-                        manageSubmissionPane = (Pane) sideLoader.load();
+                        manageSubmissionPane = sideLoader.load();
                         manageSubmissionController = sideLoader.getController();
                         manageSubmissionController.setMainController(this);
                         manageSubmissionController.setArticleId(id);
@@ -439,10 +428,10 @@ public class MainController extends Application {
                         break;
                     case editUser:
                         sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_EditUser.fxml"));
-                        editUserPane = (Pane) sideLoader.load();
+                        editUserPane = sideLoader.load();
                         editUserController = sideLoader.getController();
                         editUserController.setMainController(this);
-                        editUserController.setUserID(id);
+                        editUserController.setUser(dc.DBLoadUserById(id));
                         sideScene = new Scene(editUserPane);
                         title = "Nutzerbearbeitung";
                         break;
@@ -462,7 +451,7 @@ public class MainController extends Application {
                         break;
                     case changeUserPassword:
                         sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangePassword.fxml"));
-                        changePasswordPane = (Pane) sideLoader.load();
+                        changePasswordPane = sideLoader.load();
                         changePasswordController = sideLoader.getController();
                         changePasswordController.setMainController(this);
                         changePasswordController.setUserID(id);
@@ -472,7 +461,7 @@ public class MainController extends Application {
                     case editTopic:
                         //use createTopic to edit via id
                         sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_CreateTopic.fxml"));
-                        createTopicPane = (Pane) sideLoader.load();
+                        createTopicPane = sideLoader.load();
                         createTopicController = sideLoader.getController();
                         createTopicController.setMainController(this);
                         createTopicController.setTopicID(id);
@@ -501,7 +490,7 @@ public class MainController extends Application {
                         break;
                     case changeUserRole:
                         sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangeUserRole.fxml"));
-                        changeUserRolePane = (Pane) sideLoader.load();
+                        changeUserRolePane = sideLoader.load();
                         changeUserRoleController = sideLoader.getController();
                         changeUserRoleController.setMainController(this);
                         changeUserRoleController.setUserID(id);
@@ -510,7 +499,7 @@ public class MainController extends Application {
                         break;
                     case allowTopic:
                         sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangeUserTopic.fxml"));
-                        changeUserTopicPane = (Pane) sideLoader.load();
+                        changeUserTopicPane = sideLoader.load();
                         changeUserTopicController = sideLoader.getController();
                         changeUserTopicController.setMainController(this);
                         changeUserTopicController.setUserID(id);
@@ -533,7 +522,7 @@ public class MainController extends Application {
                         break;
                     case denyTopic:
                         sideLoader = new FXMLLoader(getClass().getResource("/view/Pane_ChangeUserTopic.fxml"));
-                        changeUserTopicPane = (Pane) sideLoader.load();
+                        changeUserTopicPane = sideLoader.load();
                         changeUserTopicController = sideLoader.getController();
                         changeUserTopicController.setMainController(this);
                         changeUserTopicController.setUserID(id);
@@ -543,7 +532,7 @@ public class MainController extends Application {
                         title = "Nutzer-Bereich ändern";
                         break;
                 }
-                if (opensideStage == true) {
+                if (opensideStage) {
                     sideScene.getStylesheets().addAll(style);
                     sideStage.setTitle(title);
                     sideStage.setScene(sideScene);
@@ -871,7 +860,6 @@ public class MainController extends Application {
             roleInt = 3;
         }
         result = dc.DBSendNewUser(email, password, name, genderInt, roleInt, address, dateOfBirth);
-        setStatus("Nutzer " + " (" + email + ") wurde erstellt.");
         return result;
     }
 
@@ -926,7 +914,7 @@ public class MainController extends Application {
         boolean result = false;
         //TODO make sure AddAllowedTopic method works
         result = dc.DBAddAllowedTopic(userID, choosenTopicID);
-        if (result == true) {
+        if (result) {
             setStatus("Dem Nutzer " + userID + " wurde ein neuer Bereich zugeordnet. BereichsID: " + choosenTopicID);
         } else {
             setStatus("ERROR: Dem Nutzer " + userID + " konnte kein neuer Bereich zugeornet werden.");
@@ -938,7 +926,7 @@ public class MainController extends Application {
         boolean result = false;
         //TODO make sure deleteAllowedTopic method works
         result = dc.DBDeleteAllowedTopic(userID, choosenTopicID);
-        if (result == true) {
+        if (result) {
             setStatus("Dem Nutzer " + userID + " wurde ein neuer Bereich zugeordnet. BereichsID: " + choosenTopicID);
         } else {
             setStatus("ERROR: Dem Nutzer " + userID + " konnte kein Bereich entzogen werden.");
@@ -953,8 +941,7 @@ public class MainController extends Application {
         return result;
     }
 
-    public boolean createTopic(String name, String parent) {
-        boolean result = false;
+    public void createTopic(String name, String parent) {
         ObservableList<Topic> topicList = dc.DBLoadAllTopics();
         Topic currentTopic;
         int topicInt = 0;
@@ -967,7 +954,6 @@ public class MainController extends Application {
         }
         dc.DBSendNewTopic(name, topicInt);
         setStatus("neues Topic angelegt: " + name);
-        return result;
     }
 
     public boolean editTopic(int id, String name, String parent) {
@@ -1000,7 +986,7 @@ public class MainController extends Application {
         article.setStatus(status);
         article.setPublisherComment(comment);
         article.setPublisher(activeUser);
-        dc.DBEditArticle(article);
+        submitted = dc.DBEditArticle(article);
         setStatus("Artikel " + articleID + " wurde auf den Status: \"" + status.toString() + "\" gesetzt.");
         return submitted;
     }
@@ -1012,7 +998,6 @@ public class MainController extends Application {
             setStatus("Passwort von Nutzer " + userID + " wurde geändert.");
         } catch (SQLException sql) {
             sql.printStackTrace();
-        } finally {
         }
         return result;
     }
@@ -1028,7 +1013,6 @@ public class MainController extends Application {
             result = dc.DBEditArticle(article);
             setStatus("Artikel (\"" + article.getTitle() + "\") wurde gespeichert.");
         }
-
         return result;
     }
 
@@ -1040,7 +1024,8 @@ public class MainController extends Application {
     public User getActiveUser() {
         return activeUser;
     }
-    public void setStylepath(String path){
+
+    public void setStylepath(String path) {
         this.stylepath = path;
     }
 

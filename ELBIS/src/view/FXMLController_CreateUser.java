@@ -39,24 +39,32 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
     @FXML
     void okClicked(ActionEvent event) {
         try {
-                if(!getEmail().equals("") && !getPassword().equals("")&& !getName().equals("")&& !getGender().equals("")&&!getRole().equals("")&& !getAddress().equals("")&& !getBirth().equals("")){
-                    mainController.createUser(getEmail(), getPassword(), getName(), getGender(), getRole(), getAddress(), getBirth());
+            if (!getEmail().equals("") && !getPassword().equals("") && !getName().equals("") && !getGender().equals("") && !getRole().equals("") && !getAddress().equals("") && !getBirth().equals("")) {
+                boolean createUser = false;
+                createUser = mainController.createUser(getEmail(), getPassword(), getName(), getGender(), getRole(), getAddress(), getBirth());
+                if (createUser) {
+                    mainController.setStatus("Nutzer " + " (" + getEmail() + ") wurde erstellt.");
                     mainController.sideStage.close();
-                } else{
-                    throw new Exception("Empty field noticed");
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Achtung");
+                    alert.setContentText("Es konnte kein Nutzer erstellt werden. \nExistiert ein Nutzer mit dieser Email bereits?");
+                    alert.setHeaderText(null);
+                    alert.showAndWait();
                 }
-        } catch(Exception e){
+            } else {
+                throw new Exception("Empty field noticed");
+            }
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Achtung");
             alert.setContentText("Bitte überprüfen sie ihre Eingaben auf Vollständigkeit");
             alert.setHeaderText(null);
             alert.showAndWait();
-            //e.printStackTrace();
-        } finally{
+        } finally {
 
         }
     }
-
 
 
     // Ini_______________________________________________________________________________________________________
@@ -111,7 +119,7 @@ public class FXMLController_CreateUser extends ELBIS_FXMLController {
     @Override
     public void setMainController(MainController mainController) {
         super.setMainController(mainController);
-        if(mainController.getActiveUser() instanceof Administrator){
+        if (mainController.getActiveUser() instanceof Administrator) {
             choiceRole.getItems().addAll("Moderator", "Administrator");
         }
     }
