@@ -222,6 +222,7 @@ public class MainController extends Application {
 
     public boolean login(String email, String pw) throws SQLException
     {
+        dc.DBUpdateAllArticles();
         setStatus("Versuche " + email + " einzuloggen...");
         boolean login = dc.login(email, pw);
         if (login) {
@@ -233,7 +234,6 @@ public class MainController extends Application {
             }
             setStatus("Nutzer eingeloggt: " + activeUser.getEmail());
             mainApplicationController.openTabs(activeUser);
-            dc.DBUpdateAllArticles();
             try
             {
                 exportAuthorized(dc.DBLoadAllArticles());
