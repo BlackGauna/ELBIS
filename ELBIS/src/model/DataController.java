@@ -117,7 +117,17 @@ public class DataController {
             " ORDER BY " + COLUMN_ARTICLE_ID + " DESC LIMIT 1 ";
 
     //Load all articles
-    public static final String LOAD_ALL_ARTICLES = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
+    public static final String LOAD_ALL_ARTICLES_NO_CONTENT = "SELECT a.id, a.title, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
+            + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
+            + "t.id, t.name, t.parentTopic, u1.email as author, u2.email as publisher, a.publisherComment "
+            + "FROM Article a "
+            + "JOIN Status s ON a.status = s.id "
+            + "JOIN Topic t ON a.topic = t.id "
+            + "JOIN User u1 ON a.authorId = u1.id "
+            + "LEFT JOIN User u2 ON a.publisherId = u2.id";
+
+    //Load all articles
+    public static final String LOAD_ALL_ARTICLES = "SELECT a.id, a.title, a.content, (SELECT datetime(a.creationDate, 'localtime') FROM Article), "
             + "(SELECT datetime(a.expireDate, 'localtime') FROM Article), (SELECT datetime(a.lastEdit, 'localtime') FROM Article), s.name, "
             + "t.id, t.name, t.parentTopic, u1.email as author, u2.email as publisher, a.publisherComment "
             + "FROM Article a "
@@ -431,7 +441,7 @@ public class DataController {
         try {
             con = SQLConnection.ConnectDB();
             assert con != null;
-            PreparedStatement pst = con.prepareStatement(LOAD_ALL_ARTICLES);
+            PreparedStatement pst = con.prepareStatement(LOAD_ALL_ARTICLES_NO_CONTENT);
             ResultSet rs = pst.executeQuery();
             ObservableList<Article> articleList = FXCollections.observableArrayList();
 
@@ -453,6 +463,39 @@ public class DataController {
             return articleList;
         } catch (SQLException e) {
             System.out.println("Couldn't load Articles in DBLoadAllArticles: " + e.getMessage());
+            return null;
+        }
+    }
+
+    //Get ObservableList of all articles with Content
+    public ObservableList DBLoadAllArticlesWithContent() {
+        try {
+            con = SQLConnection.ConnectDB();
+            assert con != null;
+            PreparedStatement pst = con.prepareStatement(LOAD_ALL_ARTICLES);
+            ResultSet rs = pst.executeQuery();
+            ObservableList<Article> articleList = FXCollections.observableArrayList();
+
+            while (rs.next()) {
+                Article temp = new Article();
+                temp.setId(rs.getInt(1));
+                temp.setTitle(rs.getString(2));
+                temp.setContent(rs.getString(3));
+                temp.setCreationDate(rs.getString(4));
+                temp.setExpireDate(rs.getString(5));
+                temp.setLastEdit(rs.getString(6));
+                temp.setStatusByString(rs.getString(7));
+                temp.setTopic(new Topic(rs.getInt(8), rs.getString(9), DBLoadTopic(rs.getInt(10))));
+                temp.setAuthor(DBLoadUserByEmail(rs.getString(11)));
+                temp.setPublisher(DBLoadUserByEmail(rs.getString(12)));
+                temp.setPublisherComment(rs.getString(13));
+
+                articleList.add(temp);
+            }
+            con.close();
+            return articleList;
+        } catch (SQLException e) {
+            System.out.println("Couldn't load Articles in DBLoadAllArticlesWithContent: " + e.getMessage());
             return null;
         }
     }
