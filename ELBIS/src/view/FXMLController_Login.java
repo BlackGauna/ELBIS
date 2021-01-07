@@ -23,6 +23,18 @@ public class FXMLController_Login extends ELBIS_FXMLController {
     @FXML
     private TextField txtEmail;
 
+    @FXML
+    private Hyperlink pwdForgot;
+
+    @FXML
+    void pwdForgotClicked(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Passwort vergessen (Dummy)");
+        alert.setContentText("Ein Link zum Zurücksetzen ihres Passworts wird an die zuvor eigegebene E-mail versendet.");
+        alert.setHeaderText(null);
+        alert.showAndWait();
+    }
+
 
     // Methods_______________________________________________________________________________________________________
 
