@@ -775,7 +775,7 @@ public class DataController {
                     case 3 -> temp = new User();
                     default -> {
                         temp = new User();
-                        System.out.println("Couldn't load user Role - default set");
+                      //  System.out.println("Couldn't load user Role - default set");
                     }
                 }
                 temp.setId(rs.getInt(2));
@@ -828,7 +828,7 @@ public class DataController {
                 case 3 -> user = new User(id, email, name, address, password, dateOfBirth, gender);
                 default -> {
                     user = new User();
-                    System.out.println("Couldn't load user Role - default set");
+                   // System.out.println("Couldn't load user Role - default set");
                 }
             }
             con.close();
@@ -873,7 +873,7 @@ public class DataController {
                 case 3 -> user = new User(id, email, name, address, password, dateOfBirth, gender);
                 default -> {
                     user = new User();
-                    System.out.println("Couldn't load user Role - default set");
+                    //System.out.println("Couldn't load user Role - default set");
                 }
             }
             con.close();
@@ -1171,7 +1171,7 @@ public class DataController {
                     case 3 -> temp = new User();
                     default -> {
                         temp = new User();
-                        System.out.println("Couldn't load user Role - default set");
+                       // System.out.println("Couldn't load user Role - default set");
                     }
                 }
                 temp.setEmail(rs.getString(1));

@@ -181,7 +181,7 @@ public class FXMLController_MainApplication extends ELBIS_FXMLController {
             default:
                 break;
         }
-        System.out.println("stylepath set");
+        //System.out.println("stylepath set");
     }
 }
 
