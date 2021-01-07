@@ -17,10 +17,21 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Button fx:id="videoButton" layoutX="355.0" layoutY="272.0" mnemonicParsing="false" onAction="#getVideoPath" text="Video importieren" />
+      <Button fx:id="videoButton" layoutX="321.0" layoutY="272.0" mnemonicParsing="false" onAction="#getVideoPath" text="Video (MP4) importieren" />
       <WebView fx:id="articleView" layoutX="32.0" layoutY="332.0" onMouseClicked="#openArticleEditor" prefHeight="291.0" prefWidth="436.0" />
       <Button fx:id="exportButton" layoutX="14.0" layoutY="668.0" mnemonicParsing="false" onAction="#exportPDF2" text="Als PDF exportieren" />
       <Button fx:id="cancelButton" layoutX="416.0" layoutY="668.0" mnemonicParsing="false" onAction="#closeVideoEditor" text="Abbrechen" />
-      <Button fx:id="saveButton" layoutX="338.0" layoutY="668.0" mnemonicParsing="false" text="Speichern" onAction="#saveArticle" />
+      <Button fx:id="saveButton" layoutX="338.0" layoutY="668.0" mnemonicParsing="false" onAction="#saveArticle" text="Speichern" />
+      <Label layoutX="20.0" layoutY="32.0" text="Überschrift: ">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="32.0" layoutY="297.0" text="Aktueller Videopfad:">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="vidPathLabel" layoutX="157.0" layoutY="298.0" prefHeight="17.0" prefWidth="311.0" />
    </children>
 </AnchorPane>

@@ -359,6 +359,7 @@ public class FXMLController_Editor
             fileChooser.getExtensionFilters().add(
                     new FileChooser.ExtensionFilter("PDF Dateien", "*.pdf")
             );
+            fileChooser.setInitialDirectory(new File(DESKTOP));
 
             // get File of chosen pdf path
             File pdf= fileChooser.showSaveDialog(new Stage());
@@ -378,12 +379,18 @@ public class FXMLController_Editor
 
         }
 
+        /**
+         * Auto export article to PDF without asking for explicit path
+         * @param article - Article to export
+         * @throws IOException
+         */
         public void autoExport(Article article) throws IOException
         {
+            // create folder on desktop
             File folder = new File(DESKTOP+ "\\ELBIS_Articles");
             folder.mkdirs();
 
-
+            // create file inside folder
             File pdf = new File(folder.getAbsolutePath()+"\\" + article.getTitle()+".pdf");
 
             if (article.getContent()!=null)
@@ -394,6 +401,7 @@ public class FXMLController_Editor
                     System.out.println("Exported PDF to: "+ pdf.getAbsolutePath());
                 } catch (IOException e)
                 {
+                    System.out.println("Konnte nicht automatisch exportieren.");
                     e.printStackTrace();
                 }
 
@@ -462,19 +470,21 @@ public class FXMLController_Editor
 
 
         /**
-         * Open file dialog for importing image into editor
+         * Import image into editor. Opens a file chooser dialog for choosing
          */
-
         public void openImage()
         {
             // create and open  file dialog window
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Bild öffnen");
 
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Bilder", "*.jpg","*.jpeg","*.png","*.bmp","*.gif"));
+
             // get File of chosen image
             File image= fileChooser.showOpenDialog(new Stage());
 
-            System.out.println(image.getAbsolutePath());
+            System.out.println("Bild importiert von: "+ image.getAbsolutePath());
 
             // image width for resizing if too big for editor
             int imgWidth=0;

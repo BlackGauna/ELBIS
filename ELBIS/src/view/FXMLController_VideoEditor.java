@@ -27,6 +27,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
@@ -60,6 +61,8 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
 
     @FXML
     Button videoButton;
+    @FXML
+    Label vidPathLabel;
     @FXML
     Button cancelButton;
     @FXML
@@ -170,6 +173,7 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
         {
             titleField.setText(matcher.group(1));
             videoPath=matcher.group(2);
+            vidPathLabel.setText(videoPath);
             html= matcher.group(3);
 
             editorController.setHtml(html);
@@ -366,6 +370,7 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
         if(video!=null)
         {
             videoPath= video.getAbsolutePath();
+            vidPathLabel.setText(videoPath);
         }
 
     }
