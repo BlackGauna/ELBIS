@@ -135,11 +135,12 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
 
     public void openArticleEditor()
     {
-        if (html!=null)
+        if (html==null)
         {
             html="";
         }
         // mainController.openEditorforVideo(html);
+
         editorController.openArticle(html);
         editorStage.show();
     }
@@ -245,7 +246,6 @@ public class FXMLController_VideoEditor extends ELBIS_FXMLController
             saveController.setExpireDate(currentArticle.getExpireDate());
         }
 
-        // TODO: topic selection based on user and privileges
         // if only user privileges then limited options for status
         // but can still see the current status
         if (activeUser instanceof User && !(activeUser instanceof Moderator))

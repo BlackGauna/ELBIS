@@ -9,7 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class DataController {
     //ATTRIBUTES--------------------------------------------------------------------------------------------------------
-    // TODO Sort everything according to the database
     // Article
     public static final String TABLE_ARTICLE = "Article";
     public static final String COLUMN_ARTICLE_ID = "id";

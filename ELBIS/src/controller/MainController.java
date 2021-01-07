@@ -922,7 +922,6 @@ public class MainController extends Application {
 
     public boolean allowTopic(int userID, int choosenTopicID) {
         boolean result = false;
-        //TODO make sure AddAllowedTopic method works
         result = dc.DBAddAllowedTopic(userID, choosenTopicID);
         if (result) {
             setStatus("Dem Nutzer " + userID + " wurde ein neuer Bereich zugeordnet. BereichsID: " + choosenTopicID);
@@ -934,7 +933,6 @@ public class MainController extends Application {
 
     public boolean denyTopic(int userID, int choosenTopicID) {
         boolean result = false;
-        //TODO make sure deleteAllowedTopic method works
         result = dc.DBDeleteAllowedTopic(userID, choosenTopicID);
         if (result) {
             setStatus("Dem Nutzer " + userID + " wurde ein neuer Bereich zugeordnet. BereichsID: " + choosenTopicID);

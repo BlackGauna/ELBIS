@@ -17,7 +17,7 @@ public class User {
     //private Date dateOfBirth;
     protected String dateOfBirth;
     protected Gender gender;
-    protected ObservableList<Topic> topics; // TODO: implement filling list into DataController when loading user(s). And into user management!
+    protected ObservableList<Topic> topics;
 
     // Ctor_______________________________________________________________________________________________________
     public User() {
