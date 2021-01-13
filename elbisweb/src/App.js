@@ -1,13 +1,14 @@
 import React from 'react';
 import {BrowserRouter as Router, Route} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 //##########Component imports##########
 import Navbar from "./components/navbar.component";
 import ELBISweb from "./components/ELBISweb.component";
-import userView from "./components/userView.component";
-import moderationView from "./components/moderationView.component";
-import administrationView from "./components/administrationView.component.js";
+import userView from "./components/user/userView.component";
+import moderationView from "./components/moderation/moderationView.component";
+import administrationView from "./components/administration/administrationView.component.js";
 import loginView from "./components/loginView.component";
 
 //##########App start##########
@@ -22,9 +23,13 @@ function App(){
           <Route path="/login/moderation" component={moderationView} />
           <Route path="/login/administration" component={administrationView} />
       </Router>
+   /*
+    <Route exact path="/"/>
+    <Redirect push to="/logout"/>
+    <Route/>
+    */
   );
 }
-
 export default App;
 
 /*

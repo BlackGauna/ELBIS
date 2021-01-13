@@ -3,6 +3,9 @@ import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default class loginViewComponent extends Component {
+
+
+
 //##########Render##########
     render() {
         return (
@@ -13,7 +16,7 @@ export default class loginViewComponent extends Component {
                 </div>
             <br/>
                 <div className="container">
-                    <Link to="/login/hauptseite">Login</Link>
+                    <Link to="/login/hauptseite"><button class="btn btn-primary">Login</button></Link>
                 </div>
             </Router>
         )
