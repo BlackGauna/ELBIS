@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
 
+
 //TODO wir brauchen eine übersichtliche Codestruktur -> Kommentare!
 
 const User = props => (
@@ -14,7 +15,7 @@ const User = props => (
         <td>{props.user.address}</td>
         <td>{props.user.gender}</td>
         <td>{props.user.dateOfBirth}</td>
-        <td>
+        <td align="right">
             <Link to={"/edit/"+props.user._id}>Bearbeiten</Link> | <a href='#' onClick={() => {props.deleteUser(props.user._id)}}>löschen</a>
         </td>
     </tr>
@@ -57,7 +58,7 @@ export default class moderation_userList extends Component{
     //TODO make "+" lead to createUser
     render(){
         return (
-            <div>
+            <div className='ElbisTable'>
                 <h3>Nutzerverwaltung</h3>
                 <table className="userTable">
                     <thead className="thead-light">
@@ -69,7 +70,7 @@ export default class moderation_userList extends Component{
                         <th>Adresse</th>
                         <th>Gender</th>
                         <th>Geburtsdatum</th>
-                        <th><Link to="/login/nutzerErstellen"><button className="btn btn-primary btn-sm" onClick="reload">+</button></Link></th>
+                        <th class={"text-right"}><Link to="/login/nutzerErstellen"><button className="btn btn-primary btn-sm" onClick="reload">+</button></Link></th>
                     </tr>
                     </thead>
                     <tbody>

@@ -1,7 +1,8 @@
 import React from 'react';
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import { Redirect } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
+import'./ELBISWeb.css';
 
 //##########Component imports##########
 import Navbar from "./components/navbar.component";
@@ -13,6 +14,7 @@ import administrationView from "./components/administration/administrationView.c
 import loginView from "./components/loginView.component";
 
 //##########App start##########
+//TODO check which type of user is logged in before redirecting to moderation or administration
 function App(){
   return (
       <Router>
