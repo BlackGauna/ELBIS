@@ -1,10 +1,40 @@
 import React from 'react';
 import {BrowserRouter as Router, Route} from "react-router-dom";
-// import logo from './logo.svg';
-// import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
+
+//##########Component imports##########
 import Navbar from "./components/navbar.component";
-import ShowUser from "./components/user-list.component";
+import ELBISweb from "./components/ELBISweb.component";
+import userView from "./components/userView.component";
+import moderationView from "./components/moderationView.component";
+import administrationView from "./components/administrationView.component.js";
+import loginView from "./components/loginView.component";
+
+//##########App start##########
+function App(){
+  return (
+      <Router>
+          <Route path="/logout" component={loginView} />
+          <Route path="/login" component={Navbar} />
+          <br/>
+          <Route path="/login/hauptseite" component={ELBISweb} />
+          <Route path="/login/artikelverwaltung" component={userView} />
+          <Route path="/login/moderation" component={moderationView} />
+          <Route path="/login/administration" component={administrationView} />
+      </Router>
+  );
+}
+
+export default App;
+
+/*
+*
+##########Default generated code##########
+*
+*/
+
+
+// import logo from './logo.svg';
 
 
 // function App() {
@@ -27,17 +57,3 @@ import ShowUser from "./components/user-list.component";
 //     </div>
 //   );
 // }
-
-function App(){
-  return (
-      <Router>
-          <div className="container">
-              <Navbar />
-              <br/>
-              <Route path="/user" component={ShowUser} />
-          </div>
-      </Router>
-  );
-}
-
-export default App;
