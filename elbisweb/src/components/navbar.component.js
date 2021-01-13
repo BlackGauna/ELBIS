@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default class Navbar extends Component{
 
@@ -17,6 +18,9 @@ export default class Navbar extends Component{
                         </li>
                         <li className="navbar-item">
                             <Link to="/login/administration" className="nav-link">Administration</Link>
+                        </li>
+                        <li className="navbar-item">
+                            <Link to="/login/nutzerErstellen" className="nav-link">TEST</Link>
                         </li>
                     </ul>
                 </div>

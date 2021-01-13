@@ -69,7 +69,7 @@ export default class moderation_userList extends Component{
                         <th>Adresse</th>
                         <th>Gender</th>
                         <th>Geburtsdatum</th>
-                        <th><Link to={"/moderation/nutzerErstellen"}>+</Link></th>
+                        <th><Link to="/login/nutzerErstellen"><button className="btn btn-primary btn-sm" onClick="reload">+</button></Link></th>
                     </tr>
                     </thead>
                     <tbody>

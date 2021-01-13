@@ -8,6 +8,7 @@ import Navbar from "./components/navbar.component";
 import ELBISweb from "./components/ELBISweb.component";
 import userView from "./components/user/userView.component";
 import moderationView from "./components/moderation/moderationView.component";
+import createUser from "./components/moderation/moderation_createUser.component";
 import administrationView from "./components/administration/administrationView.component.js";
 import loginView from "./components/loginView.component";
 
@@ -21,11 +22,9 @@ function App(){
           <Route exact path="/login/hauptseite" component={ELBISweb} />
           <Route exact path="/login/artikelverwaltung" component={userView} />
           <Route exact path="/login/moderation" component={moderationView} />
+          <Route exact path="/login/nutzerErstellen" component={createUser} />
           <Route exact path="/login/administration" component={administrationView} />
       </Router>
-
-
-
   );
 }
 export default App;

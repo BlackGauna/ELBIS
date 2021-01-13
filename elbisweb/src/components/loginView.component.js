@@ -12,11 +12,12 @@ export default class loginViewComponent extends Component {
             <Router>
                 <br/>
                 <div className="container">
-                    Login does not work yet, klick the link and refresh the site manually to get into the app again
                 </div>
             <br/>
                 <div className="container">
-                    <Link to="/login/hauptseite"><button class="btn btn-primary">Login</button></Link>
+                    ELBIS login goes here
+                    <br/><br/>
+                    <Link to="/login/hauptseite"><button class="btn btn-primary" onClick="reload">Login</button></Link>
                 </div>
             </Router>
         )
