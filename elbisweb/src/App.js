@@ -15,19 +15,17 @@ import loginView from "./components/loginView.component";
 function App(){
   return (
       <Router>
-          <Route path="/logout" component={loginView} />
+          <Route exact path="/" component={loginView} />
           <Route path="/login" component={Navbar} />
           <br/>
-          <Route path="/login/hauptseite" component={ELBISweb} />
-          <Route path="/login/artikelverwaltung" component={userView} />
-          <Route path="/login/moderation" component={moderationView} />
-          <Route path="/login/administration" component={administrationView} />
+          <Route exact path="/login/hauptseite" component={ELBISweb} />
+          <Route exact path="/login/artikelverwaltung" component={userView} />
+          <Route exact path="/login/moderation" component={moderationView} />
+          <Route exact path="/login/administration" component={administrationView} />
       </Router>
-   /*
-    <Route exact path="/"/>
-    <Redirect push to="/logout"/>
-    <Route/>
-    */
+
+
+
   );
 }
 export default App;
