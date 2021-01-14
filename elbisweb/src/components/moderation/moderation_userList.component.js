@@ -10,13 +10,13 @@ const User = props => (
     <tr>
         <td>{props.user.email}</td>
         <td>{props.user.password}</td>
-        <td>{props.user.role}</td>
         <td>{props.user.name}</td>
-        <td>{props.user.address}</td>
         <td>{props.user.gender}</td>
+        <td>{props.user.role}</td>
+        <td>{props.user.address}</td>
         <td>{props.user.dateOfBirth}</td>
         <td align="right">
-            <Link to={"/edit/"+props.user._id}>Bearbeiten</Link> | <a href='#' onClick={() => {props.deleteUser(props.user._id)}}>löschen</a>
+            <Link to={"/edit/"+props.user._id}>bearbeiten</Link> | <a href='#' onClick={() => {props.deleteUser(props.user._id)}}>löschen</a>
         </td>
     </tr>
 )
@@ -60,15 +60,15 @@ export default class moderation_userList extends Component{
         return (
             <div className='ElbisTable'>
                 <h3>Nutzerverwaltung</h3>
-                <table className="userTable">
+                <table className="userTable table">
                     <thead className="thead-light">
                     <tr>
                         <th>E-Mail</th>
                         <th>Passwort</th>
-                        <th>Rolle</th>
                         <th>Name</th>
-                        <th>Adresse</th>
-                        <th>Gender</th>
+                        <th>Geschlecht</th>
+                        <th>Rolle</th>
+                        <th>Anschrift</th>
                         <th>Geburtsdatum</th>
                         <th class={"text-right"}><Link to="/login/nutzerErstellen"><button className="btn btn-primary btn-sm" onClick="reload">+</button></Link></th>
                     </tr>
