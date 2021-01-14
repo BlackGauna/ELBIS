@@ -23,6 +23,9 @@ const topicRouter = require('./routes/topic');
 
 
 app.use('/user', userRouter);
+app.use('/article', articleRouter);
+app.use('/topic', topicRouter);
+
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
