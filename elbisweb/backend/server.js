@@ -13,12 +13,14 @@ app.use(express.json());
 const uri = "mongodb+srv://admin:admin@elbis8.ilafq.mongodb.net/ELBIS?retryWrites=true&w=majority";
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true}
 );
-const connection = mongoose.connection;
-connection.once('open', () => {
+mongoose.connection.once('open', () => {
     console.log("MongoDB connected");
 })
 
 const userRouter = require('./routes/user');
+const articleRouter = require('./routes/article');
+const topicRouter = require('./routes/topic');
+
 
 app.use('/user', userRouter);
 
