@@ -7,6 +7,9 @@ router.route('/').get((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+//TODO Other methods
+//TODO Should we also get the ID ?
+
 // Add
 router.route('/add').post((req, res) => {
     const email = req.body.email;
