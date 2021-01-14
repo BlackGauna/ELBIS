@@ -49,8 +49,7 @@ export default class moderation_userList extends Component{
 
     userList(){
         return this.state.user.map(currentUser => {
-            return <User user={currentUser} deleteUser={this.deleteUser} key={currentUser._id}>;
-            </User>
+            return <User user={currentUser} deleteUser={this.deleteUser} key={currentUser._id}/>;
         })
     }
 
@@ -70,7 +69,7 @@ export default class moderation_userList extends Component{
                         <th>Rolle</th>
                         <th>Anschrift</th>
                         <th>Geburtsdatum</th>
-                        <th class={"text-right"}><Link to="/login/nutzerErstellen"><button className="btn btn-primary btn-sm" onClick="reload">+</button></Link></th>
+                        <th className={"text-right"}><Link to="/login/nutzerErstellen"><button className="btn btn-primary btn-sm" onClick="reload">+</button></Link></th>
                     </tr>
                     </thead>
                     <tbody>

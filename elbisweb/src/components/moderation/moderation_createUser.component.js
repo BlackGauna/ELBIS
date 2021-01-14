@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import axios from 'axios';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -15,42 +18,53 @@ export default class moderation_createUser extends Component {
                     <div className="form-group">
                         <label>E-Mail: </label>
                         <br/>
-                        <input type = "text" className="form-control" value={this.state.email} onChange={this.onChange_eMail}/>
+                        <input type = "email" className="form-control" value={this.state.email} onChange={this.onChange_eMail}/>
                     </div>
 
                     <div className="form-group">
                         <label>passwort: </label>
                         <br/>
-                        <input type = "text" className="form-control" value={this.state.password} onChange={this.onChange_password}/>
+                        <input type = "password" className="form-control" value={this.state.password} onChange={this.onChange_password}/>
                     </div>
                     <div className="form-group">
                         <label>passwort bestätigen: </label>
                         <br/>
-                        <input type = "text" className="form-control" value={this.state.passwordCheck} onChange={this.onChange_passwordCheck}/>
+                        <input type = "password" className="form-control" value={this.state.passwordCheck} onChange={this.onChange_passwordCheck}/>
                     </div>
                     <div className="form-group">
                         <label>Vorname: </label>
                         <br/>
-                        <input type = "text" className="form-control" value={this.state.foreName} onChange={this.onChange_foreName}/>
+                        <input type = "name" className="form-control" value={this.state.foreName} onChange={this.onChange_foreName}/>
                     </div>
                     <div className="form-group">
                         <label>Nachname: </label>
                         <br/>
-                        <input type = "text" className="form-control" value={this.state.surName} onChange={this.onChange_surName}/>
+                        <input type = "name" className="form-control" value={this.state.surName} onChange={this.onChange_surName}/>
                     </div>
                     <div className="form-group">
-                        <label>Addresse: </label>
+                        <label>Anschrift: </label>
                         <br/>
-                        <input type = "text" className="form-control" value={this.state.address} onChange={this.onChange_address}/>
+                        <input type = "address" className="form-control" value={this.state.address} onChange={this.onChange_address}/>
                     </div>
+                    {/*<div className="form-group">*/}
+                    {/*    <label>Geschlecht:  </label>*/}
+                    {/*    <br/>*/}
+                    {/*    <select ref="userInput"*/}
+                    {/*            required*/}
+                    {/*            className="ElbisSelect"*/}
+                    {/*            value={this.state.gender}*/}
+                    {/*            onChange={this.onChange_gender}>*/}
+                    {/*        {*/}
+                    {/*            this.state.gender.map(function (gender) {*/}
+                    {/*                return <option key={gender} value={gender}>{gender}</option>;*/}
+                    {/*            })*/}
+                    {/*        }*/}
+                    {/*    </select>*/}
+                    {/*</div>*/}
                     <div className="form-group">
-                        <label>Geschlecht:  </label>
-                        <br/>
-                        <select ref="userInput"
-                                required
-                                className="ElbisSelect"
-                                value={this.state.gender}
-                                onChange={this.onChange_gender}>
+                        <label>Geschlecht: </label>
+                        <select className="form-control" ref="userInput">
+                            onChange={this.onChange_gender}>
                             {
                                 this.state.gender.map(function (gender) {
                                     return <option key={gender} value={gender}>{gender}</option>;
@@ -58,14 +72,25 @@ export default class moderation_createUser extends Component {
                             }
                         </select>
                     </div>
+                    {/*<div className="form-group">*/}
+                    {/*    <label>Rolle: </label>*/}
+                    {/*    <br/>*/}
+                    {/*    <select ref="userInput"*/}
+                    {/*            required*/}
+                    {/*            className="ElbisSelect"*/}
+                    {/*            value={this.state.role}*/}
+                    {/*            onChange={this.onChange_role}>*/}
+                    {/*        {*/}
+                    {/*            this.state.role.map(function (role) {*/}
+                    {/*                return <option key={role} value={role}>{role}</option>;*/}
+                    {/*            })*/}
+                    {/*        }*/}
+                    {/*    </select>*/}
+                    {/*</div>*/}
                     <div className="form-group">
                         <label>Rolle: </label>
-                        <br/>
-                        <select ref="userInput"
-                                required
-                                className="ElbisSelect"
-                                value={this.state.role}
-                                onChange={this.onChange_role}>
+                        <select className="form-control" id="exampleFormControlSelect1">
+                            onChange={this.onChange_role}>
                             {
                                 this.state.role.map(function (role) {
                                     return <option key={role} value={role}>{role}</option>;
@@ -77,8 +102,15 @@ export default class moderation_createUser extends Component {
                         <label>Geburtsdatum: </label>
                         <br/>
                         <div>
-                            A datePicker is missed here
+                            <DatePicker
+                                selected={this.state.date}
+                                onChange={this.onChangeDate}
+                            />
                         </div>
+                    </div>
+
+                    <div className="form-group">
+                        <input type="submit" value="Create User" className="btn btn-primary" />
                     </div>
                 </form>
             </div>
@@ -86,7 +118,7 @@ export default class moderation_createUser extends Component {
     }
 
 //##########Mount method (equals initialize!)##########
-    comonentDidMount() {
+    componentDidMount() {
         this.setState({
             //fill dropdowns
             gender: ['Maennlich', 'Weiblich', 'Divers'],
@@ -142,6 +174,10 @@ export default class moderation_createUser extends Component {
         //TODO replace and do an actual submit to the db
         console.log(user)
         //go back to the moderationView
+
+        axios.post('http://localhost:5000/user/add', user)
+            .then(res => console.log(res.data));
+
         window.location = '/login/moderation';
     }
 
