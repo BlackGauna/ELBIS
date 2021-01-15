@@ -12,7 +12,7 @@ const articleSchema = new Schema({
     //lastEdit: {type: Date, required:  false},
     status: {type: Number, required:  true},
     //TODO make sure the topicSchema import works
-    topic: {type: topicSchema, required:  true},
+    topic: {type: mongoose.Schema.Types.ObjectId, ref: 'Topic', required:  true},
     authorId: {type: Number, required:  true},
     publisherId: {type: Number, required:  false},
     publisherComment: {type: String, required:  false},

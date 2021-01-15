@@ -5,7 +5,7 @@ const topicSchema = new Schema({
     //TODO Limits to variables (Trim,minlength etc)
     name: {type: String, required:  true},
     //TODO make sure the topicSchema import works
-    ParentTopic: {type: topicSchema, required:  true},
+    ParentTopic: {type: mongoose.Schema.Types.ObjectId, ref: 'Topic', required:  true},
 }, {
     timestamps: true,
 });
