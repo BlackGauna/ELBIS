@@ -1,14 +1,15 @@
 const router = require('express').Router();
 let User = require('../models/user.model');
 
+//TODO Other methods
+//TODO Should we also get the ID ?
+
+// Get all
 router.route('/').get((req, res) => {
     User.find()
         .then(user => res.json(user))
         .catch(err => res.status(400).json('Error: ' + err));
 });
-
-//TODO Other methods
-//TODO Should we also get the ID ?
 
 // Add
 router.route('/add').post((req, res) => {
@@ -18,7 +19,7 @@ router.route('/add').post((req, res) => {
     const name = req.body.name;
     const address = req.body.address;
     const gender = req.body.gender;
-    const dateOfBirth = req.body.dateOfBirth;
+    const dateOfBirth = Date.parse(req.body.dateOfBirth);
 
     const newUser = new User({email, password, role, name, address, gender, dateOfBirth});
 

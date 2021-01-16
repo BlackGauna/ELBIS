@@ -17,7 +17,7 @@ export default class loginViewComponent extends Component {
                 <div className="container">
                     ELBIS login goes here
                     <br/><br/>
-                    <Link to="/login/hauptseite"><button class="btn btn-primary" onClick="reload">Login</button></Link>
+                    <Link to="/login/hauptseite"><button className="btn btn-primary" onClick="reload">Login</button></Link>
                 </div>
             </Router>
         )

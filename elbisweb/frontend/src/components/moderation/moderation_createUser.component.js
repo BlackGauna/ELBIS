@@ -165,7 +165,7 @@ export default class moderation_createUser extends Component {
             //TODO make password check
             password: this.state.password,
             name: this.state.foreName + " " + this.state.surName,
-            address: this.state.add,
+            address: this.state.address,
             //TODO submit gender and role in the right way
             gender: this.state.gender,
             role: this.state.role,
