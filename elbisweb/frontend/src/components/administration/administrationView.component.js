@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 //##########Component imports##########
+import administration_topicListComponent from "./administration_topicList.component";
 
 export default class userView extends Component {
 //##########Render##########
@@ -10,7 +11,7 @@ export default class userView extends Component {
         return (
             <Router>
                 <div className="container">
-                    administration content goes here as routes
+                    <Route path="/" component={administration_topicListComponent} />
                 </div>
             </Router>
         )

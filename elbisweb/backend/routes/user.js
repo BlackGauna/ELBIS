@@ -19,7 +19,7 @@ router.route('/add').post((req, res) => {
     const name = req.body.name;
     const address = req.body.address;
     const gender = req.body.gender;
-    const dateOfBirth = Date.parse(req.body.dateOfBirth);
+    const dateOfBirth = req.body.dateOfBirth;
 
     const newUser = new User({email, password, role, name, address, gender, dateOfBirth});
 

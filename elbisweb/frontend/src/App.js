@@ -13,6 +13,7 @@ import createUser from "./components/moderation/moderation_createUser.component"
 import administrationView from "./components/administration/administrationView.component.js";
 import loginView from "./components/loginView.component";
 import CreateArticle from "./components/user/CreateArticle.component";
+import createTopic from "./components/administration/administration_createTopic.component";
 
 //##########App start##########
 //TODO check which type of user is logged in before redirecting to moderation or administration
@@ -28,6 +29,7 @@ function App(){
           <Route exact path="/login/nutzerErstellen" component={createUser} />
           <Route exact path="/login/administration" component={administrationView} />
           <Route exact path="/login/createArticle" component={CreateArticle} />
+          <Route exact path="/login/createTopic" component={createTopic}/>
 
       </Router>
   );
