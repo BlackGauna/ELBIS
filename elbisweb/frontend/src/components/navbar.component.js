@@ -12,16 +12,15 @@ export default class NavBar extends Component{
                 variant={"dark"}
                 className={"border-bottom border-light mb-3"}
             >
-                <Navbar.Brand href={"/"}>ELBIS</Navbar.Brand>
+                <Navbar.Brand href={"/login/hauptseite"}>ELBIS</Navbar.Brand>
                 <Navbar.Toggle aria-controls={"basic-navbar-nav"} />
                 <Navbar.Collapse id={"basic-navbar-nav"}>
                     <Nav className={"mr-auto"}>
-                        <Nav.Link href={"/"}>Home</Nav.Link>
                         <Nav.Link href={"/login/artikelverwaltung"}>Artikelverwaltung</Nav.Link>
                         <Nav.Link href={"/login/moderation"}>Moderation</Nav.Link>
                         <Nav.Link href={"/login/administration"}>Administration</Nav.Link>
                         <Nav.Link href={"/login/nutzerErstellen"}>TEST</Nav.Link>
-                        <Nav.Link href={"/login/createArticle"}>Artikel erstellen</Nav.Link>
+                        <Nav.Link href={"/login/artikelErstellen"}>Artikel erstellen</Nav.Link>
                     </Nav>
                     <Button href={"/"} variant={"outline-primary"}>Logout</Button>
                 </Navbar.Collapse>

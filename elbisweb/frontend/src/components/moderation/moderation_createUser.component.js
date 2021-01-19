@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 //##########Component imports##########
@@ -46,21 +45,6 @@ export default class moderation_createUser extends Component {
                         <br/>
                         <input type = "address" className="form-control" value={this.state.address} onChange={this.onChange_address}/>
                     </div>
-                    {/*<div className="form-group">*/}
-                    {/*    <label>Geschlecht:  </label>*/}
-                    {/*    <br/>*/}
-                    {/*    <select ref="userInput"*/}
-                    {/*            required*/}
-                    {/*            className="ElbisSelect"*/}
-                    {/*            value={this.state.gender}*/}
-                    {/*            onChange={this.onChange_gender}>*/}
-                    {/*        {*/}
-                    {/*            this.state.gender.map(function (gender) {*/}
-                    {/*                return <option key={gender} value={gender}>{gender}</option>;*/}
-                    {/*            })*/}
-                    {/*        }*/}
-                    {/*    </select>*/}
-                    {/*</div>*/}
                     <div className="form-group">
                         <label>Geschlecht: </label>
                         <select className="form-control" ref="userInput">
@@ -72,21 +56,6 @@ export default class moderation_createUser extends Component {
                             }
                         </select>
                     </div>
-                    {/*<div className="form-group">*/}
-                    {/*    <label>Rolle: </label>*/}
-                    {/*    <br/>*/}
-                    {/*    <select ref="userInput"*/}
-                    {/*            required*/}
-                    {/*            className="ElbisSelect"*/}
-                    {/*            value={this.state.role}*/}
-                    {/*            onChange={this.onChange_role}>*/}
-                    {/*        {*/}
-                    {/*            this.state.role.map(function (role) {*/}
-                    {/*                return <option key={role} value={role}>{role}</option>;*/}
-                    {/*            })*/}
-                    {/*        }*/}
-                    {/*    </select>*/}
-                    {/*</div>*/}
                     <div className="form-group">
                         <label>Rolle: </label>
                         <select className="form-control" id="exampleFormControlSelect1">
@@ -108,9 +77,8 @@ export default class moderation_createUser extends Component {
                             />
                         </div>
                     </div>
-
                     <div className="form-group">
-                        <input type="submit" value="Create User" className="btn btn-primary" />
+                        <input type="submit" value="Nutzer erstellen" className="btn btn-primary" />
                     </div>
                 </form>
             </div>
@@ -171,13 +139,10 @@ export default class moderation_createUser extends Component {
             role: this.state.role,
             bDay: this.state.bday
         }
-        //TODO replace and do an actual submit to the db
-        console.log(user)
-        //go back to the moderationView
-
+        //TODO Make sure userCretion fully work
         axios.post('http://localhost:5000/user/add', user)
             .then(res => console.log(res.data));
-
+        //go back to the moderationView
         window.location = '/login/moderation';
     }
 

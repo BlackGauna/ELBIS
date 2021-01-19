@@ -1,5 +1,6 @@
 import React from 'react';
 import {BrowserRouter as Router, Route} from "react-router-dom";
+import { observer } from 'mobx-react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import'./ELBISWeb.css';
 
@@ -16,6 +17,26 @@ import createTopic from "./components/administration/administration_createTopic.
 
 //##########App start##########
 //TODO check which type of user is logged in before redirecting to moderation or administration
+class App extends React.Component{
+    render(){
+        return (
+            <Router>
+                <Route exact path="/" component={loginView} />
+                <Route path="/login" component={NavBar} />
+                <br/>
+                <Route exact path="/login/hauptseite" component={ELBISweb} />
+                <Route exact path="/login/artikelverwaltung" component={userView} />
+                <Route exact path="/login/moderation" component={moderationView} />
+                <Route exact path="/login/nutzerErstellen" component={createUser} />
+                <Route exact path="/login/administration" component={administrationView} />
+                <Route exact path="/login/artikelErstellen" component={CreateArticle} />
+                <Route exact path="/login/bereichErstellen" component={createTopic}/>
+
+            </Router>
+        );
+    }
+}
+/*
 function App(){
   return (
       <Router>
@@ -27,10 +48,12 @@ function App(){
           <Route exact path="/login/moderation" component={moderationView} />
           <Route exact path="/login/nutzerErstellen" component={createUser} />
           <Route exact path="/login/administration" component={administrationView} />
-          <Route exact path="/login/createArticle" component={CreateArticle} />
-          <Route exact path="/login/createTopic" component={createTopic}/>
+          <Route exact path="/login/artikelErstellen" component={CreateArticle} />
+          <Route exact path="/login/bereichErstellen" component={createTopic}/>
 
       </Router>
   );
 }
-export default App;
+*/
+
+export default observer(App);

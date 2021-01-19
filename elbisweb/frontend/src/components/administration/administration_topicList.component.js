@@ -54,7 +54,7 @@ export default class administration_topicListComponent extends Component {
                     <tr>
                         <th>Name</th>
                         <th>Parent</th>
-                        <th className={"text-right"}><Link to="/login/createTopic"><button className="btn btn-primary btn-sm" onClick="reload">+</button></Link></th>
+                        <th className={"text-right"}><Link to="/login/bereichErstellen"><button className="btn btn-primary btn-sm" onClick="reload">+</button></Link></th>
                     </tr>
                     </thead>
                     <tbody>
