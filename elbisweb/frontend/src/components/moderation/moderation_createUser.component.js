@@ -1,13 +1,80 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import UserDataService from "../../services/user.service";
+import RoleDataService from "../../services/role.service";
+import GenderDataService from "../../services/gender.service";
+import Select from 'react-select';
+
+// TODO: Geburtsdatum (DatePicker?!)
+// TODO: wenn man ein Geschlecht/Rolle auswählt, aber dann danach ein anderes Geschlecht/Rolle auswählen möchte gibts einen Fehler
 
 //##########Component imports##########
 
-
 export default class moderation_createUser extends Component {
+    //##########constructor##########
+    constructor(props) {
+        super(props);
+        //prepare all fields and make sure the functions are bound to this object
+        this.onChange_email = this.onChange_email.bind(this);
+        this.onChange_password = this.onChange_password.bind(this);
+        this.onChange_passwordCheck = this.onChange_passwordCheck.bind(this);
+        this.onChange_foreName = this.onChange_foreName.bind(this);
+        this.onChange_surName = this.onChange_surName.bind(this);
+        this.onChange_address = this.onChange_address.bind(this);
+        this.onChange_gender = this.onChange_gender.bind(this);
+        this.onChange_role = this.onChange_role.bind(this);
+        this.onChange_bday = this.onChange_bday.bind(this);
+
+        this.onSubmit = this.onSubmit.bind(this);
+
+        this.state = {
+            email: '',
+            password: '',
+            passwordCheck: '',
+            foreName: '',
+            surName: '',
+            address: '',
+            gender: [],
+            role: [],
+            // bDay: new Date(),
+
+            submitted: false
+        }
+    }
+
+    // Get gender options for dropdown
+    async getGenderOptions() {
+        const res = await GenderDataService.getAll()
+        const data = res.data
+
+
+        const options = data.map(d => ({
+            "label": d.name
+        }))
+
+        this.setState({gender: options})
+    }
+
+    // Get role options for dropdown
+    async getRoleOptions() {
+        const res = await RoleDataService.getAll()
+        const data = res.data
+
+        const options = data.map(d => ({
+            "label": d.name
+        }))
+
+        this.setState({role: options})
+    }
+
+    //##########Mount method (equals initialize!)##########
+    componentDidMount() {
+        this.getGenderOptions()
+        this.getRoleOptions()
+    }
+
     //##########Render##########
     render() {
         return (
@@ -17,139 +84,99 @@ export default class moderation_createUser extends Component {
                     <div className="form-group">
                         <label>E-Mail: </label>
                         <br/>
-                        <input type = "email" className="form-control" value={this.state.email} onChange={this.onChange_eMail}/>
+                        <input type="email" className="form-control" value={this.state.email}
+                               onChange={this.onChange_email}/>
                     </div>
 
                     <div className="form-group">
                         <label>passwort: </label>
                         <br/>
-                        <input type = "password" className="form-control" value={this.state.password} onChange={this.onChange_password}/>
+                        <input type="password" className="form-control" value={this.state.password}
+                               onChange={this.onChange_password}/>
                     </div>
                     <div className="form-group">
                         <label>passwort bestätigen: </label>
                         <br/>
-                        <input type = "password" className="form-control" value={this.state.passwordCheck} onChange={this.onChange_passwordCheck}/>
+                        <input type="password" className="form-control" value={this.state.passwordCheck}
+                               onChange={this.onChange_passwordCheck}/>
                     </div>
                     <div className="form-group">
                         <label>Vorname: </label>
                         <br/>
-                        <input type = "name" className="form-control" value={this.state.foreName} onChange={this.onChange_foreName}/>
+                        <input type="name" className="form-control" value={this.state.foreName}
+                               onChange={this.onChange_foreName}/>
                     </div>
                     <div className="form-group">
                         <label>Nachname: </label>
                         <br/>
-                        <input type = "name" className="form-control" value={this.state.surName} onChange={this.onChange_surName}/>
+                        <input type="name" className="form-control" value={this.state.surName}
+                               onChange={this.onChange_surName}/>
                     </div>
                     <div className="form-group">
                         <label>Anschrift: </label>
                         <br/>
-                        <input type = "address" className="form-control" value={this.state.address} onChange={this.onChange_address}/>
+                        <input type="address" className="form-control" value={this.state.address}
+                               onChange={this.onChange_address}/>
                     </div>
                     <div className="form-group">
                         <label>Geschlecht: </label>
-                        <select className="form-control" ref="userInput">
-                            onChange={this.onChange_gender}>
-                            {
-                                this.state.gender.map(function (gender) {
-                                    return <option key={gender} value={gender}>{gender}</option>;
-                                })
-                            }
-                        </select>
+                        <Select options={this.state.gender} onChange={this.onChange_gender}/>
                     </div>
                     <div className="form-group">
                         <label>Rolle: </label>
-                        <select className="form-control" id="exampleFormControlSelect1">
-                            onChange={this.onChange_role}>
-                            {
-                                this.state.role.map(function (role) {
-                                    return <option key={role} value={role}>{role}</option>;
-                                })
-                            }
-                        </select>
+                        <Select options={this.state.role} onChange={this.onChange_role}/>
                     </div>
                     <div className="form-group">
-                        <label>Geburtsdatum: </label>
-                        <br/>
-                        <div>
-                            <DatePicker
-                                selected={this.state.date}
-                                onChange={this.onChangeDate}
-                            />
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <input type="submit" value="Nutzer erstellen" className="btn btn-primary" />
+                        <input type="submit" value="Nutzer erstellen" className="btn btn-primary"/>
                     </div>
                 </form>
             </div>
         )
     }
 
-//##########Mount method (equals initialize!)##########
-    componentDidMount() {
-        this.setState({
-            //fill dropdowns
-            gender: ['Maennlich', 'Weiblich', 'Divers'],
-            //TODO make role dynamic (if a mod is logged in - just allow to create users!)
-            role: ['Nutzer', 'Moderator', 'Administrator']
-        })
-    }
-
-//##########constructor##########
-    constructor(props) {
-        super(props);
-        //prepare all fields and make sure the functions are bound to this object
-        this.onChange_eMail = this.onChange_eMail.bind(this);
-        this.onChange_password = this.onChange_password.bind(this);
-        this.onChange_passwordCheck = this.onChange_passwordCheck.bind(this);
-        this.onChange_foreName = this.onChange_foreName.bind(this);
-        this.onChange_surName = this.onChange_surName.bind(this);
-        this.onChange_address = this.onChange_address.bind(this);
-        this.onChange_gender = this.onChange_gender.bind(this);
-        this.onChange_role = this.onChange_role.bind(this);
-        this.onChange_bday = this.onChange_bday.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-
-        this.state = {
-            eMail: '',
-            password: '',
-            passwordCheck: '',
-            foreName: '',
-            surName: '',
-            address: '',
-            gender: [],
-            role: [],
-            bDay: new Date(),
-        }
-    }
-
-//##########submit method##########
+    //##########submit method##########
     onSubmit(e) {
         //don't let any other submit run
         e.preventDefault();
         //create the object
         const user = {
-            eMail: this.state.eMail,
+            email: this.state.email,
             //TODO make password check
             password: this.state.password,
             name: this.state.foreName + " " + this.state.surName,
             address: this.state.address,
-            //TODO submit gender and role in the right way
             gender: this.state.gender,
             role: this.state.role,
             bDay: this.state.bday
         }
-        //TODO Make sure userCretion fully work
-        axios.post('http://localhost:5000/user/add', user)
-            .then(res => console.log(res.data));
-        //go back to the moderationView
-        window.location = '/login/moderation';
+
+        UserDataService.create(user)
+            .then(res => {
+                this.setState({
+                    email: res.data.email,
+                    password: res.data.password,
+                    name: res.data.foreName + " " + res.data.surName,
+                    address: res.data.address,
+                    gender: res.data.gender,
+                    role: res.data.role,
+                    // TODO: bday
+
+                    submitted: true
+                });
+                console.log(res.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+
+        //go back to the moderationView TODO: funktioniert nicht
+        // window.location = '/login/moderation';
     }
 
-//##########change methods##########
-    onChange_eMail(e) {
+    //##########change methods##########
+    onChange_email(e) {
         this.setState({
-            eMail: e.target.value //target equals a textBox target, value its value; Changes just the given state value
+            email: e.target.value //target equals a textBox target, value its value; Changes just the given state value
         })
     }
 
@@ -185,13 +212,13 @@ export default class moderation_createUser extends Component {
 
     onChange_gender(e) {
         this.setState({
-            gender: e.target.value
+            gender: e.label
         })
     }
 
     onChange_role(e) {
         this.setState({
-            role: e.target.value
+            role: e.label
         })
     }
 

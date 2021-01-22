@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
+import UserDataService from "../../services/user.service";
 
-
-//TODO wir brauchen eine übersichtliche Codestruktur -> Kommentare!
+// TODO: edit User
 
 const User = props => (
     <tr>
@@ -16,21 +15,25 @@ const User = props => (
         <td>{props.user.address}</td>
         <td>{props.user.dateOfBirth}</td>
         <td align="right">
-            <Link to={"/edit/"+props.user._id}>bearbeiten</Link> | <a href='#' onClick={() => {props.deleteUser(props.user._id)}}>löschen</a>
+            <Link to={"/edit/" + props.user._id}>bearbeiten</Link> | <a href='#' onClick={() => {
+            props.deleteUser(props.user._id)
+        }}>löschen</a>
         </td>
     </tr>
 )
 
-export default class moderation_userList extends Component{
-    constructor(props){
+export default class moderation_userList extends Component {
+    // Constructor
+    constructor(props) {
         super(props);
 
         this.deleteUser = this.deleteUser.bind(this);
         this.state = {user: []};
     }
 
+    // Mount method
     componentDidMount() {
-        axios.get('http://localhost:5000/user/')
+        UserDataService.getAll()
             .then(response => {
                 this.setState({user: response.data})
             })
@@ -39,23 +42,24 @@ export default class moderation_userList extends Component{
             })
     }
 
-    deleteUser(id){
-        axios.delete('http://localhost:5000/user/'+id)
+    // delete User method
+    deleteUser(id) {
+        UserDataService.delete(id)
             .then(res => console.log(res.data));
         this.setState({
             user: this.state.user.filter(el => el._id !== id)
         })
     }
 
-    userList(){
+    // get user list
+    userList() {
         return this.state.user.map(currentUser => {
             return <User user={currentUser} deleteUser={this.deleteUser} key={currentUser._id}/>;
         })
     }
 
 //##########Render##########
-    //TODO make "+" lead to createUser
-    render(){
+    render() {
         return (
             <div className='ElbisTable'>
                 <h3>Nutzerverwaltung</h3>
@@ -69,7 +73,9 @@ export default class moderation_userList extends Component{
                         <th>Rolle</th>
                         <th>Anschrift</th>
                         <th>Geburtsdatum</th>
-                        <th className={"text-right"}><Link to="/login/nutzerErstellen"><button className="btn btn-primary btn-sm" onClick="reload">+</button></Link></th>
+                        <th className={"text-right"}><Link to="/login/nutzerErstellen">
+                            <button className="btn btn-primary btn-sm" onClick="reload">+</button>
+                        </Link></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -77,6 +83,7 @@ export default class moderation_userList extends Component{
                     </tbody>
                 </table>
             </div>
-            )
+        )
     }
+
 }

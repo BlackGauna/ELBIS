@@ -7,7 +7,7 @@ const userSchema = new Schema({
     //TODO Limits to variables (Trim,minlength etc)
     email: {type: String, required:  true},
     password: {type: String, required:  true},
-    role: {type: String, required:  true},
+    role: {type: String, required:  false},
     name: {type: String, required:  true},
     address: {type: String, required:  false},
     gender: {type: String, required:  false},
