@@ -18,8 +18,8 @@ mongoose.connection.once('open', () => {
 })
 
 const userRouter = require('./routes/user.route');
-const articleRouter = require('./routes/article');
-const topicRouter = require('./routes/topic');
+const articleRouter = require('./routes/article.route');
+const topicRouter = require('./routes/topic.route.');
 const roleRouter = require('./routes/role');
 const genderRouter = require('./routes/gender');
 const statusRouter = require('./routes/status');

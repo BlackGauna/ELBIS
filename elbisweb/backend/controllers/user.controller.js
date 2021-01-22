@@ -1,6 +1,6 @@
 let User = require('../models/user.model');
 
-// Create and save an ew User
+// Create and save a new User
 exports.create = (req, res) => {
     // Validate request
     if (!req.body.email) {

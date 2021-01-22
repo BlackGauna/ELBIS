@@ -10,11 +10,15 @@ const articleSchema = new Schema({
     //creationDate: {type: Date, required:  false},
     //expireDate: {type: Date, required:  false},
     //lastEdit: {type: Date, required:  false},
-    status: {type: Number, required:  true},
+    // status: {type: Number, required:  true},
+    status: {type: String, required: true},
     //TODO make sure the topicSchema import works
-    topic: {type: mongoose.Schema.Types.ObjectId, ref: 'Topic', required:  true},
-    authorId: {type: Number, required:  true},
-    publisherId: {type: Number, required:  false},
+    // topic: {type: mongoose.Schema.Types.ObjectId, ref: 'Topic', required:  true},
+    topic: {type: String, required: true},
+    author: {type: String, required: true},
+    publisher: {type: String, required: false},
+    // authorId: {type: Number, required:  true},
+    // publisherId: {type: Number, required:  false},
     publisherComment: {type: String, required:  false},
 
 }, {
