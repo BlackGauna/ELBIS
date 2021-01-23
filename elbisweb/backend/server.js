@@ -21,7 +21,7 @@ const articleRouter = require('./routes/article.route');
 const topicRouter = require('./routes/topic.route.');
 const roleRouter = require('./routes/role.route');
 const genderRouter = require('./routes/gender.route');
-const statusRouter = require('./routes/status');
+const statusRouter = require('./routes/status.route');
 const images= require("./routes/images.route");
 
 app.use('/user', userRouter);

@@ -1,48 +1,42 @@
-let User = require('../models/user.model');
+let Status = require('../models/status.model');
 
-// Create and save a new User
+// Create and save a new status
 exports.create = (req, res) => {
     // Validate request
-    if (!req.body.email) {
-        res.status(400).send({message: "Content can not be empty!"});
+    if (!req.body.name) {
+        res.status(400).send({message: "Name can not be empty!"});
         return;
     }
 
-    // Create a user
-    const user = new User({
-        email: req.body.email,
-        password: req.body.password,
-        role: req.body.role,
+    // Create a status
+    const status = new Status({
         name: req.body.name,
-        address: req.body.address,
-        gender: req.body.gender,
-        dateOfBirth: req.body.dateOfBirth
     });
 
-    // Save user in database
-    user
-        .save(user)
+    // Save status in database
+    status
+        .save(status)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occured while creating the user."
+                    err.message || "Some error occured while creating the status."
             });
         });
 };
 
 // Retrieve all Users from the database
 exports.findAll = (req, res) => {
-    User.find()
+    Status.find()
         .then(data => {
             res.send(data)
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                err.message || "Some error occured while retrieving users."
+                    err.message || "Some error occured while retrieving status."
             });
         });
 };
@@ -51,16 +45,16 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    User.findById(id)
+    Status.findById(id)
         .then(data => {
             if (!data)
-                res.status(404).send({message: "Not found user with id " + id});
+                res.status(404).send({message: "Not found status with id " + id});
             else res.send(data);
         })
         .catch(err => {
             res
                 .status(500)
-                .send({message: "Error retrieving user with id " + id});
+                .send({message: "Error retrieving status with id " + id});
         });
 };
 
@@ -74,17 +68,17 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    User.findByIdAndUpdate(id, req.body, {useFindAndModify: false})
+    Status.findByIdAndUpdate(id, req.body, {useFindAndModify: false})
         .then(data => {
             if (!data){
                 res.status(404).send({
-                    message: "Cannot update User with id = " + id + ". Maybe User was not found!"
+                    message: "Cannot update status with id = " + id + ". Maybe status was not found!"
                 });
-            } else res.send({message: "User was updated successfully."});
+            } else res.send({message: "status was updated successfully."});
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating User with id " + id
+                message: "Error updating status with id " + id
             });
         });
 };
@@ -93,21 +87,21 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    User.findByIdAndRemove(id, {useFindAndModify: false})
+    Status.findByIdAndRemove(id, {useFindAndModify: false})
         .then(data => {
             if (!data) {
                 res.status(404).send({
-                    message: "Cannot delete User with id " + id + ". Maybe User was not found"
+                    message: "Cannot delete status with id " + id + ". Maybe status was not found"
                 });
             } else {
                 res.send({
-                    message: "User was deleted successfully!"
+                    message: "status was deleted successfully!"
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete User with id " + id
+                message: "Could not delete status with id " + id
             });
         });
 }
