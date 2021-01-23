@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Nav, Navbar, Button} from "react-bootstrap";
+import {Nav, Navbar, Button, NavDropdown} from "react-bootstrap";
 
 export default class NavBar extends Component{
 
@@ -16,11 +16,21 @@ export default class NavBar extends Component{
                 <Navbar.Toggle aria-controls={"basic-navbar-nav"} />
                 <Navbar.Collapse id={"basic-navbar-nav"}>
                     <Nav className={"mr-auto"}>
-                        <Nav.Link href={"/login/artikelverwaltung"}>Artikelverwaltung</Nav.Link>
-                        <Nav.Link href={"/login/moderation"}>Moderation</Nav.Link>
-                        <Nav.Link href={"/login/administration"}>Administration</Nav.Link>
-                        <Nav.Link href={"/login/nutzerErstellen"}>TEST</Nav.Link>
-                        <Nav.Link href={"/login/artikelErstellen"}>Artikel erstellen</Nav.Link>
+                        <NavDropdown title="Artikelverwaltung" id="moderationDropdown">
+                            <NavDropdown.Item href={"/login/artikelErstellen"}>Artikel erstellen</NavDropdown.Item>
+                            <NavDropdown.Item href={"/pfadzumeinenartikeln"}>Meine Artikel</NavDropdown.Item>
+                        </NavDropdown>
+                        <NavDropdown title="Moderation" id="moderationDropdown">
+                            <NavDropdown.Item href={"/login/moderation"}>Benutzerverwaltung</NavDropdown.Item>
+                            <NavDropdown.Item href={"/pfadzuallenartikeln"}>Artikelverwaltung</NavDropdown.Item>
+                        </NavDropdown>
+                        <NavDropdown title="Administration" id="administrationDropdown">
+                            <NavDropdown.Item href={"/login/administration"}>Bereichsverwaltung</NavDropdown.Item>
+                            <NavDropdown.Item href={"/pfadzurrollenverwaltung"}>Rollenverwaltung</NavDropdown.Item>
+                        </NavDropdown>
+                    </Nav>
+                    <Nav className={"ml-auto"}>
+                        <Nav.Link href={"/eigeneskontobearbeiten"}>Mein Bereich</Nav.Link>
                     </Nav>
                     <Button href={"/"} variant={"outline-primary"}>Logout</Button>
                 </Navbar.Collapse>
