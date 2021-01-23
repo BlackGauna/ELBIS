@@ -133,6 +133,36 @@ export default class CreateArticle extends Component {
                               .post("/files/add", image)
                               .then((res) => console.log(res.data));*/
                         },
+
+                        setup: function(editor)
+                        {
+                            editor.on('BeforeSetContent', function (e) {
+                                console.log("test");
+                                console.log(e);
+                                let html =e.content;
+
+                                if (html.includes("<img"))
+                                {
+                                    // resize width of image
+                                    //console.log("before: "+html);
+                                    let re=/(width=")([\s\S]*?)(")/g;
+                                    //console.log("match: "+html.match(re));
+                                    html=html.replace(re,"$1800$3");
+                                    //console.log("html: "+html);
+
+                                    // remove height tag to keep dimensions
+                                    re=/(height="[\s\S]*?")/;
+                                    html=html.replace(re,"");
+                                }
+                                e.content=html;
+                                //console.log("after: ");
+                                //console.log(e);
+                            })
+                        },
+
+
+
+
                     }}
                     onEditorChange={this.handleEditorChange}
                 />
