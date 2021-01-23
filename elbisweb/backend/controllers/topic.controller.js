@@ -28,7 +28,7 @@ exports.create = (req, res) => {
         });
 };
 
-// Retrieve all Users from the database
+// Retrieve all topics from the database
 exports.findAll = (req, res) => {
     Topic.find()
         .then(data => {
@@ -42,7 +42,7 @@ exports.findAll = (req, res) => {
         });
 };
 
-// Find a single User with an ID
+// Find a single topic with an ID
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
@@ -59,7 +59,7 @@ exports.findOne = (req, res) => {
         });
 };
 
-// Update a user by the id
+// Update a topic by the id
 exports.update = (req, res) => {
     if (!req.body){
         return res.status(400).send({
@@ -84,7 +84,7 @@ exports.update = (req, res) => {
         });
 };
 
-// Delete User with ID
+// Delete topic with ID
 exports.delete = (req, res) => {
     const id = req.params.id;
 
@@ -96,7 +96,7 @@ exports.delete = (req, res) => {
                 });
             } else {
                 res.send({
-                    message: "Topic was deletet successfully!"
+                    message: "Topic was deleted successfully!"
                 });
             }
         })

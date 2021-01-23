@@ -101,7 +101,7 @@ exports.delete = (req, res) => {
                 });
             } else {
                 res.send({
-                    message: "Article was deletet successfully!"
+                    message: "Article was deleted successfully!"
                 });
             }
         })
