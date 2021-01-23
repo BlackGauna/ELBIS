@@ -22,6 +22,7 @@ const topicRouter = require('./routes/topic.route.');
 const roleRouter = require('./routes/role.route');
 const genderRouter = require('./routes/gender.route');
 const statusRouter = require('./routes/status');
+const images= require("./routes/images.route");
 
 app.use('/user', userRouter);
 app.use('/article', articleRouter);
@@ -29,6 +30,7 @@ app.use('/topic', topicRouter);
 app.use('/role', roleRouter);
 app.use('/gender', genderRouter);
 app.use('/status', statusRouter);
+app.use("/images", images);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

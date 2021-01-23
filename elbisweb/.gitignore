@@ -1,3 +1,6 @@
+#ELBIS
+backend/images/*
+
 # Logs
 logs
 *.log
