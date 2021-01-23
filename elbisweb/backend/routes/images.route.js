@@ -35,8 +35,10 @@ const fileFilter = (req, file, cb) => {
 
 let upload = multer({ storage, fileFilter });
 
-// router.options("/", cors());
 
+/**
+ * @route GET image
+ */
 router.route("/:filename").get((req, res) => {
   Image.find({ filename: req.params.filename }).then((image) => {
     var im = image[0];
@@ -48,8 +50,8 @@ router.route("/:filename").get((req, res) => {
 });
 
 /**
- * @route POST files
- * @desc upload a file
+ * @route POST images
+ * @desc upload an image
  */
 router.route("/add").post(upload.single("image"), (req, res) => {
   const path = req.file.filename;

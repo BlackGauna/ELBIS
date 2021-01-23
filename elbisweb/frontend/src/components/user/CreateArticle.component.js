@@ -1,8 +1,10 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import { Component } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
-import { Button, Form } from "react-bootstrap";
+import parse from 'html-react-parser';
+import {Button, Container, Form} from "react-bootstrap";
 import bsCustomFileInput from "bs-custom-file-input";
 
 //TODO: delete Images uploaded and unused(?)
@@ -13,12 +15,25 @@ export default class CreateArticle extends Component {
         super(props);
         this.state = {
             filename: "",
+            html:"",
+            showPreview:false,
         };
     }
 
     handleEditorChange = (content, editor) => {
         console.log("Content was updated:", content);
+        this.setState(state=>({
+            ...state,
+            html: content,
+        }));
     };
+
+    togglePreview=() =>{
+        this.setState(state =>({
+            ...state,
+            showPreview: !this.state.showPreview,
+        }));
+    }
 
     onChangeImage = (e) => {
         this.setState({
@@ -81,6 +96,18 @@ export default class CreateArticle extends Component {
                         $(document).ready(function() {bsCustomFileInput.init()});
                     </script>
                 </Form>*/}
+                <Container style={{display: "flex"}} className={"mr-0"}>
+                    <Button className={"mb-2"} style={{marginLeft:"auto"}} onClick={this.togglePreview}>
+                        {this.state.showPreview ? 'Live-Preview schließen':'Live-Preview öffnen'}
+                    </Button>
+                </Container>
+
+
+                {this.state.showPreview && (
+                <PreviewWindow>
+                    {parse(this.state.html)}
+                </PreviewWindow>
+                )}
 
                 <Editor
                     apiKey="0pg6bjj3shae8ys7qwuzkwo6jba2p7i7bs6onheyzqlhswen"
@@ -169,4 +196,31 @@ export default class CreateArticle extends Component {
             </div>
         );
     }
+}
+
+// Live preview of article as a React Portal
+class PreviewWindow extends Component{
+    constructor(props) {
+        super(props);
+
+        this.externalWindow=null;
+        this.containerEl=document.createElement('div');
+    }
+
+    componentDidMount() {
+        this.externalWindow=window.open('','','width=600,height=720,left=200,top=200');
+
+        this.externalWindow.document.body.appendChild(this.containerEl);
+
+    }
+
+    componentWillUnmount() {
+    this.externalWindow?.close();
+    }
+
+    render() {
+        return ReactDOM.createPortal(this.props.children, this.containerEl);
+    }
+
+
 }
