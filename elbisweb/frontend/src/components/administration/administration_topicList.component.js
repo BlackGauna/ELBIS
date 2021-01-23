@@ -2,18 +2,22 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
+import TopicDataService from "../../services/topic.service";
 
 const Topic = props => (
     <tr>
         <td>{props.topic.name}</td>
         <td>{props.topic.parentTopic}</td>
         <td align="right">
-            <Link to={"/edit/"+props.topic._id}>bearbeiten</Link> | <a href='#' onClick={() => {props.deleteTopic(props.topic._id)}}>löschen</a>
+            <Link to={"/edit/" + props.topic._id}>bearbeiten</Link> | <a href='#' onClick={() => {
+            props.deleteTopic(props.topic._id)
+        }}>löschen</a>
         </td>
     </tr>
 )
 
 export default class administration_topicListComponent extends Component {
+    // Constructor
     constructor(props) {
         super(props);
 
@@ -21,8 +25,9 @@ export default class administration_topicListComponent extends Component {
         this.state = {topic: []};
     }
 
+    // Mount method
     componentDidMount() {
-        axios.get('http://localhost:5000/topic/')
+        TopicDataService.getAll()
             .then(response => {
                 this.setState({topic: response.data})
             })
@@ -31,21 +36,23 @@ export default class administration_topicListComponent extends Component {
             })
     }
 
-    deleteTopic(id){
-        axios.delete('http://localhost:5000/topic/'+id)
+    // Delete topic
+    deleteTopic(id) {
+        TopicDataService.delete(id)
             .then(res => console.log(res.data));
         this.setState({
             topic: this.state.topic.filter(el => el._id !== id)
         })
     }
 
-    topicList(){
+    // get topicList
+    topicList() {
         return this.state.topic.map(currentTopic => {
             return <Topic topic={currentTopic} deleteTopic={this.deleteTopic} key={currentTopic._id}/>;
         })
     }
 
-    render(){
+    render() {
         return (
             <div className='ElbisTable'>
                 <h3>Bereichsverwaltung</h3>
@@ -54,7 +61,9 @@ export default class administration_topicListComponent extends Component {
                     <tr>
                         <th>Name</th>
                         <th>Elternbereich</th>
-                        <th className={"text-right"}><Link to="/login/bereichErstellen"><button className="btn btn-primary btn-sm" onClick="reload">+</button></Link></th>
+                        <th className={"text-right"}><Link to="/login/bereichErstellen">
+                            <button className="btn btn-primary btn-sm" onClick="reload">+</button>
+                        </Link></th>
                     </tr>
                     </thead>
                     <tbody>
