@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
+import TopicDataService from "../../services/topic.service";
+import Select from 'react-select';
 
 //##########Component imports##########
 
@@ -8,6 +9,41 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 
 export default class administration_createTopic extends Component {
+    //##########constructor##########
+    constructor(props) {
+        super(props);
+        //prepare all fields and make sure the functions are bound to this object
+        this.onChange_name = this.onChange_name.bind(this);
+        this.onChange_parentTopic = this.onChange_parentTopic.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+
+        this.state = {
+            name: '',
+            parentTopic: [],
+
+            submitted: false
+        }
+    }
+
+    // Get topic options for dropdown
+    async getParentTopicOptions() {
+        const res = await TopicDataService.getAll()
+        // const res = await TopicDataService.get("6002e1e5b319cf32d4e0c504");
+        const data = res.data
+
+
+        const options = data.map(d => ({
+            "label": d.name
+        }))
+
+        this.setState({parentTopic: options})
+    }
+
+    //##########Mount method (equals initialize!)##########
+    componentDidMount() {
+        this.getParentTopicOptions()
+    }
+
     //##########Render##########
     render() {
         return (
@@ -17,57 +53,56 @@ export default class administration_createTopic extends Component {
                     <div className="form-group">
                         <label>Name: </label>
                         <br/>
-                        <input type = "text" className="form-control" value={this.state.name} onChange={this.onChange_name}/>
+                        <input type="name" className="form-control" value={this.state.name}
+                               onChange={this.onChange_name}/>
                     </div>
                     <div className="form-group">
-                        <input type="submit" value="Bereich erstellen" className="btn btn-primary" />
+                        <label>Elternbereich: </label>
+                        <Select options={this.state.parentTopic} onChange={this.onChange_parentTopic}/>
+                    </div>
+                    <div className="form-group">
+                        <input type="submit" value="Bereich erstellen" className="btn btn-primary"/>
                     </div>
                 </form>
             </div>
         )
     }
 
-//##########Mount method (equals initialize!)##########
-    componentDidMount() {
-        this.setState({
-        })
-    }
-
-//##########constructor##########
-    constructor(props) {
-        super(props);
-        //prepare all fields and make sure the functions are bound to this object
-        this.onChange_name = this.onChange_name.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-
-        this.state = {
-            name: '',
-            //TODO: parentTopic
-        }
-    }
-
-//##########submit method##########
+    //##########submit method##########
     onSubmit(e) {
         //don't let any other submit run
         e.preventDefault();
         //create the object
         const topic = {
             name: this.state.name,
+            parentTopic: this.state.parentTopic
         }
 
-        console.log(topic)
+        TopicDataService.create(topic)
+            .then(res => {
+                this.setState({
+                    name: res.data.name,
+                    parentTopic: res.data.parentTopic,
 
-        axios.post('http://localhost:5000/topic/add', topic)
-            .then(res => console.log(res.data));
+                    submitted: true
+                });
+                console.log(res.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
     }
 
-//##########change methods##########
+    //##########change methods##########
     onChange_name(e) {
         this.setState({
             name: e.target.value
         })
     }
 
-    //TODO: parentTopic
-
+    onChange_parentTopic(e) {
+        this.setState({
+            parentTopic: e.label
+        })
+    }
 }
