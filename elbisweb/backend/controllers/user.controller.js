@@ -64,6 +64,24 @@ exports.findOne = (req, res) => {
         });
 };
 
+//TODO Authenticate an User by email and password
+exports.findOne = (req, res) => {
+    const getemail = req.params.email;
+    const password = req.params.password;
+
+    User.findOne({email: getemail, password: password})
+        .then(data => {
+            if (!data)
+                res.status(404).send({message: "Not found user with id " + id});
+            else res.send(data);
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .send({message: "Error retrieving user with id " + id});
+        });
+};
+
 // Update a user by the id
 exports.update = (req, res) => {
     if (!req.body){

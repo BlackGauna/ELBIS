@@ -17,12 +17,12 @@ TODO Finish models and the routes
 TODO Finish todos in the module and routes
 TODO Link router methods to components and server.js
 TODO add the functions like update article list that are going to be used on start to server.js
-TODO Hash Passwords
 TODO Insert examples and tests to collections
 
 -------Main/Frontend-------
 
 TODO create Login Page
+TODO Hash Passwords
 
 
 
