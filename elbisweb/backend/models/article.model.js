@@ -8,7 +8,7 @@ const articleSchema = new Schema({
     content: {type: String, required:  true},
     //TODO creation,expire and last edit date?
     //creationDate: {type: Date, required:  false},
-    //expireDate: {type: Date, required:  false},
+    // expireDate: {type: Date, required:  false},
     //lastEdit: {type: Date, required:  false},
     // status: {type: Number, required:  true},
     status: {type: String, required: true},

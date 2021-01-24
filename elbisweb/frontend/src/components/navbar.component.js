@@ -22,7 +22,7 @@ export default class NavBar extends Component{
                         </NavDropdown>
                         <NavDropdown title="Moderation" id="moderationDropdown">
                             <NavDropdown.Item href={"/login/moderation"}>Benutzerverwaltung</NavDropdown.Item>
-                            <NavDropdown.Item href={"/pfadzuallenartikeln"}>Artikelverwaltung</NavDropdown.Item>
+                            <NavDropdown.Item href={"/login/articles"}>Artikelverwaltung</NavDropdown.Item>
                         </NavDropdown>
                         <NavDropdown title="Administration" id="administrationDropdown">
                             <NavDropdown.Item href={"/login/administration"}>Bereichsverwaltung</NavDropdown.Item>
