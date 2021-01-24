@@ -17,7 +17,7 @@ export default class NavBar extends Component{
                 <Navbar.Collapse id={"basic-navbar-nav"}>
                     <Nav className={"mr-auto"}>
                         <NavDropdown title="Artikelverwaltung" id="moderationDropdown">
-                            <NavDropdown.Item href={"/login/artikelErstellen"}>Artikel erstellen</NavDropdown.Item>
+                            <NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>
                             <NavDropdown.Item href={"/login/pfadzumeinenartikeln"}>Meine Artikel</NavDropdown.Item>
                         </NavDropdown>
                         <NavDropdown title="Moderation" id="moderationDropdown">
