@@ -32,9 +32,9 @@ class App extends React.Component {
                 </div>
             )
         } else {
-            if (loggedUser.isLoggedIn|| loggedUser.isLoggedIn) {
+            if (loggedUser.isLoggedIn||!loggedUser.isLoggedIn) {
                 return (
-                    <div calssName="app">
+                    <div className="app">
                         <Router>
                             <Route path="/" component={NavBar}/>
                             <br/>
