@@ -63,11 +63,21 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
+    console.log(id);
     Article.findById(id)
         .then(data => {
-            if (!data)
+            if (!data){
                 res.status(404).send({message: "Not found Article with id " + id});
-            else res.send(data);
+            }
+            else {
+
+                // get real content from saved html file
+                const filename=data.content;
+                const article=data;
+                article.content=fs.readFileSync(filename);
+
+                res.send(article);
+            }
         })
         .catch(err => {
             res
@@ -85,14 +95,31 @@ exports.update = (req, res) => {
     }
 
     const id = req.params.id;
+    const html= req.body.content;
 
-    Article.findByIdAndUpdate(id, req.body, {useFindAndModify: false})
+    delete req.body["content"];
+    console.log("deleted");
+    console.log(req.body);
+
+    Article.findByIdAndUpdate(id, req.body, {useFindAndModify: false, new:true})
         .then(data => {
             if (!data){
+                console.log("fial");
                 res.status(404).send({
                     message: "Cannot update Article with id = " + id + ". Maybe Article was not found!"
                 });
-            } else res.send({message: "Article was updated successfully."});
+            } else {
+                console.log("oath: "+data.content);
+                fs.writeFile(data.content, html, (err)=>{
+                    if (err) throw err;
+
+                    // success
+                    console.log("File updated!");
+                });
+
+                console.log(data);
+                res.send(data);
+            }
         })
         .catch(err => {
             res.status(500).send({

@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import'./ELBISWeb.css';
 
+
 //##########Component imports##########
 import NavBar from "./components/navbar.component";
 import ELBISweb from "./components/ELBISweb.component";
@@ -31,7 +32,8 @@ class App extends React.Component{
                 <Route exact path="/login/moderation" component={moderationView} />
                 <Route exact path="/login/nutzerErstellen" component={createUser} />
                 <Route exact path="/login/administration" component={administrationView} />
-                <Route exact path="/login/artikelErstellen" component={CreateArticle} />
+                <Route exact path="/login/edit" component={CreateArticle} />
+                <Route exact path="/login/edit/:id" component={CreateArticle} />
                 <Route exact path="/login/bereichErstellen" component={createTopic}/>
                 <Route exact path="/login/articles" component={allArticlesList}/>
                 <Route exact path="/login/editUser/:id" component={editUser}/>

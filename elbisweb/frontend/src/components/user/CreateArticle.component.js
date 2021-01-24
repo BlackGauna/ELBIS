@@ -7,9 +7,14 @@ import parse from 'html-react-parser';
 import {Button, Container, Form, FormControl, FormGroup, FormLabel} from "react-bootstrap";
 import bsCustomFileInput from "bs-custom-file-input";
 import loggedUser from "../../session/loggedUser";
+import {BrowserRouter as Router, Route} from "react-router-dom";
 
 //TODO: delete Images uploaded and unused(?)
 //TODO: Resuse uploaded images (?)
+
+// TODO: set topic, author (etc.) from current user
+
+// TODO: if topic, title changes, rename save html file
 
 export default class CreateArticle extends Component {
     constructor(props) {
@@ -19,14 +24,73 @@ export default class CreateArticle extends Component {
             imageFilename: "",
             showPreview:false,
             html:"",
-            title:"",
+            title:"unnamed",
             oldTitle:"",
-            topic:"test",
+            topic:"unnamed",
             status:"default",
             author:"test",
-            Article:null
+            id: null,
+            Article: null
 
         };
+
+
+    }
+
+    componentWillMount() {
+
+        const paramId=this.props.match.params.id;
+        // create new article if no id in params
+        if(paramId==null){
+            console.log("Setting up new article in db");
+
+            const article={
+                title: this.state.title,
+                content: this.state.html,
+                status: this.state.status,
+                topic: this.state.topic,
+                author: this.state.author,
+                publisher: "",
+                publisherComment: "",
+            }
+
+            let id=0;
+
+            axios.post('/article/', article)
+                .then(res => {
+                    this.setState(state=>({
+                        ...state,
+                        id: res.data._id
+                    }));
+                    id=res.data._id;
+                    console.log("Saved article successfully!");
+
+                    this.props.history.push("/login/edit/"+id);
+
+
+                })
+                .catch(err=> {
+                    console.log("Couldnt create new article.");
+                    console.log(err);
+                });
+
+        } else{
+            axios.get("/article/"+paramId)
+                .then(res =>{
+                    console.log(res.data.content);
+                    this.setState({
+                        title: res.data.title,
+                        html: res.data.content,
+                        status: res.data.status,
+                        topic: res.data.topic,
+                        author: res.data.author,
+                        publisher: res.data.publisher,
+                        publisherComment: res.data.publisherComment,
+                        id: res.data._id
+                    });
+                })
+        }
+
     }
 
     handleEditorChange = (content, editor) => {
@@ -37,12 +101,11 @@ export default class CreateArticle extends Component {
         }));
 
 
-        // TODO: update article when title changed
+        // TODO: when editing title, rename html in backend
 
-        // Create new article in db
+        // update article in db
         if (this.state.title!=="")
         {
-
             const article= {
                 title: this.state.title,
                 content: this.state.html,
@@ -52,19 +115,10 @@ export default class CreateArticle extends Component {
                 publisher: "",
                 publisherComment: "",
             }
-            axios.post('/article/', article)
-                .then(res=> {
-                    this.setState(state=>({
-                        ...state,
-                        oldTitle: this.state.title
-                    }));
+            axios.put('/article/'+this.state.id, article)
+                .then(res =>{
                     console.log("Saved article successfully!");
-
-                    this.setState(state=>({
-                        ...state,
-                        Article: res.data,
-                    }))
-                    console.log(this.state.Article);
+                    console.log(res);
                 })
             .catch(err=> console.log(err));
 
@@ -127,7 +181,7 @@ export default class CreateArticle extends Component {
                     <Form>
                         <Form.Group>
                             <Form.Label>Titel</Form.Label>
-                            <Form.Control  placeholder="Titel eingeben" onChange={this.onChangeTitle}/>
+                            <Form.Control placeholder="Titel eingeben" value={this.state.title} onChange={this.onChangeTitle}/>
                         </Form.Group>
 
                     </Form>
@@ -147,6 +201,7 @@ export default class CreateArticle extends Component {
                 )}
 
                 <Editor
+                    initialValue={this.state.html}
                     apiKey="0pg6bjj3shae8ys7qwuzkwo6jba2p7i7bs6onheyzqlhswen"
                     init={{
                         //skin: "oxide-dark",
@@ -196,8 +251,6 @@ export default class CreateArticle extends Component {
                         setup: function(editor)
                         {
                             editor.on('BeforeSetContent', function (e) {
-                                console.log("test");
-                                console.log(e);
                                 let html =e.content;
 
                                 if (html.includes("<img"))
