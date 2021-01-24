@@ -15,6 +15,7 @@ import loginView from "./components/loginView.component";
 import CreateArticle from "./components/user/CreateArticle.component";
 import createTopic from "./components/administration/administration_createTopic.component";
 import allArticlesList from "./components/moderation/moderation_articleList.component";
+import editUser from "./components/moderation/moderation_editUser.component";
 
 //##########App start##########
 //TODO check which type of user is logged in before redirecting to moderation or administration
@@ -33,6 +34,7 @@ class App extends React.Component{
                 <Route exact path="/login/artikelErstellen" component={CreateArticle} />
                 <Route exact path="/login/bereichErstellen" component={createTopic}/>
                 <Route exact path="/login/articles" component={allArticlesList}/>
+                <Route exact path="/login/editUser/:id" component={editUser}/>
 
             </Router>
         );

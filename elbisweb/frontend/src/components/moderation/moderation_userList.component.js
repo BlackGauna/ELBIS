@@ -15,12 +15,18 @@ const User = props => (
         <td>{props.user.address}</td>
         <td>{props.user.dateOfBirth}</td>
         <td align="right">
-            <Link to={"/edit/" + props.user._id}>bearbeiten</Link> | <a href='#' onClick={() => {
+            <Link to={"/login/editUser/" + props.user._id} onClick={refreshPage}>bearbeiten</Link>  | <a href='#' onClick={() => {
             props.deleteUser(props.user._id)
         }}>löschen</a>
         </td>
     </tr>
 )
+
+
+function refreshPage(){
+    window.location.reload();
+}
+
 
 export default class moderation_userList extends Component {
     // Constructor
