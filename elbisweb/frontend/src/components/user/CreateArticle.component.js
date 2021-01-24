@@ -4,8 +4,9 @@ import { Component } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import parse from 'html-react-parser';
-import {Button, Container, Form} from "react-bootstrap";
+import {Button, Container, Form, FormControl, FormGroup, FormLabel} from "react-bootstrap";
 import bsCustomFileInput from "bs-custom-file-input";
+import loggedUser from "../../session/loggedUser";
 
 //TODO: delete Images uploaded and unused(?)
 //TODO: Resuse uploaded images (?)
@@ -13,10 +14,18 @@ import bsCustomFileInput from "bs-custom-file-input";
 export default class CreateArticle extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            filename: "",
-            html:"",
+            imageFilename: "",
             showPreview:false,
+            html:"",
+            title:"",
+            oldTitle:"",
+            topic:"test",
+            status:"default",
+            author:"test",
+            Article:null
+
         };
     }
 
@@ -26,6 +35,42 @@ export default class CreateArticle extends Component {
             ...state,
             html: content,
         }));
+
+
+        // TODO: update article when title changed
+
+        // Create new article in db
+        if (this.state.title!=="")
+        {
+
+            const article= {
+                title: this.state.title,
+                content: this.state.html,
+                status: this.state.status,
+                topic: this.state.topic,
+                author: this.state.author,
+                publisher: "",
+                publisherComment: "",
+            }
+            axios.post('/article/', article)
+                .then(res=> {
+                    this.setState(state=>({
+                        ...state,
+                        oldTitle: this.state.title
+                    }));
+                    console.log("Saved article successfully!");
+
+                    this.setState(state=>({
+                        ...state,
+                        Article: res.data,
+                    }))
+                    console.log(this.state.Article);
+                })
+            .catch(err=> console.log(err));
+
+        }else{
+            // TODO: if title empty and oldtitle not empty, delete file
+        }
     };
 
     togglePreview=() =>{
@@ -35,21 +80,31 @@ export default class CreateArticle extends Component {
         }));
     }
 
+    onChangeTitle=(e)=>{
+        // console.log(e.target.value);
+        this.setState(state =>({
+            ...state,
+            title: e.target.value
+        }));
+
+    }
+
     onChangeImage = (e) => {
         this.setState({
-            filename: e.target.files[0],
+            imageFilename: e.target.files[0],
         });
         console.log("Image change: ");
         console.log(e.target.files[0]);
-        console.log(this.state.filename);
+        console.log(this.state.imageFilename);
     };
 
-    imageSubmit = (e) => {
+
+    /*imageSubmit = (e) => {
         e.preventDefault();
         console.log("Submitted file: ");
-        console.log(this.state.filename);
+        console.log(this.state.imageFilename);
         const formData = new FormData();
-        formData.append("image", this.state.filename);
+        formData.append("image", this.state.imageFilename);
 
         axios
             .post("/images/add", formData)
@@ -63,39 +118,21 @@ export default class CreateArticle extends Component {
 
     editorImageSubmit = (e) => {
         e.preventDefault();
-    };
+    };*/
 
     render() {
         return (
             <div>
-                {// image upload form for testing
-                    /*<Form
-                    onSubmit={this.imageSubmit}
-                    encType={"multipart/form-data"}
-                    className={"mb-3 ml-2"}
-                >
-                    <Form.Group>
-                        <Form.File
-                            id={"customFile"}
-                            type={"file"}
-                            accept={".png, .jpg, .jpeg"}
-                            name={"image"}
-                            onChange={this.onChangeImage}
-                            label={"Bild hochladen..."}
-                            custom
-                            className={"w-50"}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Button variant={"primary"} type={"submit"} className={"mt-2"}>
-                            Hochladen
-                        </Button>
-                    </Form.Group>
+                <Container>
+                    <Form>
+                        <Form.Group>
+                            <Form.Label>Titel</Form.Label>
+                            <Form.Control  placeholder="Titel eingeben" onChange={this.onChangeTitle}/>
+                        </Form.Group>
 
-                    <script>
-                        $(document).ready(function() {bsCustomFileInput.init()});
-                    </script>
-                </Form>*/}
+                    </Form>
+                </Container>
+
                 <Container style={{display: "flex"}} className={"mr-0"}>
                     <Button className={"mb-2"} style={{marginLeft:"auto"}} onClick={this.togglePreview}>
                         {this.state.showPreview ? 'Live-Preview schließen':'Live-Preview öffnen'}
@@ -129,6 +166,8 @@ export default class CreateArticle extends Component {
                         min_height: 800,
                         file_picker_types: "image",
                         paste_data_images: true,
+
+                        // custom image upload handler (with multer)
                         images_upload_handler: function (
                             blobInfo,
                             success,
@@ -139,7 +178,7 @@ export default class CreateArticle extends Component {
                             console.log("Blobinfo");
                             console.log(blobInfo.blob());
 
-                            console.log("filename: " + blobInfo.filename());
+                            console.log("imageFilename: " + blobInfo.filename());
 
                             formData.append("image", blobInfo.blob());
 
@@ -152,13 +191,6 @@ export default class CreateArticle extends Component {
                                 })
                                 .catch((err) => failure("Upload failed"));
 
-                            /*const image = {
-                              path: blobInfo.filename(),
-                            };
-                            console.log(image.path);
-                            axios
-                              .post("/files/add", image)
-                              .then((res) => console.log(res.data));*/
                         },
 
                         setup: function(editor)
@@ -224,3 +256,32 @@ class PreviewWindow extends Component{
 
 
 }
+
+// image upload form for testing
+/*<Form
+onSubmit={this.imageSubmit}
+encType={"multipart/form-data"}
+className={"mb-3 ml-2"}
+>
+<Form.Group>
+    <Form.File
+        id={"customFile"}
+        type={"file"}
+        accept={".png, .jpg, .jpeg"}
+        name={"image"}
+        onChange={this.onChangeImage}
+        label={"Bild hochladen..."}
+        custom
+        className={"w-50"}
+    />
+</Form.Group>
+<Form.Group>
+    <Button variant={"primary"} type={"submit"} className={"mt-2"}>
+        Hochladen
+    </Button>
+</Form.Group>
+
+<script>
+    $(document).ready(function() {bsCustomFileInput.init()});
+</script>
+</Form>*/

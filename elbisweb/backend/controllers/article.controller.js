@@ -1,4 +1,5 @@
 let Article = require('../models/article.model');
+const fs= require('fs');
 
 // Create and save a new Article
 exports.create = (req, res) => {
@@ -8,10 +9,19 @@ exports.create = (req, res) => {
         return;
     }
 
+    // save html content to file
+    const filename='articles/'+req.body.topic+"-"+req.body.title+'.html';
+    fs.writeFile(filename, req.body.content, (err)=>{
+        if (err) throw err;
+
+        // success
+        console.log("File saved!");
+    });
+
     // Create a Article
     const article = new Article({
         title: req.body.title,
-        content: req.body.content,
+        content: filename, // save .html file path
         status: req.body.status,
         topic: req.body.topic,
         author: req.body.author,
@@ -21,12 +31,14 @@ exports.create = (req, res) => {
 
     // Save Article in database
     article
-        .save(article)
-        .then(data => {
-            res.send(data);
+        .save()
+        .then(article => {
+            res.json(article);
         })
         .catch(err => {
+            console.log("Article create Error");
             res.status(500).send({
+
                 message:
                     err.message || "Some error occured while creating the Article."
             });
