@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const articleSchema = new Schema({
     //TODO Limits to variables (Trim,minlength etc)
     title: {type: String, required:  true},
-    content: {type: String, required:  true},
+    path: {type: String, required:  true},
     //TODO creation,expire and last edit date?
     //creationDate: {type: Date, required:  false},
     // expireDate: {type: Date, required:  false},

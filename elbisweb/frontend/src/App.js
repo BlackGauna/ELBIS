@@ -25,7 +25,7 @@ class App extends React.Component {
     render() {
         if (loggedUser.loading) {
             return (
-                <div calssName="app">
+                <div className="app">
                     <div className="container">
                         <img src={logo} alt="ELBIS"></img> Is loading...
                     </div>
@@ -53,7 +53,7 @@ class App extends React.Component {
                 )
             } else {
                 return (
-                    <div calssName="app">
+                    <div className="app">
                         <Router>
                             <Route path="/" component={loginView}/>
                         </Router>

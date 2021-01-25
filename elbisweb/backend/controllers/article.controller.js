@@ -10,8 +10,8 @@ exports.create = (req, res) => {
     }
 
     // save html content to file
-    const filename='articles/'+req.body.topic+"-"+req.body.title+'.html';
-    fs.writeFile(filename, req.body.content, (err)=>{
+    const filepath='articles/'+req.body.topic+"_"+req.body.title+'.html';
+    fs.writeFile(filepath, req.body.content, (err)=>{
         if (err) throw err;
 
         // success
@@ -21,7 +21,7 @@ exports.create = (req, res) => {
     // Create a Article
     const article = new Article({
         title: req.body.title,
-        content: filename, // save .html file path
+        path: filepath, // save .html file path
         status: req.body.status,
         topic: req.body.topic,
         author: req.body.author,
@@ -72,7 +72,7 @@ exports.findOne = (req, res) => {
             else {
 
                 // get real content from saved html file
-                const filename=data.content;
+                const filename=data.path;
                 const article=data;
                 article.content=fs.readFileSync(filename);
 
@@ -97,20 +97,43 @@ exports.update = (req, res) => {
     const id = req.params.id;
     const html= req.body.content;
 
+    // get old title by parsing path of req
+    const oldtitle = req.body.path.substring(req.body.path.indexOf('_')+1, req.body.path.lastIndexOf('.'));
+    console.log("old: "+ oldtitle);
+
+
+    // overwrite path field to new path
+    if(oldtitle!==req.body.title)
+    {
+        fs.unlink(req.body.path, function (err) {
+            if (err) throw err;
+
+            //success
+            console.log("Old file deleted");
+        })
+
+        const newpath=req.body.path.substring(0,req.body.path.indexOf('_')+1)
+            +req.body.title
+            +'.html';
+        console.log('new path: '+ newpath);
+
+        req.body.path=newpath;
+    }
+
+
+    // delete fields not wanted in db
     delete req.body["content"];
-    console.log("deleted");
-    console.log(req.body);
+    // console.log("deleted");
 
     Article.findByIdAndUpdate(id, req.body, {useFindAndModify: false, new:true})
         .then(data => {
             if (!data){
-                console.log("fial");
                 res.status(404).send({
                     message: "Cannot update Article with id = " + id + ". Maybe Article was not found!"
                 });
             } else {
-                console.log("oath: "+data.content);
-                fs.writeFile(data.content, html, (err)=>{
+                console.log("path: "+data.path);
+                fs.writeFile(data.path, html, (err)=>{
                     if (err) throw err;
 
                     // success

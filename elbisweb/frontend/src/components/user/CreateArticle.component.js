@@ -23,9 +23,9 @@ export default class CreateArticle extends Component {
         this.state = {
             imageFilename: "",
             showPreview:false,
+            path:"",
             html:"",
             title:"unnamed",
-            oldTitle:"",
             topic:"unnamed",
             status:"default",
             author:"test",
@@ -65,21 +65,23 @@ export default class CreateArticle extends Component {
                     id=res.data._id;
                     console.log("Saved article successfully!");
 
+                    // reload site with id as param
                     this.props.history.push("/login/edit/"+id);
-
 
                 })
                 .catch(err=> {
-                    console.log("Couldnt create new article.");
+                    console.log("Couldn't create new article.");
                     console.log(err);
                 });
 
         } else{
+            // else load the article with id in params
             axios.get("/article/"+paramId)
                 .then(res =>{
                     console.log(res.data.content);
                     this.setState({
                         title: res.data.title,
+                        path: res.data.path,
                         html: res.data.content,
                         status: res.data.status,
                         topic: res.data.topic,
@@ -89,10 +91,15 @@ export default class CreateArticle extends Component {
                         id: res.data._id
                     });
                 })
+                .catch(err=>{
+                    console.log("Couldn't load existing article!");
+                    console.log(err);
+                });
         }
 
     }
 
+    // when editor content changes
     handleEditorChange = (content, editor) => {
         console.log("Content was updated:", content);
         this.setState(state=>({
@@ -101,13 +108,12 @@ export default class CreateArticle extends Component {
         }));
 
 
-        // TODO: when editing title, rename html in backend
-
         // update article in db
         if (this.state.title!=="")
         {
             const article= {
                 title: this.state.title,
+                path: this.state.path,
                 content: this.state.html,
                 status: this.state.status,
                 topic: this.state.topic,
@@ -118,14 +124,17 @@ export default class CreateArticle extends Component {
             axios.put('/article/'+this.state.id, article)
                 .then(res =>{
                     console.log("Saved article successfully!");
-                    console.log(res);
+                    console.log(res.data);
+                    this.setState({
+                        path: res.data.path,
+                    });
                 })
             .catch(err=> console.log(err));
 
         }else{
-            // TODO: if title empty and oldtitle not empty, delete file
+            // TODO: if title empty and oldtitle not empty, delete file (?)
         }
-    };
+    }
 
     togglePreview=() =>{
         this.setState(state =>({
@@ -150,7 +159,7 @@ export default class CreateArticle extends Component {
         console.log("Image change: ");
         console.log(e.target.files[0]);
         console.log(this.state.imageFilename);
-    };
+    }
 
 
     /*imageSubmit = (e) => {
