@@ -104,7 +104,7 @@ exports.update = (req, res) => {
     console.log("old: "+ oldtitle);
 
 
-    // overwrite path field to new path
+    // delete old file if title changed
     if(oldtitle!==req.body.title)
     {
         fs.unlink(req.body.path, function (err) {
@@ -119,6 +119,7 @@ exports.update = (req, res) => {
             +'.html';
         console.log('new path: '+ newpath);
 
+        // overwrite old path with new
         req.body.path=newpath;
     }
 
@@ -143,7 +144,7 @@ exports.update = (req, res) => {
                     console.log("File updated!");
                 });
 
-                console.log(data);
+                // console.log(data);
                 res.send(data);
             }
         })

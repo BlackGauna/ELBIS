@@ -6,6 +6,7 @@ const path = require("path");
 
 // image model
 let Image = require("../models/image.model");
+const fs = require("fs");
 
 const storage = multer.diskStorage({
   // config destination for uploads
@@ -39,15 +40,31 @@ let upload = multer({ storage, fileFilter });
 /**
  * @route GET image
  */
-router.route("/:filename").get((req, res) => {
-  Image.find({ filename: req.params.filename }).then((image) => {
+router.route("/:filepath").get((req, res) => {
+  Image.find({ filepath: req.params.filepath }).then((image) => {
     var im = image[0];
     console.log(im);
-    console.log(im.filename);
+    console.log(im.filepath);
     res.contentType("image/jpeg");
-    res.download("images/" + im.filename);
+    res.download("images/" + im.filepath);
   });
 });
+
+router.route("/:filepath").delete(((req, res) => {
+  Image.findOneAndDelete({filepath: req.params.filepath})
+      .then(image =>{
+        console.log("DB entry deleted!")
+        const filepath="images/"+ image.filepath;
+        console.log("filepath: "+filepath);
+
+        fs.unlink(filepath, (err => {
+          if (err) throw err;
+
+        }));
+      })
+      .catch(err => res.status(400).json('Error: '+err));
+}));
+
 
 /**
  * @route POST images
@@ -60,7 +77,7 @@ router.route("/add").post(upload.single("image"), (req, res) => {
   console.log(path);
 
   const newImage = new Image({
-    filename: path,
+    filepath: path,
   });
 
   var localIp = req.ip + ":" + req.socket.localPort;

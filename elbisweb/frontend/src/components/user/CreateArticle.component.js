@@ -97,9 +97,51 @@ export default class CreateArticle extends Component {
 
     }
 
+    //TODO: what if oldhtml is empty,
+    // or deleting last image
+    deleteRemovedImg = (oldHtml, newHtml)=>{
+        let re=/(<img [\s\S]*?\/>)/g;
+
+        let oldImages=oldHtml.match(re);
+        let newImages=newHtml.match(re);
+
+        console.log("old: ");
+        console.log(oldImages);
+        console.log("new: ");
+        console.log(newImages);
+
+        if(oldImages!==null){
+
+            if (oldImages.length> newImages.length)
+            {
+                for (let i=0; i<oldImages.length;i++) {
+                    if (newImages.includes(oldImages[i])===false) {
+                        let imgPath = oldImages[i].substring(oldImages[i].indexOf('images/'));
+                        imgPath= imgPath.substring(0, imgPath.indexOf(' ') -1);
+                        console.log(imgPath);
+                        axios.delete("/"+imgPath)
+                            .then(res => console.log(res.data));
+
+                        console.log("path: ");
+                        console.log(imgPath);
+                    }
+                }
+            }
+        }
+
+        console.log("match: ");
+        console.log(oldImages);
+        // console.log(oldImages.length);
+    }
+
     // when editor content changes
     handleEditorChange = (content) => {
         console.log("Content was updated:", content);
+
+        let oldHtml=this.state.html;
+
+        this.deleteRemovedImg(oldHtml,content);
+
         this.setState(state=>({
             ...state,
             html: content,
@@ -160,7 +202,7 @@ export default class CreateArticle extends Component {
     }
 
     loadEditorContent=()=>{
-        console.log("loaded: "+ this.state.html);
+        // console.log("loaded: "+ this.state.html);
         return this.state.html;
     }
 
@@ -220,10 +262,12 @@ export default class CreateArticle extends Component {
                             progress
                         ) {
                             const formData = new FormData();
+                            console.log(blobInfo);
                             console.log("Blobinfo");
                             console.log(blobInfo.blob());
 
                             console.log("imageFilename: " + blobInfo.filename());
+
 
                             formData.append("image", blobInfo.blob());
 
@@ -233,6 +277,7 @@ export default class CreateArticle extends Component {
                                     console.log(res.data);
                                     console.log("return: " + res.data.location);
                                     success(res.data);
+                                    //TODO: what if image is not inserted i.e. pressed cancel
                                 })
                                 .catch((err) => failure("Upload failed"));
 
@@ -243,9 +288,11 @@ export default class CreateArticle extends Component {
                             editor.on('BeforeSetContent', function (e) {
                                 let html =e.content;
 
+                                // resize width of image
                                 if (html.includes("<img"))
                                 {
-                                    // resize width of image
+                                    //TODO: for now always resizing when loading article
+                                    // even if img size is changed by user
                                     //console.log("before: "+html);
                                     let re=/(width=")([\s\S]*?)(")/g;
                                     //console.log("match: "+html.match(re));
