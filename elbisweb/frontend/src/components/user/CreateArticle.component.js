@@ -4,10 +4,8 @@ import { Component } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import parse from 'html-react-parser';
-import {Button, Container, Form, FormControl, FormGroup, FormLabel} from "react-bootstrap";
-import bsCustomFileInput from "bs-custom-file-input";
-import loggedUser from "../../session/loggedUser";
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {Button, Container, Form} from "react-bootstrap";
+
 
 //TODO: delete Images uploaded and unused(?)
 //TODO: Resuse uploaded images (?)
@@ -37,6 +35,7 @@ export default class CreateArticle extends Component {
 
     }
 
+    //TODO: fix loading content of existing article being empty
     componentWillMount() {
 
         const paramId=this.props.match.params.id;
@@ -78,17 +77,16 @@ export default class CreateArticle extends Component {
             // else load the article with id in params
             axios.get("/article/"+paramId)
                 .then(res =>{
-                    console.log(res.data.content);
                     this.setState({
-                        title: res.data.title,
-                        path: res.data.path,
+                        title: res.data.article.title,
+                        path: res.data.article.path,
                         html: res.data.content,
-                        status: res.data.status,
-                        topic: res.data.topic,
-                        author: res.data.author,
-                        publisher: res.data.publisher,
-                        publisherComment: res.data.publisherComment,
-                        id: res.data._id
+                        status: res.data.article.status,
+                        topic: res.data.article.topic,
+                        author: res.data.article.author,
+                        publisher: res.data.article.publisher,
+                        publisherComment: res.data.article.publisherComment,
+                        id: res.data.article._id
                     });
                 })
                 .catch(err=>{
@@ -100,7 +98,7 @@ export default class CreateArticle extends Component {
     }
 
     // when editor content changes
-    handleEditorChange = (content, editor) => {
+    handleEditorChange = (content) => {
         console.log("Content was updated:", content);
         this.setState(state=>({
             ...state,
@@ -161,27 +159,10 @@ export default class CreateArticle extends Component {
         console.log(this.state.imageFilename);
     }
 
-
-    /*imageSubmit = (e) => {
-        e.preventDefault();
-        console.log("Submitted file: ");
-        console.log(this.state.imageFilename);
-        const formData = new FormData();
-        formData.append("image", this.state.imageFilename);
-
-        axios
-            .post("/images/add", formData)
-            .then((res) => {
-                console.log(res.data.path);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
-
-    editorImageSubmit = (e) => {
-        e.preventDefault();
-    };*/
+    loadEditorContent=()=>{
+        console.log("loaded: "+ this.state.html);
+        return this.state.html;
+    }
 
     render() {
         return (
@@ -210,7 +191,7 @@ export default class CreateArticle extends Component {
                 )}
 
                 <Editor
-                    initialValue={this.state.html}
+                    initialValue={this.loadEditorContent()}
                     apiKey="0pg6bjj3shae8ys7qwuzkwo6jba2p7i7bs6onheyzqlhswen"
                     init={{
                         //skin: "oxide-dark",

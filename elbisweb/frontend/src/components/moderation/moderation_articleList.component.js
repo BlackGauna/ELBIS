@@ -15,7 +15,7 @@ const Article = props => (
         <td>{props.article.publisher}</td>
         <td>{props.article.publisherComment}</td>
         <td align="right">
-            <Link to={"/edit/" + props.article._id}>bearbeiten</Link> | <a href='#' onClick={() => {
+            <Link to={"edit/" + props.article._id}>bearbeiten</Link> | <a href='#' onClick={() => {
             props.deleteArticle(props.article._id)
         }}>löschen</a>
         </td>
@@ -73,7 +73,7 @@ export default class moderation_articleList extends Component {
                         <th>Autor</th>
                         <th>Veröffentlicher</th>
                         <th>Kommentar</th>
-                        <th className={"text-right"}><Link to="/login/artikelErstellen">
+                        <th className={"text-right"}><Link to="/login/edit">
                             <button className="btn btn-primary btn-sm" onClick="reload">+</button>
                         </Link></th>
                     </tr>

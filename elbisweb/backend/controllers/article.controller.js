@@ -73,10 +73,12 @@ exports.findOne = (req, res) => {
 
                 // get real content from saved html file
                 const filename=data.path;
-                const article=data;
-                article.content=fs.readFileSync(filename);
 
-                res.send(article);
+                const article=data;
+
+                const content=fs.readFileSync(filename, 'utf8');
+
+                res.json({article, content});
             }
         })
         .catch(err => {
@@ -133,6 +135,7 @@ exports.update = (req, res) => {
                 });
             } else {
                 console.log("path: "+data.path);
+                // update local html file with article's current content
                 fs.writeFile(data.path, html, (err)=>{
                     if (err) throw err;
 
@@ -155,6 +158,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
+    //TODO: also delete html file of article
     Article.findByIdAndRemove(id, {useFindAndModify: false})
         .then(data => {
             if (!data) {
