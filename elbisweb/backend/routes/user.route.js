@@ -11,6 +11,7 @@ router.get("/", users.findAll);
 router.get("/:id", users.findOne);
 
 //TODO Authenticate a User by email and password
+router.get("/authenticate/:email", users.authOne);
 
 // Update a User with id
 router.put("/:id", users.update);
