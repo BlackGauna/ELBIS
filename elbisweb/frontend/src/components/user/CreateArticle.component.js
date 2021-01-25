@@ -77,10 +77,6 @@ export default class CreateArticle extends Component {
             // else load the article with id in params
             axios.get("/article/"+paramId)
                 .then(res =>{
-                    console.log(res);
-                    const article=res.data.article;
-                    console.log("art: ");
-                    console.log(article);
                     this.setState({
                         title: res.data.article.title,
                         path: res.data.article.path,

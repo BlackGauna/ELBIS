@@ -75,26 +75,10 @@ exports.findOne = (req, res) => {
                 const filename=data.path;
 
                 const article=data;
-                article.test="test";
-                // article["test"]="test";
-                console.log("test: "+ article.test);
-
-                const test=article;
 
                 const content=fs.readFileSync(filename, 'utf8');
-                console.log("read: ");
-                console.log(content);
-                article.content=content;
-                article[content]=content;
-
-                console.log(test);
-                console.log(article.content);
-
-                //res.send(article);
 
                 res.json({article, content});
-                //res.write(content);
-                //res.end();
             }
         })
         .catch(err => {
