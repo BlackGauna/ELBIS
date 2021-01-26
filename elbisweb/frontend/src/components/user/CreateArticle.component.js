@@ -35,7 +35,6 @@ export default class CreateArticle extends Component {
 
     }
 
-    //TODO: fix loading content of existing article being empty
     componentWillMount() {
 
         const paramId=this.props.match.params.id;
@@ -97,8 +96,7 @@ export default class CreateArticle extends Component {
 
     }
 
-    //TODO: what if oldhtml is empty,
-    // or deleting last image
+
     deleteRemovedImg = (oldHtml, newHtml)=>{
         let re=/(<img [\s\S]*?\/>)/g;
 
@@ -112,17 +110,26 @@ export default class CreateArticle extends Component {
 
         if(oldImages!==null){
 
-            if (oldImages.length> newImages.length)
-            {
+            if(newImages==null){
+                for (let i=0; i<oldImages.length;i++){
+                    let imgPath = oldImages[i].substring(oldImages[i].indexOf('images/'));
+                    imgPath= imgPath.substring(0, imgPath.indexOf(' ') -1);
+                    axios.delete("/"+imgPath)
+                        .then(res => console.log(res.data));
+
+                    console.log("path to delete: ");
+                    console.log(imgPath);
+                }
+
+            }else if (oldImages.length> newImages.length){
                 for (let i=0; i<oldImages.length;i++) {
                     if (newImages.includes(oldImages[i])===false) {
                         let imgPath = oldImages[i].substring(oldImages[i].indexOf('images/'));
                         imgPath= imgPath.substring(0, imgPath.indexOf(' ') -1);
-                        console.log(imgPath);
                         axios.delete("/"+imgPath)
                             .then(res => console.log(res.data));
 
-                        console.log("path: ");
+                        console.log("path to delete: ");
                         console.log(imgPath);
                     }
                 }
@@ -258,8 +265,7 @@ export default class CreateArticle extends Component {
                         images_upload_handler: function (
                             blobInfo,
                             success,
-                            failure,
-                            progress
+                            failure
                         ) {
                             const formData = new FormData();
                             console.log(blobInfo);
@@ -279,7 +285,7 @@ export default class CreateArticle extends Component {
                                     success(res.data);
                                     //TODO: what if image is not inserted i.e. pressed cancel
                                 })
-                                .catch((err) => failure("Upload failed"));
+                                .catch((err) => failure("Upload failed: "+err));
 
                         },
 
@@ -293,10 +299,11 @@ export default class CreateArticle extends Component {
                                 {
                                     //TODO: for now always resizing when loading article
                                     // even if img size is changed by user
+
                                     //console.log("before: "+html);
                                     let re=/(width=")([\s\S]*?)(")/g;
                                     //console.log("match: "+html.match(re));
-                                    html=html.replace(re,"$1800$3");
+                                    html=html.replace(re,"$1600$3");
                                     //console.log("html: "+html);
 
                                     // remove height tag to keep dimensions
