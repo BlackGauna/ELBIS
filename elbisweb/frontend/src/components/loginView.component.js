@@ -1,14 +1,10 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
-import {Redirect} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import loggedUser from '../session/loggedUser';
-import ELBISweb from "./index.component";
 import logo from '../resources/ELBIS_logo/ELBIS_Ausgeschrieben.png';
 import {Form, FormGroup, Button} from "react-bootstrap";
 import UserDataService from "../services/user.service";
-
-//##########Component imports##########
+import SessionDataService from "../services/session.service";
 import ELBIS_loginSubmitButton from "./ELBIS_loginSubmitButton";
 import ELBIS_loginInputfield from "./ELBIS_loginInputfield.component";
 
@@ -53,21 +49,59 @@ export default class loginViewComponent extends Component {
         this.setState({
             buttonDisabled: true
         })
+        const authEmail = this.state.email;
+
+        //TODO hash password here (!make sure the hashed password matches with DB)
+        const authPassword = this.state.password;
 
         //authenticate a user
-        UserDataService.authenticate(this.state.email, this.state.password).then(res => {
-            const statemail = this.state.email;
-
-            //login successfull
+        UserDataService.authenticate(authEmail, authPassword).then(res => {
+            //authenticate successfull
             if (res.data.success) {
+                //Delete old sessions
+                try{
+                    SessionDataService.delete(authEmail)
+                        .then(res => console.log(res.data));
+                } catch(e){
+                    console.log("No old session deleted")
+                }
+                /*
+                    * create a session
+                 */
+                //frontend session
+                //TODO maybe replace token generation with time+date hashing!!
+                const token = Math.random().toString(36).substr(2);
+                const sessEmail = res.data.data.email;
+                const sessRole = res.data.data.role;
+                sessionStorage.setItem("sessionToken", token);
+                sessionStorage.setItem("sessionEmail", sessEmail);
+                sessionStorage.setItem("sessionRole", sessRole);
+                //backend session
+                const session = {
+                    token: token,
+                    email: sessEmail,
+                    role: sessRole,
+
+                }
+                SessionDataService.create(session)
+                    .then(res => {
+                        this.setState({
+                            token: res.data.token,
+                            email: res.data.email,
+                            role: res.data.role,
+                            // TODO: expire
+                            submitted: true
+                        });
+                        console.log(res.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                //pageskip variables
                 loggedUser.loading = false;
                 loggedUser.isLoggedIn = true;
-                loggedUser.email = res.data.email;
-                loggedUser.password = res.data.password;
-                loggedUser.role = res.data.role;
                 window.location = '/login';
-                sessionStorage.setItem("user", statemail)
-                //login failed
+                //authenticate failed
             } else if (res.data.success === false) {
                 loggedUser.loading = false;
                 loggedUser.isLoggedIn = false;
@@ -84,55 +118,52 @@ export default class loginViewComponent extends Component {
 
 
 //##########Render##########
-render()
-{
-    //TODO email and password form need to give some values
-    //TODO API implementation of login methods
-    return (
-        <div className="container">
-            <br/><br/>
+    render() {
+        return (
             <div className="container">
-                <p/><br/>
-                <img src={logo} alt="ELBIS"></img>
-                <br/>
-                <h4>Anmeldung</h4>
-                <hr/>
-                <p/>
-                <form onSubmit={this.onSubmit}>
-                    <FormGroup role="form">
-                        <div className="form-group">
-                            <label>E-Mail: </label>
-                            <br/>
-                            <ELBIS_loginInputfield
-                                type="email"
-                                placeholder='email'
-                                value={this.state.email ? this.state.email : ''}
-                                onChange={(val) => this.setInputValue('email', val)}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Passwort: </label>
-                            <br/>
-                            <ELBIS_loginInputfield
-                                type="password"
-                                placeholder='passwort'
-                                value={this.state.password ? this.state.password : ''}
-                                onChange={(val) => this.setInputValue('password', val)}
-                            />
-                        </div>
+                <br/><br/>
+                <div className="container">
+                    <p/><br/>
+                    <img src={logo} alt="ELBIS"></img>
+                    <br/>
+                    <h4>Anmeldung</h4>
+                    <hr/>
+                    <p/>
+                    <form onSubmit={this.onSubmit}>
+                        <FormGroup role="form">
+                            <div className="form-group">
+                                <label>E-Mail: </label>
+                                <br/>
+                                <ELBIS_loginInputfield
+                                    type="email"
+                                    placeholder='email'
+                                    value={this.state.email ? this.state.email : ''}
+                                    onChange={(val) => this.setInputValue('email', val)}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Passwort: </label>
+                                <br/>
+                                <ELBIS_loginInputfield
+                                    type="password"
+                                    placeholder='passwort'
+                                    value={this.state.password ? this.state.password : ''}
+                                    onChange={(val) => this.setInputValue('password', val)}
+                                />
+                            </div>
 
-                        <div className="form-group">
-                            <br/>
-                            <ELBIS_loginSubmitButton
-                                text="Anmelden"
-                                disabled={this.state.buttonDisabled}
-                                onClick={() => this.doLogin()}
-                            ></ELBIS_loginSubmitButton>
-                        </div>
-                    </FormGroup>
-                </form>
+                            <div className="form-group">
+                                <br/>
+                                <ELBIS_loginSubmitButton
+                                    text="Anmelden"
+                                    disabled={this.state.buttonDisabled}
+                                    onClick={() => this.doLogin()}
+                                ></ELBIS_loginSubmitButton>
+                            </div>
+                        </FormGroup>
+                    </form>
+                </div>
             </div>
-        </div>
-    )
-}
+        )
+    }
 }

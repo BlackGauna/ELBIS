@@ -5,9 +5,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import loggedUser from './session/loggedUser';
 import './ELBISWeb.css';
 import logo from './resources/ELBIS_logo/ELBIS_Ausgeschrieben.png';
-
-
-//##########Component imports##########
 import NavBar from "./components/ELBIS_navbar.component";
 import ELBISweb from "./components/index.component";
 import userView from "./components/user/userView.component";
@@ -19,10 +16,19 @@ import CreateArticle from "./components/user/CreateArticle.component";
 import createTopic from "./components/administration/administration_createTopic.component";
 import allArticlesList from "./components/moderation/moderation_articleList.component";
 import editUser from "./components/moderation/moderation_editUser.component";
-import UserDataService from "./services/user.service";
+import SessionDataService from "./services/session.service";
 
 //##########App start##########
 //TODO check which type of user is logged in before redirecting to moderation or administration
+/*
+************************************************************************************
+*   Frontend Session information will be stored as followed:
+*       sessionStorage.getItem("sessionToken"); //to get the session token
+*       sessionStorage.getItem("sessionEmail"); //to get the logged Email
+*       sessionStorage.getItem("sessionRole");  //to get the logged Role
+************************************************************************************
+*   The App will check if the session is still alive on Backend-Side on every Reload/Remount of the page (no matter if manual or by the app itself)
+ */
 class App extends React.Component {
     render() {
         if (loggedUser.loading) {
@@ -34,7 +40,7 @@ class App extends React.Component {
                 </div>
             )
         } else {
-            if (loggedUser.isLoggedIn || !loggedUser.isLoggedIn) {
+            if (loggedUser.isLoggedIn) {
                 return (
                     <div className="app">
                         <Router>
@@ -65,16 +71,20 @@ class App extends React.Component {
         }
     }
 
-//##########Mount method with login##########
+//##########Mount method with sessioncheck##########
     async componentDidMount() {
+        //wait for session check
+        console.log("FRONTEND SESSION STATE (t/e/r): " + sessionStorage.getItem("sessionToken") + " / " + sessionStorage.getItem("sessionEmail") + " / " + sessionStorage.getItem("sessionRole"));
         if (loggedUser.loading) {
-            UserDataService.authenticate(loggedUser.email, loggedUser.password).then(res => {
-                //auth successfull
-                if (res.data.success) {
+            //check if session exists
+            SessionDataService.check(sessionStorage.getItem("sessionToken"), sessionStorage.getItem("sessionEmail")).then(res => {
+                console.log(res);
+                //session existing
+                if (res.data.existing) {
                     loggedUser.loading = false;
                     loggedUser.isLoggedIn = true;
-                    //auth failed
-                } else if (res.data.success === false) {
+                    //no session found
+                } else if (res.data.existing === false) {
                     loggedUser.loading = false;
                     loggedUser.isLoggedIn = false;
                 }
@@ -84,6 +94,9 @@ class App extends React.Component {
                     loggedUser.isLoggedIn = false;
                     console.log(error);
                 })
+        } else {
+            loggedUser.loading = false;
+            loggedUser.isLoggedIn = false;
         }
     }
 }

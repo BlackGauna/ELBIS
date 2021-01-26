@@ -25,9 +25,9 @@ exports.create = (req, res) => {
 
 // Delete Session with Email
 exports.delete = (req, res) => {
-    const email = req.params.email;
+    const delemail = req.params.email;
 
-    Session.findByEmailAndRemove(email, {useFindAndModify: false})
+    Session.remove({email: delemail})
         .then(data => {
             if (!data) {
                 res.status(404).send({
@@ -67,5 +67,18 @@ exports.checkSession = (req, res) => {
             res
                 .status(500)
                 .send({existing: false,message: "Error checking token for " + postemail});
+        });
+};
+// Retrieve all Sessions from the database
+exports.findAll = (req, res) => {
+    Session.find()
+        .then(data => {
+            res.send(data)
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occured while retrieving sessions."
+            });
         });
 };

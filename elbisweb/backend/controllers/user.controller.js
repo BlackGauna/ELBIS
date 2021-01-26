@@ -64,7 +64,7 @@ exports.findOne = (req, res) => {
         });
 };
 
-//TODO Authenticate an User by email and password
+//Authenticate an User by email and password
 exports.authOne = (req, res) => {
     const postemail = req.params.email;
     const postpassword = req.params.password;

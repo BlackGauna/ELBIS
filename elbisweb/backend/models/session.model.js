@@ -12,6 +12,6 @@ const sessionSchema = new Schema({
     timestamps: true,
 });
 
-Gender = mongoose.model('Gender', genderSchema);
+Session = mongoose.model('Session', sessionSchema);
 
-module.exports = Gender;
+module.exports = Session;
