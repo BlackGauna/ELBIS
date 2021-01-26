@@ -65,7 +65,6 @@ exports.findOne = (req, res) => {
 };
 
 //TODO Authenticate an User by email and password
-
 exports.authOne = (req, res) => {
     const postemail = req.params.email;
     const postpassword = req.params.password;
@@ -73,18 +72,20 @@ exports.authOne = (req, res) => {
     User.findOne({email: postemail})
         .then(data => {
             if (!data) {
-                res.status(404).send({message: "Not found user with email " + postemail});
+                res.status(404).send({success: false,message: "Not found user with email " + postemail});
             }
             else {
-                if (postpassword == data.password) {
-                    res.send(data);
+                if (postpassword === data.password) {
+                    res.send({success: true,data});
+                } else {
+                    res.status(404).send({success: false,message: "No password match found for " + postemail});
                 }
             }
         })
         .catch(err => {
             res
                 .status(500)
-                .send({message: "Error retrieving user with email " + postemail});
+                .send({success: false,message: "Error retrieving user with email " + postemail});
         });
 };
 

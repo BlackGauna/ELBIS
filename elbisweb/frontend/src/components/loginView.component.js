@@ -6,6 +6,7 @@ import loggedUser from '../session/loggedUser';
 import ELBISweb from "./index.component";
 import logo from '../resources/ELBIS_logo/ELBIS_Ausgeschrieben.png';
 import {Form, FormGroup, Button} from "react-bootstrap";
+import UserDataService from "../services/user.service";
 
 //##########Component imports##########
 import ELBIS_loginSubmitButton from "./ELBIS_loginSubmitButton";
@@ -16,7 +17,7 @@ export default class loginViewComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            eMail: '',
+            email: '',
             password: '',
             buttonDisabled: false
         }
@@ -34,7 +35,7 @@ export default class loginViewComponent extends Component {
 
     resetForm() {
         this.setState({
-            eMail: '',
+            email: '',
             password: '',
             buttonDisabled: false
         })
@@ -42,7 +43,7 @@ export default class loginViewComponent extends Component {
 
     //##########logging methods##########
     async doLogin() {
-        if (!this.state.eMail) {
+        if (!this.state.email) {
             return;
         }
         if (!this.state.password) {
@@ -52,92 +53,86 @@ export default class loginViewComponent extends Component {
         this.setState({
             buttonDisabled: true
         })
-        try {
-            let res = await fetch('isLoggedIn', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }, body: JSON.stringify({
-                    email: this.state.email,
-                    //TODO maybe hash passwords before
-                    password: this.state.password
-                })
-            });
 
-            let result = await res.json();
-            if (result && result.success) {
+        //authenticate a user
+        UserDataService.authenticate(this.state.email, this.state.password).then(res => {
+            const statemail = this.state.email;
+
+            //login successfull
+            if (res.data.success) {
+                loggedUser.loading = false;
                 loggedUser.isLoggedIn = true;
-                loggedUser.email = result.email;
-                loggedUser.role = result.role;
-            } else if (result && result.success === false) {
+                loggedUser.email = res.data.email;
+                loggedUser.password = res.data.password;
+                loggedUser.role = res.data.role;
+                window.location = '/login';
+                sessionStorage.setItem("user", statemail)
+                //login failed
+            } else if (res.data.success === false) {
+                loggedUser.loading = false;
+                loggedUser.isLoggedIn = false;
                 this.resetForm();
-                alert(result.msg);
             }
-
-        } catch (e) {
-            console.log(e);
-            this.resetForm();
-        }
+        })
+            .catch((error) => {
+                loggedUser.loading = false;
+                loggedUser.isLoggedIn = false;
+                this.resetForm();
+                console.log(error);
+            })
     }
 
-
-//##########submit method##########
-    onSubmit = () => {
-        //TODO login logic goes here
-        console.log("LOGGING");
-    }
 
 //##########Render##########
-    render() {
-
-        //TODO email and password form need to give some values
-        //TODO API implementation of login methods
-        return (
+render()
+{
+    //TODO email and password form need to give some values
+    //TODO API implementation of login methods
+    return (
+        <div className="container">
+            <br/><br/>
             <div className="container">
-                <br/><br/>
-                <div className="container">
-                    <p/><br/>
-                    <img src={logo} alt="ELBIS"></img>
-                    <br/>
-                    <h4>Anmeldung</h4>
-                    <hr/>
-                    <p/>
-                    <form onSubmit={this.onSubmit}>
-                        <FormGroup role="form">
-                            <div className="form-group">
-                                <label>E-Mail: </label>
-                                <br/>
-                                <ELBIS_loginInputfield
-                                    type="email"
-                                    placeholder='email'
-                                    value={this.state.email ? this.state.email : ''}
-                                    onChange={(val) => this.setInputValue('email', val)}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Passwort: </label>
-                                <br/>
-                                <ELBIS_loginInputfield
-                                    type="password"
-                                    placeholder='Passwort'
-                                    value={this.state.password ? this.state.password : ''}
-                                    onChange={(val) => this.setInputValue('password', val)}
-                                />
-                            </div>
+                <p/><br/>
+                <img src={logo} alt="ELBIS"></img>
+                <br/>
+                <h4>Anmeldung</h4>
+                <hr/>
+                <p/>
+                <form onSubmit={this.onSubmit}>
+                    <FormGroup role="form">
+                        <div className="form-group">
+                            <label>E-Mail: </label>
+                            <br/>
+                            <ELBIS_loginInputfield
+                                type="email"
+                                placeholder='email'
+                                value={this.state.email ? this.state.email : ''}
+                                onChange={(val) => this.setInputValue('email', val)}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Passwort: </label>
+                            <br/>
+                            <ELBIS_loginInputfield
+                                type="password"
+                                placeholder='passwort'
+                                value={this.state.password ? this.state.password : ''}
+                                onChange={(val) => this.setInputValue('password', val)}
+                            />
+                        </div>
 
-                            <div className="form-group">
-                                <br/>
-                                <ELBIS_loginSubmitButton
-                                    text="Anmelden"
-                                    disabled={this.state.buttonDisabled}
-                                    onClick={() => this.doLogin()}
-                                ></ELBIS_loginSubmitButton>
-                            </div>
-                        </FormGroup>
-                    </form>
-                </div>
+                        <div className="form-group">
+                            <br/>
+                            <ELBIS_loginSubmitButton
+                                text="Anmelden"
+                                disabled={this.state.buttonDisabled}
+                                onClick={() => this.doLogin()}
+                            ></ELBIS_loginSubmitButton>
+                        </div>
+                    </FormGroup>
+                </form>
             </div>
-        )
-    }
+        </div>
+    )
+}
 }
