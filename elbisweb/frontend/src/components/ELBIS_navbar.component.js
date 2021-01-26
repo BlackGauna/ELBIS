@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import {Nav, Navbar, Button, NavDropdown} from "react-bootstrap";
 import loggedUser from "../session/loggedUser";
+import SessionDataService from "../services/session.service";
 
-export default class NavBar extends Component{
+export default class NavBar extends Component {
 
     render() {
         return (
@@ -13,7 +14,7 @@ export default class NavBar extends Component{
                 className={"border-bottom border-light mb-3"}
             >
                 <Navbar.Brand href={"/login/hauptseite"}>ELBIS</Navbar.Brand>
-                <Navbar.Toggle aria-controls={"basic-navbar-nav"} />
+                <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
                 <Navbar.Collapse id={"basic-navbar-nav"}>
                     <Nav className={"mr-auto"}>
                         <NavDropdown title="Artikelverwaltung" id="moderationDropdown">
@@ -26,13 +27,14 @@ export default class NavBar extends Component{
                         </NavDropdown>
                         <NavDropdown title="Administration" id="administrationDropdown">
                             <NavDropdown.Item href={"/login/administration"}>Bereichsverwaltung</NavDropdown.Item>
-                            <NavDropdown.Item href={"/login/pfadzurrollenverwaltung"}>Rollenverwaltung</NavDropdown.Item>
+                            <NavDropdown.Item
+                                href={"/login/pfadzurrollenverwaltung"}>Rollenverwaltung</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
                     <Nav className={"ml-auto"}>
                         <Nav.Link href={"/login/eigeneskontobearbeiten"}>Mein Bereich</Nav.Link>
                     </Nav>
-                    <Button href={"/"} onClick={() =>this.doLogout} variant={"outline-primary"}>Logout</Button>
+                    <Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
                 </Navbar.Collapse>
             </Navbar>
 
@@ -41,22 +43,13 @@ export default class NavBar extends Component{
 
     async doLogout() {
         try {
-            let res = await fetch('/isLoggedOut', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            });
-            let result = await res.json();
-
-            if (result && result.success) {
-                loggedUser.isLoggedIn = false;
-                loggedUser.eMail = '';
-                loggedUser.role = '';
-            }
+            SessionDataService.delete(sessionStorage.getItem("sessionEmail"))
+                .then(res => console.log(res.data));
+            loggedUser.isLoggedIn = false;
+            loggedUser.loading = true;
         } catch (e) {
-            console.log("Logout Error! " + e);
+            console.log("Couldn't log out " + e);
         }
     }
 }
+
