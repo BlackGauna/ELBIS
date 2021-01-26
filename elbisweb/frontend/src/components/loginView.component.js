@@ -7,6 +7,7 @@ import UserDataService from "../services/user.service";
 import SessionDataService from "../services/session.service";
 import ELBIS_loginSubmitButton from "./ELBIS_loginSubmitButton";
 import ELBIS_loginInputfield from "./ELBIS_loginInputfield.component";
+const bcrypt = require('bcryptjs');
 
 export default class loginViewComponent extends Component {
 
@@ -50,9 +51,8 @@ export default class loginViewComponent extends Component {
             buttonDisabled: true
         })
         const authEmail = this.state.email;
-
-        //TODO hash password here (!make sure the hashed password matches with DB)
         const authPassword = this.state.password;
+       
 
         //authenticate a user
         UserDataService.authenticate(authEmail, authPassword).then(res => {
@@ -71,6 +71,7 @@ export default class loginViewComponent extends Component {
                 //frontend session
                 //TODO maybe replace token generation with time+date hashing!!
                 const token = Math.random().toString(36).substr(2);
+                //const token = bcrypt.hash(((Math.random().toString(36).substr(2)) + (Date.now.toString)), 10);
                 const sessUserID = res.data.data._id.toString();
                 const sessEmail = res.data.data.email;
                 const sessRole = res.data.data.role;

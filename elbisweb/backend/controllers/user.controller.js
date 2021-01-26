@@ -1,7 +1,7 @@
 let User = require('../models/user.model');
-
+const bcrypt = require('bcryptjs');
 // Create and save a new User
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     // Validate request
     if (!req.body.email) {
         res.status(400).send({message: "Content can not be empty!"});
@@ -75,7 +75,7 @@ exports.authOne = (req, res) => {
                 res.status(404).send({success: false,message: "Not found user with email " + postemail});
             }
             else {
-                if (postpassword === data.password) {
+                if (bcrypt.compare(postpassword, data.password)) {
                     res.send({success: true,data});
                 } else {
                     res.status(404).send({success: false,message: "No password match found for " + postemail});
@@ -90,6 +90,7 @@ exports.authOne = (req, res) => {
 };
 
 // Update a user by the id
+//TODO Update User methods to hash password as well
 exports.update = (req, res) => {
     if (!req.body){
         return res.status(400).send({
@@ -105,7 +106,11 @@ exports.update = (req, res) => {
                 res.status(404).send({
                     message: "Cannot update User with id = " + id + ". Maybe User was not found!"
                 });
-            } else res.send({message: "User was updated successfully."});
+            } else{
+                //TODO DO SOMETHING HERE
+                 //data.password = req.body.new_password;
+                 res.send({message: "User was updated successfully."});
+            }
         })
         .catch(err => {
             res.status(500).send({
