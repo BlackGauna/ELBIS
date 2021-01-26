@@ -5,6 +5,7 @@ exports.create = (req, res) => {
     // Create a session
     const session = new Session({
         token: req.body.token,
+        userid: req.body.userid,
         email: req.body.email,
         role: req.body.role,
     });
