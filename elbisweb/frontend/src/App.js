@@ -24,6 +24,7 @@ import SessionDataService from "./services/session.service";
 ************************************************************************************
 *   Frontend Session information will be stored as followed:
 *       sessionStorage.getItem("sessionToken"); //to get the session token
+*       sessionStorage.getItem("sessionUserID"); //to get the logged userID
 *       sessionStorage.getItem("sessionEmail"); //to get the logged Email
 *       sessionStorage.getItem("sessionRole");  //to get the logged Role
 ************************************************************************************
@@ -74,7 +75,7 @@ class App extends React.Component {
 //##########Mount method with sessioncheck##########
     async componentDidMount() {
         //wait for session check
-        console.log("FRONTEND SESSION STATE (t/e/r): " + sessionStorage.getItem("sessionToken") + " / " + sessionStorage.getItem("sessionEmail") + " / " + sessionStorage.getItem("sessionRole"));
+        console.log("FRONTEND SESSION STATE (t/ID/e/r): " + sessionStorage.getItem("sessionToken") + " / " + sessionStorage.getItem("sessionUserID") + " / " + sessionStorage.getItem("sessionEmail") + " / " + sessionStorage.getItem("sessionRole"));
         if (loggedUser.loading) {
             //check if session exists
             SessionDataService.check(sessionStorage.getItem("sessionToken"), sessionStorage.getItem("sessionEmail")).then(res => {

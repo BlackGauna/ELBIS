@@ -71,14 +71,17 @@ export default class loginViewComponent extends Component {
                 //frontend session
                 //TODO maybe replace token generation with time+date hashing!!
                 const token = Math.random().toString(36).substr(2);
+                const sessUserID = res.data.data._id.toString();
                 const sessEmail = res.data.data.email;
                 const sessRole = res.data.data.role;
                 sessionStorage.setItem("sessionToken", token);
+                sessionStorage.setItem("sessionUserID", sessUserID);
                 sessionStorage.setItem("sessionEmail", sessEmail);
                 sessionStorage.setItem("sessionRole", sessRole);
                 //backend session
                 const session = {
                     token: token,
+                    userid: sessUserID,
                     email: sessEmail,
                     role: sessRole,
 
@@ -87,6 +90,7 @@ export default class loginViewComponent extends Component {
                     .then(res => {
                         this.setState({
                             token: res.data.token,
+                            userid: res.data.userid,
                             email: res.data.email,
                             role: res.data.role,
                             // TODO: expire
