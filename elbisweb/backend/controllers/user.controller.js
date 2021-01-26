@@ -90,8 +90,7 @@ exports.authOne = (req, res) => {
 };
 
 // Update a user by the id
-//TODO Update User methods to hash password as well
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
     if (!req.body){
         return res.status(400).send({
             message: "Data to update can not be empty!"
@@ -99,6 +98,7 @@ exports.update = (req, res) => {
     }
 
     const id = req.params.id;
+    req.body.password = await bcrypt.hash(req.body.password, 10);
 
     User.findByIdAndUpdate(id, req.body, {useFindAndModify: false})
         .then(data => {
@@ -106,11 +106,8 @@ exports.update = (req, res) => {
                 res.status(404).send({
                     message: "Cannot update User with id = " + id + ". Maybe User was not found!"
                 });
-            } else{
-                //TODO DO SOMETHING HERE
-                 //data.password = req.body.new_password;
+            } else
                  res.send({message: "User was updated successfully."});
-            }
         })
         .catch(err => {
             res.status(500).send({
