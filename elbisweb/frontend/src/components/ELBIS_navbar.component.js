@@ -7,7 +7,6 @@ import FormCheckLabel from "react-bootstrap/FormCheckLabel";
 import FormFileLabel from "react-bootstrap/FormFileLabel";
 
 export default class NavBar extends Component {
-//reverted changes//
     render() {
 
         if (sessionStorage.getItem("sessionRole") === "Administrator") {
