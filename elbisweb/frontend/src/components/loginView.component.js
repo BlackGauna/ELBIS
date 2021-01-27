@@ -9,7 +9,7 @@ import ELBIS_loginSubmitButton from "./ELBIS_loginSubmitButton";
 import ELBIS_loginInputfield from "./ELBIS_loginInputfield.component";
 
 export default class loginViewComponent extends Component {
-
+//reverted changes//
     constructor(props) {
         super(props);
         this.state = {
