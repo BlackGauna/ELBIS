@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Nav, Navbar, Button, NavDropdown} from "react-bootstrap";
+import {Nav, Navbar, Button, NavDropdown, FormLabel} from "react-bootstrap";
 import loggedUser from "../session/loggedUser";
 import SessionDataService from "../services/session.service";
+import FormCheckLabel from "react-bootstrap/FormCheckLabel";
+import FormFileLabel from "react-bootstrap/FormFileLabel";
 
 export default class NavBar extends Component {
 
@@ -22,23 +24,28 @@ export default class NavBar extends Component {
                     <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
                     <Navbar.Collapse id={"basic-navbar-nav"}>
                         <Nav className={"mr-auto"}>
+                            <NavDropdown title="Mein Bereich" id="userDropdown">
+                                <NavDropdown.Item href={"/login/manageAccount"}>Account verwalten</NavDropdown.Item>
+                            </NavDropdown>
                             <NavDropdown title="Artikelverwaltung" id="userDropdown">
                                 <NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>
                                 <NavDropdown.Item href={"/login/user/myArticles"}>Meine Artikel</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="Moderation" id="moderationDropdown">
                                 <NavDropdown.Item href={"/login/mod/manageUsers"}>Benutzerverwaltung</NavDropdown.Item>
-                                <NavDropdown.Item href={"/login/mod/manageArticles"}>Artikelverwaltung</NavDropdown.Item>
+                                <NavDropdown.Item
+                                    href={"/login/mod/manageArticles"}>Artikelverwaltung</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="Administration" id="administrationDropdown">
-                                <NavDropdown.Item href={"/login/admin/manageTopics"}>Bereichsverwaltung</NavDropdown.Item>
+                                <NavDropdown.Item
+                                    href={"/login/admin/manageTopics"}>Bereichsverwaltung</NavDropdown.Item>
                                 <NavDropdown.Item
                                     href={"/login/admin/manageRoles"}>Rollenverwaltung</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
-                        <Nav className={"ml-auto"}>
-                            <Nav.Link href={"/login/manageAccount"}>Mein Bereich</Nav.Link>
-                        </Nav>
+                        <span className="navbar-text m-1">
+                            {sessionStorage.getItem("sessionEmail")}
+                        </span>
                         <Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
                     </Navbar.Collapse>
                 </Navbar>
@@ -58,18 +65,22 @@ export default class NavBar extends Component {
                     <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
                     <Navbar.Collapse id={"basic-navbar-nav"}>
                         <Nav className={"mr-auto"}>
+                            <NavDropdown title="Mein Bereich" id="userDropdown">
+                                <NavDropdown.Item href={"/login/manageAccount"}>Account verwalten</NavDropdown.Item>
+                            </NavDropdown>
                             <NavDropdown title="Artikelverwaltung" id="userDropdown">
                                 <NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>
                                 <NavDropdown.Item href={"/login/user/myArticles"}>Meine Artikel</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="Moderation" id="moderationDropdown">
                                 <NavDropdown.Item href={"/login/mod/manageUsers"}>Benutzerverwaltung</NavDropdown.Item>
-                                <NavDropdown.Item href={"/login/mod/manageArticles"}>Artikelverwaltung</NavDropdown.Item>
+                                <NavDropdown.Item
+                                    href={"/login/mod/manageArticles"}>Artikelverwaltung</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
-                        <Nav className={"ml-auto"}>
-                            <Nav.Link href={"/login/manageAccount"}>Mein Bereich</Nav.Link>
-                        </Nav>
+                        <span className="navbar-text m-1">
+                            {sessionStorage.getItem("sessionEmail")}
+                        </span>
                         <Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
                     </Navbar.Collapse>
                 </Navbar>
@@ -89,14 +100,17 @@ export default class NavBar extends Component {
                     <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
                     <Navbar.Collapse id={"basic-navbar-nav"}>
                         <Nav className={"mr-auto"}>
+                            <NavDropdown title="Mein Bereich" id="userDropdown">
+                                <NavDropdown.Item href={"/login/manageAccount"}>Account verwalten</NavDropdown.Item>
+                            </NavDropdown>
                             <NavDropdown title="Artikelverwaltung" id="userDropdown">
                                 <NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>
                                 <NavDropdown.Item href={"/login/user/myArticles"}>Meine Artikel</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
-                        <Nav className={"ml-auto"}>
-                            <Nav.Link href={"/login/manageAccount"}>Mein Bereich</Nav.Link>
-                        </Nav>
+                        <span className="navbar-text m-1">
+                            {sessionStorage.getItem("sessionEmail")}
+                        </span>
                         <Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
                     </Navbar.Collapse>
                 </Navbar>
