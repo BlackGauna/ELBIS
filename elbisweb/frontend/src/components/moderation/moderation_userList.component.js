@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import UserDataService from "../../services/user.service";
 
 //TODO: edit User (initial values of the form should be loaded from db)
-//TODO: make sure mdoerators can just edit and create users
+//TODO: make sure moderators can just edit and create users
 //TODO: make sure an administrator can edit and create users, mods and admins
 //TODO: make sure an administrator can add and remove topics from a user
 
