@@ -75,7 +75,7 @@ exports.authOne = (req, res) => {
                 res.status(404).send({success: false,message: "Not found user with email " + postemail});
             }
             else {
-                if (bcrypt.compare(postpassword, data.password)) {
+                if (bcrypt.compareSync(postpassword, data.password)) {
                     res.send({success: true,data});
                 } else {
                     res.status(404).send({success: false,message: "No password match found for " + postemail});
