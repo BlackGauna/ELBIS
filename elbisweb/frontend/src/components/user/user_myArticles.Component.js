@@ -4,15 +4,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 //##########Component imports##########
 
-export default class userViewComponent extends Component {
+export default class user_myArticles extends Component {
 //##########Render##########
     render() {
         return (
-            <Router>
                 <div className="container">
                     user content goes here as routes
                 </div>
-            </Router>
         )
     }
 }

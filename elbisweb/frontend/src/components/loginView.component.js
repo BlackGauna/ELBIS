@@ -7,7 +7,6 @@ import UserDataService from "../services/user.service";
 import SessionDataService from "../services/session.service";
 import ELBIS_loginSubmitButton from "./ELBIS_loginSubmitButton";
 import ELBIS_loginInputfield from "./ELBIS_loginInputfield.component";
-const bcrypt = require('bcryptjs');
 
 export default class loginViewComponent extends Component {
 

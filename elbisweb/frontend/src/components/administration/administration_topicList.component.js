@@ -16,7 +16,7 @@ const Topic = props => (
     </tr>
 )
 
-export default class administration_topicListComponent extends Component {
+export default class administration_topicList extends Component {
     // Constructor
     constructor(props) {
         super(props);
@@ -54,22 +54,24 @@ export default class administration_topicListComponent extends Component {
 
     render() {
         return (
-            <div className='ElbisTable'>
-                <h3>Bereichsverwaltung</h3>
-                <table className="topicTable table">
-                    <thead className="thead-light">
-                    <tr>
-                        <th>Name</th>
-                        <th>Elternbereich</th>
-                        <th className={"text-right"}><Link to="/login/bereichErstellen">
-                            <button className="btn btn-primary btn-sm" onClick="reload">+</button>
-                        </Link></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {this.topicList()}
-                    </tbody>
-                </table>
+            <div className="container">
+                <div className='ElbisTable'>
+                    <h3>Bereichsverwaltung</h3>
+                    <table className="topicTable table">
+                        <thead className="thead-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Elternbereich</th>
+                            <th className={"text-right"}><Link to="/login/admin/createTopic">
+                                <button className="btn btn-primary btn-sm" onClick="reload">+</button>
+                            </Link></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {this.topicList()}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         )
     }

@@ -7,16 +7,16 @@ import './ELBISWeb.css';
 import logo from './resources/ELBIS_logo/ELBIS_Ausgeschrieben.png';
 import NavBar from "./components/ELBIS_navbar.component";
 import ELBISweb from "./components/index.component";
-import userView from "./components/user/userView.component";
-import moderationView from "./components/moderation/moderationView.component";
+import userView from "./components/user/user_myArticles.Component";
 import createUser from "./components/moderation/moderation_createUser.component";
-import administrationView from "./components/administration/administrationView.component.js";
 import loginView from "./components/loginView.component";
 import CreateArticle from "./components/user/CreateArticle.component";
 import createTopic from "./components/administration/administration_createTopic.component";
 import allArticlesList from "./components/moderation/moderation_articleList.component";
 import editUser from "./components/moderation/moderation_editUser.component";
 import SessionDataService from "./services/session.service";
+import moderation_userList from "./components/moderation/moderation_userList.component";
+import administration_topicList from "./components/administration/administration_topicList.component";
 
 //##########App start##########
 //TODO check which type of user is logged in before redirecting to moderation or administration
@@ -42,24 +42,63 @@ class App extends React.Component {
             )
         } else {
             if (loggedUser.isLoggedIn) {
-                return (
-                    <div className="app">
+                if (sessionStorage.getItem("sessionRole") === "Administrator") {
+                    /*************
+                     *   Admin Area
+                     * *************/
+                    return (
+                        <div className="app">
+                            <Router>
+                                <Route path="/" component={NavBar}/>
+                                <br/>
+                                <Route exact path="/login/home" component={ELBISweb}/>
+                                <Route exact path="/login/edit" component={CreateArticle}/>
+                                <Route exact path="/login/edit/:id" component={CreateArticle}/>
+                                <Route exact path="/login/user/myArticles" component={userView}/>
+                                <Route exact path="/login/mod/manageArticles" component={allArticlesList}/>
+                                <Route exact path="/login/mod/manageUsers" component={moderation_userList}/>
+                                <Route exact path="/login/mod/createUser" component={createUser}/>
+                                <Route exact path="/login/mod/editUser/:id" component={editUser}/>
+                                <Route exact path="/login/admin/manageTopics" component={administration_topicList}/>
+                                <Route exact path="/login/admin/createTopic" component={createTopic}/>
+
+                            </Router>
+                        </div>
+                    )
+                } else if (sessionStorage.getItem("sessionRole") === "Moderator") {
+                    /*************
+                     *   Mod Area
+                     * *************/
+                    return (<div className="app">
                         <Router>
                             <Route path="/" component={NavBar}/>
                             <br/>
-                            <Route exact path="/login/hauptseite" component={ELBISweb}/>
-                            <Route exact path="/login/artikelverwaltung" component={userView}/>
-                            <Route exact path="/login/moderation" component={moderationView}/>
-                            <Route exact path="/login/nutzerErstellen" component={createUser}/>
-                            <Route exact path="/login/administration" component={administrationView}/>
+                            <Route exact path="/login/home" component={ELBISweb}/>
                             <Route exact path="/login/edit" component={CreateArticle}/>
                             <Route exact path="/login/edit/:id" component={CreateArticle}/>
-                            <Route exact path="/login/bereichErstellen" component={createTopic}/>
-                            <Route exact path="/login/articles" component={allArticlesList}/>
-                            <Route exact path="/login/editUser/:id" component={editUser}/>
+                            <Route exact path="/login/user/myArticles" component={userView}/>
+                            <Route exact path="/login/mod/manageArticles" component={allArticlesList}/>
+                            <Route exact path="/login/mod/manageUsers" component={moderation_userList}/>
+                            <Route exact path="/login/mod/createUser" component={createUser}/>
+                            <Route exact path="/login/mod/editUser/:id" component={editUser}/>
                         </Router>
-                    </div>
-                )
+                    </div>);
+                } else if (sessionStorage.getItem("sessionRole") === "User") {
+                    /*************
+                     *   User Area
+                     * *************/
+                    return (<div className="app">
+                        <Router>
+                            <Route path="/" component={NavBar}/>
+                            <br/>
+                            <Route exact path="/login/home" component={ELBISweb}/>
+                            <Route exact path="/login/edit" component={CreateArticle}/>
+                            <Route exact path="/login/edit/:id" component={CreateArticle}/>
+                            <Route exact path="/login/user/myArticles" component={userView}/>
+                        </Router>
+                    </div>);
+                } else {
+                }
             } else if (!loggedUser.isLoggedIn) {
                 return (
                     <div className="app">
