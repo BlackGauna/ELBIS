@@ -19,6 +19,11 @@ class UserDataService {
         return http.post("/user/", data);
     }
 
+    //authenticate a User
+    authenticate(email,password){
+        return http.get(`/user/authenticate/${email}/${password}`);
+    }
+
     // update user
     update(id, data) {
         return http.put(`/user/${id}`, data);

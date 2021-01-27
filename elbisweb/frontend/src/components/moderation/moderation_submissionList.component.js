@@ -3,6 +3,10 @@ import {Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import ArticleDataService from "../../services/article.service";
 
+//TODO im a copy yet -> make me show articles that are in 'submitted' state
+//TODO create submission window to manage a submission with a comment
+
+
 // TODO: creationDate, lastEdit (access via mongoDB?) and expireDate
 // TODO: edit Article
 
@@ -22,7 +26,7 @@ const Article = props => (
     </tr>
 )
 
-export default class moderation_articleList extends Component {
+export default class moderation_submissionList extends Component {
     // Constructor
     constructor(props) {
         super(props);
@@ -62,7 +66,7 @@ export default class moderation_articleList extends Component {
     render() {
         return (
             <div className="container">
-                <h3>Artikelverwaltung</h3>
+                <h3>Neue Veröffentlichungen</h3>
                 <table className="articleTable table">
                     <thead className="thead-light">
                     <tr>

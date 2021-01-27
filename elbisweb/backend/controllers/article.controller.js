@@ -58,6 +58,22 @@ exports.findAll = (req, res) => {
             });
         });
 };
+// Retrieve all Articles with by email
+exports.findByEmail = (req, res) => {
+    const email = req.params.email;
+
+    console.log(email);
+    Article.find({author: email})
+        .then(data => {
+            res.send(data)
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occured while retrieving Articles by email."
+            });
+        });
+};
 
 // Find a single Article with an ID
 exports.findOne = (req, res) => {

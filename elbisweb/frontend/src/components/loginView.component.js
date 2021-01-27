@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
-import {Redirect} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import loggedUser from '../session/loggedUser';
-import ELBISweb from "./index.component";
 import logo from '../resources/ELBIS_logo/ELBIS_Ausgeschrieben.png';
 import {Form, FormGroup, Button} from "react-bootstrap";
-
-//##########Component imports##########
+import UserDataService from "../services/user.service";
+import SessionDataService from "../services/session.service";
 import ELBIS_loginSubmitButton from "./ELBIS_loginSubmitButton";
 import ELBIS_loginInputfield from "./ELBIS_loginInputfield.component";
 
@@ -16,9 +13,10 @@ export default class loginViewComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            eMail: '',
+            email: '',
             password: '',
-            buttonDisabled: false
+            buttonDisabled: false,
+            loginstate: "geben sie ihre Anmeldedaten ein."
         }
     }
 
@@ -32,17 +30,18 @@ export default class loginViewComponent extends Component {
         })
     }
 
-    resetForm() {
+    resetForm(msg) {
         this.setState({
-            eMail: '',
+            email: '',
             password: '',
-            buttonDisabled: false
+            buttonDisabled: false,
+            loginstate: msg
         })
     }
 
     //##########logging methods##########
     async doLogin() {
-        if (!this.state.eMail) {
+        if (!this.state.email) {
             return;
         }
         if (!this.state.password) {
@@ -52,47 +51,80 @@ export default class loginViewComponent extends Component {
         this.setState({
             buttonDisabled: true
         })
-        try {
-            let res = await fetch('isLoggedIn', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }, body: JSON.stringify({
-                    email: this.state.email,
-                    //TODO maybe hash passwords before
-                    password: this.state.password
-                })
-            });
+        const authEmail = this.state.email;
+        const authPassword = this.state.password;
 
-            let result = await res.json();
-            if (result && result.success) {
+
+        //authenticate a user
+        UserDataService.authenticate(authEmail, authPassword).then(res => {
+            //authenticate successfull
+            if (res.data.success) {
+                //Delete old sessions
+                try{
+                    SessionDataService.delete(authEmail)
+                        .then(res => console.log(res.data));
+                } catch(e){
+                    console.log("No old session deleted")
+                }
+                /*
+                    * create a session
+                 */
+                //frontend session
+                //TODO maybe replace token generation with time+date hashing!!
+                const token = Math.random().toString(36).substr(2);
+                //const token = bcrypt.hash(((Math.random().toString(36).substr(2)) + (Date.now.toString)), 10);
+                const sessUserID = res.data.data._id.toString();
+                const sessEmail = res.data.data.email;
+                const sessRole = res.data.data.role;
+                sessionStorage.setItem("sessionToken", token);
+                sessionStorage.setItem("sessionUserID", sessUserID);
+                sessionStorage.setItem("sessionEmail", sessEmail);
+                sessionStorage.setItem("sessionRole", sessRole);
+                //backend session
+                const session = {
+                    token: token,
+                    userid: sessUserID,
+                    email: sessEmail,
+                    role: sessRole,
+
+                }
+                SessionDataService.create(session)
+                    .then(res => {
+                        this.setState({
+                            token: res.data.token,
+                            userid: res.data.userid,
+                            email: res.data.email,
+                            role: res.data.role,
+                            // TODO: expire
+                            submitted: true
+                        });
+                        console.log(res.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                //pageskip variables
+                loggedUser.loading = false;
                 loggedUser.isLoggedIn = true;
-                loggedUser.email = result.email;
-                loggedUser.role = result.role;
-            } else if (result && result.success === false) {
-                this.resetForm();
-                alert(result.msg);
+                window.location = '/login/home';
+                //authenticate failed
+            } else if (res.data.success === false) {
+                loggedUser.loading = false;
+                loggedUser.isLoggedIn = false;
+                this.resetForm("Das angegebene Passwort war falsch.");
             }
-
-        } catch (e) {
-            console.log(e);
-            this.resetForm();
-        }
+        })
+            .catch((error) => {
+                loggedUser.loading = false;
+                loggedUser.isLoggedIn = false;
+                this.resetForm("Keine gültigen Logindaten.");
+                console.log(error);
+            })
     }
 
-
-//##########submit method##########
-    onSubmit = () => {
-        //TODO login logic goes here
-        console.log("LOGGING");
-    }
 
 //##########Render##########
     render() {
-
-        //TODO email and password form need to give some values
-        //TODO API implementation of login methods
         return (
             <div className="container">
                 <br/><br/>
@@ -120,11 +152,16 @@ export default class loginViewComponent extends Component {
                                 <br/>
                                 <ELBIS_loginInputfield
                                     type="password"
-                                    placeholder='Passwort'
+                                    placeholder='passwort'
                                     value={this.state.password ? this.state.password : ''}
                                     onChange={(val) => this.setInputValue('password', val)}
                                 />
                             </div>
+
+                <div className="form-group">
+                    <label>{this.state.loginstate}</label>
+
+                </div>
 
                             <div className="form-group">
                                 <br/>

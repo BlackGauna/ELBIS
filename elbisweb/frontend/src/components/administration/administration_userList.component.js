@@ -29,7 +29,7 @@ function refreshPage() {
 }
 
 
-export default class moderation_userList extends Component {
+export default class administration_userList extends Component {
     // Constructor
     constructor(props) {
         super(props);

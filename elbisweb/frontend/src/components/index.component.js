@@ -8,7 +8,7 @@ export default class ELBISweb extends Component {
         return (
             <Router>
                 <div className="container">
-                    Maybe show all public article one-pagers here
+                   <h4> Hier werden bald alle One-Pager und öffentlihen Artikel angezeigt! </h4>
                 </div>
             </Router>
         )

@@ -1,7 +1,7 @@
 let User = require('../models/user.model');
-
+const bcrypt = require('bcryptjs');
 // Create and save a new User
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     // Validate request
     if (!req.body.email) {
         res.status(400).send({message: "Content can not be empty!"});
@@ -64,8 +64,7 @@ exports.findOne = (req, res) => {
         });
 };
 
-//TODO Authenticate an User by email and password
-
+//Authenticate an User by email and password
 exports.authOne = (req, res) => {
     const postemail = req.params.email;
     const postpassword = req.params.password;
@@ -73,23 +72,25 @@ exports.authOne = (req, res) => {
     User.findOne({email: postemail})
         .then(data => {
             if (!data) {
-                res.status(404).send({message: "Not found user with email " + postemail});
+                res.status(404).send({success: false,message: "Not found user with email " + postemail});
             }
             else {
-                if (postpassword == data.password) {
-                    res.send(data);
+                if (bcrypt.compareSync(postpassword, data.password)) {
+                    res.send({success: true,data});
+                } else {
+                    res.status(404).send({success: false,message: "No password match found for " + postemail});
                 }
             }
         })
         .catch(err => {
             res
                 .status(500)
-                .send({message: "Error retrieving user with email " + postemail});
+                .send({success: false,message: "Error retrieving user with email " + postemail});
         });
 };
 
 // Update a user by the id
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
     if (!req.body){
         return res.status(400).send({
             message: "Data to update can not be empty!"
@@ -97,6 +98,7 @@ exports.update = (req, res) => {
     }
 
     const id = req.params.id;
+    req.body.password = await bcrypt.hash(req.body.password, 10);
 
     User.findByIdAndUpdate(id, req.body, {useFindAndModify: false})
         .then(data => {
@@ -104,7 +106,8 @@ exports.update = (req, res) => {
                 res.status(404).send({
                     message: "Cannot update User with id = " + id + ". Maybe User was not found!"
                 });
-            } else res.send({message: "User was updated successfully."});
+            } else
+                 res.send({message: "User was updated successfully."});
         })
         .catch(err => {
             res.status(500).send({

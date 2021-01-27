@@ -4,9 +4,7 @@ class loggedUser {
     constructor(){
         extendObservable(this, {
             loading: true,
-            isLoggedIn: false,
-            eMail: '',
-            role: ''
+            isLoggedIn: false
         })
     }
 }

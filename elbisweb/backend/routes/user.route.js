@@ -10,8 +10,8 @@ router.get("/", users.findAll);
 // Retrieve a single User with id
 router.get("/:id", users.findOne);
 
-//TODO Authenticate a User by email and password
-router.get("/authenticate/:email", users.authOne);
+//Authenticate a User by email and password
+router.get("/authenticate/:email/:password", users.authOne);
 
 // Update a User with id
 router.put("/:id", users.update);
