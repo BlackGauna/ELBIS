@@ -8,6 +8,8 @@ import UserDataService from "../../services/user.service";
 //TODO: make sure an administrator can edit and create users, mods and admins
 //TODO: make sure an administrator can add and remove topics from a user
 
+//TODO: show the dateOfBirth as "LocaleDate" somehow
+
 const User = props => (
     <tr>
         <td>{props.user.email}</td>
