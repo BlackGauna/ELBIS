@@ -9,12 +9,17 @@ class ArticleDataService {
         return http.get("/article/");
     }
 
-    // get gender by id
+    // get all articles by a specific email
+    findByEmail(email) {
+        return http.get(`/article/${email}`);
+    }
+
+        // get article by id
     get(id) {
         return http.get(`/article/${id}`);
     }
 
-    // create gender
+    // create article
     create(data) {
         return http.post("/article/", data);
     }

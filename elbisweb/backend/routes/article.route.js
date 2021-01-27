@@ -7,6 +7,9 @@ router.post("/", articles.create);
 // Retrieve all Articles
 router.get("/", articles.findAll);
 
+// Retrieve all Articles with by email
+router.get("/:email", articles.findByEmail);
+
 // Retrieve a single Article with id
 router.get("/:id", articles.findOne);
 

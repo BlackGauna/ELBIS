@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import ArticleDataService from "../../services/article.service";
 
-//##########Component imports##########
+//TODO im still a copy of mod_article list -> just show articles of the logged user here
 const Article = props => (
     <tr>
         <td>{props.article.title}</td>
@@ -31,7 +31,7 @@ export default class user_myArticles extends Component {
 
     // Mount method
     componentDidMount() {
-        ArticleDataService.getAll()
+        ArticleDataService.findByEmail(sessionStorage.getItem("sessionEmail"))
             .then(response => {
                 this.setState({article: response.data})
             })
