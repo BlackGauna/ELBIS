@@ -15,7 +15,8 @@ export default class loginViewComponent extends Component {
         this.state = {
             email: '',
             password: '',
-            buttonDisabled: false
+            buttonDisabled: false,
+            loginstate: "geben sie ihre Anmeldedaten ein."
         }
     }
 
@@ -29,11 +30,12 @@ export default class loginViewComponent extends Component {
         })
     }
 
-    resetForm() {
+    resetForm(msg) {
         this.setState({
             email: '',
             password: '',
-            buttonDisabled: false
+            buttonDisabled: false,
+            loginstate: msg
         })
     }
 
@@ -51,7 +53,7 @@ export default class loginViewComponent extends Component {
         })
         const authEmail = this.state.email;
         const authPassword = this.state.password;
-       
+
 
         //authenticate a user
         UserDataService.authenticate(authEmail, authPassword).then(res => {
@@ -109,13 +111,13 @@ export default class loginViewComponent extends Component {
             } else if (res.data.success === false) {
                 loggedUser.loading = false;
                 loggedUser.isLoggedIn = false;
-                this.resetForm();
+                this.resetForm("Das angegebene Passwort war falsch.");
             }
         })
             .catch((error) => {
                 loggedUser.loading = false;
                 loggedUser.isLoggedIn = false;
-                this.resetForm();
+                this.resetForm("Keine gültigen Logindaten.");
                 console.log(error);
             })
     }
@@ -155,6 +157,11 @@ export default class loginViewComponent extends Component {
                                     onChange={(val) => this.setInputValue('password', val)}
                                 />
                             </div>
+
+                <div className="form-group">
+                    <label>{this.state.loginstate}</label>
+
+                </div>
 
                             <div className="form-group">
                                 <br/>
