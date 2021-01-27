@@ -62,7 +62,6 @@ export default class moderation_articleList extends Component {
     render() {
         return (
             <div className="container">
-            <div className='ElbisTable'>
                 <h3>Artikelverwaltung</h3>
                 <table className="articleTable table">
                     <thead className="thead-light">
@@ -82,7 +81,6 @@ export default class moderation_articleList extends Component {
                     {this.articleList()}
                     </tbody>
                 </table>
-            </div>
             </div>
         )
     }

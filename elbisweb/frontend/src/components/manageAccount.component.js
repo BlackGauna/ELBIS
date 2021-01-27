@@ -2,15 +2,14 @@ import React, {Component} from 'react';
 import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default class ELBISweb extends Component {
+export default class EmanageAccount extends Component {
 //##########Render##########
     render() {
         return (
-            <Router>
                 <div className="container">
-                   <h4> Hier werden bald alle One-Pager und öffentlihen Artikel angezeigt! </h4>
+                    <h3>Hallo {sessionStorage.getItem("sessionEmail")} </h3>
+                   Hier kannst du bald einen Account verwwalten!
                 </div>
-            </Router>
         )
     }
 }

@@ -1,9 +1,15 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import ArticleDataService from "../../services/article.service";
 
-//TODO im still a copy of mod_article list -> just show articles of the logged user here
+//TODO im a copy yet -> make me show articles that are in 'submitted' state
+//TODO create submission window to manage a submission with a comment
+
+
+// TODO: creationDate, lastEdit (access via mongoDB?) and expireDate
+// TODO: edit Article
+
 const Article = props => (
     <tr>
         <td>{props.article.title}</td>
@@ -20,7 +26,7 @@ const Article = props => (
     </tr>
 )
 
-export default class user_myArticles extends Component {
+export default class moderation_submissionList extends Component {
     // Constructor
     constructor(props) {
         super(props);
@@ -31,7 +37,7 @@ export default class user_myArticles extends Component {
 
     // Mount method
     componentDidMount() {
-        ArticleDataService.findByEmail(sessionStorage.getItem("sessionEmail"))
+        ArticleDataService.getAll()
             .then(response => {
                 this.setState({article: response.data})
             })
@@ -60,25 +66,25 @@ export default class user_myArticles extends Component {
     render() {
         return (
             <div className="container">
-                    <h3>Meine Artikel</h3>
-                    <table className="articleTable table">
-                        <thead className="thead-light">
-                        <tr>
-                            <th>Titel</th>
-                            <th>Status</th>
-                            <th>Bereich</th>
-                            <th>Autor</th>
-                            <th>Veröffentlicher</th>
-                            <th>Kommentar</th>
-                            <th className={"text-right"}><Link to="/login/edit">
-                                <button className="btn btn-primary btn-sm" onClick="reload">+</button>
-                            </Link></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {this.articleList()}
-                        </tbody>
-                    </table>
+                <h3>Neue Veröffentlichungen</h3>
+                <table className="articleTable table">
+                    <thead className="thead-light">
+                    <tr>
+                        <th>Titel</th>
+                        <th>Status</th>
+                        <th>Bereich</th>
+                        <th>Autor</th>
+                        <th>Veröffentlicher</th>
+                        <th>Kommentar</th>
+                        <th className={"text-right"}><Link to="/login/edit">
+                            <button className="btn btn-primary btn-sm" onClick="reload">+</button>
+                        </Link></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {this.articleList()}
+                    </tbody>
+                </table>
             </div>
         )
     }

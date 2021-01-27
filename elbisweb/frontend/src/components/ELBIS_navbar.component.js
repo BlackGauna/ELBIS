@@ -11,6 +11,7 @@ export default class NavBar extends Component {
     render() {
 
         if (sessionStorage.getItem("sessionRole") === "Administrator") {
+            //TODO resolve redundancies
             /*************
              *   Admin Area
              * *************/
@@ -32,15 +33,14 @@ export default class NavBar extends Component {
                                 <NavDropdown.Item href={"/login/user/myArticles"}>Meine Artikel</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="Moderation" id="moderationDropdown">
+                                <NavDropdown.Item href={"/login/mod/manageSubmissions"}>Neue Veröffentlichungen</NavDropdown.Item>
+                                <NavDropdown.Item href={"/login/mod/manageArticles"}>Artikelverwaltung</NavDropdown.Item>
                                 <NavDropdown.Item href={"/login/mod/manageUsers"}>Benutzerverwaltung</NavDropdown.Item>
-                                <NavDropdown.Item
-                                    href={"/login/mod/manageArticles"}>Artikelverwaltung</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="Administration" id="administrationDropdown">
                                 <NavDropdown.Item
                                     href={"/login/admin/manageTopics"}>Bereichsverwaltung</NavDropdown.Item>
-                                <NavDropdown.Item
-                                    href={"/login/admin/manageRoles"}>Rollenverwaltung</NavDropdown.Item>
+                                <NavDropdown.Item href={"/login/admin/manageRoles"}>Rollenverwaltung</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
                         <span className="navbar-text m-1">
@@ -69,13 +69,13 @@ export default class NavBar extends Component {
                                 <NavDropdown.Item href={"/login/manageAccount"}>Account verwalten</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="Artikelverwaltung" id="userDropdown">
-                                <NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>
                                 <NavDropdown.Item href={"/login/user/myArticles"}>Meine Artikel</NavDropdown.Item>
+                                <NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="Moderation" id="moderationDropdown">
+                                <NavDropdown.Item href={"/login/mod/manageSubmissions"}>Neue Veröffentlichungen</NavDropdown.Item>
                                 <NavDropdown.Item href={"/login/mod/manageUsers"}>Benutzerverwaltung</NavDropdown.Item>
-                                <NavDropdown.Item
-                                    href={"/login/mod/manageArticles"}>Artikelverwaltung</NavDropdown.Item>
+                                <NavDropdown.Item href={"/login/mod/manageArticles"}>Artikelverwaltung</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
                         <span className="navbar-text m-1">
