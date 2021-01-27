@@ -105,7 +105,7 @@ export default class loginViewComponent extends Component {
                 //pageskip variables
                 loggedUser.loading = false;
                 loggedUser.isLoggedIn = true;
-                window.location = '/login/home';
+                //window.location = '/login/home';
                 //authenticate failed
             } else if (res.data.success === false) {
                 loggedUser.loading = false;

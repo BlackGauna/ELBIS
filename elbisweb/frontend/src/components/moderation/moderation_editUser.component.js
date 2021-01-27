@@ -67,6 +67,48 @@ export default class moderation_editUser extends Component {
             });
     }
 
+    // Get gender options for dropdown
+    async getGenderOptions() {
+        const res = await GenderDataService.getAll()
+        const data = res.data
+
+
+        const options = data.map(d => ({
+            "label": d.name
+        }))
+
+        this.setState({gender: options})
+    }
+
+    //##########update in DB method########## //TODO not working yet
+    updateUser() {
+        UserDataService.update(
+            this.state.currentUser.id,
+            this.state.currentUser
+        )
+            .then(response => {
+                console.log(response.data);
+                this.setState({
+                    message: "The user was updated successfully!"
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
+
+    // Get role options for dropdown
+    async getRoleOptions() {
+        const res = await RoleDataService.getAll()
+        const data = res.data
+
+        const options = data.map(d => ({
+            "label": d.name
+        }))
+
+        this.setState({role: options})
+    }
+
     //##########Render##########
     render() {
         const {currentUser} = this.state;
@@ -203,48 +245,6 @@ export default class moderation_editUser extends Component {
             </div>
 
         );
-    }
-
-    //##########update method########## //TODO not working yet
-    updateUser() {
-        UserDataService.update(
-            this.state.currentUser.id,
-            this.state.currentUser
-        )
-            .then(response => {
-                console.log(response.data);
-                this.setState({
-                    message: "The user was updated successfully!"
-                });
-            })
-            .catch(e => {
-                console.log(e);
-            });
-    }
-
-    // Get gender options for dropdown
-    async getGenderOptions() {
-        const res = await GenderDataService.getAll()
-        const data = res.data
-
-
-        const options = data.map(d => ({
-            "label": d.name
-        }))
-
-        this.setState({gender: options})
-    }
-
-    // Get role options for dropdown
-    async getRoleOptions() {
-        const res = await RoleDataService.getAll()
-        const data = res.data
-
-        const options = data.map(d => ({
-            "label": d.name
-        }))
-
-        this.setState({role: options})
     }
 
 //##########change methods##########
