@@ -50,8 +50,9 @@ exports.delete = (req, res) => {
 exports.checkSession = (req, res) => {
     const posttoken = req.params.token;
     const postemail = req.params.email;
+    const postrole = req.params.role;
 
-    Session.findOne({email: postemail})
+    Session.findOne({token: posttoken, email: postemail, role: postrole})
         .then(data => {
             if (!data) {
                 res.status(404).send({existing: false,message: "Not session found with Email " + postemail});

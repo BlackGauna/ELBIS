@@ -5,7 +5,7 @@ const router = require('express').Router();
 router.post("/", sessions.create);
 
 // check if session for email exists
-router.get("/check/:token/:email", sessions.checkSession);
+router.get("/check/:token/:email/:role", sessions.checkSession);
 
 // Delete a Session with email
 router.delete("/:email", sessions.delete);

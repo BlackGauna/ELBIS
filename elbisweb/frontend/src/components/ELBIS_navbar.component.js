@@ -39,7 +39,6 @@ export default class NavBar extends Component {
                             <NavDropdown title="Administration" id="administrationDropdown">
                                 <NavDropdown.Item
                                     href={"/login/admin/manageTopics"}>Bereichsverwaltung</NavDropdown.Item>
-                                <NavDropdown.Item href={"/login/admin/manageRoles"}>Rollenverwaltung</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
                         <span className="navbar-text m-1">

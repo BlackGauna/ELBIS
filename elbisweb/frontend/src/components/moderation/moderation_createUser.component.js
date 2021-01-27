@@ -6,9 +6,9 @@ import UserDataService from "../../services/user.service";
 import RoleDataService from "../../services/role.service";
 import GenderDataService from "../../services/gender.service";
 import Select from 'react-select';
+import {Redirect} from "react-router-dom";
 
 // TODO: Geburtsdatum (DatePicker?!)
-// TODO: wenn man ein Geschlecht/Rolle auswählt, aber dann danach ein anderes Geschlecht/Rolle auswählen möchte gibts einen Fehler
 
 //##########Component imports##########
 
@@ -43,20 +43,25 @@ export default class moderation_createUser extends Component {
             plz: '',
             place: '',
             gender: [],
+            choosenGender:'',
             role: [],
+            choosenRole:'',
             // bDay: new Date(),
 
+            redirect: false,
             submitted: false
         }
+    }
+
+    redirect = () => {
+        this.setState({redirect:true})
     }
 
     // Get gender options for dropdown
     async getGenderOptions() {
         const res = await GenderDataService.getAll()
-        const data = res.data
 
-
-        const options = data.map(d => ({
+        let options = res.data.map(d => ({
             "label": d.name
         }))
 
@@ -83,6 +88,9 @@ export default class moderation_createUser extends Component {
 
     //##########Render##########
     render() {
+        if (this.state.redirect) {
+            return <Redirect to="/login/mod/manageUsers" />
+        } else {
         return (
             <div className="container">
                 <h3>Nutzer erstellen</h3>
@@ -199,7 +207,7 @@ export default class moderation_createUser extends Component {
                     </div>
                 </form>
             </div>
-        )
+        )}
     }
 
     //##########submit method##########
@@ -213,8 +221,8 @@ export default class moderation_createUser extends Component {
             password: this.state.password,
             name: this.state.foreName + " " + this.state.surName,
             address: this.state.street + " " + this.state.houseNumber + ", " + this.state.plz + " " + this.state.place,
-            gender: this.state.gender,
-            role: this.state.role,
+            gender: this.state.choosenGender,
+            role: this.state.choosenRole,
             bDay: this.state.bday
         }
 
@@ -237,8 +245,8 @@ export default class moderation_createUser extends Component {
                 console.log(e);
             });
 
-        //go back to the moderationView TODO: funktioniert nicht
-        // window.location = '/login/moderation';
+        //go back to the moderationView
+        this.redirect();
     }
 
     //##########change methods##########
@@ -298,13 +306,13 @@ export default class moderation_createUser extends Component {
 
     onChange_gender(e) {
         this.setState({
-            gender: e.label
+            choosenGender: e.label
         })
     }
 
     onChange_role(e) {
         this.setState({
-            role: e.label
+            choosenRole: e.label
         })
     }
 
