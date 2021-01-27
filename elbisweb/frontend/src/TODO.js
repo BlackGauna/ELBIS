@@ -3,9 +3,6 @@
 
 -------General-------
 
-TODO Figure the project structure out.
-TODO Make sure everyone can run the project.
-
 TODO MAYBE deploy the project to a free hosting server at the end ?
 TODO MAYBE learn how to export it as an app to phones because its really cool
 
