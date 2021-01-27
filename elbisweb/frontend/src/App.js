@@ -79,6 +79,7 @@ class App extends React.Component {
                             <Route path="/" component={NavBar}/>
                             <br/>
                             <Route exact path="/login/home" component={ELBISweb}/>
+                            <Route exact path="/login/manageAccount" component={manageAccount}/>
                             <Route exact path="/login/edit" component={CreateArticle}/>
                             <Route exact path="/login/edit/:id" component={CreateArticle}/>
                             <Route exact path="/login/user/myArticles" component={userView}/>
@@ -98,6 +99,7 @@ class App extends React.Component {
                             <Route path="/" component={NavBar}/>
                             <br/>
                             <Route exact path="/login/home" component={ELBISweb}/>
+                            <Route exact path="/login/manageAccount" component={manageAccount}/>
                             <Route exact path="/login/edit" component={CreateArticle}/>
                             <Route exact path="/login/edit/:id" component={CreateArticle}/>
                             <Route exact path="/login/user/myArticles" component={userView}/>
