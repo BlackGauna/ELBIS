@@ -58,7 +58,9 @@ exports.findAll = (req, res) => {
             });
         });
 };
+
 // Retrieve all Articles with by email
+// TODO on wrong email the DB just answers [] instead of an Error
 exports.findByEmail = (req, res) => {
     const email = req.params.email;
 
@@ -68,15 +70,13 @@ exports.findByEmail = (req, res) => {
             res.send(data)
         })
         .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occured while retrieving Articles by email."
-            });
+                res
+                .status(500)
+                    .send({message: "Error retrieving Article with email " + email});
         });
 };
 
 // Find a single Article with an ID
-//TODO Get one article returns only [] and nothing else
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
