@@ -76,6 +76,7 @@ exports.findByEmail = (req, res) => {
 };
 
 // Find a single Article with an ID
+//TODO Get one article returns only [] and nothing else
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
@@ -105,6 +106,7 @@ exports.findOne = (req, res) => {
 };
 
 // Update a Article by the id
+//TODO Cannot read property 'substring' of undefined error.
 exports.update = (req, res) => {
     if (!req.body){
         return res.status(400).send({
