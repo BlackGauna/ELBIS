@@ -177,7 +177,6 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    //TODO: also delete html file of article
     Article.findByIdAndRemove(id, {useFindAndModify: false})
         .then(data => {
             if (!data) {
@@ -185,6 +184,13 @@ exports.delete = (req, res) => {
                     message: "Cannot delete Article with id " + id + ". Maybe Article was not found"
                 });
             } else {
+                fs.unlink(data.path, (err) => {
+                    if (err) {
+                        console.log("failed to delete local file of the article:"+err);
+                    } else {
+                        console.log('successfully deleted local file of the article');                                
+                    }
+            });
                 res.send({
                     message: "Article was deleted successfully!"
                 });
