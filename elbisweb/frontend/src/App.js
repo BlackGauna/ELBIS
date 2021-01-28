@@ -34,6 +34,7 @@ import administration_topicList from "./components/administration/administration
 *   Checks token, email AND role of a session - if one is invalid, the user gets logged out (not manipulatable by backend check)
  */
 class App extends React.Component {
+
     render() {
         if (loggedUser.loading) {
             return (

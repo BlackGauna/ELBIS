@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import loggedUser from '../session/loggedUser';
 import logo from '../resources/ELBIS_logo/ELBIS_Ausgeschrieben.png';
-import {Form, FormGroup, Button} from "react-bootstrap";
+import {FormGroup} from "react-bootstrap";
 import UserDataService from "../services/user.service";
 import SessionDataService from "../services/session.service";
 import ELBIS_loginSubmitButton from "./ELBIS_loginSubmitButton";
@@ -10,14 +10,20 @@ import ELBIS_loginInputfield from "./ELBIS_loginInputfield.component";
 import {Link} from "react-router-dom";
 
 export default class loginViewComponent extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             email: '',
             password: '',
+            mounted: true,
             buttonDisabled: false,
             loginstate: "geben sie ihre Anmeldedaten ein."
         }
+    }
+
+    componentWillUnmount() {
+        console.log("unmounted login")
     }
 
     setInputValue(property, val) {
@@ -60,10 +66,10 @@ export default class loginViewComponent extends Component {
             //authenticate successfull
             if (res.data.success) {
                 //Delete old sessions
-                try{
+                try {
                     SessionDataService.delete(authEmail)
                         .then(res => console.log(res.data));
-                } catch(e){
+                } catch (e) {
                     console.log("No old session deleted")
                 }
                 /*
@@ -106,7 +112,6 @@ export default class loginViewComponent extends Component {
                 //pageskip variables
                 loggedUser.loading = false;
                 loggedUser.isLoggedIn = true;
-                //window.location = '/login/home';
                 //authenticate failed
             } else if (res.data.success === false) {
                 loggedUser.loading = false;
@@ -130,7 +135,7 @@ export default class loginViewComponent extends Component {
                 <br/><br/>
                 <div className="container">
                     <p/><br/>
-                    <img src={logo} alt="ELBIS"></img>
+                    <img src={logo} alt="ELBIS"/>
                     <br/>
                     <h4>Anmeldung</h4>
                     <hr/>
@@ -158,18 +163,16 @@ export default class loginViewComponent extends Component {
                                 />
                             </div>
 
-                <div className="form-group">
-                    <label>{this.state.loginstate}</label>
-
-                </div>
-
+                            <div className="form-group">
+                                <label>{this.state.loginstate}</label>
+                            </div>
                             <div className="form-group">
                                 <br/>
                                 <ELBIS_loginSubmitButton
                                     text="Anmelden"
                                     disabled={this.state.buttonDisabled}
                                     onClick={() => this.doLogin()}
-                                ></ELBIS_loginSubmitButton>
+                                />
                                 <Link to='/resetpassword'>Passwort vergessen</Link>
                             </div>
                         </FormGroup>

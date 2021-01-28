@@ -136,7 +136,7 @@ export default class moderation_createUser extends Component {
                                     showMonthDropdown
                                     showYearDropdown
                                     dropdownMode="select"
-                                    customInput={<Button variant="outline-light" size="lg" block>{this.state.dateOfBirth.toLocaleDateString()}</Button>}
+                                    customInput={<Button variant="outline-secondary" size="lg" block>{this.state.dateOfBirth.toLocaleDateString()}</Button>}
                                 /> </div>
                         </div>
                         <div className="form-row">
