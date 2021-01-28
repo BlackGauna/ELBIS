@@ -7,9 +7,9 @@ import UserDataService from "../services/user.service";
 import SessionDataService from "../services/session.service";
 import ELBIS_loginSubmitButton from "./ELBIS_loginSubmitButton";
 import ELBIS_loginInputfield from "./ELBIS_loginInputfield.component";
+import {Link} from "react-router-dom";
 
 export default class loginViewComponent extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -106,7 +106,7 @@ export default class loginViewComponent extends Component {
                 //pageskip variables
                 loggedUser.loading = false;
                 loggedUser.isLoggedIn = true;
-                window.location = '/login/home';
+                //window.location = '/login/home';
                 //authenticate failed
             } else if (res.data.success === false) {
                 loggedUser.loading = false;
@@ -170,6 +170,7 @@ export default class loginViewComponent extends Component {
                                     disabled={this.state.buttonDisabled}
                                     onClick={() => this.doLogin()}
                                 ></ELBIS_loginSubmitButton>
+                                <Link to='/resetpassword'>Passwort vergessen</Link>
                             </div>
                         </FormGroup>
                     </form>

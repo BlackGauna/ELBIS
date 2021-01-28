@@ -15,8 +15,8 @@ class SessionDataService {
     }
 
     //check session
-    check(token, email){
-        return http.get(`/session/check/${token}/${email}`);
+    check(token, email, role){
+        return http.get(`/session/check/${token}/${email}/${role}`);
     }
 
     // get all sessions

@@ -11,9 +11,9 @@ import manageAccount from "./components/manageAccount.component";
 import userView from "./components/user/user_myArticles.Component";
 import createUser from "./components/moderation/moderation_createUser.component";
 import loginView from "./components/loginView.component";
+import resetPassword from "./components/resetPassword.component";
 import CreateArticle from "./components/user/CreateArticle.component";
 import createTopic from "./components/administration/administration_createTopic.component";
-import manageRoles from "./components/administration/administration_userList.component";
 import allArticlesList from "./components/moderation/moderation_articleList.component";
 import manageSubmissions from "./components/moderation/moderation_submissionList.component";
 import editUser from "./components/moderation/moderation_editUser.component";
@@ -30,7 +30,8 @@ import administration_topicList from "./components/administration/administration
 *       sessionStorage.getItem("sessionEmail"); //to get the logged Email
 *       sessionStorage.getItem("sessionRole");  //to get the logged Role
 ************************************************************************************
-*   The App will check if the session is still alive on Backend-Side on every Reload/Remount of the page (no matter if manual or by the app itself)
+*   The App will check if the session is still alive on Backend-Side on every Reload/Remount of the page (no matter if manual or by the app itself).
+*   Checks token, email AND role of a session - if one is invalid, the user gets logged out (not manipulatable by backend check)
  */
 class App extends React.Component {
     render() {
@@ -66,7 +67,6 @@ class App extends React.Component {
                                 <Route exact path="/login/mod/editUser/:id" component={editUser}/>
                                 <Route exact path="/login/admin/manageTopics" component={administration_topicList}/>
                                 <Route exact path="/login/admin/createTopic" component={createTopic}/>
-                                <Route exact path="/login/admin/manageRoles" component={manageRoles}/>
                             </Router>
                         </div>
                     )
@@ -112,6 +112,7 @@ class App extends React.Component {
                     <div className="app">
                         <Router>
                             <Route path="/" component={loginView}/>
+                            <Route exact path="/resetPassword" component={resetPassword}/>
                         </Router>
                     </div>
                 )
@@ -125,7 +126,7 @@ class App extends React.Component {
         console.log("FRONTEND SESSION STATE (t/ID/e/r): " + sessionStorage.getItem("sessionToken") + " / " + sessionStorage.getItem("sessionUserID") + " / " + sessionStorage.getItem("sessionEmail") + " / " + sessionStorage.getItem("sessionRole"));
         if (loggedUser.loading) {
             //check if session exists
-            SessionDataService.check(sessionStorage.getItem("sessionToken"), sessionStorage.getItem("sessionEmail")).then(res => {
+            SessionDataService.check(sessionStorage.getItem("sessionToken"), sessionStorage.getItem("sessionEmail"), sessionStorage.getItem("sessionRole")).then(res => {
                 console.log(res);
                 //session existing
                 if (res.data.existing) {
