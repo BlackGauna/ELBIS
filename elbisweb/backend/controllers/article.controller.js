@@ -58,7 +58,9 @@ exports.findAll = (req, res) => {
             });
         });
 };
+
 // Retrieve all Articles with by email
+// TODO on wrong email the DB just answers [] instead of an Error
 exports.findByEmail = (req, res) => {
     const email = req.params.email;
 
@@ -68,10 +70,9 @@ exports.findByEmail = (req, res) => {
             res.send(data)
         })
         .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occured while retrieving Articles by email."
-            });
+                res
+                .status(500)
+                    .send({message: "Error retrieving Article with email " + email});
         });
 };
 
@@ -105,6 +106,7 @@ exports.findOne = (req, res) => {
 };
 
 // Update a Article by the id
+//TODO Cannot read property 'substring' of undefined error.
 exports.update = (req, res) => {
     if (!req.body){
         return res.status(400).send({
@@ -175,7 +177,6 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    //TODO: also delete html file of article
     Article.findByIdAndRemove(id, {useFindAndModify: false})
         .then(data => {
             if (!data) {
@@ -183,6 +184,13 @@ exports.delete = (req, res) => {
                     message: "Cannot delete Article with id " + id + ". Maybe Article was not found"
                 });
             } else {
+                fs.unlink(data.path, (err) => {
+                    if (err) {
+                        console.log("failed to delete local file of the article:"+err);
+                    } else {
+                        console.log('successfully deleted local file of the article');                                
+                    }
+            });
                 res.send({
                     message: "Article was deleted successfully!"
                 });

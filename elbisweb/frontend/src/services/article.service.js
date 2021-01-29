@@ -11,7 +11,7 @@ class ArticleDataService {
 
     // get all articles by a specific email
     findByEmail(email) {
-        return http.get(`/article/${email}`);
+        return http.get(`/article/fetch/${email}`);
     }
 
         // get article by id

@@ -9,7 +9,7 @@ import ArticleDataService from "../../services/article.service";
 
 // TODO: creationDate, lastEdit (access via mongoDB?) and expireDate
 // TODO: edit Article
-
+//TODO managesubmission instead of 'delete' an article
 const Article = props => (
     <tr>
         <td>{props.article.title}</td>
@@ -19,7 +19,7 @@ const Article = props => (
         <td>{props.article.publisher}</td>
         <td>{props.article.publisherComment}</td>
         <td align="right">
-            <Link to={"edit/" + props.article._id}>bearbeiten</Link> | <a href='#' onClick={() => {
+            <a href='#' onClick={() => {
             props.deleteArticle(props.article._id)
         }}>löschen</a>
         </td>
@@ -76,9 +76,7 @@ export default class moderation_submissionList extends Component {
                         <th>Autor</th>
                         <th>Veröffentlicher</th>
                         <th>Kommentar</th>
-                        <th className={"text-right"}><Link to="/login/edit">
-                            <button className="btn btn-primary btn-sm" onClick="reload">+</button>
-                        </Link></th>
+                        <th className={"text-right"}></th>
                     </tr>
                     </thead>
                     <tbody>

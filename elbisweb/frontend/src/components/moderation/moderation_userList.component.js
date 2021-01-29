@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {BrowserRouter as Router, Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import UserDataService from "../../services/user.service";
+import {Table} from "react-bootstrap";
 
 //TODO: edit User (initial values of the form should be loaded from db)
 //TODO: make sure moderators can just edit and create users
@@ -23,12 +24,6 @@ const User = props => (
         </td>
     </tr>
 )
-
-
-function refreshPage() {
-    window.location.reload();
-}
-
 
 export default class moderation_userList extends Component {
     // Constructor
@@ -71,10 +66,10 @@ export default class moderation_userList extends Component {
         return (
             <div className="container">
                 <h3>Nutzerverwaltung</h3> Level: {sessionStorage.getItem("sessionRole")}
-                <table className="userTable table">
+                <table className="userTable table" >
                     <thead className="thead-light">
                     <tr>
-                        <th>E-Mail</th>
+                        <th data-mdb-sort="true">E-Mail</th>
                         <th>Name</th>
                         <th>Geschlecht</th>
                         <th>Rolle</th>
