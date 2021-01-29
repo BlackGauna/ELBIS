@@ -20,6 +20,7 @@ import editUser from "./components/moderation/moderation_editUser.component";
 import SessionDataService from "./services/session.service";
 import moderation_userList from "./components/moderation/moderation_userList.component";
 import administration_topicList from "./components/administration/administration_topicList.component";
+import articleView from "./components/ArticleView.component";
 
 //##########App start##########
 /*
@@ -57,6 +58,7 @@ class App extends React.Component {
                                 <Route path="/" component={NavBar}/>
                                 <br/>
                                 <Route exact path="/login/home" component={ELBISweb}/>
+                                <Route exact path={"/login/article/:id"} component={articleView}/>
                                 <Route exact path="/login/manageAccount" component={manageAccount}/>
                                 <Route exact path="/login/edit" component={CreateArticle}/>
                                 <Route exact path="/login/edit/:id" component={CreateArticle}/>

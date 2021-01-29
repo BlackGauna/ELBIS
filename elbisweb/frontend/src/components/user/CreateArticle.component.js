@@ -7,12 +7,10 @@ import parse from 'html-react-parser';
 import {Button, Container, Form} from "react-bootstrap";
 
 
-//TODO: delete Images uploaded and unused(?)
 //TODO: Resuse uploaded images (?)
 
 // TODO: set topic, author (etc.) from current user
 
-// TODO: if topic, title changes, rename save html file
 
 export default class CreateArticle extends Component {
     constructor(props) {
@@ -62,6 +60,7 @@ export default class CreateArticle extends Component {
                     }));
                     id=res.data._id;
                     console.log("Saved article successfully!");
+                    console.log(res.data);
 
                     // reload site with id as param
                     this.props.history.push("/login/edit/"+id);
@@ -76,6 +75,7 @@ export default class CreateArticle extends Component {
             // else load the article with id in params
             axios.get("/article/"+paramId)
                 .then(res =>{
+                    console.log(res.data);
                     this.setState({
                         title: res.data.article.title,
                         path: res.data.article.path,
@@ -154,6 +154,7 @@ export default class CreateArticle extends Component {
             html: content,
         }));
 
+        console.log("current id: "+this.state.id);
 
         // update article in db
         if (this.state.title!=="")
@@ -245,8 +246,9 @@ export default class CreateArticle extends Component {
                     init={{
                         //skin: "oxide-dark",
                         //content_css:"dark",
+                        content_css: `${process.env.PUBLIC_URL}/article.css`,
                         plugins: [
-                            "advlist autoresize autolink lists link image charmap print preview anchor",
+                            "advlist autoresize autolink lists link image charmap importcss print preview anchor",
                             "searchreplace visualblocks code fullscreen",
                             "insertdatetime media table paste code help wordcount",
                         ],
@@ -329,18 +331,38 @@ export default class CreateArticle extends Component {
 
 // Live preview of article as a React Portal
 class PreviewWindow extends Component{
+
+
     constructor(props) {
         super(props);
 
+
+
         this.externalWindow=null;
+
+        // root element
         this.containerEl=document.createElement('div');
+        this.containerEl.className="container";
     }
 
     componentDidMount() {
-        this.externalWindow=window.open('','','width=600,height=720,left=200,top=200');
+        this.externalWindow=window.open('','Artikel-Preview','width=600,height=720,left=500,top=400');
+
+        let style=document.createElement("style");
+        this.externalWindow?.document.head.appendChild(style);
+        var Vcss= '\n' +
+            '.container{\n' +
+            '    background-color: aqua;\n' +
+            '}\n' +
+            '\n' +
+            'p{\n' +
+            '    background-color: aquamarine;\n' +
+            '}';
+        style.appendChild(document.createTextNode(Vcss));
+
+
 
         this.externalWindow.document.body.appendChild(this.containerEl);
-
     }
 
     componentWillUnmount() {
@@ -353,32 +375,3 @@ class PreviewWindow extends Component{
 
 
 }
-
-// image upload form for testing
-/*<Form
-onSubmit={this.imageSubmit}
-encType={"multipart/form-data"}
-className={"mb-3 ml-2"}
->
-<Form.Group>
-    <Form.File
-        id={"customFile"}
-        type={"file"}
-        accept={".png, .jpg, .jpeg"}
-        name={"image"}
-        onChange={this.onChangeImage}
-        label={"Bild hochladen..."}
-        custom
-        className={"w-50"}
-    />
-</Form.Group>
-<Form.Group>
-    <Button variant={"primary"} type={"submit"} className={"mt-2"}>
-        Hochladen
-    </Button>
-</Form.Group>
-
-<script>
-    $(document).ready(function() {bsCustomFileInput.init()});
-</script>
-</Form>*/
