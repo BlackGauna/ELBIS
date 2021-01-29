@@ -11,17 +11,13 @@ TODO Moderators and Admins can use All topics
 -------DB/Backend-------
 
 Article
-(solved) Sending new articles does not work
-(solved) Load by id does not work
-TODO maybe - automatically delete empty articles?
-TODO change the Authors of all articles to a valid Email
-TODO add the functions like update article list that are going to be used on start to server.js
+TODO The Html files created should have the name as topic_title_id
+TODO Load by ID only works half because of the html files
+TODO add expire date to for articles and then automatically archive the expired articles.
 TODO Insert examples and tests to collections
-
+TODO maybe - automatically delete empty articles?
 User
 TODO Birthdate in correct format
-
-Everything else works fine
 
 -------Main/Frontend-------
 

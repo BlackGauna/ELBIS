@@ -1,11 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-
+const Article = require("./models/article.model");
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+const now = new Date();
 
 app.use(cors());
 app.use(express.json());
@@ -14,6 +15,8 @@ const uri = "mongodb+srv://admin:admin@elbis8.ilafq.mongodb.net/ELBIS?retryWrite
 mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
 mongoose.connection.once('open', () => {
     console.log("MongoDB connected");
+    //TODO Make sure updatemany works
+    Article.updateMany({"expireDate": {$lte: now}},{"$set":{"status": "Archived"}});
 })
 
 const userRouter = require('./routes/user.route');
@@ -24,6 +27,7 @@ const genderRouter = require('./routes/gender.route');
 const statusRouter = require('./routes/status.route');
 const images = require("./routes/images.route");
 const sessionRouter = require('./routes/session.route');
+
 
 app.use('/user', userRouter);
 app.use('/article', articleRouter);

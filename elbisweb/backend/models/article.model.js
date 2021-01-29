@@ -6,11 +6,8 @@ const articleSchema = new Schema({
     //TODO Limits to variables (Trim,minlength etc)
     title: {type: String, required:  true},
     path: {type: String, required:  true},
-    //TODO creation,expire and last edit date?
-    //creationDate: {type: Date, required:  false},
-    // expireDate: {type: Date, required:  false},
-    //lastEdit: {type: Date, required:  false},
-    // status: {type: Number, required:  true},
+    //TODO should expire date be required ?
+    expireDate: {type: Date, required:  false},
     status: {type: String, required: true},
     //TODO make sure the topicSchema import works
     // topic: {type: mongoose.Schema.Types.ObjectId, ref: 'Topic', required:  true},
