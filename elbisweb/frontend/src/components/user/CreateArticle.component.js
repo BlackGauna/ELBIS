@@ -329,6 +329,7 @@ export default class CreateArticle extends Component {
     }
 }
 
+
 // Live preview of article as a React Portal
 class PreviewWindow extends Component{
 

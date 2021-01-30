@@ -6,36 +6,35 @@
 TODO MAYBE deploy the project to a free hosting server at the end ?
 TODO MAYBE learn how to export it as an app to phones because its really cool
 
-TODO Moderators and Admins can use All topics
-
 -------DB/Backend-------
 
 TODO check on starting routine if a file to corrosponding articles in the DB exists - if not delete the DB entry
-
+TODO create 'userTopic' in DB where teh users email and a topic gets connected
+    - (frontend) after that update the 'createUser' component to write the userTopics in DB as well
+    - Moderators and Admins can use All topics (but they can still hav entries in userTopics - for the case they get degraded to a user)
 Article
 TODO make an article updateable
 TODO The Html files created should have the name as topic_title_id
 TODO Load by ID only works half because of the html files
 TODO add expire date to for articles and then automatically archive the expired articles.
 TODO Insert examples and tests to collections
-TODO maybe - automatically delete empty articles?
+TODO maybe - automatically delete empty articles? -> delete Files and DB entry
 User
 TODO Birthdate in correct format
+TODO split name(forename,surname) and the address (street, homenumber, zipCode, city) to seperate fileds in DB (the way you enter them in the createUser modal)
+    - (frontend) after that show the seperated fields 'as one' in the corrosponding tables (as they were one)
 
 -------Main/Frontend-------
 
 Tables
 TODO Make tables sortable
-TODO Show creationDate, lastEdit (access via mongoDB?) and expireDate (?)
-TODO 'edit' links of artiocles do not lead to the correct path yet (should be a full path or redirect instead of a relative path)
-    - User- MyArticles
-    - Moderator - manageArticles
+TODO Show creationDate, lastEdit (access via mongoDB?) and expireDate in each table (?)
 TODO 'edit' links of topics do not lead to the correct path yet (should be a full path or redirect instead of a relative path)
 TODO 'manageUsers' implement accesslevels
-    - moderators should just see/edit/delete users and admins should see all accounts
     - an admin can add and delete an allowed topic of users
+
 TODO Buttons should show a modal before performing an action
-    - Delete: Check if ur sure to ddelete
+    - Delete: Check if ur sure to delete
     - Submit: Check if ur sure to submit
 
 SidePages

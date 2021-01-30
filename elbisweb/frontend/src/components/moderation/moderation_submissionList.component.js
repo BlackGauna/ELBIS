@@ -4,14 +4,11 @@ import ArticleDataService from "../../services/article.service";
 import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import MessageIcon from '@material-ui/icons/Message';
 import IconButton from "@material-ui/core/IconButton";
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
-//TODO im a copy yet -> make me show articles that are in 'submitted' state
+
 //TODO create submission window to manage a submission with a comment
 
-
-// TODO: creationDate, lastEdit (access via mongoDB?) and expireDate
-// TODO: edit Article
-//TODO managesubmission instead of 'delete' an article
 const Article = props => (
     <tr>
         <td>{props.article.title}</td>
@@ -21,10 +18,15 @@ const Article = props => (
         <td>{props.article.publisher}</td>
         <td>{props.article.publisherComment}</td>
         <td align="right">
+            <IconButton aria-label="showPreview" href='#' onClick={() => {
+                props.showArticlePreview(props.article.content)
+            }}>
+                <VisibilityIcon/>
+            </IconButton>
             <IconButton aria-label="delete" href='#' onClick={() => {
                 props.handleSubmission(props.article._id)
             }}>
-            <MessageIcon/>
+                <MessageIcon/>
             </IconButton>
         </td>
     </tr>
@@ -34,7 +36,9 @@ export default class moderation_submissionList extends Component {
     // Constructor
     constructor(props) {
         super(props);
-        this.state = {article: []};
+        this.state = {
+            article: [],
+        };
     }
 
     // Mount method
@@ -48,11 +52,17 @@ export default class moderation_submissionList extends Component {
             })
     }
 
-    // delete Article method
+    // let a mod write a comment here and decide about the release of the article
     handleSubmission = (id) => {
-            console.log("implement me")
-            //TODO update the status of an article with the given id to 'Autorisiert' oder 'Abgelehnt'
-        }
+        console.log("implement me")
+        //TODO update the status of an article with the given id to 'Autorisiert' oder 'Abgelehnt'
+    }
+
+    //show an article preview here
+    showArticlePreview = (content) => {
+        console.log("implement me")
+        //TODO show the preview of an article here
+    }
 
     // get article list
     articleList() {
@@ -60,6 +70,7 @@ export default class moderation_submissionList extends Component {
             return <Article
                 article={currentArticle}
                 handleSubmission={this.handleSubmission}
+                showArticlePreview={this.showArticlePreview}
                 key={currentArticle._id}/>;
         })
     }
