@@ -114,6 +114,12 @@ class App extends React.Component {
                         </Router>
                     </div>);
                 } else {
+                    return (
+                        <div className="app">
+                        <Router>
+                            <Route path="/" component={NavBar}/>
+                        </Router></div>
+                    )
                 }
             } else if (!loggedUser.isLoggedIn) {
                 return (

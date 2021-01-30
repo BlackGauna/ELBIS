@@ -9,7 +9,6 @@ import FormFileLabel from "react-bootstrap/FormFileLabel";
 
 export default class NavBar extends Component {
     render() {
-
         if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
             //TODO resolve redundancies
             /*************
@@ -116,6 +115,10 @@ export default class NavBar extends Component {
 
             );
         } else {
+            return (<div>
+                Please contact an admin to to assign a valid role to your account.
+                <Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
+            </div>)
         }
     }
 
