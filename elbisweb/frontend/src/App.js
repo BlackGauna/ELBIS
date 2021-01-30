@@ -1,6 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
 import {observer} from 'mobx-react';
+import {ROLE} from "./session/userRoles.ice";
 import "bootstrap/dist/css/bootstrap.min.css";
 import loggedUser from './session/loggedUser';
 import './ELBISWeb.css';
@@ -52,7 +53,7 @@ class App extends React.Component {
         } else {
             //TODO resolve redundancies
             if (loggedUser.isLoggedIn) {
-                if (sessionStorage.getItem("sessionRole") === "Administrator") {
+                if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
                     /*************
                      *   Admin Area
                      * *************/
@@ -77,7 +78,7 @@ class App extends React.Component {
                             </Router>
                         </div>
                     )
-                } else if (sessionStorage.getItem("sessionRole") === "Moderator") {
+                } else if (sessionStorage.getItem("sessionRole") === ROLE.MODERATOR) {
                     /*************
                      *   Mod Area
                      * *************/
@@ -97,7 +98,7 @@ class App extends React.Component {
                             <Route exact path="/login/mod/editUser/:id" component={editUser}/>
                         </Router>
                     </div>);
-                } else if (sessionStorage.getItem("sessionRole") === "User") {
+                } else if (sessionStorage.getItem("sessionRole") === ROLE.USER) {
                     /*************
                      *   User Area
                      * *************/

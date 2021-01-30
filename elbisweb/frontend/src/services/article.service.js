@@ -18,7 +18,7 @@ class ArticleDataService {
         return http.get(`/article/fetchByStatus/${status}`);
     }
 
-        // get article by id
+    // get article by id
     get(id) {
         return http.get(`/article/${id}`);
     }

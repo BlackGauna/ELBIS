@@ -10,6 +10,8 @@ TODO Moderators and Admins can use All topics
 
 -------DB/Backend-------
 
+TODO check on starting routine if a file to corrosponding articles in the DB exists - if not delete the DB entry
+
 Article
 TODO The Html files created should have the name as topic_title_id
 TODO Load by ID only works half because of the html files

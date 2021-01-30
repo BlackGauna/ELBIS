@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import {Nav, Navbar, Button, NavDropdown, FormLabel} from "react-bootstrap";
 import loggedUser from "../session/loggedUser";
+import {ROLE} from "../session/userRoles.ice";
 import SessionDataService from "../services/session.service";
 import FormCheckLabel from "react-bootstrap/FormCheckLabel";
 import FormFileLabel from "react-bootstrap/FormFileLabel";
@@ -9,7 +10,7 @@ import FormFileLabel from "react-bootstrap/FormFileLabel";
 export default class NavBar extends Component {
     render() {
 
-        if (sessionStorage.getItem("sessionRole") === "Administrator") {
+        if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
             //TODO resolve redundancies
             /*************
              *   Admin Area
@@ -49,7 +50,7 @@ export default class NavBar extends Component {
                 </Navbar>
 
             );
-        } else if (sessionStorage.getItem("sessionRole") === "Moderator") {
+        } else if (sessionStorage.getItem("sessionRole") === ROLE.MODERATOR) {
             /*************
              *   Mod Area
              * *************/
@@ -84,7 +85,7 @@ export default class NavBar extends Component {
                 </Navbar>
 
             );
-        } else if (sessionStorage.getItem("sessionRole") === "User") {
+        } else if (sessionStorage.getItem("sessionRole") === ROLE.USER) {
             /*************
              *   User Area
              * *************/

@@ -65,7 +65,7 @@ exports.findAll = (req, res) => {
 exports.findByStatus = (req, res) => {
     const status = req.params.status;
 
-    console.log(status);
+    console.log("DB searching for Entries with Status: "+status);
     Article.find({status: status})
         .then(data => {
             if(!data){
@@ -87,7 +87,6 @@ exports.findByStatus = (req, res) => {
 exports.findByEmail = (req, res) => {
     const email = req.params.email;
 
-    console.log(email);
     Article.find({author: email})
         .then(data => {
             if(!data){

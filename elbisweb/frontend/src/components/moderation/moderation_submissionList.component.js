@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import ArticleDataService from "../../services/article.service";
-import {ARTICLESTATUS} from "../../session/articleStatus";
+import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 
 //TODO im a copy yet -> make me show articles that are in 'submitted' state
 //TODO create submission window to manage a submission with a comment

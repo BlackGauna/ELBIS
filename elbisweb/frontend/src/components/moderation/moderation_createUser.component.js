@@ -4,7 +4,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import UserDataService from "../../services/user.service";
 import RoleDataService from "../../services/role.service";
+import {ROLE} from "../../session/userRoles.ice";
 import GenderDataService from "../../services/gender.service";
+import {GENDER} from "../../session/gender.ice";
 import Select from 'react-select';
 import {Redirect} from "react-router-dom";
 import {Button, FormLabel} from "react-bootstrap";
@@ -60,24 +62,35 @@ export default class moderation_createUser extends Component {
 
     // Get gender options for dropdown
     async getGenderOptions() {
-        const res = await GenderDataService.getAll()
-
+        /*const res = await GenderDataService.getAll()
         let options = res.data.map(d => ({
             "label": d.name
         }))
-
+        this.setState({gender: options})*/
+        const data = GENDER.getAll();
+        const options = data.map(d => ({
+            "label": d.name
+        }))
         this.setState({gender: options})
     }
 
     // Get role options for dropdown
     async getRoleOptions() {
-        const res = await RoleDataService.getAll()
+        /*const res = await RoleDataService.getAll()
         const data = res.data
-
         const options = data.map(d => ({
             "label": d.name
         }))
-
+        this.setState({role: options})*/
+        let data
+        if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
+            data = ROLE.getAll()
+        } else {
+            data = ROLE.getModeratorOptions()
+        }
+        const options = data.map(d => ({
+            "label": d.name
+        }))
         this.setState({role: options})
     }
 
@@ -136,8 +149,9 @@ export default class moderation_createUser extends Component {
                                     showMonthDropdown
                                     showYearDropdown
                                     dropdownMode="select"
-                                    customInput={<Button variant="outline-secondary" size="lg" block>{this.state.dateOfBirth.toLocaleDateString()}</Button>}
-                                /> </div>
+                                    customInput={<Button variant="outline-secondary" size="lg"
+                                                         block>{this.state.dateOfBirth.toLocaleDateString()}</Button>}
+                                /></div>
                         </div>
                         <div className="form-row">
                             <div className="form-group col-md-6">
