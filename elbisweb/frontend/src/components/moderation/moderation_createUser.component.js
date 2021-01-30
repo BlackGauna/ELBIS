@@ -7,34 +7,18 @@ import {Redirect} from "react-router-dom";
 import {Button, FormLabel} from "react-bootstrap";
 import TopicDataService from "../../services/topic.service";
 import UserDataService from "../../services/user.service";
-import GenderDataService from "../../services/gender.service";
-import RoleDataService from "../../services/role.service";
 import {ROLE} from "../../session/userRoles.ice";
 import {GENDER} from "../../session/gender.ice";
 
-// TODO: TopicOptions is buggy yet (just one is chooseable?)
+// TODO: TopicOptions is buggy yet
+//  - just one is chooseable?
+//  - crashes on delete?
 
-//##########Component imports##########
 
 export default class moderation_createUser extends Component {
-    //##########constructor##########
+
     constructor(props) {
         super(props);
-        //prepare all fields and make sure the functions are bound to this object
-        this.onChange_email = this.onChange_email.bind(this);
-        this.onChange_password = this.onChange_password.bind(this);
-        this.onChange_passwordCheck = this.onChange_passwordCheck.bind(this);
-        this.onChange_foreName = this.onChange_foreName.bind(this);
-        this.onChange_surName = this.onChange_surName.bind(this);
-        this.onChange_street = this.onChange_street.bind(this);
-        this.onChange_houseNumber = this.onChange_houseNumber.bind(this);
-        this.onChange_plz = this.onChange_plz.bind(this);
-        this.onChange_place = this.onChange_place.bind(this);
-        this.onChange_gender = this.onChange_gender.bind(this);
-        this.onChange_role = this.onChange_role.bind(this);
-        this.onChange_allowedTopics = this.onChange_allowedTopics.bind(this);
-
-        this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
             email: '',
@@ -52,7 +36,7 @@ export default class moderation_createUser extends Component {
             choosenRole: '',
             dateOfBirth: new Date(),
             allowedTopics: [],
-            choosenTopic: '',
+            choosenTopics: [],
 
             stateText: '',
             redirect: false,
@@ -66,11 +50,6 @@ export default class moderation_createUser extends Component {
 
     // Get gender options for dropdown
     async getGenderOptions() {
-        /*const res = await GenderDataService.getAll()
-        let options = res.data.map(d => ({
-            "label": d.name
-        }))
-        this.setState({gender: options})*/
         const data = GENDER.getAll();
         const options = data.map(d => ({
             "label": d.name
@@ -80,12 +59,6 @@ export default class moderation_createUser extends Component {
 
     // Get role options for dropdown
     async getRoleOptions() {
-        /*const res = await RoleDataService.getAll()
-        const data = res.data
-        const options = data.map(d => ({
-            "label": d.name
-        }))
-        this.setState({role: options})*/
         let data
         if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
             data = ROLE.getAll()
@@ -255,7 +228,9 @@ export default class moderation_createUser extends Component {
                                 isMulti
                                 placeholder="Bereiche auswählen..."
                                 options={this.state.allowedTopics}
-                                onChange={this.onChange_allowedTopics}/>
+                                onChange={this.onChange_allowedTopics}
+                            />
+
                         </div>
                         <div className="form-group">
                             <input type="submit" value="Nutzer erstellen" className="btn btn-primary"/>
@@ -268,7 +243,7 @@ export default class moderation_createUser extends Component {
     }
 
     //##########submit method##########
-    onSubmit(e) {
+    onSubmit= (e)=> {
         //don't let any other submit run
         e.preventDefault();
         //create the object
@@ -283,7 +258,7 @@ export default class moderation_createUser extends Component {
                         gender: this.state.choosenGender,
                         role: this.state.choosenRole,
                         dateOfBirth: this.state.dateOfBirth,
-                        allowedTopics: this.state.choosenTopic
+                        allowedTopics: this.state.choosenTopics
                     }
 
                     UserDataService.create(user)
@@ -327,67 +302,67 @@ export default class moderation_createUser extends Component {
     }
 
     //##########change methods##########
-    onChange_email(e) {
+    onChange_email=(e)=> {
         this.setState({
             email: e.target.value //target equals a textBox target, value its value; Changes just the given state value
         })
     }
 
-    onChange_password(e) {
+    onChange_password=(e)=> {
         this.setState({
             password: e.target.value
         })
     }
 
-    onChange_passwordCheck(e) {
+    onChange_passwordCheck=(e)=> {
         this.setState({
             passwordCheck: e.target.value
         })
     }
 
-    onChange_foreName(e) {
+    onChange_foreName=(e)=> {
         this.setState({
             foreName: e.target.value
         })
     }
 
-    onChange_surName(e) {
+    onChange_surName=(e)=> {
         this.setState({
             surName: e.target.value
         })
     }
 
-    onChange_street(e) {
+    onChange_street=(e)=> {
         this.setState({
             street: e.target.value
         })
     }
 
-    onChange_houseNumber(e) {
+    onChange_houseNumber=(e)=> {
         this.setState({
             houseNumber: e.target.value
         })
     }
 
-    onChange_plz(e) {
+    onChange_plz=(e)=> {
         this.setState({
             plz: e.target.value
         })
     }
 
-    onChange_place(e) {
+    onChange_place=(e)=> {
         this.setState({
             place: e.target.value
         })
     }
 
-    onChange_gender(e) {
+    onChange_gender=(e)=> {
         this.setState({
             choosenGender: e.label
         })
     }
 
-    onChange_role(e) {
+    onChange_role= (e) =>{
         this.setState({
             choosenRole: e.label
         })
@@ -399,9 +374,9 @@ export default class moderation_createUser extends Component {
         })
     }
 
-    onChange_allowedTopics(e) {
+    onChange_allowedTopics = (e) => {
         this.setState({
-            choosenTopic: e.label
+            choosenTopics: this.state.choosenTopics.push(e.label)
         })
     }
 

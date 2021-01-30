@@ -1,28 +1,16 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import UserDataService from "../../services/user.service";
-import RoleDataService from "../../services/role.service";
-import GenderDataService from "../../services/gender.service";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Select from 'react-select';
+import {GENDER} from "../../session/gender.ice";
+import {ROLE} from "../../session/userRoles.ice";
+import {Redirect} from "react-router-dom";
+import {LabelImportant} from "@material-ui/icons";
 
 export default class moderation_editUser extends Component {
-    constructor(props){
-        super(props);
-        this.onChange_email = this.onChange_email.bind(this);
-        this.onChange_password = this.onChange_password.bind(this);
-        this.onChange_passwordCheck = this.onChange_passwordCheck.bind(this);
-        this.onChange_foreName = this.onChange_foreName.bind(this);
-        this.onChange_surName = this.onChange_surName.bind(this);
-        this.onChange_street = this.onChange_street.bind(this);
-        this.onChange_houseNumber = this.onChange_houseNumber.bind(this);
-        this.onChange_plz = this.onChange_plz.bind(this);
-        this.onChange_place = this.onChange_place.bind(this);
-        this.onChange_gender = this.onChange_gender.bind(this);
-        this.onChange_role = this.onChange_role.bind(this);
-        // this.onChange_bday = this.onChange_bday.bind(this);
 
-        this.getUser = this.getUser.bind(this);
-        this.updateUser = this.updateUser.bind(this);
+    constructor(props) {
+        super(props);
 
         this.state = {
             currentUser: {
@@ -36,12 +24,22 @@ export default class moderation_editUser extends Component {
                 houseNumber: '',
                 plz: '',
                 place: '',
-                gender: [],
-                role: [],
-                // bDay: new Date(),
-            }
+                choosenGender: '',
+                choosenRole: '',
+                dateOfBirth: new Date(),
+                allowedTopics: [],
+                choosenTopics: [],
+            },
+            role: [],
+            gender: [],
+            stateText: '',
+            redirect: false,
 
         };
+    }
+
+    redirect = () => {
+        this.setState({redirect: true})
     }
 
     componentDidMount() {
@@ -50,14 +48,51 @@ export default class moderation_editUser extends Component {
         this.getRoleOptions()
     }
 
-    getUser(id){
+    // Get gender options for dropdown
+    async getGenderOptions() {
+        const {currentUser} = this.state;
+        const data = GENDER.getAll();
+        const options = data.map(d => ({
+            "label": d.name
+        }))
+        this.setState({gender: options})
+    }
+
+    // Get role options for dropdown
+    async getRoleOptions() {
+        let data
+        const {currentUser} = this.state;
+        if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
+            data = ROLE.getAll()
+        } else {
+            data = ROLE.getModeratorOptions()
+        }
+        const options = data.map(d => ({
+            "label": d.name
+        }))
+        this.setState({role: options})
+    }
+
+    getUser = (id) => {
         UserDataService.get(id)
             .then(response => {
                 this.setState({
                     currentUser: {
                         email: response.data.email,
-                        password: response.data.password,
-                        passwordCheck: response.data.password,
+                        //TODO the hash will be loaded - dont change the password / !only write a new PW to DB if fiel changed
+                        //password: response.data.password,
+                        //passwordCheck: response.data.password,
+                        //TODO add splitted DB fields
+                        foreName: response.data.name,
+                        surName: response.data.name,
+                        street: response.data.address,
+                        houseNumber: response.data.address,
+                        plz: response.data.address,
+                        place: response.data.address,
+                        choosenGender: response.data.gender,
+                        choosenRole: response.data.role,
+                        //TODO convert to lacal date?
+                        //dateOfBirth:  response.data.dateOfBirth,
                     }
                 });
                 console.log(response.data);
@@ -67,21 +102,8 @@ export default class moderation_editUser extends Component {
             });
     }
 
-    // Get gender options for dropdown
-    async getGenderOptions() {
-        const res = await GenderDataService.getAll()
-        const data = res.data
-
-
-        const options = data.map(d => ({
-            "label": d.name
-        }))
-
-        this.setState({gender: options})
-    }
-
     //##########update in DB method########## //TODO not working yet
-    updateUser() {
+    updateUser = () => {
         UserDataService.update(
             this.state.currentUser.id,
             this.state.currentUser
@@ -97,19 +119,108 @@ export default class moderation_editUser extends Component {
             });
     }
 
-    // Get role options for dropdown
-    async getRoleOptions() {
-        const res = await RoleDataService.getAll()
-        const data = res.data
+    //##########Render##########
+    //TODO maybe open an edit modal with those links?
+    //TODO better intuitive design
+    //TODO buttons for special tools
+    render() {
+        if (this.state.redirect) {
+            return <Redirect to="/login/mod/manageUsers"/>
+        } else {
+            const {currentUser} = this.state;
+            return (
+                <div>
+                    {currentUser ? (
+                        <div className="container">
+                            <h3>Nutzer bearbeiten</h3>
+                            <hr/>
+                            <div className="form-row">
+                                <div className="form-group col-md-6">
+                                    <label>Vorname</label>
+                                    <h5>{currentUser.foreName}</h5> <a href=''>bearbeiten</a>
 
-        const options = data.map(d => ({
-            "label": d.name
-        }))
+                                </div>
+                                <div className="form-group col-md-6">
+                                    <label>Nachname</label>
+                                    <h5>{currentUser.surName}</h5> <a href=''>bearbeiten</a>
+                                </div>
+                            </div>
+                            <div className="form-row">
+                            <div className="form-group col-md-6">
+                                <label>E-Mail</label>
+                                <h5>{currentUser.email}</h5> <a href=''>bearbeiten</a>
+                            </div>
+                            </div>
+                            <br/>
+                            <div className="form-row">
+                            <div className="form-group col-md-3">
+                                <label>Passwort bearbeiten: </label> <br/>
+                                <button
+                                    className="btn btn-secondary"
+                                >
+                                    Neues Passwort setzen
+                                </button>
+                            </div>
 
-        this.setState({role: options})
+                            <div className="form-group col-md-5">
+                                <h6>{currentUser.choosenRole}</h6>
+                                <button
+                                    className="btn btn-secondary"
+                                >
+                                    Ändern
+                                </button>
+                            </div>
+                            </div>
+                            <hr/>
+                            <div className="form-row">
+                                <div className="form-group col-md-3">
+                                    <label>Straße</label>
+                                    <h6>{currentUser.street}</h6> <a href=''>bearbeiten</a>
+                                </div>
+                                <div className="form-group col-md-3">
+                                    <label>Hausnummer</label>
+                                    <h6>{currentUser.houseNumber}</h6> <a href=''>bearbeiten</a>
+                                </div>
+                            <div className="form-group col-md-3">
+                                <label>PLZ</label>
+                                <h6>{currentUser.plz}</h6> <a href=''>bearbeiten</a>
+                            </div>
+                            <div className="form-group col-md-3">
+                                <label>Ort</label>
+                                <h6>{currentUser.place}</h6> <a href=''>bearbeiten</a>
+                            </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-md-3">
+                                    <label>Geschlecht</label>
+                                    <h6>{currentUser.choosenGender}</h6>
+                                    <button
+                                        className="btn btn-secondary"
+                                    >
+                                        Ändern
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button
+                                className="btn btn-primary"
+                                onClick={this.redirect}
+                            >
+                                Zurück
+                            </button>
+                        </div>
+                    ) : (
+                        <div>
+                            <p>Test...</p>
+                        </div>
+                    )}
+                </div>
+            );
+        }
     }
 
-    //##########Render##########
+    //##########OLD Render##########
+    /*
     render() {
         const {currentUser} = this.state;
         return (
@@ -215,6 +326,7 @@ export default class moderation_editUser extends Component {
                                         type="geschlecht"
                                         placeholder="Geschlecht"
                                         options={this.state.gender}
+                                        value={currentUser.choosenGender}
                                         onChange={this.onChange_gender}/>
                                 </div>
                                 <div className="form-group col-md-6">
@@ -223,6 +335,7 @@ export default class moderation_editUser extends Component {
                                         type="role"
                                         placeholder="Rolle"
                                         options={this.state.role}
+                                        value={currentUser.choosenRole}
                                         onChange={this.onChange_role}/>
                                 </div>
                             </div>
@@ -245,14 +358,14 @@ export default class moderation_editUser extends Component {
             </div>
 
         );
-    }
+    } */
 
 //##########change methods##########
-    onChange_email(e) {
+    onChange_email = (e) => {
         const email = e.target.value;
 
-        this.setState(function(prevState){
-            return{
+        this.setState(function (prevState) {
+            return {
                 currentUser: {
                     ...prevState.currentUser,
                     email: email
@@ -261,12 +374,11 @@ export default class moderation_editUser extends Component {
         });
     }
 
-
-    onChange_password(e) {
+    onChange_password = (e) => {
         const password = e.target.value;
 
-        this.setState(function(prevState){
-            return{
+        this.setState(function (prevState) {
+            return {
                 currentUser: {
                     ...prevState.currentUser,
                     password: password
@@ -275,11 +387,11 @@ export default class moderation_editUser extends Component {
         });
     }
 
-    onChange_passwordCheck(e) {
+    onChange_passwordCheck = (e) => {
         const passwordCheck = e.target.value;
 
-        this.setState(function(prevState){
-            return{
+        this.setState(function (prevState) {
+            return {
                 currentUser: {
                     ...prevState.currentUser,
                     passwordCheck: passwordCheck
@@ -288,11 +400,11 @@ export default class moderation_editUser extends Component {
         });
     }
 
-    onChange_foreName(e) {
+    onChange_foreName = (e) => {
         const foreName = e.target.value;
 
-        this.setState(function(prevState){
-            return{
+        this.setState(function (prevState) {
+            return {
                 currentUser: {
                     ...prevState.currentUser,
                     foreName: foreName
@@ -301,11 +413,11 @@ export default class moderation_editUser extends Component {
         });
     }
 
-    onChange_surName(e) {
+    onChange_surName = (e) => {
         const surName = e.target.value;
 
-        this.setState(function(prevState){
-            return{
+        this.setState(function (prevState) {
+            return {
                 currentUser: {
                     ...prevState.currentUser,
                     surName: surName
@@ -314,11 +426,11 @@ export default class moderation_editUser extends Component {
         });
     }
 
-    onChange_street(e) {
+    onChange_street = (e) => {
         const street = e.target.value;
 
-        this.setState(function(prevState){
-            return{
+        this.setState(function (prevState) {
+            return {
                 currentUser: {
                     ...prevState.currentUser,
                     street: street
@@ -327,11 +439,11 @@ export default class moderation_editUser extends Component {
         });
     }
 
-    onChange_houseNumber(e) {
+    onChange_houseNumber = (e) => {
         const houseNumber = e.target.value;
 
-        this.setState(function(prevState){
-            return{
+        this.setState(function (prevState) {
+            return {
                 currentUser: {
                     ...prevState.currentUser,
                     houseNumber: houseNumber
@@ -340,11 +452,11 @@ export default class moderation_editUser extends Component {
         });
     }
 
-    onChange_plz(e) {
+    onChange_plz = (e) => {
         const plz = e.target.value;
 
-        this.setState(function(prevState){
-            return{
+        this.setState(function (prevState) {
+            return {
                 currentUser: {
                     ...prevState.currentUser,
                     plz: plz
@@ -353,11 +465,11 @@ export default class moderation_editUser extends Component {
         });
     }
 
-    onChange_place(e) {
+    onChange_place = (e) => {
         const place = e.target.value;
 
-        this.setState(function(prevState){
-            return{
+        this.setState(function (prevState) {
+            return {
                 currentUser: {
                     ...prevState.currentUser,
                     place: place
@@ -366,42 +478,34 @@ export default class moderation_editUser extends Component {
         });
     }
 
-    onChange_gender(e) {
+    onChange_gender = (e) => {
         const gender = e.target.value;
 
-        this.setState(function(prevState){
-            return{
+        this.setState(function (prevState) {
+            return {
                 currentUser: {
                     ...prevState.currentUser,
-                    gender: gender
+                    choosenGender: gender
                 }
             };
         });
     }
 
-    onChange_role(e) {
+    onChange_role = (e) => {
         const role = e.target.value;
-
-        this.setState(function(prevState){
-            return{
+        this.setState(function (prevState) {
+            return {
                 currentUser: {
                     ...prevState.currentUser,
-                    role: role
+                    choosenRole: role
                 }
             };
         });
     }
 
-    // onChange_bday(date) {
-    //     const bday = e.target.value;
-    //
-    //     this.setState(function(prevState){
-    //         return{
-    //             currentUser: {
-    //                 ...prevState.currentUser,
-    //                 bday: bday
-    //             }
-    //         };
-    //     });
-    // }
+    onChange_dateOfBirth = (date) => {
+        this.setState({
+            dateOfBirth: date
+        })
+    }
 }
