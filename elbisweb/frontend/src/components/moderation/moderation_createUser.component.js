@@ -94,7 +94,7 @@ export default class moderation_createUser extends Component {
         } else {
             return (
                 <div className="container">
-                    <h3>Nutzer erstellen</h3>
+                    {/*<h3>Nutzer erstellen</h3>*/}
                     <form onSubmit={this.onSubmit}>
 
                         <div className="form-group">
