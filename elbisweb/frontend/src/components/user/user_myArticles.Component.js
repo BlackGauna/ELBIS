@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
+import {Link,} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import ForwardIcon from '@material-ui/icons/Forward';
 import ArticleDataService from "../../services/article.service";
 
-//TODO im still a copy of mod_article list -> just show articles of the logged user here
+
 const Article = props => (
     <tr>
         <td>{props.article.title}</td>
@@ -12,10 +16,20 @@ const Article = props => (
         <td>{props.article.author}</td>
         <td>{props.article.publisher}</td>
         <td>{props.article.publisherComment}</td>
-        <td align="right">
-            <Link to={"edit/" + props.article._id}>bearbeiten</Link> | <a href='#' onClick={() => {
-            props.deleteArticle(props.article._id)
-        }}>löschen</a>
+        <td align='right'>
+            <IconButton aria-label="edit" href={"/login/edit/" + props.article._id}>
+                <EditIcon/>
+            </IconButton>
+            <IconButton aria-label="delete" href='#' onClick={() => {
+                props.deleteArticle(props.article._id)
+            }}>
+                <DeleteIcon/>
+            </IconButton>
+            <IconButton aria-label="forward" href='#' onClick={() => {
+                props.updateArticleStatus(props.article._id)
+            }}>
+                <ForwardIcon/>
+            </IconButton>
         </td>
     </tr>
 )
@@ -26,8 +40,11 @@ export default class user_myArticles extends Component {
         super(props);
 
         this.deleteArticle = this.deleteArticle.bind(this);
-        this.state = {article: []};
+        this.state = {
+            article: []
+        };
     }
+
 
     // Mount method
     componentDidMount() {
@@ -49,10 +66,19 @@ export default class user_myArticles extends Component {
         })
     }
 
+    // delete Article method
+    updateArticleStatus = (id) => {
+        console.log("implement me")
+       //TODO update the status of an article with the given id to 'Submitted'
+    }
+
     // get article list
     articleList() {
         return this.state.article.map(currentArticle => {
-            return <Article article={currentArticle} deleteArticle={this.deleteArticle} key={currentArticle._id}/>;
+            return <Article article={currentArticle}
+                            deleteArticle={this.deleteArticle}
+                            updateArticleStatus={this.updateArticleStatus}
+                            key={currentArticle._id}/>;
         })
     }
 
@@ -60,25 +86,27 @@ export default class user_myArticles extends Component {
     render() {
         return (
             <div className="container">
-                    <h3>Meine Artikel</h3>
-                    <table className="articleTable table">
-                        <thead className="thead-light">
-                        <tr>
-                            <th>Titel</th>
-                            <th>Status</th>
-                            <th>Bereich</th>
-                            <th>Autor</th>
-                            <th>Veröffentlicher</th>
-                            <th>Kommentar</th>
-                            <th className={"text-right"}><Link to="/login/edit">
-                                <button className="btn btn-primary btn-sm" onClick="reload">+</button>
-                            </Link></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {this.articleList()}
-                        </tbody>
-                    </table>
+                <h3>Meine Artikel</h3>
+                <table className="articleTable table">
+                    <thead className="thead-light">
+                    <tr>
+                        <th>Titel</th>
+                        <th>Status</th>
+                        <th>Bereich</th>
+                        <th>Autor</th>
+                        <th>Veröffentlicher</th>
+                        <th>Kommentar</th>
+                        <th className={"text-right"}><Link to="/login/edit">
+                            <button className="btn btn-primary btn-sm" onClick="reload">+</button>
+                        </Link>
+                        </th>
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    {this.articleList()}
+                    </tbody>
+                </table>
             </div>
         )
     }

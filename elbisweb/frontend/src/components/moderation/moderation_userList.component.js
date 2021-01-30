@@ -6,11 +6,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import Modal from "react-bootstrap/Modal";
-import AddUser from '../moderation/moderation_createUser.component'
+import CreateUser from '../moderation/moderation_createUser.component';
+import EditUser from '../moderation/moderation_createUser.component';
+import {ROLE} from "../../session/userRoles.ice"
 
-//TODO: edit User (initial values of the form should be loaded from db)
-//TODO: make sure moderators can just edit and create users
-//TODO: make sure an administrator can edit and create users, mods and admins
 //TODO: make sure an administrator can add and remove topics from a user
 
 //TODO: show the dateOfBirth as "LocaleDate" somehow
@@ -24,17 +23,25 @@ const User = props => (
         <td>{props.user.address}</td>
         <td>{props.user.dateOfBirth}</td>
         <td align="right">
-            <IconButton aria-label="edit" href={"/login/mod/editUser/" + props.user._id}>
-                <EditIcon />
+            <IconButton aria-label="edit" href={"/login/mod/editUser/" + props.user._id} disabled={checkMod(props.user.role)}>
+                <EditIcon/>
             </IconButton>
-            <IconButton aria-label="delete" href='#' onClick={() => { props.deleteUser(props.user._id)}}>
-                <DeleteIcon />
+            <IconButton aria-label="delete" disabled={checkMod(props.user.role)} href='#' onClick={() => {
+                props.deleteUser(props.user._id)
+            }}>
+                <DeleteIcon/>
             </IconButton>
         </td>
     </tr>
 )
 
-
+function checkMod(againstRole) {
+    if (sessionStorage.getItem("sessionRole") === ROLE.MODERATOR && (againstRole === ROLE.MODERATOR || againstRole === ROLE.ADMINISTRATOR)) {
+        return true
+    } else {
+        return false
+    }
+}
 
 export default class moderation_userList extends Component {
 
@@ -43,15 +50,16 @@ export default class moderation_userList extends Component {
         super(props);
 
         this.deleteUser = this.deleteUser.bind(this);
+
         this.state = {
-            show: false,
+            showCreateUser: false,
             user: []
         }
 
     }
 
-    handleModal(){
-        this.setState({show:!this.state.show});
+    handleModal() {
+        this.setState({showCreateUser: !this.state.showCreateUser});
     }
 
     // Mount method
@@ -86,7 +94,7 @@ export default class moderation_userList extends Component {
         return (
             <div className="container">
                 <h3>Nutzerverwaltung</h3> Level: {sessionStorage.getItem("sessionRole")}
-                <table className="userTable table" >
+                <table className="userTable table">
                     <thead className="thead-light">
                     <tr>
                         <th data-mdb-sort="true">E-Mail</th>
@@ -98,20 +106,23 @@ export default class moderation_userList extends Component {
 
 
                         <th className={"text-right"}>
-                            <button className="btn btn-primary btn-sm" onClick={()=>{this.handleModal()}}>+</button>
+                            <button className="btn btn-primary btn-sm" onClick={() => {
+                                this.handleModal()
+                            }}>+
+                            </button>
                         </th>
-
-                        <Modal show={this.state.show} onHide={()=>this.handleModal()} size="lg">
+                        <Modal show={this.state.showCreateUser} onHide={() => this.handleModal()} size="lg">
                             <Modal.Header>Nutzer anlegen</Modal.Header>
                             <Modal.Body>
-                                <AddUser/>
+                                <CreateUser/>
                             </Modal.Body>
                             <Modal.Footer>
-                                <button className="btn btn-primary btn-sm" onClick={()=>{this.handleModal()}}>Close</button>
+                                <button className="btn btn-primary btn-sm" onClick={() => {
+                                    this.handleModal()
+                                }}>Close
+                                </button>
                             </Modal.Footer>
                         </Modal>
-
-
                         {/*<th className={"text-right"}><Link to="/login/mod/createUser">*/}
                         {/*    <button className="btn btn-primary btn-sm">+</button>*/}
                         {/*</Link></th>*/}

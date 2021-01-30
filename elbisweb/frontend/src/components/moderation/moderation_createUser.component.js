@@ -2,17 +2,17 @@ import React, {Component} from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import UserDataService from "../../services/user.service";
-import RoleDataService from "../../services/role.service";
-import {ROLE} from "../../session/userRoles.ice";
-import GenderDataService from "../../services/gender.service";
-import {GENDER} from "../../session/gender.ice";
 import Select from 'react-select';
 import {Redirect} from "react-router-dom";
 import {Button, FormLabel} from "react-bootstrap";
 import TopicDataService from "../../services/topic.service";
+import UserDataService from "../../services/user.service";
+import GenderDataService from "../../services/gender.service";
+import RoleDataService from "../../services/role.service";
+import {ROLE} from "../../session/userRoles.ice";
+import {GENDER} from "../../session/gender.ice";
 
-// TODO: Geburtsdatum (DatePicker?!)
+// TODO: TopicOptions is buggy yet (just one is chooseable?)
 
 //##########Component imports##########
 

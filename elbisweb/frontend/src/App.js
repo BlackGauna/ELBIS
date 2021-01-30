@@ -10,7 +10,6 @@ import NavBar from "./components/ELBIS_navbar.component";
 import ELBISweb from "./components/index.component";
 import manageAccount from "./components/manageAccount.component";
 import userView from "./components/user/user_myArticles.Component";
-import createUser from "./components/moderation/moderation_createUser.component";
 import loginView from "./components/loginView.component";
 import resetPassword from "./components/resetPassword.component";
 import CreateArticle from "./components/user/CreateArticle.component";
@@ -71,7 +70,6 @@ class App extends React.Component {
                                 <Route exact path="/login/mod/manageSubmissions" component={manageSubmissions}/>
                                 <Route exact path="/login/mod/manageArticles" component={allArticlesList}/>
                                 <Route exact path="/login/mod/manageUsers" component={moderation_userList}/>
-                                <Route exact path="/login/mod/createUser" component={createUser}/>
                                 <Route exact path="/login/mod/editUser/:id" component={editUser}/>
                                 <Route exact path="/login/admin/manageTopics" component={administration_topicList}/>
                                 <Route exact path="/login/admin/createTopic" component={createTopic}/>
@@ -94,7 +92,6 @@ class App extends React.Component {
                             <Route exact path="/login/mod/manageSubmissions" component={manageSubmissions}/>
                             <Route exact path="/login/mod/manageArticles" component={allArticlesList}/>
                             <Route exact path="/login/mod/manageUsers" component={moderation_userList}/>
-                            <Route exact path="/login/mod/createUser" component={createUser}/>
                             <Route exact path="/login/mod/editUser/:id" component={editUser}/>
                         </Router>
                     </div>);

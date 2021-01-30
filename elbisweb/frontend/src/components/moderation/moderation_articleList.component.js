@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import ArticleDataService from "../../services/article.service";
-
-// TODO: creationDate, lastEdit (access via mongoDB?) and expireDate
-// TODO: edit Article
+import IconButton from "@material-ui/core/IconButton";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const Article = props => (
     <tr>
@@ -15,9 +15,14 @@ const Article = props => (
         <td>{props.article.publisher}</td>
         <td>{props.article.publisherComment}</td>
         <td align="right">
-            <Link to={"edit/" + props.article._id}>bearbeiten</Link> | <a href='#' onClick={() => {
-            props.deleteArticle(props.article._id)
-        }}>löschen</a>
+                <IconButton aria-label="edit" href={"/login/edit/" + props.article._id}>
+                    <EditIcon/>
+                </IconButton>
+                <IconButton aria-label="delete" href='#' onClick={() => {
+                    props.deleteArticle(props.article._id)
+                }}>
+                    <DeleteIcon/>
+                </IconButton>
         </td>
     </tr>
 )
@@ -54,7 +59,10 @@ export default class moderation_articleList extends Component {
     // get article list
     articleList() {
         return this.state.article.map(currentArticle => {
-            return <Article article={currentArticle} deleteArticle={this.deleteArticle} key={currentArticle._id}/>;
+            return <Article
+                article={currentArticle}
+                deleteArticle={this.deleteArticle}
+                key={currentArticle._id}/>;
         })
     }
 

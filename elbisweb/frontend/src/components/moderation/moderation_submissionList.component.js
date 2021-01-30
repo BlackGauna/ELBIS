@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import ArticleDataService from "../../services/article.service";
 import {ARTICLESTATUS} from "../../session/articleStatus.ice";
+import MessageIcon from '@material-ui/icons/Message';
+import IconButton from "@material-ui/core/IconButton";
 
 //TODO im a copy yet -> make me show articles that are in 'submitted' state
 //TODO create submission window to manage a submission with a comment
@@ -20,9 +21,11 @@ const Article = props => (
         <td>{props.article.publisher}</td>
         <td>{props.article.publisherComment}</td>
         <td align="right">
-            <a href='#' onClick={() => {
-            props.deleteArticle(props.article._id)
-        }}>löschen</a>
+            <IconButton aria-label="delete" href='#' onClick={() => {
+                props.handleSubmission(props.article._id)
+            }}>
+            <MessageIcon/>
+            </IconButton>
         </td>
     </tr>
 )
@@ -31,7 +34,6 @@ export default class moderation_submissionList extends Component {
     // Constructor
     constructor(props) {
         super(props);
-        this.deleteArticle = this.deleteArticle.bind(this);
         this.state = {article: []};
     }
 
@@ -47,18 +49,18 @@ export default class moderation_submissionList extends Component {
     }
 
     // delete Article method
-    deleteArticle(id) {
-        ArticleDataService.delete(id)
-            .then(res => console.log(res.data));
-        this.setState({
-            article: this.state.article.filter(el => el._id !== id)
-        })
-    }
+    handleSubmission = (id) => {
+            console.log("implement me")
+            //TODO update the status of an article with the given id to 'Autorisiert' oder 'Abgelehnt'
+        }
 
     // get article list
     articleList() {
         return this.state.article.map(currentArticle => {
-            return <Article article={currentArticle} deleteArticle={this.deleteArticle} key={currentArticle._id}/>;
+            return <Article
+                article={currentArticle}
+                handleSubmission={this.handleSubmission}
+                key={currentArticle._id}/>;
         })
     }
 
@@ -75,7 +77,7 @@ export default class moderation_submissionList extends Component {
                         <th>Bereich</th>
                         <th>Autor</th>
                         <th>Veröffentlicher</th>
-                        <th>Kommentar</th>
+                        <th>ursprünglicher Kommentar</th>
                         <th className={"text-right"}></th>
                     </tr>
                     </thead>
