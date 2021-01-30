@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import ArticleDataService from "../../services/article.service";
+import {ARTICLESTATUS} from "../../session/articleStatus";
 
 //TODO im a copy yet -> make me show articles that are in 'submitted' state
 //TODO create submission window to manage a submission with a comment
@@ -30,14 +31,13 @@ export default class moderation_submissionList extends Component {
     // Constructor
     constructor(props) {
         super(props);
-
         this.deleteArticle = this.deleteArticle.bind(this);
         this.state = {article: []};
     }
 
     // Mount method
     componentDidMount() {
-        ArticleDataService.getAll()
+        ArticleDataService.findByState(ARTICLESTATUS.EINGEREICHT)
             .then(response => {
                 this.setState({article: response.data})
             })

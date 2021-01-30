@@ -7,8 +7,11 @@ router.post("/", articles.create);
 // Retrieve all Articles
 router.get("/", articles.findAll);
 
-// Retrieve all Articles with by email
-router.get("/fetch/:email", articles.findByEmail);
+// Retrieve all Articles with a specific status
+router.get("/fetchByStatus/:status", articles.findByStatus);
+
+// Retrieve all Articles by email
+router.get("/fetchByMail/:email", articles.findByEmail);
 
 // Retrieve a single Article with id
 router.get("/:id", articles.findOne);

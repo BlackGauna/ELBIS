@@ -11,7 +11,11 @@ class ArticleDataService {
 
     // get all articles by a specific email
     findByEmail(email) {
-        return http.get(`/article/fetch/${email}`);
+        return http.get(`/article/fetchByMail/${email}`);
+    }
+    // get all articles in a specific status
+    findByState(status) {
+        return http.get(`/article/fetchByStatus/${status}`);
     }
 
         // get article by id

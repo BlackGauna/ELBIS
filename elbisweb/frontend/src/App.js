@@ -33,8 +33,12 @@ import articleView from "./components/ArticleView.component";
 ************************************************************************************
 *   The App will check if the session is still alive on Backend-Side on every Reload/Remount of the page (no matter if manual or by the app itself).
 *   Checks token, email AND role of a session - if one is invalid, the user gets logged out (not manipulatable by backend check)
+* ***********************************************************************************
+*
+*
  */
 class App extends React.Component {
+
 
     render() {
         if (loggedUser.loading) {

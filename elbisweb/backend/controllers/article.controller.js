@@ -61,6 +61,28 @@ exports.findAll = (req, res) => {
 };
 
 // Retrieve all Articles with by email
+// TODO on wrong status the DB just answers [] instead of an Error
+exports.findByStatus = (req, res) => {
+    const status = req.params.status;
+
+    console.log(status);
+    Article.find({status: status})
+        .then(data => {
+            if(!data){
+                res.status(404).send({message: "Not found Article with status " + status});
+            } else{
+                res.send(data)
+            }
+
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .send({message: "Error retrieving Article with status " + status});
+        });
+};
+
+// Retrieve all Articles with by email
 // TODO on wrong email the DB just answers [] instead of an Error
 exports.findByEmail = (req, res) => {
     const email = req.params.email;
@@ -68,7 +90,12 @@ exports.findByEmail = (req, res) => {
     console.log(email);
     Article.find({author: email})
         .then(data => {
-            res.send(data)
+            if(!data){
+                res.status(404).send({message: "Not found Article with email " + email});
+            } else{
+                res.send(data)
+            }
+
         })
         .catch(err => {
                 res
