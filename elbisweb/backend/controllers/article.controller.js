@@ -82,7 +82,7 @@ exports.findByStatus = (req, res) => {
         });
 };
 
-// Retrieve all Articles with by email
+// Retrieve all Articles by a specific email
 // TODO on wrong email the DB just answers [] instead of an Error
 exports.findByEmail = (req, res) => {
     const email = req.params.email;

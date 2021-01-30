@@ -6,12 +6,12 @@
 TODO MAYBE deploy the project to a free hosting server at the end ?
 TODO MAYBE learn how to export it as an app to phones because its really cool
 
+TODO Moderators and Admins can use All topics (but they can still hav entries in userTopics - for the case they get degraded to a user)
+
 -------DB/Backend-------
 
 TODO check on starting routine if a file to corrosponding articles in the DB exists - if not delete the DB entry
-TODO create 'userTopic' in DB where teh users email and a topic gets connected
-    - (frontend) after that update the 'createUser' component to write the userTopics in DB as well
-    - Moderators and Admins can use All topics (but they can still hav entries in userTopics - for the case they get degraded to a user)
+
 Article
 TODO make an article updateable
 TODO The Html files created should have the name as topic_title_id
@@ -39,10 +39,11 @@ TODO Buttons should show a modal before performing an action
 
 SidePages
 TODO finalize 'createUser'
-    - Choose allowedTopics and write them correcly to the DB
+    - Choose allowedTopics and write them correcly to the (userTopic)DB
 TODO finalize 'editUser'
     - create static initial labels with values loaded from db
     - add "edit" button to edit any attribute with a modal
+     - Choose allowedTopics and write them correcly to the (userTopic)DB
 TODO finalize 'manageAccount'
     - copy "editUser" and just load the logged in User to be edited
 TODO create a 'submit' component for the moderator to publish submitted articles
