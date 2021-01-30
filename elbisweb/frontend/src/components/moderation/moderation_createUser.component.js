@@ -8,6 +8,7 @@ import GenderDataService from "../../services/gender.service";
 import Select from 'react-select';
 import {Redirect} from "react-router-dom";
 import {Button, FormLabel} from "react-bootstrap";
+import TopicDataService from "../../services/topic.service";
 
 // TODO: Geburtsdatum (DatePicker?!)
 
@@ -29,6 +30,7 @@ export default class moderation_createUser extends Component {
         this.onChange_place = this.onChange_place.bind(this);
         this.onChange_gender = this.onChange_gender.bind(this);
         this.onChange_role = this.onChange_role.bind(this);
+        this.onChange_allowedTopics = this.onChange_allowedTopics.bind(this);
 
         this.onSubmit = this.onSubmit.bind(this);
 
@@ -47,6 +49,8 @@ export default class moderation_createUser extends Component {
             role: [],
             choosenRole: '',
             dateOfBirth: new Date(),
+            allowedTopics: [],
+            choosenTopic: '',
 
             stateText: '',
             redirect: false,
@@ -81,10 +85,23 @@ export default class moderation_createUser extends Component {
         this.setState({role: options})
     }
 
+    async getTopicOptions(){
+        const res = await TopicDataService.getAll()
+        const data = res.data
+
+        const options = data.map(d => ({
+            "value": d.id,
+            "label": d.name
+        }))
+
+        this.setState({allowedTopics: options})
+    }
+
     //##########Mount method (equals initialize!)##########
     componentDidMount() {
         this.getGenderOptions()
         this.getRoleOptions()
+        this.getTopicOptions()
     }
 
     //##########Render##########
@@ -218,6 +235,15 @@ export default class moderation_createUser extends Component {
                             </div>
                         </div>
                         <div className="form-group">
+                            <label>Erlaubte Bereiche</label>
+                            <Select
+                                type="allowedTopics"
+                                isMulti
+                                placeholder="Bereiche auswählen..."
+                                options={this.state.allowedTopics}
+                                onChange={this.onChange_allowedTopics}/>
+                        </div>
+                        <div className="form-group">
                             <input type="submit" value="Nutzer erstellen" className="btn btn-primary"/>
                             <FormLabel className="m-3" style={{color: "red"}}>{this.state.stateText}</FormLabel>
                         </div>
@@ -242,7 +268,8 @@ export default class moderation_createUser extends Component {
                         address: this.state.street + " " + this.state.houseNumber + ", " + this.state.plz + " " + this.state.place,
                         gender: this.state.choosenGender,
                         role: this.state.choosenRole,
-                        dateOfBirth: this.state.dateOfBirth
+                        dateOfBirth: this.state.dateOfBirth,
+                        allowedTopics: this.state.choosenTopic
                     }
 
                     UserDataService.create(user)
@@ -255,6 +282,7 @@ export default class moderation_createUser extends Component {
                                 gender: res.data.gender,
                                 role: res.data.role,
                                 dateOfBirth: res.data.dateOfBirth,
+                                allowedTopics: res.data.allowedTopics,
 
                                 submitted: true
                             });
@@ -356,4 +384,12 @@ export default class moderation_createUser extends Component {
             dateOfBirth: date
         })
     }
+
+    onChange_allowedTopics(e) {
+        this.setState({
+            choosenTopic: e.label
+        })
+    }
+
+
 }

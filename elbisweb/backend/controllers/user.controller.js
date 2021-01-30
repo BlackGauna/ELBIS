@@ -16,7 +16,8 @@ exports.create = async (req, res) => {
         name: req.body.name,
         address: req.body.address,
         gender: req.body.gender,
-        dateOfBirth: req.body.dateOfBirth
+        dateOfBirth: req.body.dateOfBirth,
+        allowedTopics: req.body.allowedTopics
     });
 
     // Save user in database

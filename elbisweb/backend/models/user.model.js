@@ -11,6 +11,9 @@ const userSchema = new Schema({
     address: {type: String, required:  false},
     gender: {type: String, required:  false},
     dateOfBirth: {type: Date, required:  false},
+    allowedTopics: [{
+        type: String, required: false
+    }]
 }, {
     timestamps: true,
 });
