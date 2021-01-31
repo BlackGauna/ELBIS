@@ -11,12 +11,12 @@ export default class manageAccount extends Component {
         this.onChange_email = this.onChange_email.bind(this);
         this.onChange_password = this.onChange_password.bind(this);
         this.onChange_passwordCheck = this.onChange_passwordCheck.bind(this);
-        this.onChange_foreName = this.onChange_foreName.bind(this);
-        this.onChange_surName = this.onChange_surName.bind(this);
+        this.onChange_fName = this.onChange_fName.bind(this);
+        this.onChange_lName = this.onChange_lName.bind(this);
         this.onChange_street = this.onChange_street.bind(this);
-        this.onChange_houseNumber = this.onChange_houseNumber.bind(this);
+        this.onChange_hNumber = this.onChange_hNumber.bind(this);
         this.onChange_plz = this.onChange_plz.bind(this);
-        this.onChange_place = this.onChange_place.bind(this);
+        this.onChange_city = this.onChange_city.bind(this);
         this.onChange_gender = this.onChange_gender.bind(this);
 
         this.getUser = this.getUser.bind(this);
@@ -28,12 +28,12 @@ export default class manageAccount extends Component {
                 email: '',
                 password: '',
                 passwordCheck: '',
-                foreName: '',
-                surName: '',
+                fName: '',
+                lName: '',
                 street: '',
-                houseNumber: '',
+                hNumber: '',
                 plz: '',
-                place: '',
+                city: '',
                 gender: [],
             }
 
@@ -53,6 +53,12 @@ export default class manageAccount extends Component {
                         email: response.data.email,
                         password: response.data.password,
                         passwordCheck: response.data.password,
+                        fName: response.data.fName,
+                        lName: response.data.lName,
+                        street: response.data.street,
+                        hNumber: response.data.hNumber,
+                        plz: response.data.plz,
+                        city: response.data.city
                     }
                 });
                 console.log(response.data);
@@ -109,8 +115,8 @@ export default class manageAccount extends Component {
                                         type="name"
                                         className="form-control"
                                         placeholder="Vorname"
-                                        value={currentUser.foreName}
-                                        onChange={this.onChange_foreName}/>
+                                        value={currentUser.fName}
+                                        onChange={this.onChange_fName}/>
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label>Nachname</label>
@@ -118,8 +124,8 @@ export default class manageAccount extends Component {
                                         type="name"
                                         className="form-control"
                                         placeholder="Nachname"
-                                        value={currentUser.surName}
-                                        onChange={this.onChange_surName}/>
+                                        value={currentUser.lName}
+                                        onChange={this.onChange_lName}/>
                                 </div>
                             </div>
 
@@ -165,11 +171,11 @@ export default class manageAccount extends Component {
                                 <div className="form-group col-md-2">
                                     <label>Hausnummer</label>
                                     <input
-                                        type="houseNumber"
+                                        type="hNumber"
                                         className="form-control"
                                         placeholder="Hausnummer"
-                                        value={currentUser.houseNumber}
-                                        onChange={this.onChange_houseNumber}/>
+                                        value={currentUser.hNumber}
+                                        onChange={this.onChange_hNumber}/>
                                 </div>
                             </div>
                             <div className="form-row">
@@ -188,8 +194,8 @@ export default class manageAccount extends Component {
                                         type="ort"
                                         className="form-control"
                                         placeholder="Ort"
-                                        value={currentUser.place}
-                                        onChange={this.onChange_place}/>
+                                        value={currentUser.city}
+                                        onChange={this.onChange_city}/>
                                 </div>
                             </div>
                             <div className="form-row">
@@ -264,27 +270,27 @@ export default class manageAccount extends Component {
         });
     }
 
-    onChange_foreName(e) {
-        const foreName = e.target.value;
+    onChange_fName(e) {
+        const fName = e.target.value;
 
         this.setState(function(prevState){
             return{
                 currentUser: {
                     ...prevState.currentUser,
-                    foreName: foreName
+                    fName: fName
                 }
             };
         });
     }
 
-    onChange_surName(e) {
-        const surName = e.target.value;
+    onChange_lName(e) {
+        const lName = e.target.value;
 
         this.setState(function(prevState){
             return{
                 currentUser: {
                     ...prevState.currentUser,
-                    surName: surName
+                    lName: lName
                 }
             };
         });
@@ -303,14 +309,14 @@ export default class manageAccount extends Component {
         });
     }
 
-    onChange_houseNumber(e) {
-        const houseNumber = e.target.value;
+    onChange_hNumber(e) {
+        const hNumber = e.target.value;
 
         this.setState(function(prevState){
             return{
                 currentUser: {
                     ...prevState.currentUser,
-                    houseNumber: houseNumber
+                    hNumber: hNumber
                 }
             };
         });
@@ -329,14 +335,14 @@ export default class manageAccount extends Component {
         });
     }
 
-    onChange_place(e) {
-        const place = e.target.value;
+    onChange_city(e) {
+        const city = e.target.value;
 
         this.setState(function(prevState){
             return{
                 currentUser: {
                     ...prevState.currentUser,
-                    place: place
+                    city: city
                 }
             };
         });
