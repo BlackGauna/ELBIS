@@ -18,7 +18,7 @@ const Article = props => (
                 <IconButton aria-label="edit" href={"/login/edit/" + props.article._id}>
                     <EditIcon/>
                 </IconButton>
-                <IconButton aria-label="delete" href='#' onClick={() => {
+                <IconButton aria-label="delete" onClick={() => {
                     props.deleteArticle(props.article._id)
                 }}>
                     <DeleteIcon/>
@@ -81,7 +81,7 @@ export default class moderation_articleList extends Component {
                         <th>Veröffentlicher</th>
                         <th>Kommentar</th>
                         <th className={"text-right"}><Link to="/login/edit">
-                            <button className="btn btn-primary btn-sm" onClick="reload">+</button>
+                            <button className="btn btn-primary btn-sm" >+</button>
                         </Link></th>
                     </tr>
                     </thead>

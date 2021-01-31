@@ -10,7 +10,7 @@ exports.create = (req, res) => {
     }
 
     // save html content to file
-    const filepath='articles/'+req.body.topic+"_"+req.body.title+'.html';
+    const filepath='articles/'+req.body.topic+"_"+req.body.title+'_'+Date.now() +'.html';
     fs.writeFile(filepath, req.body.content, (err)=>{
         if (err) throw err;
 
@@ -160,7 +160,7 @@ exports.update = (req, res) => {
         })
 
         const newpath=req.body.path.substring(0,req.body.path.indexOf('_')+1)
-            +req.body.title
+            +req.body.title + '_' + Date.now()
             +'.html';
         console.log('new path: '+ newpath);
 

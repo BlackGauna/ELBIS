@@ -13,8 +13,13 @@ export default class ArticleView extends Component {
     }
 
     componentDidMount() {
-        axios.get("/articles/"+this.props.match.params.id)
+        axios.get("/article/"+this.props.match.params.id)
             .then(res=>{
+                console.log("article: ");
+                console.log(res.data);
+                const test= res.data.content +"\n" + "Session: ";
+                console.log(test);
+                console.log(sessionStorage.getItem("sessionEmail"));
                 this.setState({
                     content: res.data.content,
                 })

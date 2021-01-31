@@ -22,9 +22,9 @@ export default class CreateArticle extends Component {
             path:"",
             html:"",
             title:"unnamed",
-            topic:"unnamed",
+            topic:"undefined",
             status:"default",
-            author:"test",
+            author:"undefined",
             id: null,
             Article: null
 
@@ -33,9 +33,13 @@ export default class CreateArticle extends Component {
 
     }
 
-    componentWillMount() {
+    componentDidMount() {
+
+        // get current logged in user as email
+        const loggedUser= sessionStorage.getItem("sessionEmail");
 
         const paramId=this.props.match.params.id;
+
         // create new article if no id in params
         if(paramId==null){
             console.log("Setting up new article in db");
@@ -45,7 +49,7 @@ export default class CreateArticle extends Component {
                 content: this.state.html,
                 status: this.state.status,
                 topic: this.state.topic,
-                author: this.state.author,
+                author: loggedUser,
                 publisher: "",
                 publisherComment: "",
             }
@@ -222,6 +226,11 @@ export default class CreateArticle extends Component {
                         <Form.Group>
                             <Form.Label>Titel</Form.Label>
                             <Form.Control placeholder="Titel eingeben" value={this.state.title} onChange={this.onChangeTitle}/>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Bereich</Form.Label>
+                            <Form.Control placeholder="Bereich eingeben" value={this.state.topic} onChange={this.onChangeTitle}/>
                         </Form.Group>
 
                     </Form>
