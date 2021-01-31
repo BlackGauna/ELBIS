@@ -25,6 +25,7 @@ const topicRouter = require('./routes/topic.route.');
 const roleRouter = require('./routes/role.route');
 const genderRouter = require('./routes/gender.route');
 const statusRouter = require('./routes/status.route');
+const userTopicRouter = require('./routes/userTopic.route');
 const images = require("./routes/images.route");
 const sessionRouter = require('./routes/session.route');
 
@@ -35,6 +36,7 @@ app.use('/topic', topicRouter);
 app.use('/role', roleRouter);
 app.use('/gender', genderRouter);
 app.use('/status', statusRouter);
+app.use('/userTopic', userTopicRouter);
 app.use("/images", images);
 app.use('/session', sessionRouter);
 

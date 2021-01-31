@@ -1,4 +1,4 @@
-let Topic = require('../models/userTopic.model');
+let UserTopic = require('../models/userTopic.model');
 
 exports.delete = (req, res) => {
     const email = req.params.email;
@@ -25,14 +25,8 @@ exports.delete = (req, res) => {
 
 // Create and save a new userTopic
 exports.create = (req, res) => {
-    // Validate request
-    if (!req.body.name) {
-        res.status(400).send({message: "Content can not be empty!"});
-        return;
-    }
-
     // Create a topic
-    const userTopic = new userTopic({
+    const userTopic = new UserTopic({
         email: req.body.email,
         topic: req.body.topic
     });
