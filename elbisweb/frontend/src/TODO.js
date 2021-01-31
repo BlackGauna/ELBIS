@@ -14,7 +14,6 @@ TODO check on starting routine if a file to corrosponding articles in the DB exi
 
 Article
 TODO make an article updateable
-TODO The Html files created should have the name as topic_title_id
 TODO Load by ID only works half because of the html files
 TODO add expire date to for articles and then automatically archive the expired articles.
 TODO Insert examples and tests to collections

@@ -5,12 +5,18 @@ import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import parse from 'html-react-parser';
 import {Button, Container, Form} from "react-bootstrap";
+import TopicService from "../../services/topic.service";
+import UserTopicService from "../../services/userTopic.service";
+import {ARTICLESTATUS} from "../../session/articleStatus.ice";
+import loggedUser from "../../session/loggedUser";
+
 
 
 //TODO: Resuse uploaded images (?)
 
 // TODO: set topic, author (etc.) from current user
 
+//TODO: valid | invalid for Form submission
 
 export default class CreateArticle extends Component {
     constructor(props) {
@@ -26,7 +32,9 @@ export default class CreateArticle extends Component {
             status:"default",
             author:"undefined",
             id: null,
-            Article: null
+            loggedUser:null,
+            allowedTopics: [],
+            statusOptions:[],
 
         };
 
@@ -37,6 +45,9 @@ export default class CreateArticle extends Component {
 
         // get current logged in user as email
         const loggedUser= sessionStorage.getItem("sessionEmail");
+        this.setState({
+            loggedUser: loggedUser,
+        });
 
         const paramId=this.props.match.params.id;
 
@@ -79,7 +90,7 @@ export default class CreateArticle extends Component {
             // else load the article with id in params
             axios.get("/article/"+paramId)
                 .then(res =>{
-                    console.log(res.data);
+                    // console.log(res.data);
                     this.setState({
                         title: res.data.article.title,
                         path: res.data.article.path,
@@ -90,16 +101,104 @@ export default class CreateArticle extends Component {
                         publisher: res.data.article.publisher,
                         publisherComment: res.data.article.publisherComment,
                         id: res.data.article._id
+
                     });
+
+                    this.getUserData();
+
                 })
                 .catch(err=>{
                     console.log("Couldn't load existing article!");
                     console.log(err);
                 });
+
+
         }
 
     }
 
+    /**
+     * get all user data from Db and call subfunctions for additional data.
+     */
+    getUserData=()=>{
+        const currentUser=sessionStorage.getItem("sessionUserID");
+
+        axios.get("/user/"+currentUser)
+            .then(res=>{
+
+                this.setState({
+                    loggedUser: res.data
+                }, ()=>{
+                    this.getUserTopics();
+                    this.getStatusOptions();
+                });
+
+            })
+
+    }
+
+    /**
+     * Get available status options for current user role
+     */
+    getStatusOptions=() =>{
+        const userRole=this.state.loggedUser.role;
+
+        if (userRole!=="Nutzer"){
+            this.setState({
+                statusOptions: ARTICLESTATUS.getAll()
+            }, ()=>{
+                console.log("status: ")
+                console.log(this.state.statusOptions)
+            })
+        }else{
+            this.setState({
+                statusOptions: ARTICLESTATUS.getUserOptions()
+            })
+        }
+    }
+
+    // TODO: update to use topic array in user object?
+    /**
+     * Get allowed topics of user and save to state.
+     * If role is not user, have all topics
+     */
+    getUserTopics= () =>{
+        const userRole=this.state.loggedUser.role;
+        //console.log("Loading available topics.");
+
+        if (userRole!=="Nutzer")
+        {
+            TopicService.getAll()
+                .then(res=>{
+
+                    const topics= res.data.map(topic=>({
+                        "id": topic._id,
+                        "name": topic.name,
+                    }));
+                    //console.log("TOPICS:");
+                    //console.log(topics);
+
+                    this.setState({
+                        allowedTopics: topics,
+                    });
+                })
+        }else{
+            UserTopicService.getAllByMail(this.state.loggedUser.email)
+                .then(res=>{
+
+                    const topics= res.data.map(topic=>({
+                        "id": topic._id,
+                        "name": topic.name,
+                    }));
+                    //console.log("TOPICS:");
+                    //console.log(topics);
+
+                    this.setState({
+                        allowedTopics: topics,
+                    });
+                })
+        }
+    }
 
     deleteRemovedImg = (oldHtml, newHtml)=>{
         let re=/(<img [\s\S]*?\/>)/g;
@@ -145,7 +244,10 @@ export default class CreateArticle extends Component {
         // console.log(oldImages.length);
     }
 
-    // when editor content changes
+    /**
+     * When editor content changes, send changes to server/Db
+     * @param content - current content inside editor
+     */
     handleEditorChange = (content) => {
         console.log("Content was updated:", content);
 
@@ -164,6 +266,7 @@ export default class CreateArticle extends Component {
         if (this.state.title!=="")
         {
             const article= {
+                id: this.state.id,
                 title: this.state.title,
                 path: this.state.path,
                 content: this.state.html,
@@ -213,6 +316,32 @@ export default class CreateArticle extends Component {
         console.log(this.state.imageFilename);
     }
 
+    onChangeTopic= (e)=>{
+        //console.log(e.target);
+
+        // get value inside 'data-key' of form item. Equals id of topic
+        //const topicId=e.target[e.target.selectedIndex].dataset.key;
+        // name of topic
+        const topicName= e.target.value;
+
+        this.setState({
+            topic: topicName,
+        })
+    }
+
+    onChangeStatus= (e)=>{
+        //console.log(e.target);
+
+        // get value inside 'data-key' of form item. Equals id of topic
+        //const topicId=e.target[e.target.selectedIndex].dataset.key;
+        // name of topic
+        const statusName= e.target.value;
+
+        this.setState({
+            status: statusName,
+        })
+    }
+
     loadEditorContent=()=>{
         // console.log("loaded: "+ this.state.html);
         return this.state.html;
@@ -230,7 +359,27 @@ export default class CreateArticle extends Component {
 
                         <Form.Group>
                             <Form.Label>Bereich</Form.Label>
-                            <Form.Control placeholder="Bereich eingeben" value={this.state.topic} onChange={this.onChangeTitle}/>
+                            <Form.Control as={"select"} value={this.state.topic} onChange={this.onChangeTopic}>
+                                <option hidden>Bitte Bereich auswählen</option>
+                                {
+                                    this.state.allowedTopics.map(
+                                        topic=> <option value={topic.name} data-key={topic.id} key={topic.id}>{topic.name}</option>
+                                    )
+                                }
+                            </Form.Control>
+
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Status</Form.Label>
+                            <Form.Control as={"select"} value={this.state.status} onChange={this.onChangeStatus}>
+                                <option hidden>Bitte Status auswählen</option>
+                                {
+                                    this.state.statusOptions.map(
+                                        (status, index)=> <option value={status.name} key={index}>{status.name}</option>
+                                    )
+                                }
+                            </Form.Control>
+
                         </Form.Group>
 
                     </Form>

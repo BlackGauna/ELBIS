@@ -146,11 +146,15 @@ exports.update = (req, res) => {
 
     // get old title by parsing path of req
     const oldtitle = req.body.path.substring(req.body.path.indexOf('_')+1, req.body.path.lastIndexOf('.'));
-    console.log("old: "+ oldtitle);
+    console.log("old title: "+ oldtitle);
+
+    // get old topic
+    const oldTopic = req.body.path.substring(req.body.path.indexOf('/')+1, req.body.path.indexOf('_'));
+    console.log("old topic: "+ oldTopic);
 
 
     // delete old file if title changed
-    if(oldtitle!==req.body.title)
+    if(oldtitle!==req.body.title || oldTopic!==req.body.topic)
     {
         fs.unlink(req.body.path, function (err) {
             if (err) throw err;
@@ -159,13 +163,15 @@ exports.update = (req, res) => {
             console.log("Old file deleted");
         })
 
-        const newpath=req.body.path.substring(0,req.body.path.indexOf('_')+1)
-            +req.body.title + '_' + Date.now()
+        const newPath=req.body.path.substring(0,req.body.path.indexOf('/')+1)
+            + req.body.topic+ '_'
+            +req.body.title + '_' + req.body.id
             +'.html';
-        console.log('new path: '+ newpath);
+
+        console.log('new path: '+ newPath);
 
         // overwrite old path with new
-        req.body.path=newpath;
+        req.body.path=newPath;
     }
 
 
