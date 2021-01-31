@@ -18,12 +18,12 @@ export default class moderation_editUser extends Component {
                 email: '',
                 password: '',
                 passwordCheck: '',
-                foreName: '',
-                surName: '',
+                fName: '',
+                lName: '',
                 street: '',
-                houseNumber: '',
+                hNumber: '',
                 plz: '',
-                place: '',
+                city: '',
                 choosenGender: '',
                 choosenRole: '',
                 dateOfBirth: new Date(),
@@ -82,13 +82,12 @@ export default class moderation_editUser extends Component {
                         //TODO the hash will be loaded - dont change the password / !only write a new PW to DB if fiel changed
                         //password: response.data.password,
                         //passwordCheck: response.data.password,
-                        //TODO add splitted DB fields
-                        foreName: response.data.name,
-                        surName: response.data.name,
-                        street: response.data.address,
-                        houseNumber: response.data.address,
-                        plz: response.data.address,
-                        place: response.data.address,
+                        fName: response.data.fName,
+                        lName: response.data.lName,
+                        street: response.data.street,
+                        hNumber: response.data.hNumber,
+                        plz: response.data.plz,
+                        city: response.data.city,
                         choosenGender: response.data.gender,
                         choosenRole: response.data.role,
                         //TODO convert to lacal date?
@@ -137,12 +136,12 @@ export default class moderation_editUser extends Component {
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label>Vorname</label>
-                                    <h5>{currentUser.foreName}</h5> <a href=''>bearbeiten</a>
+                                    <h5>{currentUser.fName}</h5> <a href=''>bearbeiten</a>
 
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label>Nachname</label>
-                                    <h5>{currentUser.surName}</h5> <a href=''>bearbeiten</a>
+                                    <h5>{currentUser.lName}</h5> <a href=''>bearbeiten</a>
                                 </div>
                             </div>
                             <div className="form-row">
@@ -179,7 +178,7 @@ export default class moderation_editUser extends Component {
                                 </div>
                                 <div className="form-group col-md-3">
                                     <label>Hausnummer</label>
-                                    <h6>{currentUser.houseNumber}</h6> <a href=''>bearbeiten</a>
+                                    <h6>{currentUser.hNumber}</h6> <a href=''>bearbeiten</a>
                                 </div>
                             <div className="form-group col-md-3">
                                 <label>PLZ</label>
@@ -187,7 +186,7 @@ export default class moderation_editUser extends Component {
                             </div>
                             <div className="form-group col-md-3">
                                 <label>Ort</label>
-                                <h6>{currentUser.place}</h6> <a href=''>bearbeiten</a>
+                                <h6>{currentUser.city}</h6> <a href=''>bearbeiten</a>
                             </div>
                             </div>
                             <div className="form-row">
@@ -236,8 +235,8 @@ export default class moderation_editUser extends Component {
                                         type="name"
                                         className="form-control"
                                         placeholder="Vorname"
-                                        value={currentUser.foreName}
-                                        onChange={this.onChange_foreName}/>
+                                        value={currentUser.fName}
+                                        onChange={this.onChange_fName}/>
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label>Nachname</label>
@@ -245,8 +244,8 @@ export default class moderation_editUser extends Component {
                                         type="name"
                                         className="form-control"
                                         placeholder="Nachname"
-                                        value={currentUser.surName}
-                                        onChange={this.onChange_surName}/>
+                                        value={currentUser.lName}
+                                        onChange={this.onChange_lName}/>
                                 </div>
                             </div>
 
@@ -292,11 +291,11 @@ export default class moderation_editUser extends Component {
                                 <div className="form-group col-md-2">
                                     <label>Hausnummer</label>
                                     <input
-                                        type="houseNumber"
+                                        type="hNumber"
                                         className="form-control"
                                         placeholder="Hausnummer"
-                                        value={currentUser.houseNumber}
-                                        onChange={this.onChange_houseNumber}/>
+                                        value={currentUser.hNumber}
+                                        onChange={this.onChange_hNumber}/>
                                 </div>
                             </div>
                             <div className="form-row">
@@ -315,8 +314,8 @@ export default class moderation_editUser extends Component {
                                         type="ort"
                                         className="form-control"
                                         placeholder="Ort"
-                                        value={currentUser.place}
-                                        onChange={this.onChange_place}/>
+                                        value={currentUser.city}
+                                        onChange={this.onChange_city}/>
                                 </div>
                             </div>
                             <div className="form-row">
@@ -400,27 +399,27 @@ export default class moderation_editUser extends Component {
         });
     }
 
-    onChange_foreName = (e) => {
-        const foreName = e.target.value;
+    onChange_fName = (e) => {
+        const fName = e.target.value;
 
         this.setState(function (prevState) {
             return {
                 currentUser: {
                     ...prevState.currentUser,
-                    foreName: foreName
+                    fName: fName
                 }
             };
         });
     }
 
-    onChange_surName = (e) => {
-        const surName = e.target.value;
+    onChange_lName = (e) => {
+        const lName = e.target.value;
 
         this.setState(function (prevState) {
             return {
                 currentUser: {
                     ...prevState.currentUser,
-                    surName: surName
+                    lName: lName
                 }
             };
         });
@@ -439,14 +438,14 @@ export default class moderation_editUser extends Component {
         });
     }
 
-    onChange_houseNumber = (e) => {
-        const houseNumber = e.target.value;
+    onChange_hNumber = (e) => {
+        const hNumber = e.target.value;
 
         this.setState(function (prevState) {
             return {
                 currentUser: {
                     ...prevState.currentUser,
-                    houseNumber: houseNumber
+                    hNumber: hNumber
                 }
             };
         });
@@ -465,14 +464,14 @@ export default class moderation_editUser extends Component {
         });
     }
 
-    onChange_place = (e) => {
-        const place = e.target.value;
+    onChange_city = (e) => {
+        const city = e.target.value;
 
         this.setState(function (prevState) {
             return {
                 currentUser: {
                     ...prevState.currentUser,
-                    place: place
+                    city: city
                 }
             };
         });

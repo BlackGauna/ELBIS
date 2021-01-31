@@ -164,7 +164,7 @@ export default class moderation_createUser extends Component {
                             </div>
                         </div>
                         <div className="form-row">
-                            <div className="form-group col-md-10">
+                            <div className="form-group col-md-9">
                                 <label>Straße</label>
                                 <input
                                     type="street"
@@ -173,7 +173,7 @@ export default class moderation_createUser extends Component {
                                     value={this.state.street}
                                     onChange={this.onChange_street}/>
                             </div>
-                            <div className="form-group col-md-2">
+                            <div className="form-group col-md-3">
                                 <label>Hausnummer</label>
                                 <input
                                     type="houseNumber"
@@ -208,7 +208,7 @@ export default class moderation_createUser extends Component {
                                 <label>Geschlecht</label>
                                 <Select
                                     type="geschlecht"
-                                    placeholder="Geschlecht"
+                                    placeholder="Geschlecht auswählen..."
                                     options={this.state.gender}
                                     onChange={this.onChange_gender}/>
                             </div>
@@ -216,7 +216,7 @@ export default class moderation_createUser extends Component {
                                 <label>Rolle</label>
                                 <Select
                                     type="role"
-                                    placeholder="Rolle"
+                                    placeholder="Rolle auswählen..."
                                     options={this.state.role}
                                     onChange={this.onChange_role}/>
                             </div>
