@@ -5,9 +5,6 @@ import Select from 'react-select';
 
 //##########Component imports##########
 
-// TODO: parentTopic
-
-
 export default class administration_createTopic extends Component {
     //##########constructor##########
     constructor(props) {
@@ -20,6 +17,7 @@ export default class administration_createTopic extends Component {
         this.state = {
             name: '',
             parentTopic: [],
+            choosenParentTopic: '',
 
             submitted: false
         }
@@ -49,6 +47,7 @@ export default class administration_createTopic extends Component {
         return (
             <div className="container">
                 <h3>Bereich erstellen</h3>
+                <br/>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
                         <label>Name: </label>
@@ -58,7 +57,10 @@ export default class administration_createTopic extends Component {
                     </div>
                     <div className="form-group">
                         <label>Elternbereich: </label>
-                        <Select options={this.state.parentTopic} onChange={this.onChange_parentTopic}/>
+                        <Select
+                            placeholder="Elternbereich auswählen..."
+                            options={this.state.parentTopic}
+                            onChange={this.onChange_parentTopic}/>
                     </div>
                     <div className="form-group">
                         <input type="submit" value="Bereich erstellen" className="btn btn-primary"/>
@@ -75,7 +77,7 @@ export default class administration_createTopic extends Component {
         //create the object
         const topic = {
             name: this.state.name,
-            parentTopic: this.state.parentTopic
+            parentTopic: this.state.choosenGender
         }
 
         TopicDataService.create(topic)
@@ -102,7 +104,8 @@ export default class administration_createTopic extends Component {
 
     onChange_parentTopic(e) {
         this.setState({
-            parentTopic: e.label
+            choosenParentTopic: e.label
         })
     }
+
 }

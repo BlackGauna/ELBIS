@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Link} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import UserDataService from "../../services/user.service";
 import EditIcon from '@material-ui/icons/Edit';

@@ -1,17 +1,25 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
-import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
 import TopicDataService from "../../services/topic.service";
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import Modal from "react-bootstrap/Modal";
+import AddTopic from '../administration/administration_createTopic.component';
 
 const Topic = props => (
     <tr>
         <td>{props.topic.name}</td>
         <td>{props.topic.parentTopic}</td>
         <td align="right">
-            <Link to={"/edit/" + props.topic._id}>bearbeiten</Link> | <a href='#' onClick={() => {
-            props.deleteTopic(props.topic._id)
-        }}>löschen</a>
+            <IconButton aria-label="edit" href={"/login/admin/editTopic/" + props.topic._id}>
+                <EditIcon/>
+            </IconButton>
+            <IconButton aria-label="delete" href='#' onClick={() => {
+                props.deleteTopic(props.topic._id)
+            }}>
+                <DeleteIcon/>
+            </IconButton>
         </td>
     </tr>
 )
@@ -22,7 +30,14 @@ export default class administration_topicList extends Component {
         super(props);
 
         this.deleteTopic = this.deleteTopic.bind(this);
-        this.state = {topic: []};
+        this.state = {
+            topic: [],
+            showCreateTopic: false
+        };
+    }
+
+    handleModal(){
+        this.setState({showCreateTopic:!this.state.showCreateTopic});
     }
 
     // Mount method
@@ -62,9 +77,23 @@ export default class administration_topicList extends Component {
                         <tr>
                             <th>Name</th>
                             <th>Elternbereich</th>
-                            <th className={"text-right"}><Link to="/login/admin/createTopic">
-                                <button className="btn btn-primary btn-sm" onClick="reload">+</button>
-                            </Link></th>
+
+                            <th className={"text-right"}>
+                                <button className="btn btn-primary btn-sm" onClick={()=>{this.handleModal()}}>+</button>
+                            </th>
+
+                            <Modal show={this.state.showCreateTopic} onHide={()=>this.handleModal()} size="lg">
+                                <Modal.Body>
+                                    <AddTopic/>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <button className="btn btn-primary btn-sm" onClick={
+                                        ()=>{this.handleModal()
+                                        }}>Close
+                                    </button>
+                                </Modal.Footer>
+                            </Modal>
+
                         </tr>
                         </thead>
                         <tbody>
