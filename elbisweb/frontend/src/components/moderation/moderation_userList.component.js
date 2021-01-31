@@ -17,10 +17,10 @@ import {ROLE} from "../../session/userRoles.ice"
 const User = props => (
     <tr>
         <td>{props.user.email}</td>
-        <td>{props.user.name}</td>
+        <td>{props.user.fName} {props.user.lName}</td>
         <td>{props.user.gender}</td>
         <td>{props.user.role}</td>
-        <td>{props.user.address}</td>
+        <td>{props.user.street} {props.user.hNumber} <br/> {props.user.plz} {props.user.city}</td>
         <td>{props.user.dateOfBirth}</td>
         <td align="right">
             <IconButton aria-label="edit" href={"/login/mod/editUser/" + props.user._id} disabled={checkMod(props.user.role)}>

@@ -13,11 +13,15 @@ exports.create = async (req, res) => {
         email: req.body.email,
         password: req.body.password,
         role: req.body.role,
-        name: req.body.name,
-        address: req.body.address,
+        fName: req.body.fName,
+        lName: req.body.lName,
+        street: req.body.street,
+        hNumber: req.body.hNumber,
+        plz: req.body.plz,
+        city: req.body.city,
         gender: req.body.gender,
         dateOfBirth: req.body.dateOfBirth,
-        allowedTopics: req.body.allowedTopics
+        // allowedTopics: req.body.allowedTopics
     });
 
     // Save user in database

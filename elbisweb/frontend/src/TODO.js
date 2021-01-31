@@ -21,8 +21,6 @@ TODO Insert examples and tests to collections
 TODO maybe - automatically delete empty articles? -> delete Files and DB entry
 User
 TODO Birthdate in correct format
-TODO split name(forename,surname) and the address (street, homenumber, zipCode, city) to seperate fileds in DB (the way you enter them in the createUser modal)
-    - (frontend) after that show the seperated fields 'as one' in the corrosponding tables (as they were one)
 
 -------Main/Frontend-------
 

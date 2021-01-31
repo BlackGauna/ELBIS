@@ -24,12 +24,12 @@ export default class moderation_createUser extends Component {
             email: '',
             password: '',
             passwordCheck: '',
-            foreName: '',
-            surName: '',
+            fName: '',
+            lName: '',
             street: '',
-            houseNumber: '',
+            hNumber: '',
             plz: '',
-            place: '',
+            city: '',
             gender: [],
             choosenGender: '',
             role: [],
@@ -150,8 +150,8 @@ export default class moderation_createUser extends Component {
                                     type="name"
                                     className="form-control"
                                     placeholder="Vorname"
-                                    value={this.state.foreName}
-                                    onChange={this.onChange_foreName}/>
+                                    value={this.state.fName}
+                                    onChange={this.onChange_fName}/>
                             </div>
                             <div className="form-group col-md-6">
                                 <label>Nachname</label>
@@ -159,8 +159,8 @@ export default class moderation_createUser extends Component {
                                     type="name"
                                     className="form-control"
                                     placeholder="Nachname"
-                                    value={this.state.surName}
-                                    onChange={this.onChange_surName}/>
+                                    value={this.state.lName}
+                                    onChange={this.onChange_lName}/>
                             </div>
                         </div>
                         <div className="form-row">
@@ -179,8 +179,8 @@ export default class moderation_createUser extends Component {
                                     type="houseNumber"
                                     className="form-control"
                                     placeholder="Hausnummer"
-                                    value={this.state.houseNumber}
-                                    onChange={this.onChange_houseNumber}/>
+                                    value={this.state.hNumber}
+                                    onChange={this.onChange_hNumber}/>
                             </div>
                         </div>
                         <div className="form-row">
@@ -199,8 +199,8 @@ export default class moderation_createUser extends Component {
                                     type="ort"
                                     className="form-control"
                                     placeholder="Ort"
-                                    value={this.state.place}
-                                    onChange={this.onChange_place}/>
+                                    value={this.state.city}
+                                    onChange={this.onChange_city}/>
                             </div>
                         </div>
                         <div className="form-row">
@@ -253,8 +253,12 @@ export default class moderation_createUser extends Component {
                     const user = {
                         email: this.state.email,
                         password: this.state.password,
-                        name: this.state.foreName + " " + this.state.surName,
-                        address: this.state.street + " " + this.state.houseNumber + ", " + this.state.plz + " " + this.state.place,
+                        fName: this.state.fName,
+                        lName: this.state.lName,
+                        street: this.state.street,
+                        hNumber: this.state.hNumber,
+                        plz: this.state.plz,
+                        city: this.state.city,
                         gender: this.state.choosenGender,
                         role: this.state.choosenRole,
                         dateOfBirth: this.state.dateOfBirth,
@@ -266,8 +270,12 @@ export default class moderation_createUser extends Component {
                             this.setState({
                                 email: res.data.email,
                                 password: res.data.password,
-                                name: res.data.foreName + " " + res.data.surName,
-                                address: res.data.street + " " + res.data.houseNumber + ", " + res.data.plz + " " + res.data.place,
+                                fName: res.data.fName,
+                                lName: res.data.lName,
+                                street: res.data.street,
+                                hNumber: res.data.hNumber,
+                                plz: res.data.plz,
+                                city: res.data.city,
                                 gender: res.data.gender,
                                 role: res.data.role,
                                 dateOfBirth: res.data.dateOfBirth,
@@ -320,15 +328,15 @@ export default class moderation_createUser extends Component {
         })
     }
 
-    onChange_foreName=(e)=> {
+    onChange_fName=(e)=> {
         this.setState({
-            foreName: e.target.value
+            fName: e.target.value
         })
     }
 
-    onChange_surName=(e)=> {
+    onChange_lName=(e)=> {
         this.setState({
-            surName: e.target.value
+            lName: e.target.value
         })
     }
 
@@ -338,9 +346,9 @@ export default class moderation_createUser extends Component {
         })
     }
 
-    onChange_houseNumber=(e)=> {
+    onChange_hNumber=(e)=> {
         this.setState({
-            houseNumber: e.target.value
+            hNumber: e.target.value
         })
     }
 
@@ -350,9 +358,9 @@ export default class moderation_createUser extends Component {
         })
     }
 
-    onChange_place=(e)=> {
+    onChange_city=(e)=> {
         this.setState({
-            place: e.target.value
+            city: e.target.value
         })
     }
 
