@@ -441,10 +441,10 @@ export default class CreateArticle extends Component {
                             }
 
                             axios
-                                .post("/images/add", formData)
+                                .post("/images/add", formData, config)
                                 .then((res) => {
-                                    console.log(res.data);
-                                    console.log("return: " + res.data.location);
+                                    console.log("location: "+ res.data);
+                                    //console.log("return: " + res.data.location);
                                     success(res.data);
                                     //TODO: what if image is not inserted i.e. pressed cancel
                                 })
