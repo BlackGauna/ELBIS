@@ -16,7 +16,7 @@ mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTo
 mongoose.connection.once('open', () => {
     console.log("MongoDB connected");
     //TODO Make sure updatemany works
-    Article.updateMany({"expireDate": {$lte: now}},{"$set":{"status": "Archived"}});
+    Article.updateMany({"expiredate": {$lte: now}},{"$set":{"status": "Archived"}});
 })
 
 const userRouter = require('./routes/user.route');
