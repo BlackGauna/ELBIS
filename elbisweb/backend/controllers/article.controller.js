@@ -22,7 +22,7 @@ exports.create = (req, res) => {
     const article = new Article({
         title: req.body.title,
         path: filepath, // save .html file path
-        expiredate: req.body.expiredate,
+        expireDate: req.body.expireDate,
         status: req.body.status,
         topic: req.body.topic,
         author: req.body.author,

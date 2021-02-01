@@ -8,7 +8,8 @@ import {Button, Container, Form} from "react-bootstrap";
 import TopicService from "../../services/topic.service";
 import UserTopicService from "../../services/userTopic.service";
 import {ARTICLESTATUS} from "../../session/articleStatus.ice";
-import loggedUser from "../../session/loggedUser";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/material_green.css";
 
 
 
@@ -35,6 +36,8 @@ export default class CreateArticle extends Component {
             loggedUser:null,
             allowedTopics: [],
             statusOptions:[],
+            date:new Date().toISOString(),
+
 
         };
 
@@ -63,6 +66,7 @@ export default class CreateArticle extends Component {
                 author: loggedUser,
                 publisher: "",
                 publisherComment: "",
+                expireDate:this.state.date
             }
 
             let id=0;
@@ -90,7 +94,8 @@ export default class CreateArticle extends Component {
             // else load the article with id in params
             axios.get("/article/"+paramId)
                 .then(res =>{
-                    // console.log(res.data);
+                    console.log(res.data);
+                    console.log(res.data.article.expireDate)
                     this.setState({
                         title: res.data.article.title,
                         path: res.data.article.path,
@@ -100,7 +105,8 @@ export default class CreateArticle extends Component {
                         author: res.data.article.author,
                         publisher: res.data.article.publisher,
                         publisherComment: res.data.article.publisherComment,
-                        id: res.data.article._id
+                        id: res.data.article._id,
+                        date: res.data.article.expireDate
 
                     });
 
@@ -112,9 +118,7 @@ export default class CreateArticle extends Component {
                     console.log(err);
                 });
 
-
         }
-
     }
 
     /**
@@ -275,6 +279,7 @@ export default class CreateArticle extends Component {
                 author: this.state.author,
                 publisher: "",
                 publisherComment: "",
+                expireDate: this.state.date
             }
             axios.put('/article/'+this.state.id, article)
                 .then(res =>{
@@ -342,6 +347,14 @@ export default class CreateArticle extends Component {
         })
     }
 
+    onChangeDate= (e) =>{
+        const date=e[0].toISOString();
+        this.setState({
+            date:date
+        });
+        //console.log(date)
+    }
+
     loadEditorContent=()=>{
         // console.log("loaded: "+ this.state.html);
         return this.state.html;
@@ -379,7 +392,17 @@ export default class CreateArticle extends Component {
                                     )
                                 }
                             </Form.Control>
+                        </Form.Group>
 
+                        <Form.Group>
+                            <Form.Label className={"mr-2"}>Ablaufdatum</Form.Label>
+                            <Flatpickr
+                                data-enable-time
+                                options={{dateFormat: "Y-m-d H:i", defaultDate:this.state.date, time_24hr: true}}
+                                value={this.state.date}
+                                onReady={this.onChangeDate}
+                                onChange={this.onChangeDate}
+                                />
                         </Form.Group>
 
                     </Form>
@@ -436,9 +459,13 @@ export default class CreateArticle extends Component {
 
 
                             formData.append("image", blobInfo.blob());
-                            const config = {
-                                onUploadProgress: progressEvent => console.log(progressEvent.loaded)
-                            }
+
+                            let config = {
+                                onUploadProgress: function(progressEvent) {
+                                    let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                                    console.log("Upload progress: "+percentCompleted);
+                                }
+                            };
 
                             axios
                                 .post("/images/add", formData, config)
