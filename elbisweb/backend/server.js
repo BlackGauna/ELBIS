@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
-const now = new Date();
+const now = new Date().toISOString();
 
 app.use(cors());
 app.use(express.json());
