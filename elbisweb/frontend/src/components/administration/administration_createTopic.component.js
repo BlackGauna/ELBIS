@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import TopicDataService from "../../services/topic.service";
 import Select from 'react-select';
+import {Button, Grid} from "@material-ui/core";
+import topicList from "../administration/administration_topicList.component";
 
 //##########Component imports##########
 
@@ -12,7 +14,7 @@ export default class administration_createTopic extends Component {
         //prepare all fields and make sure the functions are bound to this object
         this.onChange_name = this.onChange_name.bind(this);
         this.onChange_parentTopic = this.onChange_parentTopic.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
+        this.createTopic = this.createTopic.bind(this);
 
         this.state = {
             name: '',
@@ -62,22 +64,28 @@ export default class administration_createTopic extends Component {
                             options={this.state.parentTopic}
                             onChange={this.onChange_parentTopic}/>
                     </div>
-                    <div className="form-group">
-                        <input type="submit" value="Bereich erstellen" className="btn btn-primary"/>
-                    </div>
+                    <br/>
+
+                    <Grid container justify="flex-end">
+                    <Button variant="contained" color="primary" onClick={() => {
+                        this.createTopic()
+                    }}>
+                        Bereich erstellen
+                    </Button>
+                    </Grid>
+
                 </form>
             </div>
         )
     }
 
     //##########submit method##########
-    onSubmit(e) {
-        //don't let any other submit run
-        e.preventDefault();
+    createTopic() {
+
         //create the object
         const topic = {
             name: this.state.name,
-            parentTopic: this.state.choosenGender
+            parentTopic: this.state.choosenParentTopic
         }
 
         TopicDataService.create(topic)
