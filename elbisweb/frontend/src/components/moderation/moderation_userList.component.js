@@ -7,7 +7,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Modal from "react-bootstrap/Modal";
 import CreateUser from '../moderation/moderation_createUser.component';
 import EditUser from '../moderation/moderation_createUser.component';
-import {ROLE} from "../../session/userRoles.ice"
+import {ROLE} from "../../session/userRoles.ice";
+import BootstrapTable from 'react-bootstrap-table-next';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 
 //TODO: make sure an administrator can add and remove topics from a user
 
@@ -52,7 +55,8 @@ export default class moderation_userList extends Component {
 
         this.state = {
             showCreateUser: false,
-            user: []
+            user: [],
+            columns:[]
         }
 
     }
@@ -63,13 +67,21 @@ export default class moderation_userList extends Component {
 
     // Mount method
     componentDidMount() {
+
+        const columns = [{
+            dataField: 'email',
+            text: 'E-Mail'
+        }];
+        this.setState({columns: columns});
+
         UserDataService.getAll()
             .then(response => {
                 this.setState({user: response.data})
+                console.log(this.state.user);
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
     }
 
     // delete User method
@@ -90,10 +102,19 @@ export default class moderation_userList extends Component {
 
 //##########Render##########
     render() {
+        console.log(this.state.columns);
         return (
             <div className="container">
                 <h3>Nutzerverwaltung</h3> Level: {sessionStorage.getItem("sessionRole")}
-                <table className="userTable table">
+
+                <BootstrapTable
+                    bootstrap4={true}
+                    keyField='email'
+                    data={this.state.user}
+                    columns={this.state.columns}/>
+
+                <table
+                    className="userTable table">
                     <thead className="thead-light">
                     <tr>
                         <th data-mdb-sort="true">E-Mail</th>
