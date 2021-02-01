@@ -21,6 +21,7 @@ import SessionDataService from "./services/session.service";
 import moderation_userList from "./components/moderation/moderation_userList.component";
 import administration_topicList from "./components/administration/administration_topicList.component";
 import articleView from "./components/ArticleView.component";
+import editTopic from "./components/administration/administration_editTopic.component";
 
 //##########App start##########
 /*
@@ -73,6 +74,7 @@ class App extends React.Component {
                                 <Route exact path="/login/mod/editUser/:id" component={editUser}/>
                                 <Route exact path="/login/admin/manageTopics" component={administration_topicList}/>
                                 <Route exact path="/login/admin/createTopic" component={createTopic}/>
+                                <Route exact path="/login/admin/editTopic/:id" component={editTopic}/>
                             </Router>
                         </div>
                     )
