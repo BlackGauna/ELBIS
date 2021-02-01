@@ -103,8 +103,12 @@ exports.update = async (req, res) => {
     }
 
     const id = req.params.id;
-    req.body.password = await bcrypt.hash(req.body.password, 10);
-
+    if(!req.body.password){
+        delete req.body["password"];
+    }else{
+        req.body.password = await bcrypt.hash(req.body.password, 10);
+    }
+    
     User.findByIdAndUpdate(id, req.body, {useFindAndModify: false})
         .then(data => {
             if (!data){
