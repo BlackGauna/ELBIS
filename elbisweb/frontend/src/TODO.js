@@ -7,6 +7,7 @@ TODO MAYBE deploy the project to a free hosting server at the end ?
 TODO MAYBE learn how to export it as an app to phones because its really cool
 
 TODO Moderators and Admins can use All topics (but they can still hav entries in userTopics - for the case they get degraded to a user)
+TODO on TopicChange or TopicDelete - check userTopics and change
 
 -------DB/Backend-------
 
