@@ -4,27 +4,18 @@ import UserDataService from "../services/user.service";
 import GenderDataService from "../services/gender.service";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Select from 'react-select';
+import {GENDER} from "../session/gender.ice";
+
+
+// TODO: change gender isn't working yet
+
 export default class manageAccount extends Component {
 
     constructor(props){
         super(props);
-        this.onChange_email = this.onChange_email.bind(this);
-        this.onChange_password = this.onChange_password.bind(this);
-        this.onChange_passwordCheck = this.onChange_passwordCheck.bind(this);
-        this.onChange_fName = this.onChange_fName.bind(this);
-        this.onChange_lName = this.onChange_lName.bind(this);
-        this.onChange_street = this.onChange_street.bind(this);
-        this.onChange_hNumber = this.onChange_hNumber.bind(this);
-        this.onChange_plz = this.onChange_plz.bind(this);
-        this.onChange_city = this.onChange_city.bind(this);
-        this.onChange_gender = this.onChange_gender.bind(this);
-
-        this.getUser = this.getUser.bind(this);
-        this.updateUser = this.updateUser.bind(this);
 
         this.state = {
             currentUser: {
-                id: null,
                 email: '',
                 password: '',
                 passwordCheck: '',
@@ -36,8 +27,7 @@ export default class manageAccount extends Component {
                 city: '',
                 gender: [],
             }
-
-        };
+        }
     }
 
     componentDidMount() {
@@ -45,7 +35,7 @@ export default class manageAccount extends Component {
         this.getGenderOptions()
     }
 
-    getUser(){
+    getUser () {
         UserDataService.get(sessionStorage.getItem("sessionUserID"))
             .then(response => {
                 this.setState({
@@ -70,32 +60,31 @@ export default class manageAccount extends Component {
 
     // Get gender options for dropdown
     async getGenderOptions() {
-        const res = await GenderDataService.getAll()
-        const data = res.data
-
-
+        const data = GENDER.getAll();
         const options = data.map(d => ({
             "label": d.name
         }))
-
         this.setState({gender: options})
     }
 
-    //##########update in DB method########## //TODO not working yet
-    updateUser() {
-        UserDataService.update(
-            this.state.currentUser.id,
-            this.state.currentUser
-        )
-            .then(response => {
-                console.log(response.data);
-                this.setState({
-                    message: "The user was updated successfully!"
+    //##########update in DB method##########
+    updateUser = () => {
+        if(window.confirm('Möchten Sie die Änderungen übernehmen?')) {
+            UserDataService.update(
+                sessionStorage.getItem("sessionUserID"),
+                this.state.currentUser
+            )
+                .then(response => {
+                    console.log(response.data);
+                    this.setState({
+                        message: "The user was updated successfully!"
+                    });
+                })
+                .catch(e => {
+                    console.log(e);
                 });
-            })
-            .catch(e => {
-                console.log(e);
-            });
+        } else{
+        }
     }
 
     //##########Render##########
@@ -145,7 +134,6 @@ export default class manageAccount extends Component {
                                         type="password"
                                         className="form-control"
                                         placeholder="Passwort"
-                                        value={currentUser.password}
                                         onChange={this.onChange_password}/>
                                 </div>
                                 <div className="form-group col-md-6">
@@ -154,7 +142,6 @@ export default class manageAccount extends Component {
                                         type="password"
                                         className="form-control"
                                         placeholder="Passwort"
-                                        value={currentUser.passwordCheck}
                                         onChange={this.onChange_passwordCheck}/>
                                 </div>
                             </div>
@@ -218,6 +205,9 @@ export default class manageAccount extends Component {
                         >
                             Bestätigen
                         </button>
+                        <br/>
+                        <br/>
+                        <br/>
                     </div>
                 ) : (
                     <div>
@@ -225,7 +215,6 @@ export default class manageAccount extends Component {
                     </div>
                 )}
             </div>
-
         );
     }
 
@@ -348,6 +337,7 @@ export default class manageAccount extends Component {
         });
     }
 
+    // TODO: isn't working: e.target is undefined
     onChange_gender(e) {
         const gender = e.target.value;
 
