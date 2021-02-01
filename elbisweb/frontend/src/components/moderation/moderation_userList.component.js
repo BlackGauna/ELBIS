@@ -60,7 +60,7 @@ export default class moderation_userList extends Component {
             {
                 dataField: '_id',
                 text: 'Aktion',
-                sort: 'true',
+                // sort: 'true',
                 formatter: this.buttonFormatter,
                 // formatExtraData: {}
             },

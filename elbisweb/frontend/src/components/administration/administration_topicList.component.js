@@ -4,40 +4,51 @@ import TopicDataService from "../../services/topic.service";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Modal from "react-bootstrap/Modal";
 import AddTopic from '../administration/administration_createTopic.component';
-
-const Topic = props => (
-    <tr>
-        <td>{props.topic.name}</td>
-        <td>{props.topic.parentTopic}</td>
-        <td align="right">
-            <IconButton aria-label="edit" href={"/login/admin/editTopic/" + props.topic._id}>
-                <EditIcon/>
-            </IconButton>
-            <IconButton aria-label="delete" href='#' onClick={() => {
-                props.deleteTopic(props.topic._id)
-            }}>
-                <DeleteIcon/>
-            </IconButton>
-        </td>
-    </tr>
-)
+import EditTopic from '../administration/administration_editTopic.component';
+import BootstrapTable from 'react-bootstrap-table-next';
+import {Grid} from "@material-ui/core";
 
 export default class administration_topicList extends Component {
     // Constructor
     constructor(props) {
         super(props);
 
-        this.deleteTopic = this.deleteTopic.bind(this);
+        const columns = [
+            {
+                dataField: 'name',
+                text: 'Name',
+                sort: 'true',
+            },
+            {
+                dataField: 'parentTopic',
+                text: 'Elternbereich',
+                sort: 'true',
+            },
+            {
+                dataField: '_id',
+                text: 'Aktion',
+                formatter: this.buttonFormatter
+            }
+
+        ];
+
         this.state = {
             topic: [],
-            showCreateTopic: false
+            showCreateTopic: false,
+            showEditTopic: false,
+            columns: columns
         };
     }
 
-    handleModal(){
+    handleCreateModal(){
         this.setState({showCreateTopic:!this.state.showCreateTopic});
+    }
+
+    handleEditModal(){
+        this.setState({showEditTopic: !this.state.showEditTopic});
     }
 
     // Mount method
@@ -53,54 +64,100 @@ export default class administration_topicList extends Component {
 
     // Delete topic
     deleteTopic(id) {
-        TopicDataService.delete(id)
-            .then(res => console.log(res.data));
-        this.setState({
-            topic: this.state.topic.filter(el => el._id !== id)
-        })
+        if(window.confirm('Möchten Sie den ausgewählten Bereich löschen?')){
+            TopicDataService.delete(id)
+                .then(res => console.log(res.data));
+            this.setState({
+                topic: this.state.topic.filter(el => el._id !== id)
+            })
+        } else {
+
+        }
     }
 
-    // get topicList
-    topicList() {
-        return this.state.topic.map(currentTopic => {
-            return <Topic topic={currentTopic} deleteTopic={this.deleteTopic} key={currentTopic._id}/>;
-        })
+    buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
+        return (
+            <div>
+
+                {/*Edit and delete buttons in each row*/}
+
+                <div>
+
+                    <Grid container justify="flex-end">
+                        <IconButton
+                            aria-label="edit"
+                            onClick={() => this.handleEditModal(row._id)}>
+                            <EditIcon/>
+                        </IconButton>
+
+                        <IconButton aria-label="delete" href='#' onClick={() => {
+                            this.deleteTopic(row._id)}}>
+                            <DeleteIcon/>
+                        </IconButton>
+                    </Grid>
+
+                </div>
+
+
+                {/*Open modal to edit a topic*/}
+                {/*TODO: implement edit modal)*/}
+
+                {/*Old code:*/}
+                {/*<IconButton aria-label="edit" href={"/login/admin/editTopic/" + props.topic._id}>*/}
+                {/*    <EditIcon/>*/}
+                {/*</IconButton>*/}
+
+                <Modal show={this.state.showEditTopic} onHide={() => this.handleEditModal() + row._id} size="lg">
+                    <Modal.Header>Bereich bearbeiten</Modal.Header>
+                    <Modal.Body>
+                        <EditTopic/>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-primary btn-sm" onClick={() => {
+                            this.handleEditModal()
+                        }}>Close
+                        </button>
+                    </Modal.Footer>
+                </Modal>
+
+            </div>
+        )
     }
 
+    // ############ Render ################
     render() {
         return (
             <div className="container">
-                <div className='ElbisTable'>
-                    <h3>Bereichsverwaltung</h3>
-                    <table className="topicTable table">
-                        <thead className="thead-light">
-                        <tr>
-                            <th>Name</th>
-                            <th>Elternbereich</th>
+                <h3>Bereichsverwaltung</h3>
 
-                            <th className={"text-right"}>
-                                <button className="btn btn-primary btn-sm" onClick={()=>{this.handleModal()}}>+</button>
-                            </th>
+                <Grid container justify="flex-end">
+                    <IconButton aria-label="add" href='#' onClick={() => {
+                        this.handleCreateModal()
+                    }}>
+                        <AddCircleIcon/>
+                    </IconButton>
+                </Grid>
 
-                            <Modal show={this.state.showCreateTopic} onHide={()=>this.handleModal()} size="lg">
-                                <Modal.Body>
-                                    <AddTopic/>
-                                </Modal.Body>
-                                <Modal.Footer>
-                                    <button className="btn btn-primary btn-sm" onClick={
-                                        ()=>{this.handleModal()
-                                        }}>Close
-                                    </button>
-                                </Modal.Footer>
-                            </Modal>
+                <BootstrapTable
+                    headerClasses="thead-light"
+                    bordered={false}
+                    bootstrap4={true}
+                    keyField='name'
+                    data={this.state.topic}
+                    columns={this.state.columns}/>
 
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {this.topicList()}
-                        </tbody>
-                    </table>
-                </div>
+
+                <Modal show={this.state.showCreateTopic} onHide={()=>this.handleCreateModal()} size="lg">
+                    <Modal.Body>
+                        <AddTopic/>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-primary btn-sm" onClick={
+                            ()=>{this.handleCreateModal()
+                            }}>Close
+                        </button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         )
     }
