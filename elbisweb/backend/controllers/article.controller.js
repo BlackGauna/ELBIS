@@ -145,12 +145,15 @@ exports.update = (req, res) => {
     const html= req.body.content;
 
     // get old title by parsing path of req
-    const oldtitle = req.body.path.substring(req.body.path.indexOf('_')+1, req.body.path.lastIndexOf('.'));
+    const oldtitle = req.body.path.substring(req.body.path.indexOf('_')+1, req.body.path.lastIndexOf('_'));
     console.log("old title: "+ oldtitle);
+    console.log("new title: "+req.body.title)
 
     // get old topic
     const oldTopic = req.body.path.substring(req.body.path.indexOf('/')+1, req.body.path.indexOf('_'));
     console.log("old topic: "+ oldTopic);
+    console.log("new topic: "+ req.body.topic);
+    console.log(oldtitle!==req.body.title ||oldTopic!==req.body.topic);
 
 
     // delete old file if title changed
@@ -195,7 +198,7 @@ exports.update = (req, res) => {
                     console.log("File updated!");
                 });
 
-                // console.log(data);
+                console.log(data);
                 res.send(data);
             }
         })

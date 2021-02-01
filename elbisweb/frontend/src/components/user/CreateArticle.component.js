@@ -404,7 +404,7 @@ export default class CreateArticle extends Component {
                     init={{
                         //skin: "oxide-dark",
                         //content_css:"dark",
-                        content_css: `${process.env.PUBLIC_URL}/article.css`,
+                        //content_css: `${process.env.PUBLIC_URL}/article.css`,
                         plugins: [
                             "advlist autoresize autolink lists link image charmap importcss print preview anchor",
                             "searchreplace visualblocks code fullscreen",
@@ -436,6 +436,9 @@ export default class CreateArticle extends Component {
 
 
                             formData.append("image", blobInfo.blob());
+                            const config = {
+                                onUploadProgress: progressEvent => console.log(progressEvent.loaded)
+                            }
 
                             axios
                                 .post("/images/add", formData)
