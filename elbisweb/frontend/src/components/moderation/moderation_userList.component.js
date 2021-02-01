@@ -10,7 +10,7 @@ import EditUser from '../moderation/moderation_createUser.component';
 import {ROLE} from "../../session/userRoles.ice";
 import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import {Container} from "react-bootstrap";
 
 //TODO: make sure an administrator can add and remove topics from a user
 
@@ -25,7 +25,8 @@ const User = props => (
         <td>{props.user.street} {props.user.hNumber} <br/> {props.user.plz} {props.user.city}</td>
         <td>{props.user.dateOfBirth}</td>
         <td align="right">
-            <IconButton aria-label="edit" href={"/login/mod/editUser/" + props.user._id} disabled={checkMod(props.user.role)}>
+            <IconButton aria-label="edit" href={"/login/mod/editUser/" + props.user._id}
+                        disabled={checkMod(props.user.role)}>
                 <EditIcon/>
             </IconButton>
             <IconButton aria-label="delete" disabled={checkMod(props.user.role)} href='#' onClick={() => {
@@ -51,12 +52,41 @@ export default class moderation_userList extends Component {
     constructor(props) {
         super(props);
 
-        this.deleteUser = this.deleteUser.bind(this);
+        const columns = [{
+            dataField: 'email',
+            text: 'E-Mail',
+            sort: 'true',
+        },
+            {
+                dataField: 'fName',
+                text: 'Vorname',
+                sort: 'true',
+                headerStyle: {}
+            },
+            {
+                dataField: 'lName',
+                text: 'Nachname',
+                sort: 'true'
+            },
+            {
+                dataField: 'role',
+                text: 'Rolle',
+                sort: 'true'
+            },
+            {
+                dataField: '_id',
+                text: 'Rolle',
+                sort: 'true',
+                formatter: this.buttonFormatter,
+                formatExtraData: {}
+            },
+
+        ];
 
         this.state = {
             showCreateUser: false,
             user: [],
-            columns:[]
+            columns: columns
         }
 
     }
@@ -67,17 +97,9 @@ export default class moderation_userList extends Component {
 
     // Mount method
     componentDidMount() {
-
-        const columns = [{
-            dataField: 'email',
-            text: 'E-Mail'
-        }];
-        this.setState({columns: columns});
-
         UserDataService.getAll()
             .then(response => {
                 this.setState({user: response.data})
-                console.log(this.state.user);
             })
             .catch((error) => {
                 console.log(error);
@@ -85,7 +107,7 @@ export default class moderation_userList extends Component {
     }
 
     // delete User method
-    deleteUser(id) {
+    deleteUser = (id) => {
         UserDataService.delete(id)
             .then(res => console.log(res.data));
         this.setState({
@@ -100,58 +122,66 @@ export default class moderation_userList extends Component {
         })
     }
 
+    buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
+        //TODO define delete/edit buttons via ID
+        console.log(row)
+        return (
+            <div>
+                <IconButton aria-label="delete" onClick={() => {
+                    this.handleModal()
+                }}> {row.email}
+                </IconButton>
+
+
+                <Modal show={this.state.showCreateUser} onHide={() => this.handleModal()} size="lg">
+                    <Modal.Header>Nutzer anlegen</Modal.Header>
+                    <Modal.Body>
+                        <CreateUser/>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-primary btn-sm" onClick={() => {
+                            this.handleModal()
+                        }}>Close
+                        </button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+        )
+    }
+
 //##########Render##########
     render() {
-        console.log(this.state.columns);
         return (
             <div className="container">
-                <h3>Nutzerverwaltung</h3> Level: {sessionStorage.getItem("sessionRole")}
+                <h3>Nutzerverwaltung</h3>
+                <Container style={{display: "flex"}}>
+                    Level: {sessionStorage.getItem("sessionRole")}
+                    <button className="btn btn-primary btn-sm" style={{marginLeft: "auto"}} onClick={() => {
+                        this.handleModal()
+                    }}>+
+                    </button>
+                </Container>
 
                 <BootstrapTable
+                    headerClasses="thead-light"
+                    bordered={false}
                     bootstrap4={true}
                     keyField='email'
                     data={this.state.user}
                     columns={this.state.columns}/>
 
-                <table
-                    className="userTable table">
-                    <thead className="thead-light">
-                    <tr>
-                        <th data-mdb-sort="true">E-Mail</th>
-                        <th>Name</th>
-                        <th>Geschlecht</th>
-                        <th>Rolle</th>
-                        <th>Anschrift</th>
-                        <th>Geburtsdatum</th>
-
-
-                        <th className={"text-right"}>
-                            <button className="btn btn-primary btn-sm" onClick={() => {
-                                this.handleModal()
-                            }}>+
-                            </button>
-                        </th>
-                        <Modal show={this.state.showCreateUser} onHide={() => this.handleModal()} size="lg">
-                            <Modal.Header>Nutzer anlegen</Modal.Header>
-                            <Modal.Body>
-                                <CreateUser/>
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <button className="btn btn-primary btn-sm" onClick={() => {
-                                    this.handleModal()
-                                }}>Close
-                                </button>
-                            </Modal.Footer>
-                        </Modal>
-                        {/*<th className={"text-right"}><Link to="/login/mod/createUser">*/}
-                        {/*    <button className="btn btn-primary btn-sm">+</button>*/}
-                        {/*</Link></th>*/}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {this.userList()}
-                    </tbody>
-                </table>
+                <Modal show={this.state.showCreateUser} onHide={() => this.handleModal()} size="lg">
+                    <Modal.Header>Nutzer anlegen</Modal.Header>
+                    <Modal.Body>
+                        <CreateUser/>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-primary btn-sm" onClick={() => {
+                            this.handleModal()
+                        }}>Close
+                        </button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         )
     }
