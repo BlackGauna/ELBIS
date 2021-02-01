@@ -6,37 +6,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import Modal from "react-bootstrap/Modal";
 import CreateUser from '../moderation/moderation_createUser.component';
-import EditUser from '../moderation/moderation_createUser.component';
+import EditUser from '../moderation/moderation_editUser.component';
 import {ROLE} from "../../session/userRoles.ice";
 import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import {Container} from "react-bootstrap";
 
 //TODO: make sure an administrator can add and remove topics from a user
-
 //TODO: show the dateOfBirth as "LocaleDate" somehow
-
-const User = props => (
-    <tr>
-        <td>{props.user.email}</td>
-        <td>{props.user.fName} {props.user.lName}</td>
-        <td>{props.user.gender}</td>
-        <td>{props.user.role}</td>
-        <td>{props.user.street} {props.user.hNumber} <br/> {props.user.plz} {props.user.city}</td>
-        <td>{props.user.dateOfBirth}</td>
-        <td align="right">
-            <IconButton aria-label="edit" href={"/login/mod/editUser/" + props.user._id}
-                        disabled={checkMod(props.user.role)}>
-                <EditIcon/>
-            </IconButton>
-            <IconButton aria-label="delete" disabled={checkMod(props.user.role)} href='#' onClick={() => {
-                props.deleteUser(props.user._id)
-            }}>
-                <DeleteIcon/>
-            </IconButton>
-        </td>
-    </tr>
-)
 
 function checkMod(againstRole) {
     if (sessionStorage.getItem("sessionRole") === ROLE.MODERATOR && (againstRole === ROLE.MODERATOR || againstRole === ROLE.ADMINISTRATOR)) {
@@ -52,16 +29,18 @@ export default class moderation_userList extends Component {
     constructor(props) {
         super(props);
 
-        const columns = [{
-            dataField: 'email',
-            text: 'E-Mail',
-            sort: 'true',
-        },
+        // TODO: Vorname+Nachname in eine Spalte; Straße, Hausnummer, PLZ und Ort in eine Spalte
+
+        const columns = [
+            {
+                dataField: 'email',
+                text: 'E-Mail',
+                sort: 'true',
+            },
             {
                 dataField: 'fName',
                 text: 'Vorname',
                 sort: 'true',
-                headerStyle: {}
             },
             {
                 dataField: 'lName',
@@ -74,25 +53,34 @@ export default class moderation_userList extends Component {
                 sort: 'true'
             },
             {
+                dataField: 'gender',
+                text: 'Geschlecht',
+                sort: 'true'
+            },
+            {
                 dataField: '_id',
-                text: 'Rolle',
+                text: 'Aktion',
                 sort: 'true',
                 formatter: this.buttonFormatter,
-                formatExtraData: {}
+                // formatExtraData: {}
             },
 
         ];
 
         this.state = {
             showCreateUser: false,
+            showEditUser: false,
             user: [],
             columns: columns
         }
-
     }
 
-    handleModal() {
+    handleCreateModal() {
         this.setState({showCreateUser: !this.state.showCreateUser});
+    }
+
+    handleEditModal(){
+        this.setState({showEditUser: !this.state.showEditUser});
     }
 
     // Mount method
@@ -108,43 +96,61 @@ export default class moderation_userList extends Component {
 
     // delete User method
     deleteUser = (id) => {
-        UserDataService.delete(id)
-            .then(res => console.log(res.data));
-        this.setState({
-            user: this.state.user.filter(el => el._id !== id)
-        })
-    }
+        if(window.confirm('Möchten Sie den ausgewählten Nutzer löschen?')){
+            UserDataService.delete(id)
+                .then(res => console.log(res.data));
+            this.setState({
+                user: this.state.user.filter(el => el._id !== id)
+            })
+        } else {
 
-    // get user list
-    userList() {
-        return this.state.user.map(currentUser => {
-            return <User user={currentUser} deleteUser={this.deleteUser} key={currentUser._id}/>;
-        })
+        }
+
     }
 
     buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
-        //TODO define delete/edit buttons via ID
-        console.log(row)
         return (
             <div>
-                <IconButton aria-label="delete" onClick={() => {
-                    this.handleModal()
-                }}> {row.email}
+
+                {/*Edit and delete buttons in each row*/}
+
+                <div>
+                    <IconButton
+                        aria-label="edit"
+                        onClick={() => this.handleEditModal(row._id)}
+                        // href={"/login/mod/editUser/" + row._id}
+                        disabled={checkMod(row.role)}> <EditIcon/>
+                    </IconButton>
+
+                    <IconButton aria-label="delete" href='#' onClick={() => {
+                        this.deleteUser(row._id)}}>
+                    <DeleteIcon/>
                 </IconButton>
+                </div>
 
 
-                <Modal show={this.state.showCreateUser} onHide={() => this.handleModal()} size="lg">
-                    <Modal.Header>Nutzer anlegen</Modal.Header>
+                {/*Open modal to edit a user*/}
+                {/*TODO: implement edit modal)*/}
+
+                {/*Old code:*/}
+                {/*<IconButton aria-label="edit" href={"/login/mod/editUser/" + props.user._id}*/}
+                {/*            disabled={checkMod(props.user.role)}>*/}
+                {/*    <EditIcon/>*/}
+                {/*</IconButton>*/}
+
+                <Modal show={this.state.showEditUser} onHide={() => this.handleEditModal() + row._id} size="lg">
+                    <Modal.Header>Nutzer bearbeiten</Modal.Header>
                     <Modal.Body>
-                        <CreateUser/>
+                        <EditUser/>
                     </Modal.Body>
                     <Modal.Footer>
                         <button className="btn btn-primary btn-sm" onClick={() => {
-                            this.handleModal()
+                            this.handleEditModal()
                         }}>Close
                         </button>
                     </Modal.Footer>
                 </Modal>
+
             </div>
         )
     }
@@ -156,11 +162,17 @@ export default class moderation_userList extends Component {
                 <h3>Nutzerverwaltung</h3>
                 <Container style={{display: "flex"}}>
                     Level: {sessionStorage.getItem("sessionRole")}
+
+                    {/*+ Button to open the create modal*/}
+
                     <button className="btn btn-primary btn-sm" style={{marginLeft: "auto"}} onClick={() => {
-                        this.handleModal()
+                        this.handleCreateModal()
                     }}>+
                     </button>
+
                 </Container>
+
+                {/*Print the table*/}
 
                 <BootstrapTable
                     headerClasses="thead-light"
@@ -170,21 +182,24 @@ export default class moderation_userList extends Component {
                     data={this.state.user}
                     columns={this.state.columns}/>
 
-                <Modal show={this.state.showCreateUser} onHide={() => this.handleModal()} size="lg">
+                {/*Open modal to create a new user*/}
+                {/*TODO: Modal currently has two buttons (one to submit, one to close)*/}
+
+                <Modal show={this.state.showCreateUser} onHide={() => this.handleCreateModal()} size="lg">
                     <Modal.Header>Nutzer anlegen</Modal.Header>
                     <Modal.Body>
                         <CreateUser/>
                     </Modal.Body>
                     <Modal.Footer>
                         <button className="btn btn-primary btn-sm" onClick={() => {
-                            this.handleModal()
+                            this.handleCreateModal()
                         }}>Close
                         </button>
                     </Modal.Footer>
                 </Modal>
+
+
             </div>
         )
     }
-
 }
-
