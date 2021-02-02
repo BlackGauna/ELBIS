@@ -15,18 +15,14 @@ TODO check on starting routine if a file to corrosponding articles in the DB exi
 
 Article
 TODO make an article updateable
-TODO Load by ID only works half because of the html files
 TODO add expire date to for articles and then automatically archive the expired articles.
-TODO Insert examples and tests to collections
 TODO maybe - automatically delete empty articles? -> delete Files and DB entry
 User
-TODO Birthdate in correct format
+
 
 -------Main/Frontend-------
 
 Tables
-TODO Make tables sortable
-TODO Show creationDate, lastEdit (access via mongoDB?) and expireDate in each table (?)
 TODO 'edit' links of topics do not lead to the correct path yet (should be a full path or redirect instead of a relative path)
 TODO 'manageUsers' implement accesslevels
     - an admin can add and delete an allowed topic of users
