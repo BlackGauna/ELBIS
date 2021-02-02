@@ -5,39 +5,75 @@ import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import MessageIcon from '@material-ui/icons/Message';
 import IconButton from "@material-ui/core/IconButton";
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import moment from "moment";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import {Container} from "react-bootstrap";
+import BootstrapTable from "react-bootstrap-table-next";
 
 
 //TODO create submission window to manage a submission with a comment
-
-const Article = props => (
-    <tr>
-        <td>{props.article.title}</td>
-        <td>{props.article.status}</td>
-        <td>{props.article.topic}</td>
-        <td>{props.article.author}</td>
-        <td>{props.article.publisher}</td>
-        <td>{props.article.publisherComment}</td>
-        <td align="right">
-            <IconButton aria-label="showPreview" href='#' onClick={() => {
-                props.showArticlePreview(props.article.content)
-            }}>
-                <VisibilityIcon/>
-            </IconButton>
-            <IconButton aria-label="delete" href='#' onClick={() => {
-                props.handleSubmission(props.article._id)
-            }}>
-                <MessageIcon/>
-            </IconButton>
-        </td>
-    </tr>
-)
 
 export default class moderation_submissionList extends Component {
     // Constructor
     constructor(props) {
         super(props);
+
+        const columns = [
+            {
+                dataField: 'title',
+                text: 'Titel',
+                sort: true,
+            },
+            {
+                dataField: 'status',
+                text: 'Status',
+                sort: true,
+            },
+            {
+                dataField: 'createdAt',
+                text: 'Erstelldatum',
+                sort: true,
+                formatter: this.dateFormatter,
+            },
+            {
+                dataField: 'updatedAt',
+                text: 'Bearbeitet',
+                sort: true,
+                formatter: this.dateFormatter,
+            },
+            {
+                dataField: 'expireDate',
+                text: 'Ablaufdatum',
+                sort: true,
+                formatter: this.dateFormatter,
+            },
+            {
+                dataField: 'topic',
+                text: 'Bereich',
+                sort: true,
+            },
+            {
+                dataField: 'author',
+                text: 'Autor',
+                sort: true,
+            },
+            {
+                dataField: 'publisher',
+                text: 'Veröffentlicher',
+                sort: true,
+            },
+            {
+                dataField: '_id',
+                text: 'Aktion',
+                sort: false,
+                formatter: this.buttonFormatter,
+            },
+        ];
+
         this.state = {
             article: [],
+            columns: columns
         };
     }
 
@@ -52,6 +88,28 @@ export default class moderation_submissionList extends Component {
             })
     }
 
+    dateFormatter = (cell) => {
+        return moment(cell).format("DD.MM.YYYY HH:mm:ss")
+    }
+
+    // TODO: implement view Article (read only??) and create comment to author
+    buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
+        return (
+            <div>
+                <IconButton
+                    aria-label="view"
+                    href={"/login/edit/" + row._id}>
+                    <VisibilityIcon/>
+                </IconButton>
+
+                <IconButton aria-label="message" href='#' onClick={() => {
+                    this.deleteArticle(row._id)}}>
+                    <MessageIcon/>
+                </IconButton>
+            </div>
+        )
+    }
+
     // let a mod write a comment here and decide about the release of the article
     handleSubmission = (id) => {
         console.log("implement me")
@@ -64,38 +122,23 @@ export default class moderation_submissionList extends Component {
         //TODO show the preview of an article here
     }
 
-    // get article list
-    articleList() {
-        return this.state.article.map(currentArticle => {
-            return <Article
-                article={currentArticle}
-                handleSubmission={this.handleSubmission}
-                showArticlePreview={this.showArticlePreview}
-                key={currentArticle._id}/>;
-        })
-    }
 
 //##########Render##########
     render() {
         return (
             <div className="container">
-                <h3>Neue Veröffentlichungen</h3>
-                <table className="articleTable table">
-                    <thead className="thead-light">
-                    <tr>
-                        <th>Titel</th>
-                        <th>Status</th>
-                        <th>Bereich</th>
-                        <th>Autor</th>
-                        <th>Veröffentlicher</th>
-                        <th>ursprünglicher Kommentar</th>
-                        <th className={"text-right"}></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {this.articleList()}
-                    </tbody>
-                </table>
+                <h3>Artikelverwaltung</h3>
+                <Container style={{display: "flex"}}>
+                    Level: {sessionStorage.getItem("sessionRole")}
+                </Container>
+
+                <BootstrapTable
+                    headerClasses="thead-light"
+                    bordered={false}
+                    bootstrap4={true}
+                    keyField='title'
+                    data={this.state.article}
+                    columns={this.state.columns}/>
             </div>
         )
     }

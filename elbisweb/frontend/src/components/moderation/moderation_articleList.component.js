@@ -5,35 +5,73 @@ import ArticleDataService from "../../services/article.service";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import BootstrapTable from 'react-bootstrap-table-next';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import {Container} from "react-bootstrap";
+import moment from "moment";
 
-const Article = props => (
-    <tr>
-        <td>{props.article.title}</td>
-        <td>{props.article.status}</td>
-        <td>{props.article.topic}</td>
-        <td>{props.article.author}</td>
-        <td>{props.article.publisher}</td>
-        <td>{props.article.publisherComment}</td>
-        <td align="right">
-                <IconButton aria-label="edit" href={"/login/edit/" + props.article._id}>
-                    <EditIcon/>
-                </IconButton>
-                <IconButton aria-label="delete" onClick={() => {
-                    props.deleteArticle(props.article._id)
-                }}>
-                    <DeleteIcon/>
-                </IconButton>
-        </td>
-    </tr>
-)
 
 export default class moderation_articleList extends Component {
     // Constructor
     constructor(props) {
         super(props);
 
-        this.deleteArticle = this.deleteArticle.bind(this);
-        this.state = {article: []};
+        const columns = [
+            {
+                dataField: 'title',
+                text: 'Titel',
+                sort: true,
+            },
+            {
+                dataField: 'status',
+                text: 'Status',
+                sort: true,
+            },
+            {
+                dataField: 'createdAt',
+                text: 'Erstelldatum',
+                sort: true,
+                formatter: this.dateFormatter,
+            },
+            {
+                dataField: 'updatedAt',
+                text: 'Bearbeitet',
+                sort: true,
+                formatter: this.dateFormatter,
+            },
+            {
+                dataField: 'expireDate',
+                text: 'Ablaufdatum',
+                sort: true,
+                formatter: this.dateFormatter,
+            },
+            {
+                dataField: 'topic',
+                text: 'Bereich',
+                sort: true,
+            },
+            {
+                dataField: 'author',
+                text: 'Autor',
+                sort: true,
+            },
+            {
+                dataField: 'publisher',
+                text: 'Veröffentlicher',
+                sort: true,
+            },
+            {
+                dataField: '_id',
+                text: 'Aktion',
+                sort: false,
+                formatter: this.buttonFormatter,
+            },
+        ];
+
+        this.state = {
+            article: [],
+            columns: columns
+        }
     }
 
     // Mount method
@@ -48,47 +86,55 @@ export default class moderation_articleList extends Component {
     }
 
     // delete Article method
-    deleteArticle(id) {
-        ArticleDataService.delete(id)
-            .then(res => console.log(res.data));
-        this.setState({
-            article: this.state.article.filter(el => el._id !== id)
-        })
+    deleteArticle = (id) => {
+        if(window.confirm('Möchten Sie den ausgewählten Artikel löschen?')){
+            ArticleDataService.delete(id)
+                .then(res => console.log(res.data));
+            this.setState({
+                article: this.state.article.filter(el => el._id !== id)
+            })
+        } else {}
     }
 
-    // get article list
-    articleList() {
-        return this.state.article.map(currentArticle => {
-            return <Article
-                article={currentArticle}
-                deleteArticle={this.deleteArticle}
-                key={currentArticle._id}/>;
-        })
+    dateFormatter = (cell) => {
+        return moment(cell).format("DD.MM.YYYY HH:mm:ss")
     }
+
+    buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
+        return (
+            <div>
+                <IconButton
+                    aria-label="edit"
+                    href={"/login/edit/" + row._id}>
+                    <EditIcon/>
+                </IconButton>
+
+                <IconButton aria-label="delete" href='#' onClick={() => {
+                    this.deleteArticle(row._id)}}>
+                    <DeleteIcon/>
+                </IconButton>
+            </div>
+
+        )
+    }
+
 
 //##########Render##########
     render() {
         return (
             <div className="container">
                 <h3>Artikelverwaltung</h3>
-                <table className="articleTable table">
-                    <thead className="thead-light">
-                    <tr>
-                        <th>Titel</th>
-                        <th>Status</th>
-                        <th>Bereich</th>
-                        <th>Autor</th>
-                        <th>Veröffentlicher</th>
-                        <th>Kommentar</th>
-                        <th className={"text-right"}><Link to="/login/edit">
-                            <button className="btn btn-primary btn-sm" >+</button>
-                        </Link></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {this.articleList()}
-                    </tbody>
-                </table>
+                <Container style={{display: "flex"}}>
+                    Level: {sessionStorage.getItem("sessionRole")}
+                </Container>
+
+                <BootstrapTable
+                    headerClasses="thead-light"
+                    bordered={false}
+                    bootstrap4={true}
+                    keyField='title'
+                    data={this.state.article}
+                    columns={this.state.columns}/>
             </div>
         )
     }
