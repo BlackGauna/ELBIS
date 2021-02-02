@@ -11,9 +11,9 @@ import {ROLE} from "../../session/userRoles.ice";
 import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import {Container} from "react-bootstrap";
+import moment from "moment";
 
 //TODO: make sure an administrator can add and remove topics from a user
-//TODO: show the dateOfBirth as "LocaleDate" somehow
 
 function checkMod(againstRole) {
     if (sessionStorage.getItem("sessionRole") === ROLE.MODERATOR && (againstRole === ROLE.MODERATOR || againstRole === ROLE.ADMINISTRATOR)) {
@@ -29,43 +29,56 @@ export default class moderation_userList extends Component {
     constructor(props) {
         super(props);
 
-        // TODO: Vorname+Nachname in eine Spalte; Straße, Hausnummer, PLZ und Ort in eine Spalte
+        // TODO: Straße, Hausnummer, PLZ und Ort in eine Spalte
 
         const columns = [
             {
                 dataField: 'email',
                 text: 'E-Mail',
-                sort: 'true',
+                sort: true,
             },
             {
                 dataField: 'fName',
-                text: 'Vorname',
-                sort: 'true',
-            },
-            {
-                dataField: 'lName',
-                text: 'Nachname',
-                sort: 'true'
-            },
-            {
-                dataField: 'role',
-                text: 'Rolle',
-                sort: 'true'
+                text: 'Name',
+                sort: true,
+                formatter: this.nameFormatter,
             },
             {
                 dataField: 'gender',
                 text: 'Geschlecht',
-                sort: 'true'
+                sort: true
             },
+            {
+                dataField: 'dateOfBirth',
+                text: 'Geburtsdatum',
+                sort: true,
+                formatter: this.dateFormatter,
+            },
+
+            // TODO: doesn't work
+            {
+                dataField: 'street',
+                text: 'Adresse',
+                sort: true,
+                formater: this.addressFormatter,
+            },
+            {
+                dataField: 'role',
+                text: 'Rolle',
+                sort: true
+            },
+
             {
                 dataField: '_id',
                 text: 'Aktion',
-                // sort: 'true',
+                sort: false,
                 formatter: this.buttonFormatter,
                 // formatExtraData: {}
             },
 
         ];
+
+
 
         this.state = {
             showCreateUser: false,
@@ -106,6 +119,18 @@ export default class moderation_userList extends Component {
 
         }
 
+    }
+
+    addressFormatter (cell, row, index) {
+        return cell + " " + row.hNumber + " " + row.plz + " " + row.city;
+    }
+
+    nameFormatter(cell, row, index) {
+        return cell + " " + row.lName;
+    }
+
+    dateFormatter = (cell) => {
+        return moment(cell).format("DD.MM.YYYY")
     }
 
     buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
@@ -154,6 +179,8 @@ export default class moderation_userList extends Component {
             </div>
         )
     }
+
+
 
 //##########Render##########
     render() {
