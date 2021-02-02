@@ -12,6 +12,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import {Container} from "react-bootstrap";
 import moment from "moment";
+import loggedUser from "../../session/loggedUser";
 
 //TODO: make sure an administrator can add and remove topics from a user
 
@@ -25,78 +26,131 @@ function checkMod(againstRole) {
 
 export default class moderation_userList extends Component {
 
-    // Constructor
+    /********
+     *
+     * Constructor
+     *
+     ********/
     constructor(props) {
         super(props);
-
-        // TODO: Straße, Hausnummer, PLZ und Ort in eine Spalte
-
-        const columns = [
-            {
-                dataField: 'email',
-                text: 'E-Mail',
-                sort: true,
-            },
-            {
-                dataField: 'fName',
-                text: 'Name',
-                sort: true,
-                formatter: this.nameFormatter,
-            },
-            {
-                dataField: 'gender',
-                text: 'Geschlecht',
-                sort: true
-            },
-            {
-                dataField: 'dateOfBirth',
-                text: 'Geburtsdatum',
-                sort: true,
-                formatter: this.dateFormatter,
-            },
-
-            // TODO: doesn't work
-            {
-                dataField: 'street',
-                text: 'Adresse',
-                sort: true,
-                formater: this.addressFormatter,
-            },
-            {
-                dataField: 'role',
-                text: 'Rolle',
-                sort: true
-            },
-
-            {
-                dataField: '_id',
-                text: 'Aktion',
-                sort: false,
-                formatter: this.buttonFormatter,
-                // formatExtraData: {}
-            },
-
-        ];
-
-
-
+        //state
         this.state = {
             showCreateUser: false,
-            showEditUser: false,
+            showEditUserBool: true,
+            //MODALWORK: array with booleans for editUserModals
+            showEditUser: [],
             user: [],
-            columns: columns
+            //table columns
+            columns: [
+                {
+                    dataField: 'email',
+                    text: 'E-Mail',
+                    sort: true,
+                    headerStyle: () => {
+                        return {width: '20%'};
+                    }
+                },
+                {
+                    dataField: 'fName',
+                    text: 'Name',
+                    sort: true,
+                    formatter: this.nameFormatter,
+                },
+                {
+                    dataField: 'gender',
+                    text: 'Geschlecht',
+                    sort: true
+                },
+                {
+                    dataField: 'dateOfBirth',
+                    text: 'Geburtsdatum',
+                    sort: true,
+                    formatter: this.dateFormatter,
+                },
+                {
+                    dataField: 'street',
+                    text: 'Adresse',
+                    sort: true,
+                    formatter: this.addressFormatter,
+                },
+                {
+                    dataField: 'role',
+                    text: 'Rolle',
+                    sort: true
+                },
+                {
+                    dataField: '_id',
+                    text: 'Aktion',
+                    sort: false,
+                    formatter: this.buttonFormatter,
+                    //formatExtraData: {}
+                },
+            ]
         }
     }
 
-    handleCreateModal() {
+    /********
+     *
+     * Modals
+     *
+     ********/
+    handleCreateModal = () => {
         this.setState({showCreateUser: !this.state.showCreateUser});
     }
 
-    handleEditModal(){
-        this.setState({showEditUser: !this.state.showEditUser});
+    handleEditModal = (index) => {
+            const showEditUser = this.state.showEditUser;
+            showEditUser[index]= !this.state.showEditUser[index];
+            this.setState({showEditUser: showEditUser});
     }
 
-    // Mount method
+    /********
+     *
+     * Formatters
+     *
+     ********/
+    addressFormatter = (cell, row, index) => {
+        return cell + " " + row.hNumber + " " + row.plz + " " + row.city;
+    }
+
+    nameFormatter = (cell, row, index) => {
+        return cell + " " + row.lName;
+    }
+
+    dateFormatter = (cell) => {
+        return moment(cell).format("DD.MM.YYYY")
+    }
+
+    buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
+        //MODALWORK: give the array an boolean for every row
+       this.state.showEditUser.push(false);
+        return (
+            <div>
+
+                {/*Edit and delete buttons in each row*/}
+                <div>
+                    <IconButton
+                        aria-label="edit"
+                        onClick={() => this.handleEditModal(rowIndex)}
+                        disabled={checkMod(row.role)}> <EditIcon/>
+                    </IconButton>
+
+                    <IconButton aria-label="delete" href='#' onClick={() => {
+                        this.deleteUser(row._id)
+                    }}>
+                        <DeleteIcon/>
+                    </IconButton>
+                </div>
+            </div>
+        )
+
+    }
+
+    /********
+     *
+     * Mounting
+     *
+     ********/
     componentDidMount() {
         UserDataService.getAll()
             .then(response => {
@@ -107,83 +161,31 @@ export default class moderation_userList extends Component {
             });
     }
 
-    // delete User method
+    /********
+     *
+     * other
+     *
+     ********/
+        // delete User method
     deleteUser = (id) => {
-        if(window.confirm('Möchten Sie den ausgewählten Nutzer löschen?')){
+        if (window.confirm('Möchten Sie den ausgewählten Nutzer löschen?')) {
             UserDataService.delete(id)
                 .then(res => console.log(res.data));
             this.setState({
                 user: this.state.user.filter(el => el._id !== id)
             })
         } else {
-
+            //nothing
         }
-
     }
 
-    addressFormatter (cell, row, index) {
-        return cell + " " + row.hNumber + " " + row.plz + " " + row.city;
-    }
-
-    nameFormatter(cell, row, index) {
-        return cell + " " + row.lName;
-    }
-
-    dateFormatter = (cell) => {
-        return moment(cell).format("DD.MM.YYYY")
-    }
-
-    buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
-        return (
-            <div>
-
-                {/*Edit and delete buttons in each row*/}
-
-                <div>
-                    <IconButton
-                        aria-label="edit"
-                        onClick={() => this.handleEditModal(row._id)}
-                        // href={"/login/mod/editUser/" + row._id}
-                        disabled={checkMod(row.role)}> <EditIcon/>
-                    </IconButton>
-
-                    <IconButton aria-label="delete" href='#' onClick={() => {
-                        this.deleteUser(row._id)}}>
-                    <DeleteIcon/>
-                </IconButton>
-                </div>
-
-
-                {/*Open modal to edit a user*/}
-                {/*TODO: implement edit modal)*/}
-
-                {/*Old code:*/}
-                {/*<IconButton aria-label="edit" href={"/login/mod/editUser/" + props.user._id}*/}
-                {/*            disabled={checkMod(props.user.role)}>*/}
-                {/*    <EditIcon/>*/}
-                {/*</IconButton>*/}
-
-                <Modal show={this.state.showEditUser} onHide={() => this.handleEditModal() + row._id} size="lg">
-                    <Modal.Header>Nutzer bearbeiten</Modal.Header>
-                    <Modal.Body>
-                        <EditUser/>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <button className="btn btn-primary btn-sm" onClick={() => {
-                            this.handleEditModal()
-                        }}>Close
-                        </button>
-                    </Modal.Footer>
-                </Modal>
-
-            </div>
-        )
-    }
-
-
-
-//##########Render##########
+    /********
+     *
+     * Render
+     *
+     ********/
     render() {
+
         return (
             <div className="container">
                 <h3>Nutzerverwaltung</h3>
@@ -209,24 +211,52 @@ export default class moderation_userList extends Component {
                     data={this.state.user}
                     columns={this.state.columns}/>
 
-                {/*Open modal to create a new user*/}
-                {/*TODO: Modal currently has two buttons (one to submit, one to close)*/}
-
-                <Modal show={this.state.showCreateUser} onHide={() => this.handleCreateModal()} size="lg">
-                    <Modal.Header>Nutzer anlegen</Modal.Header>
+                {this.renderCreateModal()}
+                {this.renderEditModal()}
+            </div>
+        )
+    }
+    renderCreateModal=()=>{
+        //MODALWORK: check boolean for the CreateUser Modal
+        if(this.state.showCreateUser){
+            console.log("open CreateModal")
+            return(
+                <Modal
+                    show={true}
+                    onHide={() => this.handleCreateModal()} size="lg">
+                    <Modal.Header><h3>Nutzer anlegen</h3></Modal.Header>
                     <Modal.Body>
                         <CreateUser/>
                     </Modal.Body>
                     <Modal.Footer>
                         <button className="btn btn-primary btn-sm" onClick={() => {
                             this.handleCreateModal()
-                        }}>Close
+                        }}>Zurück
                         </button>
                     </Modal.Footer>
                 </Modal>
-
-
-            </div>
-        )
+            )}
+    }
+    renderEditModal=()=>{
+        //MODALWORK: check each boolean of the table rows
+        for(let index = 0 ; index < this.state.showEditUser.length; index++){
+            if(this.state.showEditUser[index]){
+                console.log("open EditModal")
+                return(
+                    <Modal
+                        show={true}
+                        onHide={() => this.handleEditModal(index)} size="lg">
+                        <Modal.Header><h3>Nutzer bearbeiten</h3></Modal.Header>
+                        <Modal.Body>
+                            {/*MODALWORK: set the prop of the EditUser component (Userarrayindex = TableRowIndex)*/}
+                            <EditUser user={this.state.user[index]}/>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <button className="btn btn-primary btn-sm" onClick={() => {
+                                this.handleEditModal(index)
+                            }}>Zurück
+                            </button>
+                        </Modal.Footer>
+                    </Modal>)}}
     }
 }

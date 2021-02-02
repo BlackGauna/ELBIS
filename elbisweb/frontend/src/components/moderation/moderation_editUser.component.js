@@ -4,8 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Select from 'react-select';
 import {GENDER} from "../../session/gender.ice";
 import {ROLE} from "../../session/userRoles.ice";
-import {Redirect} from "react-router-dom";
-import {LabelImportant} from "@material-ui/icons";
+
 
 export default class moderation_editUser extends Component {
 
@@ -13,6 +12,12 @@ export default class moderation_editUser extends Component {
         super(props);
 
         this.state = {
+            //this user was given by the usertable (only used to load the user from the db by id yet)
+            givenUserByTable: this.props.user,
+            //in form: please use the loaded user(currentUser) down below due to its loaded directly from the db and might store newer information
+
+            //this will be the loaded User from the DB and the user to submit
+            //TODO refresh the application after submitting and close the modal somehow
             currentUser: {
                 id: null,
                 email: '',
@@ -33,17 +38,15 @@ export default class moderation_editUser extends Component {
             role: [],
             gender: [],
             stateText: '',
-            redirect: false,
 
         };
-    }
-
-    redirect = () => {
-        this.setState({redirect: true})
+        console.log("Opened EDITUSER with: ")
+        console.log(this.props.user)
     }
 
     componentDidMount() {
-        this.getUser(this.props.match.params.id);
+        //this.getUser(this.props.match.params.id);
+        this.getUser(this.props.user._id);
         this.getGenderOptions()
         this.getRoleOptions()
     }
@@ -94,6 +97,7 @@ export default class moderation_editUser extends Component {
                         //dateOfBirth:  response.data.dateOfBirth,
                     }
                 });
+                console.log("Loaded User from DB:");
                 console.log(response.data);
             })
             .catch(e => {
@@ -119,106 +123,6 @@ export default class moderation_editUser extends Component {
     }
 
     //##########Render##########
-    //TODO maybe open an edit modal with those links?
-    //TODO better intuitive design
-    //TODO buttons for special tools
-    render() {
-        if (this.state.redirect) {
-            return <Redirect to="/login/mod/manageUsers"/>
-        } else {
-            const {currentUser} = this.state;
-            return (
-                <div>
-                    {currentUser ? (
-                        <div className="container">
-                            <h3>Nutzer bearbeiten</h3>
-                            <hr/>
-                            <div className="form-row">
-                                <div className="form-group col-md-6">
-                                    <label>Vorname</label>
-                                    <h5>{currentUser.fName}</h5> <a href=''>bearbeiten</a>
-
-                                </div>
-                                <div className="form-group col-md-6">
-                                    <label>Nachname</label>
-                                    <h5>{currentUser.lName}</h5> <a href=''>bearbeiten</a>
-                                </div>
-                            </div>
-                            <div className="form-row">
-                            <div className="form-group col-md-6">
-                                <label>E-Mail</label>
-                                <h5>{currentUser.email}</h5> <a href=''>bearbeiten</a>
-                            </div>
-                            </div>
-                            <br/>
-                            <div className="form-row">
-                            <div className="form-group col-md-3">
-                                <label>Passwort bearbeiten: </label> <br/>
-                                <button
-                                    className="btn btn-secondary"
-                                >
-                                    Neues Passwort setzen
-                                </button>
-                            </div>
-
-                            <div className="form-group col-md-5">
-                                <h6>{currentUser.choosenRole}</h6>
-                                <button
-                                    className="btn btn-secondary"
-                                >
-                                    Ändern
-                                </button>
-                            </div>
-                            </div>
-                            <hr/>
-                            <div className="form-row">
-                                <div className="form-group col-md-3">
-                                    <label>Straße</label>
-                                    <h6>{currentUser.street}</h6> <a href=''>bearbeiten</a>
-                                </div>
-                                <div className="form-group col-md-3">
-                                    <label>Hausnummer</label>
-                                    <h6>{currentUser.hNumber}</h6> <a href=''>bearbeiten</a>
-                                </div>
-                            <div className="form-group col-md-3">
-                                <label>PLZ</label>
-                                <h6>{currentUser.plz}</h6> <a href=''>bearbeiten</a>
-                            </div>
-                            <div className="form-group col-md-3">
-                                <label>Ort</label>
-                                <h6>{currentUser.city}</h6> <a href=''>bearbeiten</a>
-                            </div>
-                            </div>
-                            <div className="form-row">
-                                <div className="form-group col-md-3">
-                                    <label>Geschlecht</label>
-                                    <h6>{currentUser.choosenGender}</h6>
-                                    <button
-                                        className="btn btn-secondary"
-                                    >
-                                        Ändern
-                                    </button>
-                                </div>
-                            </div>
-
-                            <button
-                                className="btn btn-primary"
-                                onClick={this.redirect}
-                            >
-                                Zurück
-                            </button>
-                        </div>
-                    ) : (
-                        <div>
-                            <p>Test...</p>
-                        </div>
-                    )}
-                </div>
-            );
-        }
-    }
-
-    //##########OLD Render##########
     /*
     render() {
         const {currentUser} = this.state;
@@ -226,7 +130,6 @@ export default class moderation_editUser extends Component {
             <div>
                 {currentUser ? (
                     <div className="container">
-                        <h3>Nutzer bearbeiten</h3>
                         <form>
                             <div className="form-row">
                                 <div className="form-group col-md-6">
@@ -357,7 +260,97 @@ export default class moderation_editUser extends Component {
             </div>
 
         );
-    } */
+    }*/
+
+    //##########alternative Render##########
+
+    //TODO maybe open an edit modal with those links?
+    //TODO better intuitive design
+    //TODO buttons for special tools
+    render() {
+            const {currentUser} = this.state;
+            return (
+                <div>
+                    {currentUser ? (
+                        <div className="container">
+                            <div className="form-row">
+                                <div className="form-group col-md-6">
+                                    <label>Vorname</label>
+                                    <h5>{currentUser.fName}</h5> <a href=''>bearbeiten</a>
+
+                                </div>
+                                <div className="form-group col-md-6">
+                                    <label>Nachname</label>
+                                    <h5>{currentUser.lName}</h5> <a href=''>bearbeiten</a>
+                                </div>
+                            </div>
+                            <div className="form-row">
+                            <div className="form-group col-md-6">
+                                <label>E-Mail</label>
+                                <h5>{currentUser.email}</h5> <a href=''>bearbeiten</a>
+                            </div>
+                            </div>
+                            <br/>
+                            <div className="form-row">
+                            <div className="form-group col-md-3">
+                                <label>Passwort bearbeiten: </label> <br/>
+                                <button
+                                    className="btn btn-secondary"
+                                >
+                                    Neues Passwort setzen
+                                </button>
+                            </div>
+
+                            <div className="form-group col-md-5">
+                                <h6>{currentUser.choosenRole}</h6>
+                                <button
+                                    className="btn btn-secondary"
+                                >
+                                    Ändern
+                                </button>
+                            </div>
+                            </div>
+                            <hr/>
+                            <div className="form-row">
+                                <div className="form-group col-md-3">
+                                    <label>Straße</label>
+                                    <h6>{currentUser.street}</h6> <a href=''>bearbeiten</a>
+                                </div>
+                                <div className="form-group col-md-3">
+                                    <label>Hausnummer</label>
+                                    <h6>{currentUser.hNumber}</h6> <a href=''>bearbeiten</a>
+                                </div>
+                            <div className="form-group col-md-3">
+                                <label>PLZ</label>
+                                <h6>{currentUser.plz}</h6> <a href=''>bearbeiten</a>
+                            </div>
+                            <div className="form-group col-md-3">
+                                <label>Ort</label>
+                                <h6>{currentUser.city}</h6> <a href=''>bearbeiten</a>
+                            </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-md-3">
+                                    <label>Geschlecht</label>
+                                    <h6>{currentUser.choosenGender}</h6>
+                                    <button
+                                        className="btn btn-secondary"
+                                    >
+                                        Ändern
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <p>Test...</p>
+                        </div>
+                    )}
+                </div>
+            );
+    }
+
+
 
 //##########change methods##########
     onChange_email = (e) => {

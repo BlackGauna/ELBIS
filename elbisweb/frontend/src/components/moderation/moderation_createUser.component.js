@@ -12,7 +12,7 @@ import {GENDER} from "../../session/gender.ice";
 import UserTopicDataService from "../../services/userTopic.service";
 
 // TODO: send selected topics to the db (userTopic table)
-
+//TODO refresh the application after submitting and close the modal somehow
 
 export default class moderation_createUser extends Component {
 
