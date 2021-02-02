@@ -9,10 +9,9 @@ import TopicDataService from "../../services/topic.service";
 import UserDataService from "../../services/user.service";
 import {ROLE} from "../../session/userRoles.ice";
 import {GENDER} from "../../session/gender.ice";
+import UserTopicDataService from "../../services/userTopic.service";
 
-// TODO: TopicOptions is buggy yet
-//  - just one is chooseable?
-//  - crashes on delete?
+// TODO: send selected topics to the db (userTopic table)
 
 
 export default class moderation_createUser extends Component {
@@ -76,7 +75,7 @@ export default class moderation_createUser extends Component {
         const data = res.data
 
         const options = data.map(d => ({
-            "value": d.id,
+            "value": d.name,
             "label": d.name
         }))
 
@@ -92,6 +91,7 @@ export default class moderation_createUser extends Component {
 
     //##########Render##########
     render() {
+        console.log(this.state.choosenTopics)
         if (this.state.redirect) {
             return <Redirect to="/login/mod/manageUsers"/>
         } else {
@@ -228,9 +228,11 @@ export default class moderation_createUser extends Component {
                                 isMulti
                                 placeholder="Bereiche auswählen..."
                                 options={this.state.allowedTopics}
-                                onChange={this.onChange_allowedTopics}
+                                onChange={this.onChange_allowedTopics.bind(this)}
                             />
-
+                            {
+                                this.state.choosenTopics === null ? "" : this.state.choosenTopics.map( v=> <h4>{v.label}</h4>)
+                            }
                         </div>
                         <div className="form-group">
                             <input type="submit" value="Nutzer erstellen" className="btn btn-primary"/>
@@ -262,7 +264,7 @@ export default class moderation_createUser extends Component {
                         gender: this.state.choosenGender,
                         role: this.state.choosenRole,
                         dateOfBirth: this.state.dateOfBirth,
-                        allowedTopics: this.state.choosenTopics
+                        // allowedTopics: this.state.choosenTopics
                     }
 
                     UserDataService.create(user)
@@ -279,7 +281,7 @@ export default class moderation_createUser extends Component {
                                 gender: res.data.gender,
                                 role: res.data.role,
                                 dateOfBirth: res.data.dateOfBirth,
-                                allowedTopics: res.data.allowedTopics,
+                                // allowedTopics: res.data.allowedTopics,
 
                                 submitted: true
                             });
@@ -288,6 +290,24 @@ export default class moderation_createUser extends Component {
                         .catch(e => {
                             console.log(e);
                         });
+
+                    const userTopic = {
+                        email: this.state.email,
+                        topic: this.state.choosenTopics
+                    }
+
+                    UserTopicDataService.create(userTopic)
+                        .then (res => {
+                            this.setState({
+                                email: res.data.email,
+                                topic: res.data.topic
+                            });
+                            console.log(res.data);
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+
 
                     //go back to the moderationView
                     this.redirect();
@@ -382,11 +402,14 @@ export default class moderation_createUser extends Component {
         })
     }
 
-    onChange_allowedTopics = (e) => {
-        this.setState({
-            choosenTopics: this.state.choosenTopics.push(e.label)
-        })
+    // onChange_allowedTopics = (e) => {
+    //     this.setState({
+    //         choosenTopics: this.state.choosenTopics.push(e.label)
+    //     })
+    // }
+
+    onChange_allowedTopics (e) {
+        console.log(e)
+        this.setState({value:e})
     }
-
-
 }
