@@ -30,6 +30,7 @@ exports.create = (req, res) => {
         publisherComment: req.body.publisherComment
     });
 
+
     // Save Article in database
     article
         .save()
@@ -38,6 +39,7 @@ exports.create = (req, res) => {
         })
         .catch(err => {
             console.log("Article create Error");
+            console.log(err);
             res.status(500).send({
 
                 message:

@@ -3,7 +3,6 @@ import {BrowserRouter as Router} from "react-router-dom";
 import axios from "axios";
 import UserTopicService from "../services/userTopic.service";
 import TopicService from "../services/topic.service";
-import loggedUser from "../session/loggedUser";
 
 export default class ArticleView extends Component {
 //##########Render##########
@@ -20,7 +19,7 @@ export default class ArticleView extends Component {
         const userMail=sessionStorage.getItem("sessionEmail");
         UserTopicService.getAllByMail(userMail)
             .then(res =>{
-                if (res.data.length==0)
+                if (res.data.length===0)
                 {
                     TopicService.getAll()
                         .then(res=>{
@@ -38,8 +37,6 @@ export default class ArticleView extends Component {
                 const test= res.data.content +"\n" + "Session: ";
                 console.log(test);
                 console.log(sessionStorage.getItem("sessionEmail"));
-
-
 
 
 
