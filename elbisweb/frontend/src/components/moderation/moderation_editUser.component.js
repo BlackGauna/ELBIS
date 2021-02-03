@@ -481,7 +481,7 @@ export default class moderation_editUser extends Component {
                             <div className="form-group col-md-4">
                                 {lName_field}
                             </div>
-                            <div className="form-group col-md-2">
+                            <div className="form-group col-md-3">
                                 {gender_field}
                             </div>
                         </div>
