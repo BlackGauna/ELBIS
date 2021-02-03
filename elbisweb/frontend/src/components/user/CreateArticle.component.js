@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import ReactDOM from "react-dom";
 import { Component } from "react";
 import { Editor } from "@tinymce/tinymce-react";
@@ -13,9 +13,7 @@ import "flatpickr/dist/themes/material_green.css";
 
 
 
-//TODO: Resuse uploaded images (?)
-
-// TODO: set topic, author (etc.) from current user
+//TODO: Reuse uploaded images (?)
 
 //TODO: valid | invalid for Form submission
 
@@ -28,9 +26,9 @@ export default class CreateArticle extends Component {
             showPreview:false,
             path:"",
             html:"",
-            title:"unnamed",
-            topic:"undefined",
-            status:"default",
+            title:"",
+            topic:"",
+            status:"",
             author:"undefined",
             id: null,
             loggedUser:null,
@@ -59,10 +57,10 @@ export default class CreateArticle extends Component {
             console.log("Setting up new article in db");
 
             const article={
-                title: this.state.title,
+                title: "unnamed",       // set unnamed so that backend can save correctly
                 content: this.state.html,
-                status: this.state.status,
-                topic: this.state.topic,
+                status: "undefined",    // same as above
+                topic: "undefined",     // same as above
                 author: loggedUser,
                 publisher: "",
                 publisherComment: "",
@@ -96,6 +94,20 @@ export default class CreateArticle extends Component {
                 .then(res =>{
                     console.log(res.data);
                     console.log(res.data.article.expireDate)
+
+                    // if previously undefined set as empty for form validation
+                    if (res.data.article.title==="unnamed")
+                    {
+                        res.data.article.title="";
+                    }
+                    if (res.data.article.status==="undefined")
+                    {
+                        res.data.article.status="";
+                    }
+                    if (res.data.article.topic==="undefined")
+                    {
+                        res.data.article.topic="";
+                    }
                     this.setState({
                         title: res.data.article.title,
                         path: res.data.article.path,
@@ -204,16 +216,17 @@ export default class CreateArticle extends Component {
         }
     }
 
+/**################# Handle Editor Changes ###############################**/
     deleteRemovedImg = (oldHtml, newHtml)=>{
         let re=/(<img [\s\S]*?\/>)/g;
 
         let oldImages=oldHtml.match(re);
         let newImages=newHtml.match(re);
 
-        console.log("old: ");
-        console.log(oldImages);
-        console.log("new: ");
-        console.log(newImages);
+        //console.log("old: ");
+        //console.log(oldImages);
+        //console.log("new: ");
+        //console.log(newImages);
 
         if(oldImages!==null){
 
@@ -224,8 +237,8 @@ export default class CreateArticle extends Component {
                     axios.delete("/"+imgPath)
                         .then(res => console.log(res.data));
 
-                    console.log("path to delete: ");
-                    console.log(imgPath);
+                    //console.log("path to delete: ");
+                    //console.log(imgPath);
                 }
 
             }else if (oldImages.length> newImages.length){
@@ -236,17 +249,18 @@ export default class CreateArticle extends Component {
                         axios.delete("/"+imgPath)
                             .then(res => console.log(res.data));
 
-                        console.log("path to delete: ");
-                        console.log(imgPath);
+                        //console.log("path to delete: ");
+                        //console.log(imgPath);
                     }
                 }
             }
         }
 
-        console.log("match: ");
-        console.log(oldImages);
+        //console.log("match: ");
+        //console.log(oldImages);
         // console.log(oldImages.length);
     }
+
 
     /**
      * When editor content changes, send changes to server/Db
@@ -254,6 +268,22 @@ export default class CreateArticle extends Component {
      */
     handleEditorChange = (content) => {
         console.log("Content was updated:", content);
+        //console.log(this.state)
+
+        let forms= document.querySelectorAll(".needs-validation");
+        //console.log("forms");
+        //console.log(forms);
+
+        let allValid=true;
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                    if (!form.checkValidity()) {
+                        allValid=false;
+                        //console.log(allValid);
+                    }
+
+                    form.classList.add('was-validated')
+            })
 
         let oldHtml=this.state.html;
 
@@ -264,38 +294,47 @@ export default class CreateArticle extends Component {
             html: content,
         }));
 
-        console.log("current id: "+this.state.id);
+        if (allValid){
+
+            //console.log("current id: "+this.state.id);
+            console.log("Setting up update to Db.");
+
+            if (this.state.title!=="")
+            {
+                const article= {
+                    id: this.state.id,
+                    title: this.state.title,
+                    path: this.state.path,
+                    content: this.state.html,
+                    status: this.state.status,
+                    topic: this.state.topic,
+                    author: this.state.author,
+                    publisher: "",
+                    publisherComment: "",
+                    expireDate: this.state.date
+                }
+
+                //console.log(article);
+                axios.put('/article/'+this.state.id, article)
+                    .then(res =>{
+                        console.log("Saved article successfully!");
+                        console.log(res.data);
+                        this.setState({
+                            path: res.data.path,
+                        });
+                    })
+                    .catch(err=> console.log(err));
+
+            }
+            // TODO: if title empty and oldtitle not empty, delete file (?)
+
+        }
 
         // update article in db
-        if (this.state.title!=="")
-        {
-            const article= {
-                id: this.state.id,
-                title: this.state.title,
-                path: this.state.path,
-                content: this.state.html,
-                status: this.state.status,
-                topic: this.state.topic,
-                author: this.state.author,
-                publisher: "",
-                publisherComment: "",
-                expireDate: this.state.date
-            }
-            axios.put('/article/'+this.state.id, article)
-                .then(res =>{
-                    console.log("Saved article successfully!");
-                    console.log(res.data);
-                    this.setState({
-                        path: res.data.path,
-                    });
-                })
-            .catch(err=> console.log(err));
 
-        }else{
-            // TODO: if title empty and oldtitle not empty, delete file (?)
-        }
     }
 
+/**################# OnChange ###############################**/
     togglePreview=() =>{
         this.setState(state =>({
             ...state,
@@ -360,32 +399,45 @@ export default class CreateArticle extends Component {
         return this.state.html;
     }
 
+/**##########################Render########################################**/
     render() {
+
         return (
             <div>
                 <Container>
-                    <Form>
-                        <Form.Group>
+                    <Form noValidate className={"needs-validation"} >
+                        <Form.Group className={"w-50"}>
                             <Form.Label>Titel</Form.Label>
-                            <Form.Control placeholder="Titel eingeben" value={this.state.title} onChange={this.onChangeTitle}/>
+                            <Form.Control placeholder="Titel eingeben"
+                                          value={this.state.title}
+                                          onChange={this.onChangeTitle}
+                                          required
+                            />
+                            <Form.Control.Feedback className={"valid-feedback"}>
+                                In Ordnung.
+                            </Form.Control.Feedback>
+                            <Form.Control.Feedback className={"invalid-feedback"} type="invalid">
+                                Bitte einen Titel eingeben.
+                            </Form.Control.Feedback>
                         </Form.Group>
 
-                        <Form.Group>
+                        <Form.Row>
+                        <Form.Group className={"col-4"}>
                             <Form.Label>Bereich</Form.Label>
-                            <Form.Control as={"select"} value={this.state.topic} onChange={this.onChangeTopic}>
-                                <option hidden>Bitte Bereich auswählen</option>
+                            <Form.Control as={"select"} custom required value={this.state.topic} onChange={this.onChangeTopic}>
+                                <option disabled value="">Bereich auswählen:</option>
                                 {
                                     this.state.allowedTopics.map(
                                         topic=> <option value={topic.name} data-key={topic.id} key={topic.id}>{topic.name}</option>
                                     )
                                 }
                             </Form.Control>
-
                         </Form.Group>
-                        <Form.Group>
+
+                        <Form.Group className={"col-4"}>
                             <Form.Label>Status</Form.Label>
-                            <Form.Control as={"select"} value={this.state.status} onChange={this.onChangeStatus}>
-                                <option hidden>Bitte Status auswählen</option>
+                            <Form.Control as={"select"} required custom value={this.state.status} onChange={this.onChangeStatus}>
+                                <option disabled value="">Status auswählen:</option>
                                 {
                                     this.state.statusOptions.map(
                                         (status, index)=> <option value={status.name} key={index}>{status.name}</option>
@@ -393,9 +445,11 @@ export default class CreateArticle extends Component {
                                 }
                             </Form.Control>
                         </Form.Group>
+                        </Form.Row>
 
                         <Form.Group>
-                            <Form.Label className={"mr-2"}>Ablaufdatum</Form.Label>
+                            <Form.Label>Ablaufdatum</Form.Label>
+                            <div/>
                             <Flatpickr
                                 data-enable-time
                                 options={{dateFormat: "Y-m-d H:i", defaultDate:this.state.date, time_24hr: true}}
@@ -408,11 +462,6 @@ export default class CreateArticle extends Component {
                     </Form>
                 </Container>
 
-                <Container style={{display: "flex"}} className={"mr-0"}>
-                    <Button className={"mb-2"} style={{marginLeft:"auto"}} onClick={this.togglePreview}>
-                        {this.state.showPreview ? 'Live-Preview schließen':'Live-Preview öffnen'}
-                    </Button>
-                </Container>
 
 
                 {this.state.showPreview && (
@@ -420,6 +469,15 @@ export default class CreateArticle extends Component {
                     {parse(this.state.html)}
                 </PreviewWindow>
                 )}
+
+
+                <Container>
+                    <div style={{display:"flex"}}>
+                        <Button className={" mb-2 ml-auto"} onClick={this.togglePreview}>
+                            {this.state.showPreview ? 'Live-Preview schließen':'Live-Preview öffnen'}
+                        </Button>
+
+                    </div>
 
                 <Editor
                     initialValue={this.loadEditorContent()}
@@ -512,6 +570,7 @@ export default class CreateArticle extends Component {
                     }}
                     onEditorChange={this.handleEditorChange}
                 />
+                </Container>
             </div>
         );
     }
@@ -561,6 +620,5 @@ class PreviewWindow extends Component{
     render() {
         return ReactDOM.createPortal(this.props.children, this.containerEl);
     }
-
 
 }

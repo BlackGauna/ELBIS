@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const articleSchema = new Schema({
-    title: {type: String, required: true, unique: true},
+    title: {type: String, required: true},
     path: {type: String, required: true},
     expireDate: {type: Date, required: true},
     status: {type: String, required: true},
