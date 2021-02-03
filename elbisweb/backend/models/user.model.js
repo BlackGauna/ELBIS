@@ -13,7 +13,8 @@ const userSchema = new Schema({
     plz: {type: String, required: true},
     city: {type: String, required: true},
     gender: {type: String, required: true},
-    dateOfBirth: {type: Date, required: true},
+    //TODO changed to string -> check if everything still works fine
+    dateOfBirth: {type: String, required: true},
 }, {
     timestamps: true,
 });

@@ -7,11 +7,12 @@ TODO MAYBE deploy the project to a free hosting server at the end ?
 TODO MAYBE learn how to export it as an app to phones because its really cool
 
 TODO Moderators and Admins can use All topics (but they can still hav entries in userTopics - for the case they get degraded to a user)
-TODO on TopicChange or TopicDelete - check userTopics and change
 
 -------DB/Backend-------
+TODO on Topic-Name-Change (topicUpdate) or TopicDelete - check userTopics and change/delete related topicnames
+TODO on User-Email-Change (userUpdate) or UserDelete - check UserTopics and change/delete related useremails
 
-TODO check on starting routine if a file to corrosponding articles in the DB exists - if not delete the DB entry
+TODO check on starting routine if a file to articles in the DB exists - if not delete the DB entry
 
 Article
 TODO make an article updateable
@@ -31,27 +32,20 @@ TODO Buttons should show a modal before performing an action
     - Delete: Check if ur sure to delete
     - Submit: Check if ur sure to submit
 
+TODO Handle Text overflow on cells
+
 SidePages
 TODO finalize 'createUser'
     - Choose allowedTopics and write them correcly to the (userTopic)DB
 TODO finalize 'editUser'
-    - create static initial labels with values loaded from db
-    - add "edit" button to edit any attribute with a modal
-     - Choose allowedTopics and write them correcly to the (userTopic)DB
-TODO finalize 'manageAccount'
-    - copy "editUser" and just load the logged in User to be edited
+     - passwordchange, DateOfBirth
+     - make UserTopics editable
 TODO create a 'submit' component for the moderator to publish submitted articles
 TODO show all articles/onepagers in state 'public' on the home site
+TODO make a public homepage for non-logged Users
 
 -------Editor-------
-
-
-
-
-
-
-
-
-
+TODO implement OnePagers
+TODO show OnePagers on Homepage
 
  */

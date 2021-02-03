@@ -124,7 +124,8 @@ export default class moderation_userList extends Component {
     }
 
     dateFormatter = (cell) => {
-        return moment(cell).format("DD.MM.YYYY")
+        //return moment(cell).format("DD.MM.YYYY")
+        return cell
     }
 
     buttonFormatter = (cell, row, rowIndex, formatExtraData) => {

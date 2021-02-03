@@ -5,6 +5,7 @@ import Select from 'react-select';
 import {Button, FormText} from "react-bootstrap";
 import {GENDER} from "../../session/gender.ice";
 import {ROLE} from "../../session/userRoles.ice";
+import DatePicker from "react-datepicker";
 
 export default class moderation_editUser extends Component {
     //TODO Password
@@ -35,7 +36,7 @@ export default class moderation_editUser extends Component {
                 city: '',
                 choosenGender: '',
                 choosenRole: '',
-                dateOfBirth: new Date(),
+                dateOfBirth: '',
                 allowedTopics: [],
                 choosenTopics: [],
             },
@@ -96,7 +97,7 @@ export default class moderation_editUser extends Component {
                         choosenGender: response.data.gender,
                         choosenRole: response.data.role,
                         //TODO convert to lacal date?
-                        //dateOfBirth:  response.data.dateOfBirth,
+                        dateOfBirth:  response.data.dateOfBirth,
                     }
                 });
                 console.log("Loaded User from DB:");
@@ -140,7 +141,6 @@ export default class moderation_editUser extends Component {
      * Render
      *
      ********/
-    //TODO buttons for special tools
     //TODO maybe use send-method when enter is pressed in the inputfield
     render() {
         const {currentUser} = this.state;
@@ -153,7 +153,7 @@ export default class moderation_editUser extends Component {
                     <input
                         style={{
                             fontWeight: "600",
-                            fontSize: "20px",
+                            fontSize: "30px",
                             background: "none",
                             textAlign: "left",
                             marginLeft: "-14px"
@@ -286,8 +286,7 @@ export default class moderation_editUser extends Component {
         let gender_field;
         if (!toggles.gender) {
             gender_field =
-                <div>
-                    <br/>
+                <div><label>Geschlecht</label>
                     <input
                         style={{
                             fontWeight: "600",
@@ -305,7 +304,7 @@ export default class moderation_editUser extends Component {
                         onClick={this.toggle_gender}>ändern</Button>
                 </div>;
         } else {
-            gender_field = <div>
+            gender_field = <div><label>Geschlecht</label>
                 <Select
                     type="gender"
                     placeholder="Geschlecht"
@@ -315,6 +314,44 @@ export default class moderation_editUser extends Component {
                 <Button variant="link" size='sm' onClick={this.toggle_gender}>abbrechen</Button>
                 <Button variant="link" size='sm' style={{color: '#229954'}}
                         onClick={this.send_gender}>bestätigen</Button>
+            </div>;
+        }
+        //dateOfBirth field
+        let dateOfBirth_field;
+        if (!toggles.dateOfBirth) {
+            dateOfBirth_field =
+                <div><label>Geburtsdatum</label>
+                    <input
+                        style={{
+                            fontWeight: "600",
+                            fontSize: "20px",
+                            background: "none",
+                            textAlign: "left",
+                            marginLeft: "-14px"
+                        }}
+                        className="form-control border-0"
+                        value={currentUser.dateOfBirth}
+                        disabled={true}/>
+                    <Button
+                        variant="outline-primary"
+                        size='sm'
+                        onClick={this.toggle_dateOfBirth}>ändern</Button>
+                </div>;
+        } else {
+            dateOfBirth_field = <div> <label>Geburtsdatum</label><br/>
+                <DatePicker
+                    selected={new Date()}
+                    onChange={this.onChange_dateOfBirth}
+                    peekNextMonth
+                    showMonthDropdown
+                    showYearDropdown
+                    dropdownMode="select"
+                    customInput={<Button variant="outline-secondary" size="lg"
+                                         block>{currentUser.dateOfBirth}</Button>}
+                /> <br/>
+                <Button variant="link" size='sm' onClick={this.toggle_dateOfBirth}>abbrechen</Button>
+                <Button variant="link" size='sm' style={{color: '#229954'}}
+                        onClick={this.send_dateOfBirth}>bestätigen</Button>
             </div>;
         }
         //street field
@@ -465,7 +502,8 @@ export default class moderation_editUser extends Component {
                             </div>
                             <div className="form-group col-md-3">
                                 <Button
-                                    variant="outline-primary">
+                                    variant="outline-primary"
+                                href="/resetPassword">
                                     Neues Passwort setzen
                                 </Button>
                                 <p/>
@@ -475,21 +513,27 @@ export default class moderation_editUser extends Component {
                         {/************************************************************/}
                         <hr/>
                         <div className="form-row">
-                            <div className="form-group col-md-5">
+                            <div className="form-group col-md-3">
                                 {fName_field}
                             </div>
-                            <div className="form-group col-md-4">
+                            <div className="form-group col-md-3">
                                 {lName_field}
                             </div>
                             <div className="form-group col-md-3">
                                 {gender_field}
+
                             </div>
+                            <div className="form-group col-md-3">
+                                {dateOfBirth_field}
+                            </div>
+
+
                         </div>
                         <br/>
                         {/************************************************************/}
                         <hr/>
                         <div className="form-row">
-                            <div className="form-group col-md-5">
+                            <div className="form-group col-md-auto">
                                 {street_field}
                             </div>
                             <div className="form-group col-md-2">
@@ -498,7 +542,7 @@ export default class moderation_editUser extends Component {
                             <div className="form-group col-md-2">
                                 {plz_field}
                             </div>
-                            <div className="form-group col-md-3">
+                            <div className="form-group col-md-auto">
                                 {city_field}
                             </div>
                         </div>
@@ -691,6 +735,41 @@ export default class moderation_editUser extends Component {
                 console.log(e);
             });
     }
+    //dateOfBirth
+    onChange_dateOfBirth = (date) => {
+        const myDate = date.toLocaleDateString()
+        console.log("Writing BD: "+myDate)
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    dateOfBirth: myDate
+                }
+            };
+        });
+    }
+    toggle_dateOfBirth = () => {
+        let {toggles} = this.state;
+        toggles.dateOfBirth = !toggles.dateOfBirth;
+        this.setState({toggles: toggles})
+        this.getUser(this.state.currentUser.id)
+    }
+    send_dateOfBirth = () => {
+        UserDataService.update(
+            this.state.currentUser.id,
+            {dateOfBirth: this.state.currentUser.dateOfBirth}
+        )
+            .then(response => {
+                console.log(response.data);
+                this.toggle_dateOfBirth();
+                this.setState({
+                    message: "The user was updated successfully!"
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
     //street
     onChange_street = (e) => {
         const street = e.target.value;
@@ -858,12 +937,12 @@ export default class moderation_editUser extends Component {
             };
         });
     }
-
+/*
     onChange_dateOfBirth = (date) => {
         this.setState({
             dateOfBirth: date
         })
-    }
+    } */
 //##########OLD Render##########
     /*
     render() {

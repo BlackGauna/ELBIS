@@ -33,7 +33,7 @@ export default class moderation_createUser extends Component {
             choosenGender: '',
             role: [],
             choosenRole: '',
-            dateOfBirth: new Date(),
+            dateOfBirth: new Date().toLocaleDateString(),
             allowedTopics: [],
             choosenTopics: [],
 
@@ -133,14 +133,14 @@ export default class moderation_createUser extends Component {
                             <label>Geburtsdatum</label>
                             <div className="form-row">
                                 <DatePicker
-                                    selected={this.state.dateOfBirth}
+                                    selected={new Date()}
                                     onChange={this.onChange_dateOfBirth}
                                     peekNextMonth
                                     showMonthDropdown
                                     showYearDropdown
                                     dropdownMode="select"
                                     customInput={<Button variant="outline-secondary" size="lg"
-                                                         block>{this.state.dateOfBirth.toLocaleDateString()}</Button>}
+                                                         block>{this.state.dateOfBirth}</Button>}
                                 /></div>
                         </div>
                         <div className="form-row">
@@ -397,8 +397,9 @@ export default class moderation_createUser extends Component {
     }
 
     onChange_dateOfBirth = (date) => {
+        const myDate = date.toLocaleDateString()
         this.setState({
-            dateOfBirth: date
+            dateOfBirth: myDate
         })
     }
 

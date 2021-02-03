@@ -62,6 +62,7 @@ class App extends React.Component {
                             <Router>
                                 <Route path="/" component={NavBar}/>
                                 <br/>
+                                <Route exact path="/resetPassword" component={resetPassword}/>
                                 <Route exact path="/login/home" component={ELBISweb}/>
                                 <Route exact path={"/login/article/:id"} component={articleView}/>
                                 <Route exact path="/login/manageAccount" component={manageAccount}/>
@@ -86,6 +87,7 @@ class App extends React.Component {
                         <Router>
                             <Route path="/" component={NavBar}/>
                             <br/>
+                            <Route exact path="/resetPassword" component={resetPassword}/>
                             <Route exact path="/login/home" component={ELBISweb}/>
                             <Route exact path="/login/manageAccount" component={manageAccount}/>
                             <Route exact path="/login/edit" component={CreateArticle}/>
@@ -105,6 +107,7 @@ class App extends React.Component {
                         <Router>
                             <Route path="/" component={NavBar}/>
                             <br/>
+                            <Route exact path="/resetPassword" component={resetPassword}/>
                             <Route exact path="/login/home" component={ELBISweb}/>
                             <Route exact path="/login/manageAccount" component={manageAccount}/>
                             <Route exact path="/login/edit" component={CreateArticle}/>
