@@ -109,7 +109,7 @@ export default class NavBar extends Component {
                         <span className="navbar-text m-1">
                             {sessionStorage.getItem("sessionEmail")}
                         </span>
-                        <Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
+                        <Button onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
                     </Navbar.Collapse>
                 </Navbar>
 
@@ -117,17 +117,21 @@ export default class NavBar extends Component {
         } else {
             return (<div>
                 Please contact an admin to to assign a valid role to your account.
-                <Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
+                <Button onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
             </div>)
         }
     }
 
     async doLogout() {
         try {
+            sessionStorage.setItem("sessionToken", "");
             SessionDataService.delete(sessionStorage.getItem("sessionEmail"))
                 .then(res => console.log(res.data));
             loggedUser.isLoggedIn = false;
             loggedUser.loading = true;
+            sessionStorage.setItem("sessionUserID",  "");
+            sessionStorage.setItem("sessionEmail",  "");
+            sessionStorage.setItem("sessionRole",  "");
         } catch (e) {
             console.log("Couldn't log out " + e);
         }

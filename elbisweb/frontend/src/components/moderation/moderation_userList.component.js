@@ -13,6 +13,7 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import {Container} from "react-bootstrap";
 import moment from "moment";
 import loggedUser from "../../session/loggedUser";
+import { Router, Redirect } from "react-router-dom";
 
 //TODO: make sure an administrator can add and remove topics from a user
 
@@ -99,9 +100,14 @@ export default class moderation_userList extends Component {
     }
 
     handleEditModal = (index) => {
-            const showEditUser = this.state.showEditUser;
-            showEditUser[index]= !this.state.showEditUser[index];
-            this.setState({showEditUser: showEditUser});
+        const showEditUser = this.state.showEditUser;
+        showEditUser[index] = !this.state.showEditUser[index]
+        this.setState({showEditUser: showEditUser});
+    }
+    refreshPage = (index)=>{
+        this.handleEditModal(index)
+        //TODO test if works for everyone (works fine for me(chrome))
+        window.location.reload()
     }
 
     /********
@@ -123,7 +129,7 @@ export default class moderation_userList extends Component {
 
     buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
         //MODALWORK: give the array an boolean for every row
-       this.state.showEditUser.push(false);
+        this.state.showEditUser.push(false);
         return (
             <div>
 
@@ -185,7 +191,6 @@ export default class moderation_userList extends Component {
      *
      ********/
     render() {
-
         return (
             <div className="container">
                 <h3>Nutzerverwaltung</h3>
@@ -216,11 +221,12 @@ export default class moderation_userList extends Component {
             </div>
         )
     }
-    renderCreateModal=()=>{
+
+    renderCreateModal = () => {
         //MODALWORK: check boolean for the CreateUser Modal
-        if(this.state.showCreateUser){
+        if (this.state.showCreateUser) {
             console.log("open CreateModal")
-            return(
+            return (
                 <Modal
                     show={true}
                     onHide={() => this.handleCreateModal()} size="lg">
@@ -235,17 +241,18 @@ export default class moderation_userList extends Component {
                         </button>
                     </Modal.Footer>
                 </Modal>
-            )}
+            )
+        }
     }
-    renderEditModal=()=>{
+    renderEditModal = () => {
         //MODALWORK: check each boolean of the table rows
-        for(let index = 0 ; index < this.state.showEditUser.length; index++){
-            if(this.state.showEditUser[index]){
+        for (let index = 0; index < this.state.showEditUser.length; index++) {
+            if (this.state.showEditUser[index]) {
                 console.log("open EditModal")
-                return(
+                return (
                     <Modal
                         show={true}
-                        onHide={() => this.handleEditModal(index)} size="lg">
+                        onHide={() => this.refreshPage(index)} size="lg">
                         <Modal.Header><h3>Nutzer bearbeiten</h3></Modal.Header>
                         <Modal.Body>
                             {/*MODALWORK: set the prop of the EditUser component (Userarrayindex = TableRowIndex)*/}
@@ -253,10 +260,12 @@ export default class moderation_userList extends Component {
                         </Modal.Body>
                         <Modal.Footer>
                             <button className="btn btn-primary btn-sm" onClick={() => {
-                                this.handleEditModal(index)
+                                this.refreshPage(index);
                             }}>Zurück
                             </button>
                         </Modal.Footer>
-                    </Modal>)}}
+                    </Modal>)
+            }
+        }
     }
 }

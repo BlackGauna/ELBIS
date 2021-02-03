@@ -127,6 +127,12 @@ export default class loginViewComponent extends Component {
             })
     }
 
+    handleKeyPress = (event) => {
+        if(event.key === 'Enter'){
+            this.doLogin()
+        }
+    }
+
 
 //##########Render##########
     render() {
@@ -150,6 +156,7 @@ export default class loginViewComponent extends Component {
                                     placeholder='email'
                                     value={this.state.email ? this.state.email : ''}
                                     onChange={(val) => this.setInputValue('email', val)}
+                                    onKeyPress={this.handleKeyPress}
                                 />
                             </div>
                             <div className="form-group">
@@ -160,6 +167,7 @@ export default class loginViewComponent extends Component {
                                     placeholder='passwort'
                                     value={this.state.password ? this.state.password : ''}
                                     onChange={(val) => this.setInputValue('password', val)}
+                                    onKeyPress={this.handleKeyPress}
                                 />
                             </div>
 
@@ -172,6 +180,8 @@ export default class loginViewComponent extends Component {
                                     text="Anmelden"
                                     disabled={this.state.buttonDisabled}
                                     onClick={() => this.doLogin()}
+                                    onSubmit={() => this.doLogin()}
+                                    onKeyPress={this.handleKeyPress}
                                 />
                                 <Link to='/resetpassword'>Passwort vergessen</Link>
                             </div>

@@ -10,6 +10,7 @@ class ELBIS_loginSubmitButton extends React.Component {
                     className="mb-1"
                     disabled={this.props.disabled}
                     onClick={() => this.props.onClick()}
+                    onKeyPress={this.props.onKeyPress}
                 >
                     {this.props.text}
                 </Button>

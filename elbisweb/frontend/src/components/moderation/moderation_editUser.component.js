@@ -2,22 +2,26 @@ import React, {Component} from "react";
 import UserDataService from "../../services/user.service";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Select from 'react-select';
+import {Button, FormText} from "react-bootstrap";
 import {GENDER} from "../../session/gender.ice";
 import {ROLE} from "../../session/userRoles.ice";
 
-
 export default class moderation_editUser extends Component {
-
+    //TODO Password
+    //TODO Birthday
+    /********
+     *
+     * Constructor
+     *
+     ********/
     constructor(props) {
         super(props);
-
         this.state = {
-            //this user was given by the usertable (only used to load the user from the db by id yet)
+            //this user was given by the usertable (only used to load the user from the db by id)
             givenUserByTable: this.props.user,
             //in form: please use the loaded user(currentUser) down below due to its loaded directly from the db and might store newer information
-
-            //this will be the loaded User from the DB and the user to submit
-            //TODO refresh the application after submitting and close the modal somehow
+            //
+            //this will be the loaded User from the DB and the user to submit:
             currentUser: {
                 id: null,
                 email: '',
@@ -38,19 +42,75 @@ export default class moderation_editUser extends Component {
             role: [],
             gender: [],
             stateText: '',
+            toggles: {
+                email: false,
+                password: false,
+                fName: false,
+                lName: false,
+                street: false,
+                hNumber: false,
+                plz: false,
+                city: false,
+                gender: false,
+                role: false,
+                dateOfBirth: false,
+                topics: false,
+            }
 
         };
         console.log("Opened EDITUSER with: ")
         console.log(this.props.user)
     }
-
+    /********
+     *
+     * Mounting
+     *
+     ********/
     componentDidMount() {
         //this.getUser(this.props.match.params.id);
         this.getUser(this.props.user._id);
         this.getGenderOptions()
         this.getRoleOptions()
     }
-
+    /********
+     *
+     * Load user from DB
+     *
+     ********/
+    getUser = (id) => {
+        UserDataService.get(id)
+            .then(response => {
+                this.setState({
+                    currentUser: {
+                        id: response.data._id,
+                        email: response.data.email,
+                        //TODO the hash will be loaded - dont change the password / !only write a new PW to DB if fiel changed
+                        //password: response.data.password,
+                        //passwordCheck: response.data.password,
+                        fName: response.data.fName,
+                        lName: response.data.lName,
+                        street: response.data.street,
+                        hNumber: response.data.hNumber,
+                        plz: response.data.plz,
+                        city: response.data.city,
+                        choosenGender: response.data.gender,
+                        choosenRole: response.data.role,
+                        //TODO convert to lacal date?
+                        //dateOfBirth:  response.data.dateOfBirth,
+                    }
+                });
+                console.log("Loaded User from DB:");
+                console.log(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
+    /********
+     *
+     * Load options from ice
+     *
+     ********/
     // Get gender options for dropdown
     async getGenderOptions() {
         const {currentUser} = this.state;
@@ -75,44 +135,695 @@ export default class moderation_editUser extends Component {
         }))
         this.setState({role: options})
     }
+    /********
+     *
+     * Render
+     *
+     ********/
+    //TODO buttons for special tools
+    //TODO maybe use send-method when enter is pressed in the inputfield
+    render() {
+        const {currentUser} = this.state;
+        let {toggles} = this.state;
+        //email field
+        let email_field;
+        if (!toggles.email) {
+            email_field =
+                <div><label>E-Mail</label>
+                    <input
+                        style={{
+                            fontWeight: "600",
+                            fontSize: "20px",
+                            background: "none",
+                            textAlign: "left",
+                            marginLeft: "-14px"
+                        }}
+                        className="form-control border-0"
+                        value={currentUser.email}
+                        disabled={true}/>
+                    <Button
+                        variant="outline-primary"
+                        size='sm'
+                        onClick={this.toggle_email}>bearbeiten</Button>
+                </div>;
+        } else {
+            email_field = <div>
+                <label>E-Mail</label>
+                <input
+                    type="email"
+                    className="form-control"
+                    placeholder="E-Mail"
+                    value={currentUser.email}
+                    onChange={this.onChange_email}/>
+                <Button variant="link" size='sm' onClick={this.toggle_email}>abbrechen</Button>
+                <Button variant="link" size='sm' style={{color: '#229954'}}
+                        onClick={this.send_email}>bestätigen</Button>
+            </div>;
+        }
+        //role field
+        let role_field;
+        if (!toggles.role) {
+            role_field =
+                <div>
+                    <input
+                        style={{
+                            fontWeight: "600",
+                            fontSize: "20px",
+                            background: "none",
+                            textAlign: "left",
+                            marginLeft: "-14px"
+                        }}
+                        className="form-control border-0"
+                        value={currentUser.choosenRole}
+                        disabled={true}/>
+                    <Button
+                        variant="outline-primary"
+                        size='sm'
+                        onClick={this.toggle_role}>neue Rolle zuweisen</Button>
+                </div>;
+        } else {
+            role_field = <div>
+                <Select
+                    type="role"
+                    placeholder="Rolle"
+                    options={this.state.role}
+                    //value={currentUser.choosenRole}
+                    onChange={this.onChange_role}/>
+                <Button variant="link" size='sm' onClick={this.toggle_role}>abbrechen</Button>
+                <Button variant="link" size='sm' style={{color: '#229954'}}
+                        onClick={this.send_role}>bestätigen</Button>
+            </div>;
+        }
+        //fName field
+        let fName_field;
+        if (!toggles.fName) {
+            fName_field =
+                <div><label>Vorname</label>
+                    <input
+                        style={{
+                            fontWeight: "600",
+                            fontSize: "20px",
+                            background: "none",
+                            textAlign: "left",
+                            marginLeft: "-14px"
+                        }}
+                        className="form-control border-0"
+                        value={currentUser.fName}
+                        disabled={true}/>
+                    <Button variant="outline-primary"
+                            size='sm'
+                            onClick={this.toggle_fName}>bearbeiten</Button>
+                </div>;
+        } else {
+            fName_field = <div>
+                <label>Vorname</label>
+                <input
+                    type="name"
+                    className="form-control"
+                    placeholder="Vorname"
+                    value={currentUser.fName}
+                    onChange={this.onChange_fName}/>
+                <Button variant="link" size='sm' onClick={this.toggle_fName}>abbrechen</Button>
+                <Button variant="link" size='sm' style={{color: '#229954'}}
+                        onClick={this.send_fName}>bestätigen</Button>
+            </div>;
+        }
+        //lName field
+        let lName_field;
+        if (!toggles.lName) {
+            lName_field =
+                <div><label>Nachname</label>
+                    <input
+                        style={{
+                            fontWeight: "600",
+                            fontSize: "20px",
+                            background: "none",
+                            textAlign: "left",
+                            marginLeft: "-14px"
+                        }}
+                        className="form-control border-0"
+                        value={currentUser.lName}
+                        disabled={true}/>
+                    <Button variant="outline-primary"
+                            size='sm'
+                            onClick={this.toggle_lName}>bearbeiten</Button>
+                </div>;
+        } else {
+            lName_field = <div>
+                <label>Nachname</label>
+                <input
+                    type="nachname"
+                    className="form-control"
+                    placeholder="Nachname"
+                    value={currentUser.lName}
+                    onChange={this.onChange_lName}/>
+                <Button variant="link" size='sm' onClick={this.toggle_lName}>abbrechen</Button>
+                <Button variant="link" size='sm' style={{color: '#229954'}}
+                        onClick={this.send_lName}>bestätigen</Button>
+            </div>;
+        }
+        //gender field
+        let gender_field;
+        if (!toggles.gender) {
+            gender_field =
+                <div>
+                    <br/>
+                    <input
+                        style={{
+                            fontWeight: "600",
+                            fontSize: "20px",
+                            background: "none",
+                            textAlign: "left",
+                            marginLeft: "-14px"
+                        }}
+                        className="form-control border-0"
+                        value={currentUser.choosenGender}
+                        disabled={true}/>
+                    <Button
+                        variant="outline-primary"
+                        size='sm'
+                        onClick={this.toggle_gender}>ändern</Button>
+                </div>;
+        } else {
+            gender_field = <div>
+                <Select
+                    type="gender"
+                    placeholder="Geschlecht"
+                    options={this.state.gender}
+                    //value={currentUser.choosenGender}
+                    onChange={this.onChange_gender}/>
+                <Button variant="link" size='sm' onClick={this.toggle_gender}>abbrechen</Button>
+                <Button variant="link" size='sm' style={{color: '#229954'}}
+                        onClick={this.send_gender}>bestätigen</Button>
+            </div>;
+        }
+        //street field
+        let street_field;
+        if (!toggles.street) {
+            street_field =
+                <div><label>Straße</label>
+                    <input
+                        style={{
+                            fontWeight: "600",
+                            fontSize: "20px",
+                            background: "none",
+                            textAlign: "left",
+                            marginLeft: "-14px"
+                        }}
+                        className="form-control border-0"
+                        value={currentUser.street}
+                        disabled={true}/>
+                    <Button variant="outline-primary"
+                            size='sm'
+                            onClick={this.toggle_street}>bearbeiten</Button>
+                </div>;
+        } else {
+            street_field = <div>
+                <label>Straße</label>
+                <input
+                    type="straße"
+                    className="form-control"
+                    placeholder="Straße"
+                    value={currentUser.street}
+                    onChange={this.onChange_street}/>
+                <Button variant="link" size='sm' onClick={this.toggle_street}>abbrechen</Button>
+                <Button variant="link" size='sm' style={{color: '#229954'}}
+                        onClick={this.send_street}>bestätigen</Button>
+            </div>;
+        }
+        //hNumber field
+        let hNumber_field;
+        if (!toggles.hNumber) {
+            hNumber_field =
+                <div><label>Haus Nr.</label>
+                    <input
+                        style={{
+                            fontWeight: "600",
+                            fontSize: "20px",
+                            background: "none",
+                            textAlign: "left",
+                            marginLeft: "-14px"
+                        }}
+                        className="form-control border-0"
+                        value={currentUser.hNumber}
+                        disabled={true}/>
+                    <Button variant="outline-primary"
+                            size='sm'
+                            onClick={this.toggle_hNumber}>bearbeiten</Button>
+                </div>;
+        } else {
+            hNumber_field = <div>
+                <label>Haus Nr.</label>
+                <input
+                    type="hNummer"
+                    className="form-control"
+                    placeholder="Haus Nr."
+                    value={currentUser.hNumber}
+                    onChange={this.onChange_hNumber}/>
+                <Button variant="link" size='sm' onClick={this.toggle_hNumber}>abbr.</Button>
+                <Button variant="link" size='sm' style={{color: '#229954'}}
+                        onClick={this.send_hNumber}>best.</Button>
+            </div>;
+        }
+        //plz field
+        let plz_field;
+        if (!toggles.plz) {
+            plz_field =
+                <div><label>PLZ</label>
+                    <input
+                        style={{
+                            fontWeight: "600",
+                            fontSize: "20px",
+                            background: "none",
+                            textAlign: "left",
+                            marginLeft: "-14px"
+                        }}
+                        className="form-control border-0"
+                        value={currentUser.plz}
+                        disabled={true}/>
+                    <Button variant="outline-primary"
+                            size='sm'
+                            onClick={this.toggle_plz}>bearbeiten</Button>
+                </div>;
+        } else {
+            plz_field = <div>
+                <label>PLZ</label>
+                <input
+                    type="plz"
+                    className="form-control"
+                    placeholder="PLZ"
+                    value={currentUser.plz}
+                    onChange={this.onChange_plz}/>
+                <Button variant="link" size='sm' onClick={this.toggle_plz}>abbr.</Button>
+                <Button variant="link" size='sm' style={{color: '#229954'}}
+                        onClick={this.send_plz}>best.</Button>
+            </div>;
+        }
+        //city field
+        let city_field;
+        if (!toggles.city) {
+            city_field =
+                <div><label>Ort</label>
+                    <input
+                        style={{
+                            fontWeight: "600",
+                            fontSize: "20px",
+                            background: "none",
+                            textAlign: "left",
+                            marginLeft: "-14px"
+                        }}
+                        className="form-control border-0"
+                        value={currentUser.city}
+                        disabled={true}/>
+                    <Button variant="outline-primary"
+                            size='sm'
+                            onClick={this.toggle_city}>bearbeiten</Button>
+                </div>;
+        } else {
+            city_field = <div>
+                <label>Ort</label>
+                <input
+                    type="Ort"
+                    className="form-control"
+                    placeholder="Ort"
+                    value={currentUser.city}
+                    onChange={this.onChange_city}/>
+                <Button variant="link" size='sm' onClick={this.toggle_city}>abbrechen</Button>
+                <Button variant="link" size='sm' style={{color: '#229954'}}
+                        onClick={this.send_city}>bestätigen</Button>
+            </div>;
+        }
+        //full Render
+        return (
+            <div>
+                {currentUser ? (
+                    <div className="container">
+                        {/************************************************************/}
+                        <div className="form-row">
+                            <div className="form-group col-md-9">
+                                {email_field}
+                            </div>
+                            <div className="form-group col-md-3">
+                                <Button
+                                    variant="outline-primary">
+                                    Neues Passwort setzen
+                                </Button>
+                                <p/>
+                                {role_field}
+                            </div>
+                        </div>
+                        {/************************************************************/}
+                        <hr/>
+                        <div className="form-row">
+                            <div className="form-group col-md-5">
+                                {fName_field}
+                            </div>
+                            <div className="form-group col-md-4">
+                                {lName_field}
+                            </div>
+                            <div className="form-group col-md-2">
+                                {gender_field}
+                            </div>
+                        </div>
+                        <br/>
+                        {/************************************************************/}
+                        <hr/>
+                        <div className="form-row">
+                            <div className="form-group col-md-5">
+                                {street_field}
+                            </div>
+                            <div className="form-group col-md-2">
+                                {hNumber_field}
+                            </div>
+                            <div className="form-group col-md-2">
+                                {plz_field}
+                            </div>
+                            <div className="form-group col-md-3">
+                                {city_field}
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div>
+                        <p>Test...</p>
+                    </div>
+                )}
+            </div>
+        );
+    }
 
-    getUser = (id) => {
-        UserDataService.get(id)
+    /********
+     * (3) Changefunctions for every field
+     *
+     *  1.Changefunction -> write new input values
+     *  2.togglefunction -> boolean if a field is editable
+     *  3.sendfunction -> sends a specific field to be updated in DB
+     ********/
+    //email
+    onChange_email = (e) => {
+        const email = e.target.value;
+
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    email: email
+                }
+            };
+        });
+    }
+    toggle_email = () => {
+        let {toggles} = this.state;
+        toggles.email = !toggles.email;
+        this.setState({toggles: toggles})
+        this.getUser(this.state.currentUser.id)
+    }
+    send_email = () => {
+        UserDataService.update(
+            this.state.currentUser.id,
+            {email: this.state.currentUser.email}
+        )
             .then(response => {
-                this.setState({
-                    currentUser: {
-                        email: response.data.email,
-                        //TODO the hash will be loaded - dont change the password / !only write a new PW to DB if fiel changed
-                        //password: response.data.password,
-                        //passwordCheck: response.data.password,
-                        fName: response.data.fName,
-                        lName: response.data.lName,
-                        street: response.data.street,
-                        hNumber: response.data.hNumber,
-                        plz: response.data.plz,
-                        city: response.data.city,
-                        choosenGender: response.data.gender,
-                        choosenRole: response.data.role,
-                        //TODO convert to lacal date?
-                        //dateOfBirth:  response.data.dateOfBirth,
-                    }
-                });
-                console.log("Loaded User from DB:");
                 console.log(response.data);
+                this.toggle_email();
+                this.setState({
+                    message: "The user was updated successfully!"
+                });
             })
             .catch(e => {
                 console.log(e);
             });
     }
-
-    //##########update in DB method########## //TODO not working yet
-    updateUser = () => {
+    //role
+    onChange_role = (e) => {
+        const role = e.label;
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    choosenRole: role
+                }
+            };
+        });
+    }
+    toggle_role = () => {
+        let {toggles} = this.state;
+        toggles.role = !toggles.role;
+        this.setState({toggles: toggles})
+        this.getUser(this.state.currentUser.id)
+    }
+    send_role = () => {
         UserDataService.update(
             this.state.currentUser.id,
-            this.state.currentUser
+            {role: this.state.currentUser.choosenRole}
         )
             .then(response => {
                 console.log(response.data);
+                this.toggle_role();
+                this.setState({
+                    message: "The user was updated successfully!"
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
+    //fName
+    onChange_fName = (e) => {
+        const fName = e.target.value;
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    fName: fName
+                }
+            };
+        });
+    }
+    toggle_fName = () => {
+        let {toggles} = this.state;
+        toggles.fName = !toggles.fName;
+        this.setState({toggles: toggles})
+        this.getUser(this.state.currentUser.id)
+    }
+    send_fName = () => {
+        UserDataService.update(
+            this.state.currentUser.id,
+            {fName: this.state.currentUser.fName}
+        )
+            .then(response => {
+                console.log(response.data);
+                this.toggle_fName();
+                this.setState({
+                    message: "The user was updated successfully!"
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
+    //lName
+    onChange_lName = (e) => {
+        const lName = e.target.value;
+
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    lName: lName
+                }
+            };
+        });
+    }
+    toggle_lName = () => {
+        let {toggles} = this.state;
+        toggles.lName = !toggles.lName;
+        this.setState({toggles: toggles})
+        this.getUser(this.state.currentUser.id)
+    }
+    send_lName = () => {
+        UserDataService.update(
+            this.state.currentUser.id,
+            {lName: this.state.currentUser.lName}
+        )
+            .then(response => {
+                console.log(response.data);
+                this.toggle_lName();
+                this.setState({
+                    message: "The user was updated successfully!"
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
+    //gender
+    onChange_gender = (e) => {
+        const gender = e.label;
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    choosenGender: gender
+                }
+            };
+        });
+    }
+    toggle_gender = () => {
+        let {toggles} = this.state;
+        toggles.gender = !toggles.gender;
+        this.setState({toggles: toggles})
+        this.getUser(this.state.currentUser.id)
+    }
+    send_gender = () => {
+        UserDataService.update(
+            this.state.currentUser.id,
+            {gender: this.state.currentUser.choosenGender}
+        )
+            .then(response => {
+                console.log(response.data);
+                this.toggle_gender();
+                this.setState({
+                    message: "The user was updated successfully!"
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
+    //street
+    onChange_street = (e) => {
+        const street = e.target.value;
+
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    street: street
+                }
+            };
+        });
+    }
+    toggle_street = () => {
+        let {toggles} = this.state;
+        toggles.street = !toggles.street;
+        this.setState({toggles: toggles})
+        this.getUser(this.state.currentUser.id)
+    }
+    send_street = () => {
+        UserDataService.update(
+            this.state.currentUser.id,
+            {street: this.state.currentUser.street}
+        )
+            .then(response => {
+                console.log(response.data);
+                this.toggle_street();
+                this.setState({
+                    message: "The user was updated successfully!"
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
+    //hNumber
+    onChange_hNumber = (e) => {
+        const hNumber = e.target.value;
+
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    hNumber: hNumber
+                }
+            };
+        });
+    }
+    toggle_hNumber = () => {
+        let {toggles} = this.state;
+        toggles.hNumber = !toggles.hNumber;
+        this.setState({toggles: toggles})
+        this.getUser(this.state.currentUser.id)
+    }
+    send_hNumber = () => {
+        UserDataService.update(
+            this.state.currentUser.id,
+            {hNumber: this.state.currentUser.hNumber}
+        )
+            .then(response => {
+                console.log(response.data);
+                this.toggle_hNumber();
+                this.setState({
+                    message: "The user was updated successfully!"
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
+    //plz
+    onChange_plz = (e) => {
+        const plz = e.target.value;
+
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    plz: plz
+                }
+            };
+        });
+    }
+    toggle_plz = () => {
+        let {toggles} = this.state;
+        toggles.plz = !toggles.plz;
+        this.setState({toggles: toggles})
+        this.getUser(this.state.currentUser.id)
+    }
+    send_plz = () => {
+        UserDataService.update(
+            this.state.currentUser.id,
+            {plz: this.state.currentUser.plz}
+        )
+            .then(response => {
+                console.log(response.data);
+                this.toggle_plz();
+                this.setState({
+                    message: "The user was updated successfully!"
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
+    //city
+    onChange_city = (e) => {
+        const city = e.target.value;
+
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    city: city
+                }
+            };
+        });
+    }
+    toggle_city = () => {
+        let {toggles} = this.state;
+        toggles.city = !toggles.city;
+        this.setState({toggles: toggles})
+        this.getUser(this.state.currentUser.id)
+
+    }
+    send_city = () => {
+        UserDataService.update(
+            this.state.currentUser.id,
+            {city: this.state.currentUser.city}
+        )
+            .then(response => {
+                console.log(response.data);
+                this.toggle_city();
                 this.setState({
                     message: "The user was updated successfully!"
                 });
@@ -122,7 +833,38 @@ export default class moderation_editUser extends Component {
             });
     }
 
-    //##########Render##########
+    onChange_password = (e) => {
+        const password = e.target.value;
+
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    password: password
+                }
+            };
+        });
+    }
+
+    onChange_passwordCheck = (e) => {
+        const passwordCheck = e.target.value;
+
+        this.setState(function (prevState) {
+            return {
+                currentUser: {
+                    ...prevState.currentUser,
+                    passwordCheck: passwordCheck
+                }
+            };
+        });
+    }
+
+    onChange_dateOfBirth = (date) => {
+        this.setState({
+            dateOfBirth: date
+        })
+    }
+//##########OLD Render##########
     /*
     render() {
         const {currentUser} = this.state;
@@ -151,7 +893,6 @@ export default class moderation_editUser extends Component {
                                         onChange={this.onChange_lName}/>
                                 </div>
                             </div>
-
                             <div className="form-group">
                                 <label>E-Mail</label>
                                 <input
@@ -241,9 +982,7 @@ export default class moderation_editUser extends Component {
                                         onChange={this.onChange_role}/>
                                 </div>
                             </div>
-
                         </form>
-
                         <button
                             type="submit"
                             className="btn btn-primary"
@@ -258,246 +997,23 @@ export default class moderation_editUser extends Component {
                     </div>
                 )}
             </div>
-
         );
-    }*/
-
-    //##########alternative Render##########
-
-    //TODO maybe open an edit modal with those links?
-    //TODO better intuitive design
-    //TODO buttons for special tools
-    render() {
-            const {currentUser} = this.state;
-            return (
-                <div>
-                    {currentUser ? (
-                        <div className="container">
-                            <div className="form-row">
-                                <div className="form-group col-md-6">
-                                    <label>Vorname</label>
-                                    <h5>{currentUser.fName}</h5> <a href=''>bearbeiten</a>
-
-                                </div>
-                                <div className="form-group col-md-6">
-                                    <label>Nachname</label>
-                                    <h5>{currentUser.lName}</h5> <a href=''>bearbeiten</a>
-                                </div>
-                            </div>
-                            <div className="form-row">
-                            <div className="form-group col-md-6">
-                                <label>E-Mail</label>
-                                <h5>{currentUser.email}</h5> <a href=''>bearbeiten</a>
-                            </div>
-                            </div>
-                            <br/>
-                            <div className="form-row">
-                            <div className="form-group col-md-3">
-                                <label>Passwort bearbeiten: </label> <br/>
-                                <button
-                                    className="btn btn-secondary"
-                                >
-                                    Neues Passwort setzen
-                                </button>
-                            </div>
-
-                            <div className="form-group col-md-5">
-                                <h6>{currentUser.choosenRole}</h6>
-                                <button
-                                    className="btn btn-secondary"
-                                >
-                                    Ändern
-                                </button>
-                            </div>
-                            </div>
-                            <hr/>
-                            <div className="form-row">
-                                <div className="form-group col-md-3">
-                                    <label>Straße</label>
-                                    <h6>{currentUser.street}</h6> <a href=''>bearbeiten</a>
-                                </div>
-                                <div className="form-group col-md-3">
-                                    <label>Hausnummer</label>
-                                    <h6>{currentUser.hNumber}</h6> <a href=''>bearbeiten</a>
-                                </div>
-                            <div className="form-group col-md-3">
-                                <label>PLZ</label>
-                                <h6>{currentUser.plz}</h6> <a href=''>bearbeiten</a>
-                            </div>
-                            <div className="form-group col-md-3">
-                                <label>Ort</label>
-                                <h6>{currentUser.city}</h6> <a href=''>bearbeiten</a>
-                            </div>
-                            </div>
-                            <div className="form-row">
-                                <div className="form-group col-md-3">
-                                    <label>Geschlecht</label>
-                                    <h6>{currentUser.choosenGender}</h6>
-                                    <button
-                                        className="btn btn-secondary"
-                                    >
-                                        Ändern
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <div>
-                            <p>Test...</p>
-                        </div>
-                    )}
-                </div>
-            );
     }
-
-
-
-//##########change methods##########
-    onChange_email = (e) => {
-        const email = e.target.value;
-
-        this.setState(function (prevState) {
-            return {
-                currentUser: {
-                    ...prevState.currentUser,
-                    email: email
-                }
-            };
-        });
+    //##########unused update in DB method##########
+    updateUser = (payload) => {
+        UserDataService.update(
+            this.state.currentUser.id,
+            payload
+        )
+            .then(response => {
+                console.log(response.data);
+                this.setState({
+                    message: "The user was updated successfully!"
+                });
+            })
+            .catch(e => {
+                console.log(e);
+            });
     }
-
-    onChange_password = (e) => {
-        const password = e.target.value;
-
-        this.setState(function (prevState) {
-            return {
-                currentUser: {
-                    ...prevState.currentUser,
-                    password: password
-                }
-            };
-        });
-    }
-
-    onChange_passwordCheck = (e) => {
-        const passwordCheck = e.target.value;
-
-        this.setState(function (prevState) {
-            return {
-                currentUser: {
-                    ...prevState.currentUser,
-                    passwordCheck: passwordCheck
-                }
-            };
-        });
-    }
-
-    onChange_fName = (e) => {
-        const fName = e.target.value;
-
-        this.setState(function (prevState) {
-            return {
-                currentUser: {
-                    ...prevState.currentUser,
-                    fName: fName
-                }
-            };
-        });
-    }
-
-    onChange_lName = (e) => {
-        const lName = e.target.value;
-
-        this.setState(function (prevState) {
-            return {
-                currentUser: {
-                    ...prevState.currentUser,
-                    lName: lName
-                }
-            };
-        });
-    }
-
-    onChange_street = (e) => {
-        const street = e.target.value;
-
-        this.setState(function (prevState) {
-            return {
-                currentUser: {
-                    ...prevState.currentUser,
-                    street: street
-                }
-            };
-        });
-    }
-
-    onChange_hNumber = (e) => {
-        const hNumber = e.target.value;
-
-        this.setState(function (prevState) {
-            return {
-                currentUser: {
-                    ...prevState.currentUser,
-                    hNumber: hNumber
-                }
-            };
-        });
-    }
-
-    onChange_plz = (e) => {
-        const plz = e.target.value;
-
-        this.setState(function (prevState) {
-            return {
-                currentUser: {
-                    ...prevState.currentUser,
-                    plz: plz
-                }
-            };
-        });
-    }
-
-    onChange_city = (e) => {
-        const city = e.target.value;
-
-        this.setState(function (prevState) {
-            return {
-                currentUser: {
-                    ...prevState.currentUser,
-                    city: city
-                }
-            };
-        });
-    }
-
-    onChange_gender = (e) => {
-        const gender = e.target.value;
-
-        this.setState(function (prevState) {
-            return {
-                currentUser: {
-                    ...prevState.currentUser,
-                    choosenGender: gender
-                }
-            };
-        });
-    }
-
-    onChange_role = (e) => {
-        const role = e.target.value;
-        this.setState(function (prevState) {
-            return {
-                currentUser: {
-                    ...prevState.currentUser,
-                    choosenRole: role
-                }
-            };
-        });
-    }
-
-    onChange_dateOfBirth = (date) => {
-        this.setState({
-            dateOfBirth: date
-        })
-    }
+    */
 }
