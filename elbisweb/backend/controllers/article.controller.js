@@ -52,7 +52,23 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     Article.find()
         .then(data => {
-            res.send(data)
+            // convert data array to editable JSON array
+            let mod= JSON.parse(JSON.stringify(data));
+
+            // find content of articles and append into content field
+            mod.forEach(article=>{
+
+                try {
+                    const content=fs.readFileSync(article.path, 'utf8');
+                    article.content=content;
+                }catch {
+                    article.content="Article not found.";
+                }
+
+            })
+            console.log(mod);
+
+            res.send(mod)
         })
         .catch(err => {
             res.status(500).send({

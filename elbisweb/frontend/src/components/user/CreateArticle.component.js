@@ -10,6 +10,7 @@ import UserTopicService from "../../services/userTopic.service";
 import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
+import articleStyle from '../../article.css'
 
 
 
@@ -486,6 +487,7 @@ export default class CreateArticle extends Component {
                         //skin: "oxide-dark",
                         //content_css:"dark",
                         //content_css: `${process.env.PUBLIC_URL}/article.css`,
+                        content_css:articleStyle,
                         plugins: [
                             "advlist autoresize autolink lists link image charmap importcss print preview anchor",
                             "searchreplace visualblocks code fullscreen",
@@ -607,7 +609,6 @@ class PreviewWindow extends Component{
             '    background-color: aquamarine;\n' +
             '}';
         style.appendChild(document.createTextNode(Vcss));
-
 
 
         this.externalWindow.document.body.appendChild(this.containerEl);
