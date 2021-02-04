@@ -149,8 +149,7 @@ exports.delete = (req, res) => {
                 Article.updateMany({"author":data.email},{"$set":{"author":"Gelöschter Nutzer"}},{"multi":true},(err, writeResult) => {});
                 Article.updateMany({"publisher":data.email},{"$set":{"publisher":"Gelöschter Nutzer"}},{"multi":true},(err, writeResult) => {});
                 Article.updateMany({"author":data.email},{"$set":{"status":"Archived"}},{"multi":true},(err, writeResult) => {});
-                //TODO Make sure this works and Usertopics are deleted by user deletion.
-                UserTopic.deleteMany({"email":data.email},{"multi":true});
+                UserTopic.deleteMany({"email":data.email},{"multi":true},(err) => {});
                 res.send({
                     message: "User was deleted successfully!"
                 });

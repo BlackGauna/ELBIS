@@ -9,14 +9,9 @@ TODO MAYBE learn how to export it as an app to phones because its really cool
 TODO Moderators and Admins can use All topics (but they can still hav entries in userTopics - for the case they get degraded to a user)
 
 -------DB/Backend-------
-TODO on Topic-Name-Change (topicUpdate) or TopicDelete - check userTopics and change/delete related topicnames
-TODO on User-Email-Change (userUpdate) or UserDelete - check UserTopics and change/delete related useremails
-
-TODO check on starting routine if a file to articles in the DB exists - if not delete the DB entry
 
 Article
 TODO make an article updateable
-TODO add expire date to for articles and then automatically archive the expired articles.
 TODO maybe - automatically delete empty articles? -> delete Files and DB entry
 User
 

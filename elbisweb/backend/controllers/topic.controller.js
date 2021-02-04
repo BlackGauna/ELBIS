@@ -104,7 +104,7 @@ exports.delete = (req, res) => {
                 });
             } else {
                 Article.updateMany({"topic":data.name},{"$set":{"topic":data.parentTopic}},{"multi":true},(err, writeResult) => {});
-                UserTopic.deleteMany({"topic":data.name},{"multi":true});
+                UserTopic.deleteMany({"topic":data.name},{"multi":true},(err, writeResult) => {});
                 res.send({
                     message: "Topic was deleted successfully!"
                 });

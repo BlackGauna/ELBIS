@@ -17,6 +17,7 @@ mongoose.connection.once('open', () => {
     console.log("MongoDB connected");
     //TODO Make sure articles get archived after time passes.
     Article.updateMany({"expiredate":{"$lte":now}},{"$set":{"status":"Archived"}},{"multi":true},(err, writeResult) => {});
+    Article.deleteMany({"path":{"$eq":""}},{"multi":true},(err) => {});
 })
 
 const userRouter = require('./routes/user.route');
