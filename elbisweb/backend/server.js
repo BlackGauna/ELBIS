@@ -15,8 +15,7 @@ const uri = "mongodb+srv://admin:admin@elbis8.ilafq.mongodb.net/ELBIS?retryWrite
 mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
 mongoose.connection.once('open', () => {
     console.log("MongoDB connected");
-    //TODO Make sure updatemany works
-    Article.updateMany({"expiredate": {$lte: now}},{"$set":{"status": "Archived"}});
+    Article.updateMany({"expiredate":{$lte: now}},{"$set":{"status":"Archived"}});
 })
 
 const userRouter = require('./routes/user.route');
