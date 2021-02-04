@@ -1,4 +1,6 @@
 let Topic = require('../models/topic.model');
+const Article = require("../models/article.model");
+const UserTopic = require("../models/userTopic.model");
 
 // Create and save a new Topic
 exports.create = (req, res) => {
@@ -75,7 +77,13 @@ exports.update = (req, res) => {
                 res.status(404).send({
                     message: "Cannot update topic with id = " + id + ". Maybe topic was not found!"
                 });
-            } else res.send({message: "Topic was updated successfully."});
+            } else {
+                if(req.body.name){
+                    Article.updateMany({"topic":data.name},{"$set":{"topic":req.body.name}},{"multi":true},(err, writeResult) => {});
+                    UserTopic.updateMany({"topic":data.name},{"$set":{"topic":req.body.name}},{"multi":true},(err, writeResult) => {});
+                }
+                res.send({message: "Topic was updated successfully."});
+            }
         })
         .catch(err => {
             res.status(500).send({
