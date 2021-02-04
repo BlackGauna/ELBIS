@@ -23,6 +23,11 @@ class ArticleDataService {
         return http.get(`/article/${id}`);
     }
 
+    // update article
+    update(id, data) {
+        return http.put(`/article/${id}`, data);
+    }
+
     // create article
     create(data) {
         return http.post("/article/", data);
