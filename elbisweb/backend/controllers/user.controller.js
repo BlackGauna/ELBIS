@@ -121,12 +121,9 @@ exports.update = async (req, res) => {
                  res.send({message: "User was updated successfully."});
             if(req.body.email){
 
-                Article.updateMany({author:{$eq:data.email}},{$set:{author:req.body.email}});
-                console.log("New email is set for matching articles");
-                Article.updateMany({publisher: {$eq:data.email}},{$set:{publisher:req.body.email}});
-                console.log("New publisher is set for matching articles");
-                UserTopic.updateMany({email: {$eq:data.email}},{$set:{email:req.body.email}});
-                console.log("New email is set for matching user topics");
+                Article.updateMany({"author":data.email},{"$set":{"author":req.body.email}},{"multi":true},(err, writeResult) => {});
+                Article.updateMany({"publisher":data.email},{"$set":{"publisher":req.body.email}},{"multi":true},(err, writeResult) => {});
+                UserTopic.updateMany({"email":data.email},{"$set":{"email":req.body.email}},{"multi":true},(err, writeResult) => {});
 
             }
 
@@ -149,6 +146,11 @@ exports.delete = (req, res) => {
                     message: "Cannot delete User with id " + id + ". Maybe User was not found"
                 });
             } else {
+                Article.updateMany({"author":data.email},{"$set":{"author":"Gelöschter Nutzer"}},{"multi":true},(err, writeResult) => {});
+                Article.updateMany({"publisher":data.email},{"$set":{"publisher":"Gelöschter Nutzer"}},{"multi":true},(err, writeResult) => {});
+                Article.updateMany({"author":data.email},{"$set":{"status":"Archived"}},{"multi":true},(err, writeResult) => {});
+                //TODO Make sure this works and Usertopics are deleted by user deletion.
+                UserTopic.deleteMany({"email":data.email},{"multi":true});
                 res.send({
                     message: "User was deleted successfully!"
                 });

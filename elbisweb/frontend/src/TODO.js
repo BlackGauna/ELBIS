@@ -26,7 +26,6 @@ User
 IMPORTANT
 
 TODO update topic name updates every single article topic
-TODO By delete pdates every article and user topic that the email is related to author and publisher
 TODO When a topic is deleted, every article that belongs to it should revert the topic to Default
 
 
