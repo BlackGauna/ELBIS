@@ -103,6 +103,8 @@ exports.delete = (req, res) => {
                     message: "Cannot delete Topic with id " + id + ". Maybe Topic was not found"
                 });
             } else {
+                Article.updateMany({"topic":data.name},{"$set":{"topic":data.parentTopic}},{"multi":true},(err, writeResult) => {});
+                UserTopic.deleteMany({"topic":data.name},{"multi":true});
                 res.send({
                     message: "Topic was deleted successfully!"
                 });

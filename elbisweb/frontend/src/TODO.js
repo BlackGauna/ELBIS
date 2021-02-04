@@ -25,8 +25,6 @@ User
 
 IMPORTANT
 
-TODO update topic name updates every single article topic
-TODO When a topic is deleted, every article that belongs to it should revert the topic to Default
 
 
 
