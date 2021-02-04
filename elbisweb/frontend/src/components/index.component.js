@@ -3,7 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ArticleService from "../services/article.service";
 import {Container, Tab, Tabs} from "react-bootstrap";
 import parse from "html-react-parser";
-import '../article_Terminal.css'
+import style from '../article_Terminal.module.css'
+import {Helmet} from "react-helmet";
 
 
 export default class ELBISweb extends Component {
@@ -32,7 +33,16 @@ export default class ELBISweb extends Component {
 //##########Render##########
     render() {
         return (
-        <div>
+        <div className={"all"}>
+            <Helmet>
+                <style type={"text/css"}>
+                    {`
+                        body {
+                        overflow: hidden;
+                        }
+                    `}
+                </style>
+            </Helmet>
             <div className={"container"}>
 
                 <Tabs>
@@ -51,9 +61,9 @@ export default class ELBISweb extends Component {
 
             </div>
 
-            <div className={"banner"}>
+            <div className={style.banner}>
                 <div className={"container"}>
-                    <p className={"banner"}>
+                    <p className={style.banner}>
                         Lesen Sie den vollständigen Artikel auf unserer Homepage: "QR Placeholder"
                     </p>
                 </div>
