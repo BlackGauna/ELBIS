@@ -1,5 +1,7 @@
 let User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
+const Article = require("../models/article.model");
+const UserTopic = require("../models/userTopic.model");
 // Create and save a new User
 exports.create = async (req, res) => {
     // Validate request
@@ -117,6 +119,17 @@ exports.update = async (req, res) => {
                 });
             } else
                  res.send({message: "User was updated successfully."});
+            if(req.body.email){
+
+                Article.updateMany({author:{$eq:data.email}},{$set:{author:req.body.email}});
+                console.log("New email is set for matching articles");
+                Article.updateMany({publisher: {$eq:data.email}},{$set:{publisher:req.body.email}});
+                console.log("New publisher is set for matching articles");
+                UserTopic.updateMany({email: {$eq:data.email}},{$set:{email:req.body.email}});
+                console.log("New email is set for matching user topics");
+
+            }
+
         })
         .catch(err => {
             res.status(500).send({
