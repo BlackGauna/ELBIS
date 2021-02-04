@@ -34,6 +34,8 @@ TODO Buttons should show a modal before performing an action
 
 TODO Handle Text overflow on cells
 
+TODO Make a public/submitted article revertable (unpublish) and the comment editable
+
 SidePages
 TODO finalize 'createUser'
     - Choose allowedTopics and write them correcly to the (userTopic)DB

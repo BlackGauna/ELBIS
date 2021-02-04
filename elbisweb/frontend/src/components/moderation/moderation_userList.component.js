@@ -98,7 +98,7 @@ export default class moderation_userList extends Component {
     handleCreateModal = () => {
         this.setState({showCreateUser: !this.state.showCreateUser});
     }
-
+    //MODALWORK: a handler for the index of the modal to show
     handleEditModal = (index) => {
         const showEditUser = this.state.showEditUser;
         showEditUser[index] = !this.state.showEditUser[index]
@@ -217,6 +217,7 @@ export default class moderation_userList extends Component {
                     data={this.state.user}
                     columns={this.state.columns}/>
 
+                {/*Check the modals*/}
                 {this.renderCreateModal()}
                 {this.renderEditModal()}
             </div>
