@@ -11,6 +11,7 @@ const articleSchema = new Schema({
     author: {type: String, required: true},
     publisher: {type: String, required: false},
     publisherComment: {type: String, required: false},
+    authorizeDate: {type: String, required: false},
 }, {
     timestamps: true,
 });
