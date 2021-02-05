@@ -61,6 +61,12 @@ export default class moderation_articleList extends Component {
                 sort: true,
             },
             {
+                dataField: 'publisherComment',
+                text: 'Kommentar',
+                sort: true,
+                formatter: this.commentFormatter,
+            },
+            {
                 dataField: '_id',
                 text: 'Aktion',
                 sort: false,
@@ -100,10 +106,22 @@ export default class moderation_articleList extends Component {
         return moment(cell).format("DD.MM.YYYY HH:mm:ss")
     }
 
+    commentFormatter = (cell) => {
+        if(cell.length >= 20){
+            return <div><a href='#' onClick={()=>this.showComment(cell)}>{cell.substring(0, 20)+("(...)")}</a></div>
+        } else return <div><a href='#' onClick={()=>this.showComment(cell)}>{cell}</a></div>
+
+    }
+
+    showComment = (cell) => {
+        //TODO maybe toggle a modal here but thats good for now
+        window.alert(cell)
+    }
+
     buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
         return (
             <div>
-                //TODO mybe make this just a preview
+                {/*TODO mybe make this just a preview*/}
                 <IconButton
                     aria-label="edit"
                     href={"/login/edit/" + row._id}>
@@ -123,12 +141,9 @@ export default class moderation_articleList extends Component {
 //##########Render##########
     render() {
         return (
-            <div className="container">
+            <div className="container-fluid">
                 <h3>Artikelverwaltung</h3>
-                <Container style={{display: "flex"}}>
                     Level: {sessionStorage.getItem("sessionRole")}
-                </Container>
-
                 <BootstrapTable
                     headerClasses="thead-light"
                     bordered={false}

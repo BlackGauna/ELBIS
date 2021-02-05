@@ -51,7 +51,7 @@ TODO show all articles/onepagers in state 'public' on the home site
 TODO make a public homepage for non-logged Users
 
 -------Editor-------
-TODO make sure file names for images are unique?
+
 TODO implement OnePagers
 TODO show OnePagers on Homepage
 TODO save article if one of the meta-fields is changed (not just on content update)
