@@ -27,7 +27,8 @@ exports.create = (req, res) => {
         topic: req.body.topic,
         author: req.body.author,
         publisher: req.body.publisher,
-        publisherComment: req.body.publisherComment
+        publisherComment: req.body.publisherComment,
+        authorizeDate: req.body.authorizeDate,
     });
 
 
@@ -80,7 +81,7 @@ exports.findAll = (req, res) => {
 
 // Retrieve all Articles from the database which are authorised
 exports.findAllAuthorised = (req, res) => {
-    Article.find({status: "Autorisiert"}).sort({updatedAt: -1})
+    Article.find({status: "Autorisiert"}).sort({authorizeDate: -1})
         .then(data => {
             if((!data) || (!data.length)){
                 res.status(404).send({message: "No published articles"});
@@ -239,6 +240,10 @@ exports.update = (req, res) => {
     delete req.body["content"];
     // console.log("deleted");
 
+    if (req.body.status === "Autorisiert") {
+        req.body.authorizeDate = new Date().toISOString()
+    }
+
     Article.findByIdAndUpdate(id, req.body, {useFindAndModify: false, new:true})
         .then(data => {
             if (!data){
@@ -246,10 +251,10 @@ exports.update = (req, res) => {
                     message: "Cannot update Article with id = " + id + ". Maybe Article was not found!"
                 });
             } else {
-                console.log("path: "+data.path);
+                console.log("path: " + data.path);
                 // update local html file with article's current content
-                if(html){
-                    fs.writeFile(data.path, html, (err)=>{
+                if (html) {
+                    fs.writeFile(data.path, html, (err) => {
                         if (err) throw err;
 
                         // success
