@@ -310,8 +310,8 @@ export default class CreateArticle extends Component {
                     status: this.state.status,
                     topic: this.state.topic,
                     author: this.state.author,
-                    publisher: "",
-                    publisherComment: "",
+                    publisher: this.state.publisher,
+                    publisherComment: this.state.publisherComment,
                     expireDate: this.state.date
                 }
 
