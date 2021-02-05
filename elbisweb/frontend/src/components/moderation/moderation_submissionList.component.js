@@ -42,6 +42,11 @@ export default class moderation_submissionList extends Component {
                     sort: true,
                 },
                 {
+                    dataField: 'topic',
+                    text: 'Bereich',
+                    sort: true,
+                },
+                {
                     dataField: 'createdAt',
                     text: 'Erstelldatum',
                     sort: true,
@@ -58,11 +63,6 @@ export default class moderation_submissionList extends Component {
                     text: 'Ablaufdatum',
                     sort: true,
                     formatter: this.dateFormatter,
-                },
-                {
-                    dataField: 'topic',
-                    text: 'Bereich',
-                    sort: true,
                 },
                 {
                     dataField: 'author',

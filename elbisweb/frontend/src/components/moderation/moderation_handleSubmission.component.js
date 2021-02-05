@@ -97,7 +97,14 @@ export default class handleSubmission extends Component {
      * Render
      *
      ********/
-//TODO add comment field and two buttons (decline/authorize)
+    prevComment=()=>{
+        if(this.state.myArticle.publisherComment){
+            return("vorheriger Kommentar: \n"+this.state.myArticle.publisherComment)
+        } else{
+            return ("neuen Kommentar verfassen...")
+        }
+    }
+
     render() {
         return (
             <div>
@@ -110,6 +117,7 @@ export default class handleSubmission extends Component {
                         className="form-control"
                         id="comment"
                         rows="3"
+                        placeholder={this.prevComment()}
                         onChange={this.onChange_comment}/>
 
                         </div>

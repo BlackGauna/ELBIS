@@ -103,6 +103,7 @@ export default class moderation_articleList extends Component {
     buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
         return (
             <div>
+                //TODO mybe make this just a preview
                 <IconButton
                     aria-label="edit"
                     href={"/login/edit/" + row._id}>
