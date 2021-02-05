@@ -80,7 +80,7 @@ exports.findAll = (req, res) => {
 
 // Retrieve all Articles from the database which are authorised
 exports.findAllAuthorised = (req, res) => {
-    Article.find({status: "Autorisiert"})
+    Article.find({status: "Autorisiert"}).sort({updatedAt: -1})
         .then(data => {
             if((!data) || (!data.length)){
                 res.status(404).send({message: "No published articles"});
