@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
+import React, {Component, useLayoutEffect} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import ArticleService from "../services/article.service";
 import {Container, Tab, Tabs} from "react-bootstrap";
 import parse from "html-react-parser";
 import style from '../article_Terminal.module.css'
 import {Helmet} from "react-helmet";
+import loggedUser from "../session/loggedUser";
 
 
 export default class ELBISweb extends Component {
@@ -15,6 +16,7 @@ export default class ELBISweb extends Component {
         this.state={
             articles:[]
         }
+        this.myRef= React.createRef();
 
     }
 
@@ -27,13 +29,32 @@ export default class ELBISweb extends Component {
                    articles:res.data
                })
            })
+
     }
+
+
 
 
 //##########Render##########
     render() {
+        let isOverflown=({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => {
+            console.log(clientHeight)
+            return scrollHeight > clientHeight || scrollWidth > clientWidth;
+        };
+
+        let ref =React.createRef();
+
+        function OverflowTest(){
+
+            useLayoutEffect(()=>{
+                console.log(ref.current.scrollWidth);
+            })
+        }
+
+
         return (
-        <div className={"all"}>
+
+        <div id={"tes"} className={"all"}>
             <Helmet>
                 <style type={"text/css"}>
                     {`
@@ -49,8 +70,8 @@ export default class ELBISweb extends Component {
                     {
                         this.state.articles.map(
                             article=> <Tab eventKey={article._id} title={article.title} key={article._id}>
-                                        <Container className={"d-flex justify-content-center content"}>
-                                            <div>
+                                        <Container id={"test"} className={"d-flex justify-content-center"}>
+                                            <div className={style.content} ref={ref}>
                                                 {parse(article.content)}
                                             </div>
                                         </Container>
@@ -61,13 +82,21 @@ export default class ELBISweb extends Component {
 
             </div>
 
-            <div className={style.banner}>
-                <div className={"container"}>
-                    <p className={style.banner}>
-                        Lesen Sie den vollständigen Artikel auf unserer Homepage: "QR Placeholder"
-                    </p>
+
+            {!isOverflown && (
+                <div>Overflow</div>
+            )}
+
+            {isOverflown && (
+                <div className={style.banner}>
+                    <div className={"container"}>
+                        <p className={style.banner}>
+                            Lesen Sie den vollständigen Artikel auf unserer Homepage: "QR Placeholder"
+                        </p>
+                    </div>
                 </div>
-            </div>
+            )}
+
         </div>
         )
     }

@@ -66,7 +66,7 @@ exports.findAll = (req, res) => {
                 }
 
             })
-            console.log(mod);
+            //console.log(mod);
 
             res.send(mod)
         })
@@ -160,7 +160,12 @@ exports.update = (req, res) => {
     }
 
     const id = req.params.id;
-    const html= req.body.content;
+
+    let html;
+    if(req.body.content){
+        html= req.body.content;
+    }
+
 
     // get old title by parsing path of req
     const oldtitle = req.body.path.substring(req.body.path.indexOf('_')+1, req.body.path.lastIndexOf('_'));
@@ -209,12 +214,15 @@ exports.update = (req, res) => {
             } else {
                 console.log("path: "+data.path);
                 // update local html file with article's current content
-                fs.writeFile(data.path, html, (err)=>{
-                    if (err) throw err;
+                if(html){
+                    fs.writeFile(data.path, html, (err)=>{
+                        if (err) throw err;
 
-                    // success
-                    console.log("File updated!");
-                });
+                        // success
+                        console.log("File updated!");
+                    });
+                }
+
 
                 console.log(data);
                 res.send(data);

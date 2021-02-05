@@ -1,5 +1,4 @@
 div.content{
-    background-color: #fafafa;
 }
 
 h1{
@@ -10,16 +9,17 @@ h1{
 }
 p{
     /*background-color: darkcyan;*/
-    font-size: 1.2rem !important;
+    font-size: 1.1rem !important;
+    text-align: left;
 }
 
 img{
-    margin-top: 1.5rem;
+    margin-top: 10.5rem;
     margin-bottom: 1.5rem;
+    alignment: center;
 }
 
 div.banner{
-
     display: flex;
     background-image: linear-gradient(to bottom, rgba(232,232,232,0.3)10%,rgba(232,232,232, 1)56%);
     /*background-color: rgba(176, 176, 176, 0.5);*/
@@ -36,3 +36,5 @@ p.banner{
     color: black;
     font-size: 2rem !important;
 }
+
+
