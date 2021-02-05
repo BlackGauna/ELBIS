@@ -6,6 +6,7 @@ import parse from "html-react-parser";
 import style from '../article_Terminal.module.css'
 import {Helmet} from "react-helmet";
 import loggedUser from "../session/loggedUser";
+import $ from 'jquery'
 
 
 export default class ELBISweb extends Component {
@@ -59,7 +60,7 @@ export default class ELBISweb extends Component {
         console.log(document.getElementById("test").scrollHeight)
         console.log(window.innerHeight)
 
-        if(document.getElementById("test").scrollHeight>window.innerHeight){
+        if($(document).height()>window.innerHeight){
             this.setState({
                 isOverflown:true
             })
