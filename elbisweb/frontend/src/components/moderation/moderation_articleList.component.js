@@ -148,7 +148,8 @@ export default class moderation_articleList extends Component {
                     headerClasses="thead-light"
                     bordered={false}
                     bootstrap4={true}
-                    keyField='title'
+                    //KeyField needs to be uniqe - else error on updates!
+                    keyField='createdAt'
                     data={this.state.article}
                     columns={this.state.columns}/>
             </div>

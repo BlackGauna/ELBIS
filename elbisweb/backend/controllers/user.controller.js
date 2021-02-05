@@ -125,7 +125,7 @@ exports.update = async (req, res) => {
                 Article.updateMany({"author":data.email},{"$set":{"author":req.body.email}},{"multi":true},(err, writeResult) => {});
                 Article.updateMany({"publisher":data.email},{"$set":{"publisher":req.body.email}},{"multi":true},(err, writeResult) => {});
                 UserTopic.updateMany({"email":data.email},{"$set":{"email":req.body.email}},{"multi":true},(err, writeResult) => {});
-
+                Session.updateMany({"email":data.email},{"$set":{"email":req.body.email}},{"multi":true},(err, writeResult) => {});
             }
 
         })

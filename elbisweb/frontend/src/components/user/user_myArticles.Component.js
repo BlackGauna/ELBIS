@@ -11,13 +11,12 @@ import moment from "moment";
 import MessageIcon from "@material-ui/icons/Message";
 import {Container} from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
+import Alert from 'react-bootstrap/Alert'
 import Modal from "react-bootstrap/Modal";
 import HandleSubmission from "../moderation/moderation_handleSubmission.component";
 
 
-
 export default class user_myArticles extends Component {
-    //TODO maybe show autorized articles as green, published blue and declined as red
 
     /********
      *
@@ -84,7 +83,7 @@ export default class user_myArticles extends Component {
         };
     }
 
-    statusRowStyle= (row, rowIndex)=>{
+    statusRowStyle = (row, rowIndex) => {
         const style = {};
         if (row.status === ARTICLESTATUS.AUTORISIERT || row.status === ARTICLESTATUS.ÖFFENTLICH) {
             style.backgroundColor = '#A3E4D7';
@@ -92,8 +91,7 @@ export default class user_myArticles extends Component {
             style.backgroundColor = '#AED6F1';
         } else if (row.status === ARTICLESTATUS.ABGELEHNT) {
             style.backgroundColor = '#E6B0AA';
-        }
-        else {
+        } else {
 
         }
         return style
@@ -104,20 +102,20 @@ export default class user_myArticles extends Component {
      * Modals
      *
      ********/
-    refreshPage = ()=>{
-        //TODO if works for everyone (works fine for me(chrome))
+    refreshPage = () => {
         window.location.reload()
     }
 
     // delete Article method
     deleteArticle = (id) => {
-        if(window.confirm('Möchten Sie den ausgewählten Artikel löschen?')){
+        if (window.confirm('Möchten Sie den ausgewählten Artikel löschen?')) {
             ArticleDataService.delete(id)
                 .then(res => console.log(res.data));
             this.setState({
                 article: this.state.article.filter(el => el._id !== id)
             })
-        } else {}
+        } else {
+        }
     }
 
     showComment = (cell) => {
@@ -126,9 +124,8 @@ export default class user_myArticles extends Component {
     }
 
     updateArticleStatus = (row) => {
-        //TODO update error?
         row.status = ARTICLESTATUS.EINGEREICHT;
-        if(window.confirm('Möchten Sie den ausgewählten Artikel zum veröffentlichen einreichen?')){
+        if (window.confirm('Möchten Sie den ausgewählten Artikel zum veröffentlichen einreichen?')) {
             ArticleDataService.update(
                 row._id, row)
                 .then(response => {
@@ -140,7 +137,8 @@ export default class user_myArticles extends Component {
                 .catch(e => {
                     console.log(e);
                 });
-        } else {}
+        } else {
+        }
         this.refreshPage()
     }
 
@@ -169,9 +167,13 @@ export default class user_myArticles extends Component {
     }
 
     commentFormatter = (cell) => {
-        if(cell.length >= 20){
-            return <div><a href='#' onClick={()=>this.showComment(cell)}>{cell.substring(0, 20)+("(...)")}</a></div>
-        } else return <div><a href='#' onClick={()=>this.showComment(cell)}>{cell}</a></div>
+        if (cell.length >= 20) {
+            if(this.state.commentAlert){
+
+            }
+            return <div><a href='#' onClick={() => this.showComment(cell)}>{cell.substring(0, 20) + ("(...)")}</a>
+            </div>
+        } else {return <div><a href='#' onClick={() => this.showComment(cell)}>{cell}</a></div>}
 
     }
 
@@ -188,7 +190,8 @@ export default class user_myArticles extends Component {
                 </IconButton>
 
                 <IconButton aria-label="delete" href='#' onClick={() => {
-                    this.deleteArticle(row._id)}}>
+                    this.deleteArticle(row._id)
+                }}>
                     <DeleteIcon/>
                 </IconButton>
 
@@ -219,13 +222,12 @@ export default class user_myArticles extends Component {
                     headerClasses="thead-light"
                     bordered={false}
                     bootstrap4={true}
-                    //TODO KeyField needs to be uniqe - else error on updates!
+                    //KeyField needs to be uniqe - else error on updates!
                     keyField='createdAt'
                     data={this.state.article}
                     columns={this.state.columns}
                     rowStyle={this.statusRowStyle}
                 />
-
             </div>
         )
     }
