@@ -11,7 +11,7 @@ class UserTopicDataService {
 
     //get all by email
     getAllByMail(email) {
-        return http.get(`/usertopic/${email}}`);
+        return http.get(`/usertopic/${email}`);
     }
 
     // create userTopic
