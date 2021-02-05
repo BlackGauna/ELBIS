@@ -9,7 +9,6 @@ import DatePicker from "react-datepicker";
 
 export default class moderation_editUser extends Component {
     //TODO Password
-    //TODO Birthday
     /********
      *
      * Constructor
@@ -88,7 +87,7 @@ export default class moderation_editUser extends Component {
                     currentUser: {
                         id: response.data._id,
                         email: response.data.email,
-                        //TODO the hash will be loaded - dont change the password / !only write a new PW to DB if fiel changed
+                        //!!!the hash will be loaded - dont change the password / !only write a new PW to DB if fiel changed
                         //password: response.data.password,
                         //passwordCheck: response.data.password,
                         fName: response.data.fName,
@@ -99,7 +98,6 @@ export default class moderation_editUser extends Component {
                         city: response.data.city,
                         choosenGender: response.data.gender,
                         choosenRole: response.data.role,
-                        //TODO convert to lacal date?
                         dateOfBirth: response.data.dateOfBirth,
                     }
                 });

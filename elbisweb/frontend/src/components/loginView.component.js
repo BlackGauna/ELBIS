@@ -101,7 +101,6 @@ export default class loginViewComponent extends Component {
                             userid: res.data.userid,
                             email: res.data.email,
                             role: res.data.role,
-                            // TODO: expire
                             submitted: true
                         });
                         console.log(res.data);

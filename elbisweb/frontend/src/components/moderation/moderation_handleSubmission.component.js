@@ -7,7 +7,7 @@ import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import ArticleDataService from "../../services/article.service";
 
 export default class handleSubmission extends Component {
-    //TODO update comment, state and publisher at submit
+
     /********
      *
      * Constructor
@@ -70,7 +70,6 @@ export default class handleSubmission extends Component {
                     console.log(this.state.myArticle)
                     e.preventDefault();
                     //ARTICLE UPDATE
-                    //TODO error on update article function (other payload-model used in controller function???)
                     ArticleDataService.update(
                         this.state.myArticle._id, this.state.myArticle)
                         .then(response => {

@@ -6,15 +6,10 @@ import MessageIcon from '@material-ui/icons/Message';
 import IconButton from "@material-ui/core/IconButton";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import moment from "moment";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 import {Container} from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import Modal from "react-bootstrap/Modal";
 import HandleSubmission from "./moderation_handleSubmission.component";
-
-
-//TODO create submission window to manage a submission with a comment
 
 export default class moderation_submissionList extends Component {
 
@@ -97,18 +92,12 @@ export default class moderation_submissionList extends Component {
     }
     refreshPage = (index)=>{
         this.handleSubmissionModal(index)
-        //TODO if works for everyone (works fine for me(chrome))
         window.location.reload()
-    }
-    // let a mod write a comment here and decide about the release of the article
-    handleSubmission = (id) => {
-        console.log("implement me")
-        //TODO update the status of an article with the given id to 'Autorisiert' oder 'Abgelehnt'
     }
     //show an article preview here
     showArticlePreview = (content) => {
         console.log("implement me")
-        //TODO show the preview of an article here
+        //TODO maybe show the preview of an article here
     }
 
     /********
@@ -135,7 +124,6 @@ export default class moderation_submissionList extends Component {
         return moment(cell).format("DD.MM.YYYY HH:mm:ss")
     }
 
-    // TODO: implement view Article (read only??) and create comment to author
     buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
         //MODALWORK: give the array an boolean for every row
         this.state.submissionModal.push(false);
@@ -173,7 +161,6 @@ export default class moderation_submissionList extends Component {
                     headerClasses="thead-light"
                     bordered={false}
                     bootstrap4={true}
-                    //TODO KeyField needs to be uniqe - else error on updates!
                     keyField='createdAt'
                     data={this.state.article}
                     columns={this.state.columns}/>

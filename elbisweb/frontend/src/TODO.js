@@ -37,14 +37,10 @@ TODO finalize 'createUser'
 TODO finalize 'editUser'
      - passwordchange,
      - make UserTopics editable
-TODO create a 'submit' component for the moderator to publish submitted articles
-TODO show all articles/onepagers in state 'public' on the home site
 TODO make a public homepage for non-logged Users
 
 -------Editor-------
 
-TODO implement OnePagers
-TODO show OnePagers on Homepage
 TODO save article if one of the meta-fields is changed (not just on content update)
 TODO save the previous publisher and comment (do not write empty on save)
 

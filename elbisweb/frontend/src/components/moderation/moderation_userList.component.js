@@ -50,7 +50,8 @@ export default class moderation_userList extends Component {
                     text: 'E-Mail',
                     sort: true,
                     headerStyle: () => {
-                        return {width: '20%'};
+                        return {width: '20%',
+                        };
                     }
                 },
                 {
@@ -109,7 +110,6 @@ export default class moderation_userList extends Component {
     }
     refreshPage = (index) => {
         this.handleEditModal(index)
-        //TODO test if works for everyone (works fine for me(chrome))
         window.location.reload()
     }
 
