@@ -163,7 +163,7 @@ export default class moderation_submissionList extends Component {
      ********/
     render() {
         return (
-            <div className="container">
+            <div className="container-fluid">
                 <h3>Neue Veröffentlichungen</h3>
                 <Container style={{display: "flex"}}>
                 </Container>

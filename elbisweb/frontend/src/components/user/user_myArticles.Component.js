@@ -168,7 +168,7 @@ export default class user_myArticles extends Component {
         return moment(cell).format("DD.MM.YYYY HH:mm:ss")
     }
 
-    commentFormatter = (cell, row) => {
+    commentFormatter = (cell) => {
         if(cell.length >= 20){
             return <div><a href='#' onClick={()=>this.showComment(cell)}>{cell.substring(0, 20)+("(...)")}</a></div>
         } else return <div><a href='#' onClick={()=>this.showComment(cell)}>{cell}</a></div>
@@ -209,7 +209,7 @@ export default class user_myArticles extends Component {
      ********/
     render() {
         return (
-            <div className="container">
+            <div className="container-fluid">
                 <h3>Meine Artikel</h3>
                 <Container style={{display: "flex"}}>
                 </Container>
