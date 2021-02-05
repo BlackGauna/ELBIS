@@ -14,9 +14,11 @@ export default class ELBISweb extends Component {
         super(props);
 
         this.state={
-            articles:[]
+            articles:[],
+            isOverflown:false,
         }
         this.myRef= React.createRef();
+
 
     }
 
@@ -57,6 +59,18 @@ export default class ELBISweb extends Component {
         console.log(document.getElementById("test").scrollHeight)
         console.log(window.innerHeight)
 
+        if(document.getElementById("test").scrollHeight>window.innerHeight){
+            this.setState({
+                isOverflown:true
+            })
+        }else {
+            this.setState({
+                isOverflown:false
+            })
+        }
+
+
+
     }
 
 
@@ -88,13 +102,15 @@ export default class ELBISweb extends Component {
             </div>
 
 
-            <div className={style.banner}>
-                <div className={"container"}>
-                    <p className={style.banner}>
-                        Lesen Sie den vollständigen Artikel auf unserer Homepage: "QR Placeholder"
-                    </p>
+            {this.state.isOverflown && (
+                <div className={style.banner}>
+                    <div className={"container"}>
+                        <p className={style.banner}>
+                            Lesen Sie den vollständigen Artikel auf unserer Homepage: "QR Placeholder"
+                        </p>
+                    </div>
                 </div>
-            </div>
+            )}
 
 
         </div>
