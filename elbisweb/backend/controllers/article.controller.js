@@ -148,8 +148,7 @@ exports.findOne = (req, res) => {
         });
 };
 
-// Update a Article by the id
-//TODO Cannot read property 'substring' of undefined error.
+// Update a Article by the id, however must always send a complete article. Can't just send one field.
 exports.update = (req, res) => {
     if (!req.body){
         return res.status(400).send({
