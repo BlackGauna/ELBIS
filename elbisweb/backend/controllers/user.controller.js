@@ -2,6 +2,7 @@ let User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const Article = require("../models/article.model");
 const UserTopic = require("../models/userTopic.model");
+const Session = require("../models/session.model");
 // Create and save a new User
 exports.create = async (req, res) => {
     // Validate request
@@ -150,6 +151,7 @@ exports.delete = (req, res) => {
                 Article.updateMany({"publisher":data.email},{"$set":{"publisher":"Gelöschter Nutzer"}},{"multi":true},(err, writeResult) => {});
                 Article.updateMany({"author":data.email},{"$set":{"status":"Archived"}},{"multi":true},(err, writeResult) => {});
                 UserTopic.deleteMany({"email":data.email},{"multi":true},(err) => {});
+                Session.deleteMany({"email":data.email},{"multi":true},(err) => {});
                 res.send({
                     message: "User was deleted successfully!"
                 });
