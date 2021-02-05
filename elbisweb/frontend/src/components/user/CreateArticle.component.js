@@ -174,7 +174,7 @@ export default class CreateArticle extends Component {
         }
     }
 
-    // TODO: update to use topic array in user object?
+    //update to use topic array in user object?
     /**
      * Get allowed topics of user and save to state.
      * If role is not user, have all topics

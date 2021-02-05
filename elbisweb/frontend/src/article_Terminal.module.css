@@ -21,7 +21,7 @@ img{
 
 div.banner{
     display: flex;
-    background-image: linear-gradient(to bottom, rgba(232,232,232,0.3)10%,rgba(232,232,232, 1)56%);
+    background-image: linear-gradient(to bottom, rgba(232,232,232,0)10%,rgba(232,232,232, 1)56%);
     /*background-color: rgba(176, 176, 176, 0.5);*/
     position: fixed;
     bottom: 0;
