@@ -22,7 +22,6 @@ export default class manageAccount extends Component {
             allowedTopics: []
         }
     }
-
     /********
      *
      * Mount
