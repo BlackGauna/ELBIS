@@ -40,6 +40,7 @@ export default class moderation_editUser extends Component {
                 allowedTopics: [],
                 choosenTopics: [],
             },
+            updateSession: false,
             role: [],
             gender: [],
             stateText: '',
@@ -62,6 +63,7 @@ export default class moderation_editUser extends Component {
         console.log("Opened EDITUSER with: ")
         console.log(this.props.user)
     }
+
     /********
      *
      * Mounting
@@ -73,6 +75,7 @@ export default class moderation_editUser extends Component {
         this.getGenderOptions()
         this.getRoleOptions()
     }
+
     /********
      *
      * Load user from DB
@@ -97,7 +100,7 @@ export default class moderation_editUser extends Component {
                         choosenGender: response.data.gender,
                         choosenRole: response.data.role,
                         //TODO convert to lacal date?
-                        dateOfBirth:  response.data.dateOfBirth,
+                        dateOfBirth: response.data.dateOfBirth,
                     }
                 });
                 console.log("Loaded User from DB:");
@@ -107,6 +110,7 @@ export default class moderation_editUser extends Component {
                 console.log(e);
             });
     }
+
     /********
      *
      * Load options from ice
@@ -136,6 +140,7 @@ export default class moderation_editUser extends Component {
         }))
         this.setState({role: options})
     }
+
     /********
      *
      * Render
@@ -338,7 +343,7 @@ export default class moderation_editUser extends Component {
                         onClick={this.toggle_dateOfBirth}>ändern</Button>
                 </div>;
         } else {
-            dateOfBirth_field = <div> <label>Geburtsdatum</label><br/>
+            dateOfBirth_field = <div><label>Geburtsdatum</label><br/>
                 <DatePicker
                     selected={new Date()}
                     onChange={this.onChange_dateOfBirth}
@@ -503,7 +508,7 @@ export default class moderation_editUser extends Component {
                             <div className="form-group col-md-3">
                                 <Button
                                     variant="outline-primary"
-                                href="/resetPassword">
+                                    href="/resetPassword">
                                     Neues Passwort setzen
                                 </Button>
                                 <p/>
@@ -563,10 +568,12 @@ export default class moderation_editUser extends Component {
      *  2.togglefunction -> boolean if a field is editable
      *  3.sendfunction -> sends a specific field to be updated in DB
      ********/
-    //email
+        //email
     onChange_email = (e) => {
         const email = e.target.value;
-
+        if (this.state.currentUser.email === sessionStorage.getItem("sessionEmail")) {
+            this.setState({updateSession: true})
+        }
         this.setState(function (prevState) {
             return {
                 currentUser: {
@@ -588,6 +595,12 @@ export default class moderation_editUser extends Component {
             {email: this.state.currentUser.email}
         )
             .then(response => {
+
+                if (this.state.updateSession) {
+                    sessionStorage.setItem("sessionEmail", this.state.currentUser.email)
+                    this.setState({updateSession: false})
+                }
+
                 console.log(response.data);
                 this.toggle_email();
                 this.setState({
@@ -738,7 +751,7 @@ export default class moderation_editUser extends Component {
     //dateOfBirth
     onChange_dateOfBirth = (date) => {
         const myDate = date.toLocaleDateString()
-        console.log("Writing BD: "+myDate)
+        console.log("Writing BD: " + myDate)
         this.setState(function (prevState) {
             return {
                 currentUser: {
@@ -937,12 +950,12 @@ export default class moderation_editUser extends Component {
             };
         });
     }
-/*
-    onChange_dateOfBirth = (date) => {
-        this.setState({
-            dateOfBirth: date
-        })
-    } */
+    /*
+        onChange_dateOfBirth = (date) => {
+            this.setState({
+                dateOfBirth: date
+            })
+        } */
 //##########OLD Render##########
     /*
     render() {

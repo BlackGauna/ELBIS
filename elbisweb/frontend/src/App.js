@@ -40,7 +40,6 @@ import editTopic from "./components/administration/administration_editTopic.comp
  */
 class App extends React.Component {
 
-
     render() {
         if (loggedUser.loading) {
             return (
@@ -51,8 +50,32 @@ class App extends React.Component {
                 </div>
             )
         } else {
-            //TODO resolve redundancies
             if (loggedUser.isLoggedIn) {
+                let adminRoutes, moderationRoutes, userRoutes, publicRoutes;
+                adminRoutes =
+                    <div>
+                        <Route exact path="/login/admin/manageTopics" component={administration_topicList}/>
+                        <Route exact path="/login/admin/createTopic" component={createTopic}/>
+                        <Route exact path="/login/admin/editTopic/:id" component={editTopic}/>
+                    </div>
+                moderationRoutes =
+                    <div>
+                        <Route exact path="/login/mod/manageSubmissions" component={manageSubmissions}/>
+                        <Route exact path="/login/mod/manageArticles" component={allArticlesList}/>
+                        <Route exact path="/login/mod/manageUsers" component={moderation_userList}/>
+                        <Route exact path="/login/mod/editUser/:id" component={editUser}/>
+                    </div>
+                userRoutes =
+                    <div>
+                        <Route path="/" component={NavBar}/>
+                        <br/>
+                        <Route exact path="/resetPassword" component={resetPassword}/>
+                        <Route exact path="/login/home" component={ELBISweb}/>
+                        <Route exact path="/login/manageAccount" component={manageAccount}/>
+                        <Route exact path="/login/edit" component={CreateArticle}/>
+                        <Route exact path="/login/edit/:id" component={CreateArticle}/>
+                        <Route exact path="/login/user/myArticles" component={userView}/>
+                    </div>
                 if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
                     /*************
                      *   Admin Area
@@ -60,22 +83,9 @@ class App extends React.Component {
                     return (
                         <div className="app">
                             <Router>
-                                <Route path="/" component={NavBar}/>
-                                <br/>
-                                <Route exact path="/resetPassword" component={resetPassword}/>
-                                <Route exact path="/login/home" component={ELBISweb}/>
-                                <Route exact path={"/login/article/:id"} component={articleView}/>
-                                <Route exact path="/login/manageAccount" component={manageAccount}/>
-                                <Route exact path="/login/edit" component={CreateArticle}/>
-                                <Route exact path="/login/edit/:id" component={CreateArticle}/>
-                                <Route exact path="/login/user/myArticles" component={userView}/>
-                                <Route exact path="/login/mod/manageSubmissions" component={manageSubmissions}/>
-                                <Route exact path="/login/mod/manageArticles" component={allArticlesList}/>
-                                <Route exact path="/login/mod/manageUsers" component={moderation_userList}/>
-                                <Route exact path="/login/mod/editUser/:id" component={editUser}/>
-                                <Route exact path="/login/admin/manageTopics" component={administration_topicList}/>
-                                <Route exact path="/login/admin/createTopic" component={createTopic}/>
-                                <Route exact path="/login/admin/editTopic/:id" component={editTopic}/>
+                                {userRoutes}
+                                {moderationRoutes}
+                                {adminRoutes}
                             </Router>
                         </div>
                     )
@@ -85,18 +95,8 @@ class App extends React.Component {
                      * *************/
                     return (<div className="app">
                         <Router>
-                            <Route path="/" component={NavBar}/>
-                            <br/>
-                            <Route exact path="/resetPassword" component={resetPassword}/>
-                            <Route exact path="/login/home" component={ELBISweb}/>
-                            <Route exact path="/login/manageAccount" component={manageAccount}/>
-                            <Route exact path="/login/edit" component={CreateArticle}/>
-                            <Route exact path="/login/edit/:id" component={CreateArticle}/>
-                            <Route exact path="/login/user/myArticles" component={userView}/>
-                            <Route exact path="/login/mod/manageSubmissions" component={manageSubmissions}/>
-                            <Route exact path="/login/mod/manageArticles" component={allArticlesList}/>
-                            <Route exact path="/login/mod/manageUsers" component={moderation_userList}/>
-                            <Route exact path="/login/mod/editUser/:id" component={editUser}/>
+                            {userRoutes}
+                            {moderationRoutes}
                         </Router>
                     </div>);
                 } else if (sessionStorage.getItem("sessionRole") === ROLE.USER) {
@@ -105,25 +105,21 @@ class App extends React.Component {
                      * *************/
                     return (<div className="app">
                         <Router>
-                            <Route path="/" component={NavBar}/>
-                            <br/>
-                            <Route exact path="/resetPassword" component={resetPassword}/>
-                            <Route exact path="/login/home" component={ELBISweb}/>
-                            <Route exact path="/login/manageAccount" component={manageAccount}/>
-                            <Route exact path="/login/edit" component={CreateArticle}/>
-                            <Route exact path="/login/edit/:id" component={CreateArticle}/>
-                            <Route exact path="/login/user/myArticles" component={userView}/>
+                            {userRoutes}
                         </Router>
                     </div>);
                 } else {
                     return (
                         <div className="app">
-                        <Router>
-                            <Route path="/" component={NavBar}/>
-                        </Router></div>
+                            <Router>
+                                <Route path="/" component={NavBar}/>
+                            </Router></div>
                     )
                 }
             } else if (!loggedUser.isLoggedIn) {
+                /*************
+                 *   public Area
+                 * *************/
                 return (
                     <div className="app">
                         <Router>
