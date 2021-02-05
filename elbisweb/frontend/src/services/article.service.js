@@ -9,6 +9,10 @@ class ArticleDataService {
         return http.get("/article/");
     }
 
+    getAllAuthorized() {
+        return http.get("/article/published");
+    }
+
     // get all articles by a specific email
     findByEmail(email) {
         return http.get(`/article/fetchByMail/${email}`);
