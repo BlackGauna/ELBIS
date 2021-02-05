@@ -13,7 +13,9 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import {Container} from "react-bootstrap";
 import moment from "moment";
 import loggedUser from "../../session/loggedUser";
-import { Router, Redirect } from "react-router-dom";
+import {Router, Redirect} from "react-router-dom";
+import {Grid} from "@material-ui/core";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 //TODO: make sure an administrator can add and remove topics from a user
 
@@ -81,9 +83,10 @@ export default class moderation_userList extends Component {
                 },
                 {
                     dataField: '_id',
-                    text: 'Aktion',
+                    text: '',
                     sort: false,
                     formatter: this.buttonFormatter,
+                    headerFormatter: this.headerButtonFormatter,
                     //formatExtraData: {}
                 },
             ]
@@ -104,7 +107,7 @@ export default class moderation_userList extends Component {
         showEditUser[index] = !this.state.showEditUser[index]
         this.setState({showEditUser: showEditUser});
     }
-    refreshPage = (index)=>{
+    refreshPage = (index) => {
         this.handleEditModal(index)
         //TODO test if works for everyone (works fine for me(chrome))
         window.location.reload()
@@ -135,7 +138,7 @@ export default class moderation_userList extends Component {
             <div>
 
                 {/*Edit and delete buttons in each row*/}
-                <div>
+                <Grid container justify="flex-end">
                     <IconButton
                         aria-label="edit"
                         onClick={() => this.handleEditModal(rowIndex)}
@@ -147,10 +150,26 @@ export default class moderation_userList extends Component {
                     }}>
                         <DeleteIcon/>
                     </IconButton>
-                </div>
+                </Grid>
             </div>
         )
 
+    }
+
+    headerButtonFormatter = () => {
+        //TODO button crushes the header size
+        return (
+            <div>
+                <Grid container justify="flex-end">
+                    {/*+ Button to open the create modal*/}
+                    <IconButton aria-label="add" href='#' onClick={() => {
+                        this.handleCreateModal()
+                    }}>
+                        <AddCircleIcon/>
+                    </IconButton>
+                </Grid>
+            </div>
+        )
     }
 
     /********
@@ -193,22 +212,10 @@ export default class moderation_userList extends Component {
      ********/
     render() {
         return (
-            <div className="container">
+            <div className="container-fluid">
                 <h3>Nutzerverwaltung</h3>
-                <Container style={{display: "flex"}}>
-                    Level: {sessionStorage.getItem("sessionRole")}
-
-                    {/*+ Button to open the create modal*/}
-
-                    <button className="btn btn-primary btn-sm" style={{marginLeft: "auto"}} onClick={() => {
-                        this.handleCreateModal()
-                    }}>+
-                    </button>
-
-                </Container>
-
+                Level: {sessionStorage.getItem("sessionRole")}
                 {/*Print the table*/}
-
                 <BootstrapTable
                     headerClasses="thead-light"
                     bordered={false}
