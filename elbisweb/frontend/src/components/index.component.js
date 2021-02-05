@@ -17,6 +17,7 @@ export default class ELBISweb extends Component {
         this.state={
             articles:[],
             isOverflown:false,
+            tabs:[]
         }
         this.myRef= React.createRef();
 
@@ -25,21 +26,43 @@ export default class ELBISweb extends Component {
 
 
     componentDidMount() {
-       ArticleService.getAll()
+       ArticleService.getAllAuthorized()
            .then(res=>{
-               console.log(res.data)
+               //console.log(res.data)
                this.setState({
                    articles:res.data
                })
+               console.log(this.state.articles)
+
+               this.buildTabsnew()
 
            })
     }
 
+    buildTabsnew=() =>{
+        const tabs=this.state.articles.map(
+            article=> <Tab.Pane
+                onLoad={e=>this.handleTabChange(e)}
+                onEntered={e=>this.handleTabChange(e)} ref={this.myRef}
+                eventKey={article._id} title={article.title} key={article._id}>
+                <Container className={"d-flex justify-content-center"}>
+                    <div id={"test"} className={style.content}>
+                        {parse(article.content)}
+                    </div>
+                </Container>
+            </Tab.Pane>
+        )
 
-    buildTab=() =>{
+        this.setState({
+            tabs:tabs
+        })
+    }
+
+   /* buildTab=() =>{
         try {
             return this.state.articles.map(
                 article=> <Tab.Pane
+                    onChange={console.log($(document).height)}
                     onEntered={e=>this.handleTabChange(e)} ref={this.myRef}
                     eventKey={article._id} title={article.title} key={article._id}>
                     <Container className={"d-flex justify-content-center"}>
@@ -52,13 +75,15 @@ export default class ELBISweb extends Component {
         }finally {
 
         }
-    }
+    }*/
 
 
     handleTabChange=(e) => {
-        console.log(e)
+        //console.log(e)
         console.log(document.getElementById("test").scrollHeight)
+        //console.log($(document).height)
         console.log(window.innerHeight)
+
 
         if($(document).height()>window.innerHeight){
             this.setState({
@@ -96,7 +121,7 @@ export default class ELBISweb extends Component {
                     unmountOnExit={true}
                 >
                     {
-                        this.buildTab()
+                        this.state.tabs
 
                     }
                 </Tabs>
