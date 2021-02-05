@@ -43,7 +43,8 @@ export default class ELBISweb extends Component {
         const tabs=this.state.articles.map(
             article=> <Tab.Pane
                 onLoad={e=>this.handleTabChange(e)}
-                onEntered={e=>this.handleTabChange(e)} ref={this.myRef}
+                onEntered={e=>this.handleTabChange(e)}
+                ref={this.myRef}
                 eventKey={article._id} title={article.title} key={article._id}>
                 <Container className={"d-flex justify-content-center"}>
                     <div id={"test"} className={style.content}>
@@ -56,6 +57,7 @@ export default class ELBISweb extends Component {
         this.setState({
             tabs:tabs
         })
+        this.handleTabChange()
     }
 
    /* buildTab=() =>{
