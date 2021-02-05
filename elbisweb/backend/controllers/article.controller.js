@@ -78,6 +78,43 @@ exports.findAll = (req, res) => {
         });
 };
 
+// Retrieve all Articles from the database which are authorised
+exports.findAllAuthorised = (req, res) => {
+    Article.find({status: "Autorisiert"})
+        .then(data => {
+            if((!data) || (!data.length)){
+                res.status(404).send({message: "No published articles"});
+            } else{
+
+
+            // convert data array to editable JSON array
+            let mod= JSON.parse(JSON.stringify(data));
+
+            // find content of articles and append into content field
+            mod.forEach(article=>{
+
+                try {
+                    const content=fs.readFileSync(article.path, 'utf8');
+                    article.content=content;
+                }catch {
+                    article.content="Article not found.";
+                }
+
+            })
+            //console.log(mod);
+
+            res.send(mod)
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occured while retrieving Articles."
+            });
+        });
+};
+
+
 // Retrieve all Articles with by email
 exports.findByStatus = (req, res) => {
     const status = req.params.status;
