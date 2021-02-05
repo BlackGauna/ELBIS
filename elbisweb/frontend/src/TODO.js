@@ -11,19 +11,10 @@ TODO Moderators and Admins can use All topics (but they can still hav entries in
 -------DB/Backend-------
 
 Article
-TODO make an article updateable
-TODO maybe - automatically delete empty articles? -> delete Files and DB entry
+
 User
 
-
-
-
 IMPORTANT
-
-
-
-
-
 
 -------Main/Frontend-------
 

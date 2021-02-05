@@ -79,14 +79,13 @@ exports.findAll = (req, res) => {
 };
 
 // Retrieve all Articles with by email
-// TODO on wrong status the DB just answers [] instead of an Error
 exports.findByStatus = (req, res) => {
     const status = req.params.status;
 
     console.log("DB searching for Entries with Status: "+status);
     Article.find({status: status})
         .then(data => {
-            if(!data){
+            if((!data) || (!data.length)){
                 res.status(404).send({message: "Not found Article with status " + status});
             } else{
                 res.send(data)
@@ -101,13 +100,12 @@ exports.findByStatus = (req, res) => {
 };
 
 // Retrieve all Articles by a specific email
-// TODO on wrong email the DB just answers [] instead of an Error
 exports.findByEmail = (req, res) => {
     const email = req.params.email;
 
     Article.find({author: email})
         .then(data => {
-            if(!data){
+            if((!data) || (!data.length)){
                 res.status(404).send({message: "Not found Article with email " + email});
             } else{
                 res.send(data)
@@ -150,8 +148,7 @@ exports.findOne = (req, res) => {
         });
 };
 
-// Update a Article by the id
-//TODO Cannot read property 'substring' of undefined error.
+// Update a Article by the id, however must always send a complete article. Can't just send one field.
 exports.update = (req, res) => {
     if (!req.body){
         return res.status(400).send({

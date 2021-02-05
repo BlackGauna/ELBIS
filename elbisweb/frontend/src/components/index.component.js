@@ -28,29 +28,40 @@ export default class ELBISweb extends Component {
                this.setState({
                    articles:res.data
                })
+
            })
+    }
+
+
+    buildTab=() =>{
+        try {
+            return this.state.articles.map(
+                article=> <Tab.Pane
+                    onEntered={e=>this.handleTabChange(e)} ref={this.myRef}
+                    eventKey={article._id} title={article.title} key={article._id}>
+                    <Container className={"d-flex justify-content-center"}>
+                        <div id={"test"} className={style.content}>
+                            {parse(article.content)}
+                        </div>
+                    </Container>
+                </Tab.Pane>
+            )
+        }finally {
+
+        }
+    }
+
+
+    handleTabChange=(e) => {
+        console.log(e)
+        console.log(document.getElementById("test").scrollHeight)
+        console.log(window.innerHeight)
 
     }
 
 
-
-
 //##########Render##########
     render() {
-        let isOverflown=({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => {
-            console.log(clientHeight)
-            return scrollHeight > clientHeight || scrollWidth > clientWidth;
-        };
-
-        let ref =React.createRef();
-
-        function OverflowTest(){
-
-            useLayoutEffect(()=>{
-                console.log(ref.current.scrollWidth);
-            })
-        }
-
 
         return (
 
@@ -66,36 +77,25 @@ export default class ELBISweb extends Component {
             </Helmet>
             <div className={"container"}>
 
-                <Tabs>
+                <Tabs
+                    unmountOnExit={true}
+                >
                     {
-                        this.state.articles.map(
-                            article=> <Tab eventKey={article._id} title={article.title} key={article._id}>
-                                        <Container id={"test"} className={"d-flex justify-content-center"}>
-                                            <div className={style.content} ref={ref}>
-                                                {parse(article.content)}
-                                            </div>
-                                        </Container>
-                                    </Tab>
-                        )
+                        this.buildTab()
+
                     }
                 </Tabs>
-
             </div>
 
 
-            {!isOverflown && (
-                <div>Overflow</div>
-            )}
-
-            {isOverflown && (
-                <div className={style.banner}>
-                    <div className={"container"}>
-                        <p className={style.banner}>
-                            Lesen Sie den vollständigen Artikel auf unserer Homepage: "QR Placeholder"
-                        </p>
-                    </div>
+            <div className={style.banner}>
+                <div className={"container"}>
+                    <p className={style.banner}>
+                        Lesen Sie den vollständigen Artikel auf unserer Homepage: "QR Placeholder"
+                    </p>
                 </div>
-            )}
+            </div>
+
 
         </div>
         )

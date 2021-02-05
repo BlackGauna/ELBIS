@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
-const now = new Date().toISOString();
+let now = new Date().toISOString();
 
 app.use(cors());
 app.use(express.json());
@@ -15,8 +15,7 @@ const uri = "mongodb+srv://admin:admin@elbis8.ilafq.mongodb.net/ELBIS?retryWrite
 mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
 mongoose.connection.once('open', () => {
     console.log("MongoDB connected");
-    //TODO Make sure articles get archived after time passes.
-    Article.updateMany({"expiredate":{"$lte":now}},{"$set":{"status":"Archived"}},{"multi":true},(err, writeResult) => {});
+    Article.updateMany({"expireDate":{"$lte":now}},{"$set":{"status":"Archived"}},{"multi":true},(err, writeResult) => {});
     Article.deleteMany({"path":{"$eq":""}},{"multi":true},(err) => {});
 })
 

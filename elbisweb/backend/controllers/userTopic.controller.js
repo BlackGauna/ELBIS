@@ -60,13 +60,12 @@ exports.findAll = (req, res) => {
 };
 
 // Retrieve all Usertopics by a specific email
-// TODO on wrong email the DB just answers [] instead of an Error
 exports.findByEmail = (req, res) => {
     const email = req.params.email;
 
     UserTopic.find({email: email})
         .then(data => {
-            if(!data){
+            if((!data) || (!data.length)) {
                 res.status(404).send({message: "Not found UserTopic with email " + email});
             } else{
                 res.send(data)
