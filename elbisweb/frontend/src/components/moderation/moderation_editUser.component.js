@@ -506,7 +506,7 @@ export default class moderation_editUser extends Component {
                             <div className="form-group col-md-3">
                                 <Button
                                     variant="outline-primary"
-                                    href="/resetPassword">
+                                    href="/login/resetPassword">
                                     Neues Passwort setzen
                                 </Button>
                                 <p/>

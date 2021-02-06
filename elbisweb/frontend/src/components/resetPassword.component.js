@@ -33,7 +33,7 @@ export default class resetPassword extends Component {
             } else {
                 return(
                     <Router>
-                        <div className="container"> <br/><hr/><br/>
+                        <div className="container"> <br/><br/>
                             <h4> Passwort zurücksetzen? Bald gibts hier die Lösung! </h4>
                             <Link onClick={this.redirect}> Abbrechen </Link>
                         </div>

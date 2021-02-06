@@ -20,7 +20,7 @@ export default class NavBar extends Component {
                     variant={"dark"}
                     className={"border-bottom border-light mb-3"}
                 >
-                    <Navbar.Brand href={"/login/home"}>ELBIS</Navbar.Brand>
+                    <Navbar.Brand href={"/login/"}>ELBIS</Navbar.Brand>
                     <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
                     <Navbar.Collapse id={"basic-navbar-nav"}>
                         <Nav className={"mr-auto"}>
@@ -59,7 +59,7 @@ export default class NavBar extends Component {
                     variant={"dark"}
                     className={"border-bottom border-light mb-3"}
                 >
-                    <Navbar.Brand href={"/login/home"}>ELBIS</Navbar.Brand>
+                    <Navbar.Brand href={"/login/"}>ELBIS</Navbar.Brand>
                     <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
                     <Navbar.Collapse id={"basic-navbar-nav"}>
                         <Nav className={"mr-auto"}>
@@ -94,7 +94,7 @@ export default class NavBar extends Component {
                     variant={"dark"}
                     className={"border-bottom border-light mb-3"}
                 >
-                    <Navbar.Brand href={"/login/home"}>ELBIS</Navbar.Brand>
+                    <Navbar.Brand href={"/login/"}>ELBIS</Navbar.Brand>
                     <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
                     <Navbar.Collapse id={"basic-navbar-nav"}>
                         <Nav className={"mr-auto"}>
@@ -109,7 +109,7 @@ export default class NavBar extends Component {
                         <span className="navbar-text m-1">
                             {sessionStorage.getItem("sessionEmail")}
                         </span>
-                        <Button onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
+                        <Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
                     </Navbar.Collapse>
                 </Navbar>
 

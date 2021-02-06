@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 import {observer} from 'mobx-react';
 import {ROLE} from "./session/userRoles.ice";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -38,9 +38,44 @@ import editTopic from "./components/administration/administration_editTopic.comp
 *
 *
  */
-class App extends React.Component {
 
+class App extends React.Component {
     render() {
+        const NotFound=()=> <div>Not found <Redirect to='/login' /></div>
+        let adminRoutes, moderationRoutes, userRoutes,publicRoutes;
+        adminRoutes =
+            <div>
+                <Route exact path="/login/admin/manageTopics" component={administration_topicList}/>
+                <Route exact path="/login/admin/createTopic" component={createTopic}/>
+                <Route exact path="/login/admin/editTopic/:id" component={editTopic}/>
+            </div>
+        moderationRoutes =
+            <div>
+                <Route exact path="/login/mod/manageSubmissions" component={manageSubmissions}/>
+                <Route exact path="/login/mod/manageArticles" component={allArticlesList}/>
+                <Route exact path="/login/mod/manageUsers" component={moderation_userList}/>
+                <Route exact path="/login/mod/editUser/:id" component={editUser}/>
+            </div>
+        userRoutes =
+            <div>
+                <Route path="/" component={NavBar}/>
+                <br/>
+                <Route exact path="/login/resetPassword" component={resetPassword}/>
+                <Route exact path="/login/" component={ELBISweb}/>
+                <Route exact path="/login/manageAccount" component={manageAccount}/>
+                <Route exact path="/login/edit" component={CreateArticle}/>
+                <Route exact path="/login/edit/:id" component={CreateArticle}/>
+                <Route exact path="/login/user/myArticles" component={userView}/>
+            </div>
+        publicRoutes =
+            <div>
+                <Switch>
+                    <Route path="/login" component={loginView}/>
+                    <Route exact path="/terminal" component={ELBISweb}/>
+                    <Route exact path="/resetPassword" component={resetPassword}/>
+                <Route component={NotFound} />
+            </Switch>
+            </div>
         if (loggedUser.loading) {
             return (
                 <div className="app">
@@ -51,31 +86,6 @@ class App extends React.Component {
             )
         } else {
             if (loggedUser.isLoggedIn) {
-                let adminRoutes, moderationRoutes, userRoutes, publicRoutes;
-                adminRoutes =
-                    <div>
-                        <Route exact path="/login/admin/manageTopics" component={administration_topicList}/>
-                        <Route exact path="/login/admin/createTopic" component={createTopic}/>
-                        <Route exact path="/login/admin/editTopic/:id" component={editTopic}/>
-                    </div>
-                moderationRoutes =
-                    <div>
-                        <Route exact path="/login/mod/manageSubmissions" component={manageSubmissions}/>
-                        <Route exact path="/login/mod/manageArticles" component={allArticlesList}/>
-                        <Route exact path="/login/mod/manageUsers" component={moderation_userList}/>
-                        <Route exact path="/login/mod/editUser/:id" component={editUser}/>
-                    </div>
-                userRoutes =
-                    <div>
-                        <Route path="/" component={NavBar}/>
-                        <br/>
-                        <Route exact path="/resetPassword" component={resetPassword}/>
-                        <Route exact path="/login/home" component={ELBISweb}/>
-                        <Route exact path="/login/manageAccount" component={manageAccount}/>
-                        <Route exact path="/login/edit" component={CreateArticle}/>
-                        <Route exact path="/login/edit/:id" component={CreateArticle}/>
-                        <Route exact path="/login/user/myArticles" component={userView}/>
-                    </div>
                 if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
                     /*************
                      *   Admin Area
@@ -112,8 +122,9 @@ class App extends React.Component {
                     return (
                         <div className="app">
                             <Router>
-                                <Route path="/" component={NavBar}/>
-                            </Router></div>
+                                <Route component={NotFound} />
+                            </Router>
+                        </div>
                     )
                 }
             } else if (!loggedUser.isLoggedIn) {
@@ -123,9 +134,7 @@ class App extends React.Component {
                 return (
                     <div className="app">
                         <Router>
-                            <Route exact path="/" component={loginView}/>
-                            <Route exact path="/terminal" component={ELBISweb}/>
-                            <Route exact path="/resetPassword" component={resetPassword}/>
+                            {publicRoutes}
                         </Router>
                     </div>
                 )
@@ -133,7 +142,7 @@ class App extends React.Component {
         }
     }
 
-//##########Mount method with sessioncheck##########
+    //##########Mount method with sessioncheck##########
     async componentDidMount() {
         //wait for session check
         console.log("FRONTEND SESSION STATE (t/ID/e/r): " + sessionStorage.getItem("sessionToken") + " / " + sessionStorage.getItem("sessionUserID") + " / " + sessionStorage.getItem("sessionEmail") + " / " + sessionStorage.getItem("sessionRole"));
