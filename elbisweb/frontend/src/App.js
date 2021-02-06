@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route} from "react-router-dom";
 import {observer} from 'mobx-react';
 import {ROLE} from "./session/userRoles.ice";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -45,7 +45,7 @@ class App extends React.Component {
             return (
                 <div className="app">
                     <div className="container">
-                        <img src={logo} alt="ELBIS"></img> Is loading...
+                        <img src={logo} alt="ELBIS"/> Is loading...
                     </div>
                 </div>
             )
@@ -123,7 +123,8 @@ class App extends React.Component {
                 return (
                     <div className="app">
                         <Router>
-                            <Route path="/" component={loginView}/>
+                            <Route exact path="/" component={loginView}/>
+                            <Route exact path="/terminal" component={ELBISweb}/>
                             <Route exact path="/resetPassword" component={resetPassword}/>
                         </Router>
                     </div>
