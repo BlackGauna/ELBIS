@@ -7,6 +7,7 @@ import style from '../article_Terminal.module.css'
 import {Helmet} from "react-helmet";
 import loggedUser from "../session/loggedUser";
 import $ from 'jquery'
+import qr from '../resources/qr-code.png'
 
 
 export default class ELBISweb extends Component {
@@ -43,7 +44,7 @@ export default class ELBISweb extends Component {
         const tabs=this.state.articles.map(
             article=> <Tab.Pane
                 onLoad={e=>this.handleTabChange(e)}
-                onEntered={e=>this.handleTabChange(e)}
+                onEntering={e=>this.handleTabChange(e)}
                 ref={this.myRef}
                 eventKey={article._id} title={article.title} key={article._id}>
                 <Container className={"d-flex justify-content-center"}>
@@ -134,7 +135,8 @@ export default class ELBISweb extends Component {
                 <div className={style.banner}>
                     <div className={"container"}>
                         <p className={style.banner}>
-                            Lesen Sie den vollständigen Artikel auf unserer Homepage: "QR Placeholder"
+                            Lesen Sie den vollständigen Artikel auf unserer Homepage:
+                            <img src={qr} style={{marginLeft:"2rem"}} height={"100rem"}/>
                         </p>
                     </div>
                 </div>

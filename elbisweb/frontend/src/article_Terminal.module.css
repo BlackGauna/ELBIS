@@ -26,15 +26,24 @@ div.banner{
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 10%;
+    height: 20rem;
     align-items: flex-end;
 }
 
 p.banner{
     font-weight: lighter;
-    align-self: flex-end;
+    margin-bottom: auto;
     color: black;
-    font-size: 2rem !important;
+    font-size: 1.1rem !important;
 }
 
+@media (min-width: 750px) {
+    p.banner{
+        font-weight: lighter;
+        text-align: center;
+        margin-top: auto;
+        color: black;
+        font-size: 2rem !important;
+    }
+}
 
