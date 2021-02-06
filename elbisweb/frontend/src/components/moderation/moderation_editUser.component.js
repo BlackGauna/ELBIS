@@ -8,7 +8,6 @@ import {ROLE} from "../../session/userRoles.ice";
 import DatePicker from "react-datepicker";
 
 export default class moderation_editUser extends Component {
-    //TODO Password
     /********
      *
      * Constructor

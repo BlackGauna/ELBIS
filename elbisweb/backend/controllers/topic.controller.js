@@ -68,7 +68,6 @@ exports.update = (req, res) => {
             message: "Data to update can not be empty!"
         });
     }
-
     const id = req.params.id;
 
     Topic.findByIdAndUpdate(id, req.body, {useFindAndModify: false})

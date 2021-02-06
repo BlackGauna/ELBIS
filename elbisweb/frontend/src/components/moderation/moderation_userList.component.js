@@ -10,15 +10,11 @@ import EditUser from '../moderation/moderation_editUser.component';
 import {ROLE} from "../../session/userRoles.ice";
 import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import {Container} from "react-bootstrap";
-import moment from "moment";
-import loggedUser from "../../session/loggedUser";
-import {Router, Redirect} from "react-router-dom";
 import {Grid} from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 //TODO: make sure an administrator can add and remove topics from a user
-
+//TODO close and refresh after cration of a user
 function checkMod(againstRole) {
     if (sessionStorage.getItem("sessionRole") === ROLE.MODERATOR && (againstRole === ROLE.MODERATOR || againstRole === ROLE.ADMINISTRATOR)) {
         return true
@@ -28,7 +24,6 @@ function checkMod(againstRole) {
 }
 
 export default class moderation_userList extends Component {
-
     /********
      *
      * Constructor
@@ -36,14 +31,11 @@ export default class moderation_userList extends Component {
      ********/
     constructor(props) {
         super(props);
-        //state
         this.state = {
             showCreateUser: false,
-            showEditUserBool: true,
             //MODALWORK: array with booleans for editUserModals
             showEditUser: [],
             user: [],
-            //table columns
             columns: [
                 {
                     dataField: 'email',
@@ -136,7 +128,6 @@ export default class moderation_userList extends Component {
         this.state.showEditUser.push(false);
         return (
             <div>
-
                 {/*Edit and delete buttons in each row*/}
                 <Grid container justify="flex-end">
                     <IconButton
@@ -155,7 +146,6 @@ export default class moderation_userList extends Component {
                 </Grid>
             </div>
         )
-
     }
 
     headerButtonFormatter = () => {

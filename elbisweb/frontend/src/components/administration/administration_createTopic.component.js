@@ -2,10 +2,6 @@ import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import TopicDataService from "../../services/topic.service";
 import Select from 'react-select';
-import {Button, Grid} from "@material-ui/core";
-import topicList from "../administration/administration_topicList.component";
-
-//##########Component imports##########
 
 export default class administration_createTopic extends Component {
     //##########constructor##########
@@ -15,7 +11,6 @@ export default class administration_createTopic extends Component {
         this.onChange_name = this.onChange_name.bind(this);
         this.onChange_parentTopic = this.onChange_parentTopic.bind(this);
         this.createTopic = this.createTopic.bind(this);
-
         this.state = {
             name: '',
             parentTopic: [],
@@ -30,8 +25,6 @@ export default class administration_createTopic extends Component {
         const res = await TopicDataService.getAll()
         // const res = await TopicDataService.get("6002e1e5b319cf32d4e0c504");
         const data = res.data
-
-
         const options = data.map(d => ({
             "label": d.name
         }))
@@ -65,15 +58,11 @@ export default class administration_createTopic extends Component {
                             onChange={this.onChange_parentTopic}/>
                     </div>
                     <br/>
-
-                    <Grid container justify="flex-end">
-                    <Button variant="contained" color="primary" onClick={() => {
+                        <button className="btn btn-primary" onClick={() => {
                         this.createTopic()
                     }}>
                         Bereich erstellen
-                    </Button>
-                    </Grid>
-
+                    </button>
                 </form>
             </div>
         )
@@ -87,7 +76,6 @@ export default class administration_createTopic extends Component {
             name: this.state.name,
             parentTopic: this.state.choosenParentTopic
         }
-
         TopicDataService.create(topic)
             .then(res => {
                 this.setState({
