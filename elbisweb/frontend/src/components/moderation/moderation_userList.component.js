@@ -145,9 +145,11 @@ export default class moderation_userList extends Component {
                         disabled={checkMod(row.role)}> <EditIcon/>
                     </IconButton>
 
-                    <IconButton aria-label="delete" href='#' onClick={() => {
-                        this.deleteUser(row._id)
-                    }}>
+                    <IconButton
+                        aria-label="delete"
+                        href='#'
+                        disabled={checkMod(row.role)}
+                        onClick={() => {this.deleteUser(row._id)}}>
                         <DeleteIcon/>
                     </IconButton>
                 </Grid>
