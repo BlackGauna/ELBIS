@@ -5,7 +5,7 @@ import {ROLE} from "./session/userRoles.ice";
 import "bootstrap/dist/css/bootstrap.min.css";
 import loggedUser from './session/loggedUser';
 import './ELBISWeb.css';
-import logo from './resources/ELBIS_logo/ELBIS_Ausgeschrieben.png';
+import logo from './resources/ELBIS_logo/ELBIS_Ausgeschrieben.svg';
 import NavBar from "./components/ELBIS_navbar.component";
 import ELBISweb from "./components/index.component";
 import manageAccount from "./components/manageAccount.component";
@@ -80,7 +80,7 @@ class App extends React.Component {
             return (
                 <div className="app">
                     <div className="container">
-                        <img src={logo} alt="ELBIS"/> Is loading...
+                        <img src={logo} height={150} style={{marginBlock: "-4%", marginLeft: "-5%"}} alt="ELBIS"/> Is loading...
                     </div>
                 </div>
             )

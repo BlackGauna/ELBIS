@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import loggedUser from '../session/loggedUser';
-import logo from '../resources/ELBIS_logo/ELBIS_Ausgeschrieben.png';
+import logo from '../resources/ELBIS_logo/ELBIS_Ausgeschrieben.svg';
 import {FormGroup} from "react-bootstrap";
 import UserDataService from "../services/user.service";
 import SessionDataService from "../services/session.service";
@@ -140,7 +140,7 @@ export default class loginViewComponent extends Component {
                 <br/><br/>
                 <div className="container">
                     <p/><br/>
-                    <img src={logo} alt="ELBIS"/>
+                    <img src={logo} height={150} style={{marginBlock: "-4%", marginLeft: "-5%"}} alt="ELBIS"/>
                     <br/>
                     <h4>Anmeldung</h4>
                     <hr/>

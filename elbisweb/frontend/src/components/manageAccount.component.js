@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import UserTopicDataService from "../services/userTopic.service";
-
+import logo from '../resources/ELBIS_logo/ELBIS_Ausgeschrieben.svg';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Select from 'react-select';
 import {GENDER} from "../session/gender.ice";
@@ -52,9 +52,10 @@ export default class manageAccount extends Component {
 
             <div>
                 <div className="container">
-                    <h3>Hier kannst du deinen Account verwalten.</h3>
+                    <img src={logo} height={150} style={{marginBlock: "-4%", marginLeft: "-5%"}} alt="ELBIS"/>
+                    <h3>Accountverwaltung</h3>
                     <hr/>
-                    <br/><br/>
+                    <br/>
                     <h6>Accountinformationen</h6>
                 </div>
                 <div className="container border" style={{
