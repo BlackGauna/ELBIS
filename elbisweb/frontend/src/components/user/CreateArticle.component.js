@@ -7,6 +7,7 @@ import parse from 'html-react-parser';
 import {Button, Container, Form} from "react-bootstrap";
 import TopicService from "../../services/topic.service";
 import UserTopicService from "../../services/userTopic.service";
+import ArticleService from '../../services/article.service';
 import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
@@ -36,6 +37,7 @@ export default class CreateArticle extends Component {
             allowedTopics: [],
             statusOptions:[],
             date:new Date().toISOString(),
+            initialized:false,
 
 
         };
@@ -123,6 +125,10 @@ export default class CreateArticle extends Component {
 
                     });
 
+                    this.setState({
+                        initialized:true
+                    });
+
                     this.getUserData();
 
                 })
@@ -132,7 +138,42 @@ export default class CreateArticle extends Component {
                 });
 
         }
+
+        // setup beforeunload and unload events for deleting unnamed article
+        window.addEventListener("beforeunload", this.onBeforeUnload);
+        window.addEventListener("unload", this.onUnload,false);
+
+
+
+
+
     }
+
+    // show alert when trying to leave page
+    onBeforeUnload =(e)=>{
+        e.preventDefault();
+        e.returnValue= "Ungespeicherte Änderungen";
+
+    }
+
+    // delete unnamed article when leaving page
+    onUnload= (e)=>{
+        //console.log("unload")
+        if (this.state.title===""){
+
+            // delete request has to be synchronous
+            let xhr = new XMLHttpRequest();
+            xhr.open("DELETE", "/article/"+this.state.id,false);
+            xhr.send();
+
+        }
+    }
+
+
+    componentWillUnmount() {
+        window.removeEventListener("unload", this.onUnload,false);
+    }
+
 
     /**
      * get all user data from Db and call subfunctions for additional data.
@@ -268,13 +309,15 @@ export default class CreateArticle extends Component {
      * @param content - current content inside editor
      */
     handleEditorChange = (content) => {
-        console.log("Content was updated:", content);
+        //console.log("Content was updated:", content);
         //console.log(this.state)
+        console.log(this.state.initialized)
 
         let forms= document.querySelectorAll(".needs-validation");
         //console.log("forms");
         //console.log(forms);
 
+        // check if all form entries are valid
         let allValid=true;
         Array.prototype.slice.call(forms)
             .forEach(function (form) {
@@ -300,6 +343,7 @@ export default class CreateArticle extends Component {
             //console.log("current id: "+this.state.id);
             console.log("Setting up update to Db.");
 
+            // update article in db
             if (this.state.title!=="")
             {
                 const article= {
@@ -326,12 +370,14 @@ export default class CreateArticle extends Component {
                     })
                     .catch(err=> console.log(err));
 
+                window.removeEventListener("beforeunload",this.onBeforeUnload)
+
             }
             // TODO: if title empty and oldtitle not empty, delete file (?)
 
         }
 
-        // update article in db
+
 
     }
 
@@ -405,6 +451,7 @@ export default class CreateArticle extends Component {
 
         return (
             <div>
+
                 <Container>
                     <Form noValidate className={"needs-validation"} >
                         <Form.Group className={"w-50"}>
