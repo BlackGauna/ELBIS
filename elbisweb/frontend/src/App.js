@@ -142,7 +142,9 @@ class App extends React.Component {
         }
     }
 
-    //##########Mount method with sessioncheck##########
+    /*************
+     *   Mount method with sessioncheck
+     * *************/
     async componentDidMount() {
         //wait for session check
         console.log("FRONTEND SESSION STATE (t/ID/e/r): " + sessionStorage.getItem("sessionToken") + " / " + sessionStorage.getItem("sessionUserID") + " / " + sessionStorage.getItem("sessionEmail") + " / " + sessionStorage.getItem("sessionRole"));

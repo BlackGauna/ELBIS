@@ -3,7 +3,6 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Select from 'react-select';
-import {Redirect} from "react-router-dom";
 import {Button, FormLabel} from "react-bootstrap";
 import TopicDataService from "../../services/topic.service";
 import UserDataService from "../../services/user.service";
@@ -11,11 +10,13 @@ import {ROLE} from "../../session/userRoles.ice";
 import {GENDER} from "../../session/gender.ice";
 import UserTopicDataService from "../../services/userTopic.service";
 
-// TODO: send selected topics to the db (userTopic table)
 //TODO refresh the application after submitting and close the modal somehow
-
 export default class moderation_createUser extends Component {
-
+    /********
+     *
+     * Constructor
+     *
+     ********/
     constructor(props) {
         super(props);
 
@@ -38,15 +39,26 @@ export default class moderation_createUser extends Component {
             choosenTopics: [],
 
             stateText: '',
-            redirect: false,
             submitted: false
         }
     }
 
-    redirect = () => {
-        this.setState({redirect: true})
+    /********
+     *
+     * Mounting
+     *
+     ********/
+    componentDidMount() {
+        this.getGenderOptions()
+        this.getRoleOptions()
+        this.getTopicOptions()
     }
 
+    /********
+     *
+     * Load options from ice
+     *
+     ********/
     // Get gender options for dropdown
     async getGenderOptions() {
         const data = GENDER.getAll();
@@ -70,6 +82,11 @@ export default class moderation_createUser extends Component {
         this.setState({role: options})
     }
 
+    /********
+     *
+     * Load topics from DB
+     *
+     ********/
     async getTopicOptions(){
         const res = await TopicDataService.getAll()
         const data = res.data
@@ -82,19 +99,101 @@ export default class moderation_createUser extends Component {
         this.setState({allowedTopics: options})
     }
 
-    //##########Mount method (equals initialize!)##########
-    componentDidMount() {
-        this.getGenderOptions()
-        this.getRoleOptions()
-        this.getTopicOptions()
+    /********
+     *
+     * Send user to DB
+     *
+     ********/
+    onSubmit= (e)=> {
+        //don't let any other submit run
+        e.preventDefault();
+        //create the object
+        if (this.state.email) {
+            if (this.state.password) {
+                if (this.state.password === this.state.passwordCheck) {
+                    const user = {
+                        email: this.state.email,
+                        password: this.state.password,
+                        fName: this.state.fName,
+                        lName: this.state.lName,
+                        street: this.state.street,
+                        hNumber: this.state.hNumber,
+                        plz: this.state.plz,
+                        city: this.state.city,
+                        gender: this.state.choosenGender,
+                        role: this.state.choosenRole,
+                        dateOfBirth: this.state.dateOfBirth,
+                        // allowedTopics: this.state.choosenTopics
+                    }
+
+                    UserDataService.create(user)
+                        .then(res => {
+                            this.setState({
+                                email: res.data.email,
+                                password: res.data.password,
+                                fName: res.data.fName,
+                                lName: res.data.lName,
+                                street: res.data.street,
+                                hNumber: res.data.hNumber,
+                                plz: res.data.plz,
+                                city: res.data.city,
+                                gender: res.data.gender,
+                                role: res.data.role,
+                                dateOfBirth: res.data.dateOfBirth,
+                                // allowedTopics: res.data.allowedTopics,
+
+                                submitted: true
+                            });
+                            console.log(res.data);
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                    const choosenTopics = this.state.choosenTopics;
+                    for(let run = 0; run < choosenTopics.length; run++){
+                        console.log("CREATING USERTOPIC:")
+                        console.log(choosenTopics[run])
+                    let userTopic = {
+                        email: this.state.email,
+                        topic: choosenTopics[run].label
+                    }
+
+                    UserTopicDataService.create(userTopic)
+                        .then (res => {
+                            this.setState({
+                                email: res.data.email,
+                                topic: res.data.topic
+                            });
+                            console.log(res.data);
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                    }
+                } else {
+                    this.setState({
+                        passwordCheck: '',
+                        stateText: 'Die Passwörter stimmen nicht überein.'
+                    })
+                }
+            } else {
+                this.setState({
+                    stateText: 'Geben sie ein Passwort ein'
+                })
+            }
+        } else {
+            this.setState({
+                stateText: 'Geben sie eine Email-Addresse ein'
+            })
+        }
     }
 
-    //##########Render##########
+    /********
+     *
+     * Render
+     *
+     ********/
     render() {
-        console.log(this.state.choosenTopics)
-        if (this.state.redirect) {
-            return <Redirect to="/login/mod/manageUsers"/>
-        } else {
             return (
                 <div className="container">
                     {/*<h3>Nutzer erstellen</h3>*/}
@@ -231,7 +330,7 @@ export default class moderation_createUser extends Component {
                                 onChange={this.onChange_allowedTopics.bind(this)}
                             />
                             {
-                                this.state.choosenTopics === null ? "" : this.state.choosenTopics.map( v=> <h4>{v.label}</h4>)
+                               // this.state.choosenTopics === null ? "" : this.state.choosenTopics.map( v=> <h4>{v.label}</h4>)
                             }
                         </div>
                         <div className="form-group">
@@ -241,95 +340,13 @@ export default class moderation_createUser extends Component {
                     </form>
                 </div>
             )
-        }
     }
 
-    //##########submit method##########
-    onSubmit= (e)=> {
-        //don't let any other submit run
-        e.preventDefault();
-        //create the object
-        if (this.state.email) {
-            if (this.state.password) {
-                if (this.state.password === this.state.passwordCheck) {
-                    const user = {
-                        email: this.state.email,
-                        password: this.state.password,
-                        fName: this.state.fName,
-                        lName: this.state.lName,
-                        street: this.state.street,
-                        hNumber: this.state.hNumber,
-                        plz: this.state.plz,
-                        city: this.state.city,
-                        gender: this.state.choosenGender,
-                        role: this.state.choosenRole,
-                        dateOfBirth: this.state.dateOfBirth,
-                        // allowedTopics: this.state.choosenTopics
-                    }
-
-                    UserDataService.create(user)
-                        .then(res => {
-                            this.setState({
-                                email: res.data.email,
-                                password: res.data.password,
-                                fName: res.data.fName,
-                                lName: res.data.lName,
-                                street: res.data.street,
-                                hNumber: res.data.hNumber,
-                                plz: res.data.plz,
-                                city: res.data.city,
-                                gender: res.data.gender,
-                                role: res.data.role,
-                                dateOfBirth: res.data.dateOfBirth,
-                                // allowedTopics: res.data.allowedTopics,
-
-                                submitted: true
-                            });
-                            console.log(res.data);
-                        })
-                        .catch(e => {
-                            console.log(e);
-                        });
-
-                    const userTopic = {
-                        email: this.state.email,
-                        topic: this.state.choosenTopics
-                    }
-
-                    UserTopicDataService.create(userTopic)
-                        .then (res => {
-                            this.setState({
-                                email: res.data.email,
-                                topic: res.data.topic
-                            });
-                            console.log(res.data);
-                        })
-                        .catch(e => {
-                            console.log(e);
-                        });
-
-
-                    //go back to the moderationView
-                    this.redirect();
-                } else {
-                    this.setState({
-                        passwordCheck: '',
-                        stateText: 'Die Passwörter stimmen nicht überein.'
-                    })
-                }
-            } else {
-                this.setState({
-                    stateText: 'Geben sie ein Passwort ein'
-                })
-            }
-        } else {
-            this.setState({
-                stateText: 'Geben sie eine Email-Addresse ein'
-            })
-        }
-    }
-
-    //##########change methods##########
+    /********
+     *
+     * Change methods
+     *
+     ********/
     onChange_email=(e)=> {
         this.setState({
             email: e.target.value //target equals a textBox target, value its value; Changes just the given state value
@@ -410,7 +427,7 @@ export default class moderation_createUser extends Component {
     // }
 
     onChange_allowedTopics (e) {
-        console.log(e)
-        this.setState({value:e})
+        //this.setState({value:e})
+        this.setState({choosenTopics:e})
     }
 }
