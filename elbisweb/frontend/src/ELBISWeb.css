@@ -24,6 +24,11 @@ input[type=text], .ElbisSelect {
     box-sizing: border-box;
 }
 
+.green{
+    font-weight: bold;
+    color: green;
+}
+
 /* Dark background*/
 /*body{
     background: #343a40;
