@@ -21,11 +21,11 @@ class UserTopicDataService {
 
     // delete userTopic
     delete(email, topic) {
-        return http.delete(`/usertopic/${email}/${topic}`);
+        return http.delete(`/usertopic/deleteOne/${email}/${topic}`);
     }
 
-    delete(email, topic) {
-        return http.delete(`/usertopic/${email}/${topic}`);
+    deleteAllByMail(email) {
+        return http.delete(`/usertopic/deleteByMail/${email}`);
     }
 }
 

@@ -15,12 +15,7 @@ TODO Handle Text overflow on cells (cellformatter?)
 TODO MAYBE Make a public/submitted article revertable (unpublish) and the comment editable
 
 SidePages
-TODO finalize 'createUser'
-    - Choose allowedTopics and write them correcly to the (userTopic)DB
 TODO finalize 'editUser'
-     - make UserTopics editable (only an admin can add and delete an allowed topic of users)
-     - if the editUser is an admin or moderator show all topics as userTopics (instead of the entries in UserTopics)
-     - dont show "neue Rolle zuweisen" on manageaccount for mods and users
 TODO password reset for logged and nonn logged users
 TODO make sure all modals close on submit
 

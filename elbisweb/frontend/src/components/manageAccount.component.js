@@ -4,7 +4,7 @@ import UserTopicDataService from "../services/userTopic.service";
 import logo from '../resources/ELBIS_logo/ELBIS_Ausgeschrieben.svg';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Select from 'react-select';
-import {GENDER} from "../session/gender.ice";
+import {ROLE} from "../session/userRoles.ice";
 import EditUser from "./moderation/moderation_editUser.component"
 import TopicDataService from "../services/topic.service";
 
@@ -30,8 +30,16 @@ export default class manageAccount extends Component {
     componentDidMount() {
         this.getAllowedTopics()
     }
-
     async getAllowedTopics() {
+        if(sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR || sessionStorage.getItem("sessionRole")=== ROLE.MODERATOR){
+            const res = await TopicDataService.getAll()
+            const data = res.data
+
+            const options = data.map(d => ({
+                "label": d.name
+            }))
+            this.setState({allowedTopics: options})
+        } else{
         const mail = sessionStorage.getItem("sessionEmail")
         const res = await UserTopicDataService.getAllByMail(mail)
         const data = res.data
@@ -39,9 +47,8 @@ export default class manageAccount extends Component {
         const options = data.map(d => ({
             "label": d.topic
         }))
-        this.setState({allowedTopics: options})
+        this.setState({allowedTopics: options})}
     }
-
     /********
      *
      * Render
@@ -82,8 +89,6 @@ export default class manageAccount extends Component {
                             className="badge badge-pill badge-info row-cols-3"
                             style={{fontSize: "130%"}}>{v.label}</span>)
                     }
-
-
                     <br/>
                     <br/>
                 </div>

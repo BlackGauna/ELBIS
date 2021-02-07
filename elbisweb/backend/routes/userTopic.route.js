@@ -8,7 +8,10 @@ router.post("/", userTopic.create);
 router.get("/", userTopic.findAll);
 
 // delete a userTopic
-router.delete("/:email/:topic", userTopic.delete);
+router.delete("/deleteOne/:email/:topic", userTopic.delete);
+
+// delete all userTopics by an email
+router.delete("/deleteByMail/:email", userTopic.deleteAllByMail);
 
 //find userTopics by a specific email
 router.get("/:email", userTopic.findByEmail);

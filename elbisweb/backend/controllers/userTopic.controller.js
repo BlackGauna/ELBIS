@@ -23,6 +23,28 @@ exports.delete = (req, res) => {
         });
 }
 
+exports.deleteAllByMail = (req, res) => {
+    const email = req.params.email;
+
+    UserTopic.deleteMany({email: email})
+        .then(data => {
+            if (!data) {
+                res.status(404).send({
+                    message: "No delete for userTopic with email " + email
+                });
+            } else {
+                res.send({
+                    message: "userTopic was deleted successfully!"
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error on delete userTopic with email " + email
+            });
+        });
+}
+
 // Create and save a new userTopic
 exports.create = (req, res) => {
     // Create a topic

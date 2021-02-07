@@ -6,6 +6,16 @@ import {Button, FormText} from "react-bootstrap";
 import {GENDER} from "../../session/gender.ice";
 import {ROLE} from "../../session/userRoles.ice";
 import DatePicker from "react-datepicker";
+import TopicDataService from "../../services/topic.service";
+import UserTopicDataService from "../../services/userTopic.service";
+
+function checkMod() {
+    if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
+        return false
+    } else {
+        return true
+    }
+}
 
 export default class moderation_editUser extends Component {
     /********
@@ -35,9 +45,9 @@ export default class moderation_editUser extends Component {
                 choosenGender: '',
                 choosenRole: '',
                 dateOfBirth: '',
-                allowedTopics: [],
-                choosenTopics: [],
             },
+            choosenTopics: [],
+            addTopics: [],
             updateSession: false,
             role: [],
             gender: [],
@@ -70,13 +80,21 @@ export default class moderation_editUser extends Component {
     componentDidMount() {
         //this.getUser(this.props.match.params.id);
         this.getUser(this.props.user._id);
+        this.getTopicOptions()
         this.getGenderOptions()
         this.getRoleOptions()
     }
 
+    checkUpdateSession=()=>{
+        if (this.state.currentUser.email === sessionStorage.getItem("sessionEmail")) {
+            this.setState({updateSession: true})
+        } else{
+                this.setState({updateSession: false})
+        }
+    }
     /********
      *
-     * Load user from DB
+     * Load from DB
      *
      ********/
     getUser = (id) => {
@@ -102,10 +120,35 @@ export default class moderation_editUser extends Component {
                 });
                 console.log("Loaded User from DB:");
                 console.log(response.data);
+                this.checkUpdateSession()
+                this.getAllowedTopics(response.data.email)
             })
             .catch(e => {
                 console.log(e);
             });
+    }
+
+    async getAllowedTopics(email) {
+        const mail = email
+        const res = await UserTopicDataService.getAllByMail(mail)
+        const data = res.data
+
+        const options = data.map(d => ({
+            "label": d.topic
+        }))
+        this.setState({choosenTopics: options})
+        console.log(this.state.choosenTopics)
+    }
+
+    async getTopicOptions() {
+        const res = await TopicDataService.getAll()
+        const data = res.data
+
+        const options = data.map(d => ({
+            "value": d.name,
+            "label": d.name
+        }))
+        this.setState({addTopics: options})
     }
 
     /********
@@ -201,6 +244,7 @@ export default class moderation_editUser extends Component {
                     <Button
                         variant="outline-primary"
                         size='sm'
+                        hidden={checkMod()}
                         onClick={this.toggle_role}>neue Rolle zuweisen</Button>
                 </div>;
         } else {
@@ -214,6 +258,45 @@ export default class moderation_editUser extends Component {
                 <Button variant="link" size='sm' onClick={this.toggle_role}>abbrechen</Button>
                 <Button variant="link" size='sm' style={{color: '#229954'}}
                         onClick={this.send_role}>bestätigen</Button>
+            </div>;
+        }
+        //topic field
+        let topic_field;
+        if (!toggles.topic) {
+            topic_field =
+                <div style={{
+                    background: "",
+                    width: "85%",
+                    float: "center",
+                }}>
+                    <label>Bereiche</label>
+                    <br/>
+                    {
+                        this.state.choosenTopics === null ? "" : this.state.choosenTopics.map(v => <span
+                            className="badge badge-pill badge-info row-cols-3"
+                            style={{fontSize: "110%"}}>{v.label}</span>)
+                    }
+                    <br/><br/>
+                    <Button
+                        variant="outline-primary"
+                        size='sm'
+                        hidden={checkMod()}
+                        onClick={this.toggle_topic}>bearbeiten</Button>
+                </div>
+        } else {
+            //TODO should show all choosen topics on initial(?)
+            topic_field = <div>
+                <label>Bereiche</label>
+                <Select
+                    type="allowedTopics"
+                    isMulti
+                    placeholder="Alle neuen Bereiche auswählen..."
+                    options={this.state.addTopics}
+                    onChange={this.onChange_topic.bind(this)}
+                />
+                <Button variant="link" size='sm' onClick={this.toggle_topic}>abbrechen</Button>
+                <Button variant="link" size='sm' style={{color: '#229954'}}
+                        onClick={this.send_topic}>bestätigen</Button>
             </div>;
         }
         //fName field
@@ -513,6 +596,17 @@ export default class moderation_editUser extends Component {
                             </div>
                         </div>
                         {/************************************************************/}
+                        {/*dont show "Bereiche" on ManageAccount*/}
+                        { (this.state.updateSession === true || this.state.currentUser.choosenRole === ROLE.ADMINISTRATOR || this.state.currentUser.choosenRole === ROLE.MODERATOR) ?
+                         "":<div>
+                                <hr/>
+                                <div className="form-row">
+                                    <div className="form-group col-md-12">
+                                        {topic_field}
+                                    </div>
+                                </div>
+                            </div>}
+                        {/************************************************************/}
                         <hr/>
                         <div className="form-row">
                             <div className="form-group col-md-3">
@@ -528,8 +622,6 @@ export default class moderation_editUser extends Component {
                             <div className="form-group col-md-3">
                                 {dateOfBirth_field}
                             </div>
-
-
                         </div>
                         <br/>
                         {/************************************************************/}
@@ -568,9 +660,6 @@ export default class moderation_editUser extends Component {
         //email
     onChange_email = (e) => {
         const email = e.target.value;
-        if (this.state.currentUser.email === sessionStorage.getItem("sessionEmail")) {
-            this.setState({updateSession: true})
-        }
         this.setState(function (prevState) {
             return {
                 currentUser: {
@@ -641,6 +730,41 @@ export default class moderation_editUser extends Component {
             .catch(e => {
                 console.log(e);
             });
+    }
+    //topic
+    onChange_topic = (e) => {
+        this.setState({choosenTopics: e});
+    }
+    toggle_topic = () => {
+        let {toggles} = this.state;
+        toggles.topic = !toggles.topic;
+        this.setState({toggles: toggles})
+        this.getUser(this.state.currentUser.id)
+    }
+    send_topic = () => {
+        //userTopics by a user currently get wiped completely an rewritten (maybe creaate un updatemethod in backend which compares the existing ones and just adds new ones?)
+        const choosenTopics = this.state.choosenTopics;
+        UserTopicDataService.deleteAllByMail(this.state.currentUser.email).then(res => {
+            console.log(res.data);
+            for (let run = 0; run < choosenTopics.length; run++) {
+                let userTopic = {
+                    email: this.state.currentUser.email,
+                    topic: choosenTopics[run].label
+                }
+                UserTopicDataService.create(userTopic)
+                    .then(res => {
+                        this.setState({
+                            email: res.data.email,
+                            topic: res.data.topic
+                        });
+                        console.log(res.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            }
+            this.toggle_topic()
+        });
     }
     //fName
     onChange_fName = (e) => {
