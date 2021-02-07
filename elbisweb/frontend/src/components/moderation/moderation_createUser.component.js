@@ -39,6 +39,12 @@ export default class moderation_createUser extends Component {
             choosenTopics: [],
 
             stateText: '',
+
+            passwordLength: false,
+            containsNumbers: false,
+            isUpperCase: false,
+            containsSymbols: false,
+
             submitted: false
         }
     }
@@ -80,6 +86,30 @@ export default class moderation_createUser extends Component {
             "label": d.name
         }))
         this.setState({role: options})
+    }
+
+    // check to see if there is any number in the PW
+    checkForNumbers(string){
+        const matches = string.match(/\d+/g);
+        this.setState({
+            containsNumbers: matches != null
+        });
+    }
+
+    // check PW for upper case
+    checkForUpperCase(string){
+        const matches = string.match(/[A-Z]/);
+        this.setState({
+            isUpperCase: matches != null
+        });
+    }
+
+    // check PW for symbols
+    checkForSymbols(string){
+        const symbols = new RegExp(/[^A-Z a-z0-9]/);
+        this.setState({
+            containsSymbols: symbols.test(string)
+        });
     }
 
     /********
@@ -178,15 +208,16 @@ export default class moderation_createUser extends Component {
                 }
             } else {
                 this.setState({
-                    stateText: 'Geben sie ein Passwort ein'
+                    stateText: 'Geben Sie ein Passwort ein'
                 })
             }
         } else {
             this.setState({
-                stateText: 'Geben sie eine Email-Addresse ein'
+                stateText: 'Geben Sie eine E-Mail-Addresse ein'
             })
         }
     }
+
 
     /********
      *
@@ -194,6 +225,14 @@ export default class moderation_createUser extends Component {
      *
      ********/
     render() {
+        let {
+            password,
+            passwordLength,
+            containsNumbers,
+            isUpperCase,
+            containsSymbols
+        } = this.state
+        let btnStatus = !(passwordLength && containsNumbers && isUpperCase && containsSymbols);
             return (
                 <div className="container">
                     {/*<h3>Nutzer erstellen</h3>*/}
@@ -215,8 +254,14 @@ export default class moderation_createUser extends Component {
                                     type="password"
                                     className="form-control"
                                     placeholder="Passwort"
-                                    value={this.state.password}
-                                    onChange={this.onChange_password}/>
+                                    value={password}
+                                    onChange={this.onChange_password('password')}/>
+                                    <div>
+                                        <div className={passwordLength ? 'green' : null}>- Mehr als 8 Zeichen</div>
+                                        <div className={containsNumbers ? 'green' : null}>- Zahlen</div>
+                                        <div className={isUpperCase ? 'green' : null}>- Großbuchstaben</div>
+                                        <div className={containsSymbols ? 'green' : null}>- Sonderzeichen</div>
+                                    </div>
                             </div>
                             <div className="form-group col-md-6">
                                 <label>Passwort bestätigen</label>
@@ -334,7 +379,7 @@ export default class moderation_createUser extends Component {
                             }
                         </div>
                         <div className="form-group">
-                            <input type="submit" value="Nutzer erstellen" className="btn btn-primary"/>
+                            <input type="submit" disabled={btnStatus} value="Nutzer erstellen" className="btn btn-primary"/>
                             <FormLabel className="m-3" style={{color: "red"}}>{this.state.stateText}</FormLabel>
                         </div>
                     </form>
@@ -353,10 +398,15 @@ export default class moderation_createUser extends Component {
         })
     }
 
-    onChange_password=(e)=> {
+    onChange_password= input => e => {
+        let targetValue = e.target.value.replace(/\s/g, '');
+        this.checkForNumbers(targetValue);
+        this.checkForUpperCase(targetValue);
+        this.checkForSymbols(targetValue);
         this.setState({
-            password: e.target.value
-        })
+            [input]: targetValue,
+            passwordLength: targetValue.length > 7
+        });
     }
 
     onChange_passwordCheck=(e)=> {
