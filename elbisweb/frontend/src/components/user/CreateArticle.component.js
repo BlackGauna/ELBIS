@@ -11,7 +11,7 @@ import ArticleService from '../../services/article.service';
 import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
-import articleStyle from '../../article.css'
+import articleStyle from '../../article_Terminal.module.css';
 
 
 
@@ -121,7 +121,7 @@ export default class CreateArticle extends Component {
                         publisher: res.data.article.publisher,
                         publisherComment: res.data.article.publisherComment,
                         id: res.data.article._id,
-                        date: res.data.article.expireDate
+                        date: res.data.article.expireDate,
 
                     });
 
@@ -142,10 +142,6 @@ export default class CreateArticle extends Component {
         // setup beforeunload and unload events for deleting unnamed article
         window.addEventListener("beforeunload", this.onBeforeUnload);
         window.addEventListener("unload", this.onUnload,false);
-
-
-
-
 
     }
 
@@ -381,6 +377,11 @@ export default class CreateArticle extends Component {
 
     }
 
+    manualSave=()=>{
+        console.log(this.state.html);
+        this.handleEditorChange(this.state.html);
+    }
+
 /**################# OnChange ###############################**/
     togglePreview=() =>{
         this.setState(state =>({
@@ -521,6 +522,8 @@ export default class CreateArticle extends Component {
 
                 <Container>
                     <div style={{display:"flex"}}>
+                        <Button className={" mb-2"} onClick={this.manualSave}>
+                        Manuell speichern</Button>
                         <Button className={" mb-2 ml-auto"} onClick={this.togglePreview}>
                             {this.state.showPreview ? 'Live-Preview schließen':'Live-Preview öffnen'}
                         </Button>
@@ -528,13 +531,14 @@ export default class CreateArticle extends Component {
                     </div>
 
                 <Editor
+                    id={"editor"}
                     initialValue={this.loadEditorContent()}
                     apiKey="0pg6bjj3shae8ys7qwuzkwo6jba2p7i7bs6onheyzqlhswen"
                     init={{
                         //skin: "oxide-dark",
                         //content_css:"dark",
                         //content_css: `${process.env.PUBLIC_URL}/article.css`,
-                        content_css:articleStyle,
+                        content_css: articleStyle,
                         plugins: [
                             "advlist autoresize autolink lists link image charmap importcss print preview anchor",
                             "searchreplace visualblocks code fullscreen",
