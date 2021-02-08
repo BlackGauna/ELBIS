@@ -17,8 +17,6 @@ import articleStyle from '../../article_Terminal.module.css';
 
 //TODO: Reuse uploaded images (?)
 
-//TODO: valid | invalid for Form submission
-
 export default class CreateArticle extends Component {
     constructor(props) {
         super(props);
@@ -369,8 +367,6 @@ export default class CreateArticle extends Component {
                 window.removeEventListener("beforeunload",this.onBeforeUnload)
 
             }
-            // TODO: if title empty and oldtitle not empty, delete file (?)
-
         }
 
 

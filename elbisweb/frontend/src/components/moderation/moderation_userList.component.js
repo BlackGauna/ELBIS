@@ -13,7 +13,6 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import {Grid} from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 
-//TODO: make sure an administrator can add and remove topics from a user
 //TODO close and refresh after cration of a user
 function checkMod(againstRole) {
     if (sessionStorage.getItem("sessionRole") === ROLE.MODERATOR && (againstRole === ROLE.MODERATOR || againstRole === ROLE.ADMINISTRATOR)) {
