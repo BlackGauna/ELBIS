@@ -22,6 +22,7 @@ import moderation_userList from "./components/moderation/moderation_userList.com
 import administration_topicList from "./components/administration/administration_topicList.component";
 import articleView from "./components/ArticleView.component";
 import editTopic from "./components/administration/administration_editTopic.component";
+import registerAccount from "./components/registerAccount.component";
 
 //##########App start##########
 /*
@@ -70,6 +71,7 @@ class App extends React.Component {
         publicRoutes =
             <div>
                 <Switch>
+                    <Route path="/register" component={registerAccount}/>
                     <Route path="/login" component={loginView}/>
                     <Route exact path="/terminal" component={ELBISweb}/>
                     <Route exact path="/resetPassword" component={resetPassword}/>

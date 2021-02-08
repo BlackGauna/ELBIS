@@ -2,12 +2,13 @@ import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import loggedUser from '../session/loggedUser';
 import logo from '../resources/ELBIS_logo/ELBIS_Ausgeschrieben.svg';
-import {FormGroup} from "react-bootstrap";
 import UserDataService from "../services/user.service";
 import SessionDataService from "../services/session.service";
-import ELBIS_loginSubmitButton from "./ELBIS_loginSubmitButton";
 import ELBIS_loginInputfield from "./ELBIS_loginInputfield.component";
 import {Link} from "react-router-dom";
+import Form from "react-bootstrap/Form";
+import "./loginView.css";
+import Grid from "@material-ui/core/Grid";
 
 export default class loginViewComponent extends Component {
 
@@ -18,7 +19,7 @@ export default class loginViewComponent extends Component {
             password: '',
             mounted: true,
             buttonDisabled: false,
-            loginstate: "geben sie ihre Anmeldedaten ein."
+            // loginstate: "geben sie ihre Anmeldedaten ein."
         }
     }
 
@@ -136,57 +137,57 @@ export default class loginViewComponent extends Component {
 //##########Render##########
     render() {
         return (
-            <div className="container">
-                <br/><br/>
-                <div className="container">
-                    <p/><br/>
+            <div className="Login">
+                <Form onSubmit={this.onSubmit}>
                     <img src={logo} height={150} style={{marginBlock: "-4%", marginLeft: "-5%"}} alt="ELBIS"/>
-                    <br/>
-                    <h4>Anmeldung</h4>
                     <hr/>
-                    <p/>
-                    <form onSubmit={this.onSubmit}>
-                        <FormGroup role="form">
-                            <div className="form-group">
-                                <label>E-Mail: </label>
-                                <br/>
-                                <ELBIS_loginInputfield
-                                    type="email"
-                                    placeholder='email'
-                                    value={this.state.email ? this.state.email : ''}
-                                    onChange={(val) => this.setInputValue('email', val)}
-                                    onKeyPress={this.handleKeyPress}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Passwort: </label>
-                                <br/>
-                                <ELBIS_loginInputfield
-                                    type="password"
-                                    placeholder='passwort'
-                                    value={this.state.password ? this.state.password : ''}
-                                    onChange={(val) => this.setInputValue('password', val)}
-                                    onKeyPress={this.handleKeyPress}
-                                />
-                            </div>
+                      <Form.Group size="lg" controlId="email">
+                          <Form.Label>E-Mail</Form.Label>
+                          <ELBIS_loginInputfield
+                              type="email"
+                              // placeholder='email'
+                              value={this.state.email ? this.state.email : ''}
+                              onChange={(val) => this.setInputValue('email', val)}
+                              onKeyPress={this.handleKeyPress}
+                          />
+                      </Form.Group>
+                    <Form.Group size="lg" controlId="password">
+                        <Form.Label>Passwort</Form.Label>
+                        <ELBIS_loginInputfield
+                            type="password"
+                            value={this.state.password ? this.state.password : ''}
+                            onChange={(val) => this.setInputValue('password', val)}
+                            onKeyPress={this.handleKeyPress}
+                        />
+                    </Form.Group>
 
-                            <div className="form-group">
-                                <label>{this.state.loginstate}</label>
-                            </div>
-                            <div className="form-group">
-                                <br/>
-                                <ELBIS_loginSubmitButton
-                                    text="Anmelden"
-                                    disabled={this.state.buttonDisabled}
-                                    onClick={() => this.doLogin()}
-                                    onSubmit={() => this.doLogin()}
-                                    onKeyPress={this.handleKeyPress}
-                                />
-                                <Link to='/resetpassword'>Passwort vergessen</Link>
-                            </div>
-                        </FormGroup>
-                    </form>
-                </div>
+                    {/*<div>*/}
+                    {/*    <label>{this.state.loginstate}</label>*/}
+                    {/*</div>*/}
+
+                    <Grid container>
+                        <Grid item xs>
+                            <Link to="/resetpassword">Passwort vergessen?
+                            </Link>
+                        </Grid>
+                        <Grid item>
+                            <Link to="/register">
+                                Registrieren
+                            </Link>
+                        </Grid>
+                    </Grid>
+
+                    <br/>
+
+                    <button
+                        type="submit"
+                        disabled={this.state.buttonDisabled}
+                        onClick={() => this.doLogin()}
+                        onSubmit={() => this.doLogin()}
+                        onKeyPress={this.handleKeyPress}
+                        className="btn btn-dark btn-lg btn-block">Anmelden</button>
+
+                </Form>
             </div>
         )
     }

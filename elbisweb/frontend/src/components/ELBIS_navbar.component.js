@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Nav, Navbar, Button, NavDropdown, FormLabel} from "react-bootstrap";
+import {Nav, Navbar, Button, NavDropdown} from "react-bootstrap";
 import loggedUser from "../session/loggedUser";
 import {ROLE} from "../session/userRoles.ice";
 import SessionDataService from "../services/session.service";
-import FormCheckLabel from "react-bootstrap/FormCheckLabel";
-import FormFileLabel from "react-bootstrap/FormFileLabel";
 
 export default class NavBar extends Component {
     render() {
@@ -44,7 +42,8 @@ export default class NavBar extends Component {
                         <span className="navbar-text m-1">
                             {sessionStorage.getItem("sessionEmail")}
                         </span>
-                        <Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
+                        <Nav.Link href={"/"} onClick={() => this.doLogout()}>Logout</Nav.Link>
+                        {/*<Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>*/}
                     </Navbar.Collapse>
                 </Navbar>
 
