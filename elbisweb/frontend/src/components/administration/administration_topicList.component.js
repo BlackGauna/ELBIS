@@ -71,7 +71,7 @@ export default class administration_topicList extends Component {
      * Formatters
      *
      ********/
-    buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
+    buttonFormatter = (cell, row, rowIndex) => {
         this.state.showEditTopic.push(false);
         return (
             <div>
@@ -152,7 +152,7 @@ export default class administration_topicList extends Component {
      ********/
     render() {
         return (
-            <div className="container">
+            <div className="container-fluid">
                 <h3>Bereichsverwaltung</h3>
                 <BootstrapTable
                     headerClasses="thead-light"
