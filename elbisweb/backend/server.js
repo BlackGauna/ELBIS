@@ -2,23 +2,35 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const Article = require("./models/article.model");
+const cron = require('node-cron');
 require('dotenv').config();
 
 const app = express();
+
+cron.schedule('* * * * *', function() {
+    console.log('Database Refresh with routines');
+    Article.updateMany({"expireDate":{"$lte":now}},{"$set":{"status":"Archiviert"}},{"multi":true},(err, writeResult) => {});
+    Article.deleteMany({"path":{"$eq":""}},{"multi":true},(err) => {});
+    Article.updateMany({"status":"Autorisiert"},{"$set":{"status":"Öffentlich"}},{"multi":true},(err, writeResult) => {});
+});
+
 const port = process.env.PORT || 5000;
 let now = new Date().toISOString();
 
 app.use(cors());
 app.use(express.json());
 
+
+
 const uri = "mongodb+srv://admin:admin@elbis8.ilafq.mongodb.net/ELBIS?retryWrites=true&w=majority";
 mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
 mongoose.connection.once('open', () => {
     console.log("MongoDB connected");
-    Article.updateMany({"expireDate":{"$lte":now}},{"$set":{"status":"Archiviert"}},{"multi":true},(err, writeResult) => {});
-    Article.deleteMany({"path":{"$eq":""}},{"multi":true},(err) => {});
-    Article.updateMany({"status":"Autorisiert"},{"$set":{"status":"Öffentlich"}},{"multi":true},(err, writeResult) => {});
 })
+
+
+
+
 
 const userRouter = require('./routes/user.route');
 const articleRouter = require('./routes/article.route');

@@ -242,10 +242,10 @@ export default class CreateArticle extends Component {
 
                     const topics= res.data.map(topic=>({
                         "id": topic._id,
-                        "name": topic.name,
+                        "name": topic.topic,
                     }));
-                    //console.log("TOPICS:");
-                    //console.log(topics);
+                    console.log("TOPICS:");
+                    console.log(topics);
 
                     this.setState({
                         allowedTopics: topics,
