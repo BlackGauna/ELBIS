@@ -15,8 +15,9 @@ const uri = "mongodb+srv://admin:admin@elbis8.ilafq.mongodb.net/ELBIS?retryWrite
 mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
 mongoose.connection.once('open', () => {
     console.log("MongoDB connected");
-    Article.updateMany({"expireDate":{"$lte":now}},{"$set":{"status":"Archived"}},{"multi":true},(err, writeResult) => {});
+    Article.updateMany({"expireDate":{"$lte":now}},{"$set":{"status":"Archiviert"}},{"multi":true},(err, writeResult) => {});
     Article.deleteMany({"path":{"$eq":""}},{"multi":true},(err) => {});
+    Article.updateMany({"status":"Autorisiert"},{"$set":{"status":"Öffentlich"}},{"multi":true},(err, writeResult) => {});
 })
 
 const userRouter = require('./routes/user.route');
