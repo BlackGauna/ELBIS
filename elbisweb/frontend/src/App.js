@@ -67,6 +67,7 @@ class App extends React.Component {
                 <Route exact path="/login/edit" component={CreateArticle}/>
                 <Route exact path="/login/edit/:id" component={CreateArticle}/>
                 <Route exact path="/login/user/myArticles" component={userView}/>
+                <Route exact path="/login/article/:id" component={articleView}/>
             </div>
         publicRoutes =
             <div>

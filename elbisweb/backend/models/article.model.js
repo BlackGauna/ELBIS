@@ -5,8 +5,8 @@ const Schema = mongoose.Schema;
 const articleSchema = new Schema({
     title: {type: String, required: true},
     path: {type: String, required: true},
-    publishDate: {type: String, required: true},
-    expireDate: {type: String, required: true},
+    publishDate: {type: Date, required: true},
+    expireDate: {type: Date, required: true},
     status: {type: String, required: true},
     topic: {type: String, required: true},
     author: {type: String, required: true},
