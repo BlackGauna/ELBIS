@@ -80,6 +80,10 @@ export default class user_myArticles extends Component {
                     text: 'Aktion',
                     sort: false,
                     formatter: this.buttonFormatter,
+                    headerStyle: () => {
+                        return {width: '12%',
+                        };
+                    }
                 },
             ],
         };
@@ -168,9 +172,7 @@ export default class user_myArticles extends Component {
                 console.log(error);
             })
     }
-    componentWillUnmount() {
-        this.externalWindow.close();
-    }
+
     /********
      *
      * Formatters

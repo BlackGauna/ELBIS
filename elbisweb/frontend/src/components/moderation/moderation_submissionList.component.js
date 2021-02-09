@@ -121,9 +121,6 @@ export default class moderation_submissionList extends Component {
                 console.log(error);
             })
     }
-    componentWillUnmount() {
-        this.externalWindow.close();
-    }
 
     /********
      *
