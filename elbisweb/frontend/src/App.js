@@ -60,10 +60,11 @@ class App extends React.Component {
             </div>
         userRoutes =
             <div>
-                <Route path="/login" component={NavBar}/>
+                <Route path="/" component={NavBar}/>
                 <br/>
+                <Route exact path="/" component={articleList}/>
                 <Route exact path="/login/resetPassword" component={resetPassword}/>
-                <Route exact path="/login/" component={terminalView}/>
+                <Route exact path="/login/terminal" component={terminalView}/>
                 <Route exact path="/login/manageAccount" component={manageAccount}/>
                 <Route exact path="/login/edit" component={CreateArticle}/>
                 <Route exact path="/login/edit/:id" component={CreateArticle}/>
@@ -72,16 +73,16 @@ class App extends React.Component {
             </div>
         publicRoutes =
             <div>
-                <Route path="/public" component={NavBar}/>
-                <Switch>
-                    <Route exact path="/login" component={loginView}/>
-                    <Route exact path="/terminal" component={terminalView}/>
+                <Route exact path="/terminal" component={terminalView}/>
+                <Route path="/" component={NavBar}/>
+                {/*<Switch>*/}
+                    <Route exact path="/login" exact component={loginView}/>
                     <Route path="/public/register" component={registerAccount}/>
                     <Route exact path="/public/resetPassword" component={resetPassword}/>
-                    <Route exact path="/public" component={articleList}/>
+                    <Route exact path="/" component={articleList}/>
                     <Route exact path="/article/:id" component={articleView}/>
-                <Route component={NotFound} />
-            </Switch>
+                    {/*<Route component={NotFound} />
+                    </Switch>*/}
             </div>
         if (loggedUser.loading) {
             return (

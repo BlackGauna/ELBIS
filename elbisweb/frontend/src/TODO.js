@@ -16,10 +16,6 @@ SidePages
 TODO finalize 'editUser' and load initial userTopics correctly
 TODO password reset for logged and nonn logged users
 
-TODO Have a Navbar version for not logged in people.
-    Only a home button and login button should be enough.
-
-
 -------Editor-------
 
  */
