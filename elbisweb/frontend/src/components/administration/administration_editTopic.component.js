@@ -4,9 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Select from "react-select";
 import {Button} from "react-bootstrap";
 
-// TODO: implement modal (or something else) to edit a topic
-// TODO: parentTopic isn't updating yet (see onChange method)
-
 export default class administration_editTopic extends Component {
     /********
      *
@@ -83,7 +80,6 @@ export default class administration_editTopic extends Component {
      * update topic in DB
      *
      ********/
-        //TODO
     updateTopic = () => {
         const {currentTopic} = this.state
         console.log(currentTopic)

@@ -18,6 +18,7 @@ export default class handleSubmission extends Component {
         this.state = {
             myArticle: this.props.article,
             submissionOptions: [],
+            submitted: false
         }
         console.log("HandleSubmission opened with: ")
         console.log(this.state.myArticle)
@@ -58,7 +59,6 @@ export default class handleSubmission extends Component {
      *
      ********/
     onSubmit = (e) => {
-        //TODO close modal somehow
         if (this.state.myArticle.comment === '') {
             window.alert("Bitte geben sie einen Kommentar ein.")
         } else {
@@ -75,7 +75,8 @@ export default class handleSubmission extends Component {
                         .then(response => {
                             console.log(response.data);
                             this.setState({
-                                message: "The article was updated successfully!"
+                                message: "The article was updated successfully!",
+                                submitted: true
                             });
                         })
                         .catch(e => {
@@ -105,6 +106,10 @@ export default class handleSubmission extends Component {
     }
 
     render() {
+        if(this.state.submitted){
+            window.location.reload();
+        }
+        else{
         return (
             <div>
                 <form onSubmit={this.onSubmit}>
@@ -142,7 +147,7 @@ export default class handleSubmission extends Component {
                     </div>
                 </form>
             </div>
-        )
+        )}
     }
 
     /********

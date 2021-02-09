@@ -225,6 +225,10 @@ export default class moderation_createUser extends Component {
      *
      ********/
     render() {
+        if(this.state.submitted){
+            window.location.reload();
+        }
+        else{
         let {
             password,
             passwordLength,
@@ -257,10 +261,10 @@ export default class moderation_createUser extends Component {
                                     value={password}
                                     onChange={this.onChange_password('password')}/>
                                     <div>
-                                        <div className={passwordLength ? 'green' : null}>- Mehr als 8 Zeichen</div>
-                                        <div className={containsNumbers ? 'green' : null}>- Zahlen</div>
-                                        <div className={isUpperCase ? 'green' : null}>- Großbuchstaben</div>
-                                        <div className={containsSymbols ? 'green' : null}>- Sonderzeichen</div>
+                                        <div className={passwordLength ? 'green' : null} style={{fontSize: "12px"}}>- Mehr als 8 Zeichen</div>
+                                        <div className={containsNumbers ? 'green' : null} style={{fontSize: "12px"}}>- Zahlen</div>
+                                        <div className={isUpperCase ? 'green' : null} style={{fontSize: "12px"}}>- Großbuchstaben</div>
+                                        <div className={containsSymbols ? 'green' : null} style={{fontSize: "12px"}}>- Sonderzeichen</div>
                                     </div>
                             </div>
                             <div className="form-group col-md-6">
@@ -384,7 +388,7 @@ export default class moderation_createUser extends Component {
                         </div>
                     </form>
                 </div>
-            )
+            )}
     }
 
     /********
