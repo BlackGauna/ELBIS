@@ -143,7 +143,6 @@ export default class moderation_articleList extends Component {
         return (
             <div className="container-fluid">
                 <h3>Artikelverwaltung</h3>
-                    Level: {sessionStorage.getItem("sessionRole")}
                 <BootstrapTable
                     headerClasses="thead-light"
                     bordered={false}

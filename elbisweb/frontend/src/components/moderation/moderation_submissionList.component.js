@@ -10,6 +10,8 @@ import {Container} from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import Modal from "react-bootstrap/Modal";
 import HandleSubmission from "./moderation_handleSubmission.component";
+import ReactDOM from "react-dom";
+import $ from 'jquery'
 
 export default class moderation_submissionList extends Component {
 
@@ -77,6 +79,9 @@ export default class moderation_submissionList extends Component {
                 },
             ],
         };
+        //article Preview
+        this.containerEl = document.createElement('div');
+        this.externalWindow = null;
     }
 
     /********
@@ -95,9 +100,12 @@ export default class moderation_submissionList extends Component {
         window.location.reload()
     }
     //show an article preview here
-    showArticlePreview = (content) => {
-        console.log("implement me")
-        //TODO maybe show the preview of an article here
+    showArticlePreview = (row) => {
+        const id= row._id
+        const url = '/article/'+id
+        const width =  $(document).width()*0.6
+        this.externalWindow = window.open( url , '', 'width='+width+',height=700,left=200,top=200');
+        this.externalWindow.document.body.appendChild(this.containerEl);
     }
 
     /********
@@ -114,6 +122,9 @@ export default class moderation_submissionList extends Component {
                 console.log(error);
             })
     }
+    componentWillUnmount() {
+        this.externalWindow.close();
+    }
 
     /********
      *
@@ -129,10 +140,17 @@ export default class moderation_submissionList extends Component {
         this.state.submissionModal.push(false);
         return (
             <div>
-                {/*View(Edit) and submit buttons in each row*/}
+                {/*View(Edit) and submit buttons in each row
                 <IconButton
                     aria-label="view"
                     href={"/login/edit/" + row._id}>
+                    <VisibilityIcon/>
+                </IconButton> */}
+
+                <IconButton
+                    aria-label="view"
+                    onClick={()=>{this.showArticlePreview(row)}}
+                >
                     <VisibilityIcon/>
                 </IconButton>
 
@@ -167,6 +185,7 @@ export default class moderation_submissionList extends Component {
 
                 {/*Check the modals*/}
                 {this.renderSubmissionModal()}
+                {ReactDOM.createPortal(this.props.children, this.containerEl)}
             </div>
         )
     }

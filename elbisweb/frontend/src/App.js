@@ -59,7 +59,7 @@ class App extends React.Component {
             </div>
         userRoutes =
             <div>
-                <Route path="/" component={NavBar}/>
+                <Route path="/login" component={NavBar}/>
                 <br/>
                 <Route exact path="/login/resetPassword" component={resetPassword}/>
                 <Route exact path="/login/" component={ELBISweb}/>
@@ -67,7 +67,7 @@ class App extends React.Component {
                 <Route exact path="/login/edit" component={CreateArticle}/>
                 <Route exact path="/login/edit/:id" component={CreateArticle}/>
                 <Route exact path="/login/user/myArticles" component={userView}/>
-                <Route exact path="/login/article/:id" component={articleView}/>
+                <Route exact path="/article/:id" component={articleView}/>
             </div>
         publicRoutes =
             <div>
@@ -76,6 +76,7 @@ class App extends React.Component {
                     <Route path="/login" component={loginView}/>
                     <Route exact path="/terminal" component={ELBISweb}/>
                     <Route exact path="/resetPassword" component={resetPassword}/>
+                    <Route exact path="/article/:id" component={articleView}/>
                 <Route component={NotFound} />
             </Switch>
             </div>
