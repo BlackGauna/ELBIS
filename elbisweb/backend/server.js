@@ -11,7 +11,7 @@ cron.schedule('* * * * *', function() {
     console.log('Database Refresh with routines');
     Article.updateMany({"expireDate":{"$lte":now}},{"$set":{"status":"Archiviert"}},{"multi":true},(err, writeResult) => {});
     Article.deleteMany({"path":{"$eq":""}},{"multi":true},(err) => {});
-    Article.updateMany({"status":"Autorisiert"},{"$set":{"status":"Öffentlich"}},{"multi":true},(err, writeResult) => {});
+    Article.updateMany({"publishDate":{"$lte":now},"status":"Autorisiert"},{"$set":{"status":"Öffentlich"}},{"multi":true},(err, writeResult) => {});
 });
 
 const port = process.env.PORT || 5000;
