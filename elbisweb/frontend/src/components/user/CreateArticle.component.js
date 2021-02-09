@@ -21,6 +21,11 @@ export default class CreateArticle extends Component {
     constructor(props) {
         super(props);
 
+        let expireDate=new Date();
+        expireDate.setDate(expireDate.getDate()+7);
+        expireDate=expireDate.toISOString();
+        console.log(expireDate);
+
         this.state = {
             imageFilename: "",
             showPreview:false,
@@ -34,7 +39,8 @@ export default class CreateArticle extends Component {
             loggedUser:null,
             allowedTopics: [],
             statusOptions:[],
-            date:new Date().toISOString(),
+            publishDate:new Date().toISOString(),
+            expireDate: expireDate,
             initialized:false,
 
 
@@ -65,7 +71,8 @@ export default class CreateArticle extends Component {
                 author: loggedUser,
                 publisher: "",
                 publisherComment: "",
-                expireDate:this.state.date
+                expireDate: this.state.expireDate,
+                publishDate: this.state.publishDate
             }
 
             let id=0;
@@ -119,7 +126,8 @@ export default class CreateArticle extends Component {
                         publisher: res.data.article.publisher,
                         publisherComment: res.data.article.publisherComment,
                         id: res.data.article._id,
-                        date: res.data.article.expireDate,
+                        expireDate: res.data.article.expireDate,
+                        publishDate: res.data.article.publishDate
 
                     });
 
@@ -350,7 +358,8 @@ export default class CreateArticle extends Component {
                     author: this.state.author,
                     publisher: this.state.publisher,
                     publisherComment: this.state.publisherComment,
-                    expireDate: this.state.date
+                    expireDate: this.state.expireDate,
+                    publishDate: this.state.publishDate
                 }
 
                 //console.log(article);
@@ -430,12 +439,20 @@ export default class CreateArticle extends Component {
         })
     }
 
-    onChangeDate= (e) =>{
+    onChangeExpireDate= (e) =>{
         const date=e[0].toISOString();
         this.setState({
-            date:date
+            expireDate:date
         });
         //console.log(date)
+    }
+
+    onChangePublishDate= (e) =>{
+        const date=e[0].toISOString();
+        this.setState({
+            publishDate: date
+        });
+        //console.log(this.state.publishDate)
     }
 
     loadEditorContent=()=>{
@@ -493,14 +510,26 @@ export default class CreateArticle extends Component {
                         </Form.Row>
 
                         <Form.Group>
+                            <Form.Label>Veröffentlichungsdatum</Form.Label>
+                            <div/>
+                            <Flatpickr
+                                data-enable-time
+                                options={{dateFormat: "Y-m-d H:i", defaultDate:this.state.publishDate, time_24hr: true}}
+                                value={this.state.publishDate}
+                                onReady={this.onChangePublishDate}
+                                onChange={this.onChangePublishDate}
+                            />
+                        </Form.Group>
+
+                        <Form.Group>
                             <Form.Label>Ablaufdatum</Form.Label>
                             <div/>
                             <Flatpickr
                                 data-enable-time
-                                options={{dateFormat: "Y-m-d H:i", defaultDate:this.state.date, time_24hr: true}}
-                                value={this.state.date}
-                                onReady={this.onChangeDate}
-                                onChange={this.onChangeDate}
+                                options={{dateFormat: "Y-m-d H:i", defaultDate:this.state.expireDate, time_24hr: true}}
+                                value={this.state.expireDate}
+                                onReady={this.onChangeExpireDate}
+                                onChange={this.onChangeExpireDate}
                                 />
                         </Form.Group>
 
