@@ -4,8 +4,66 @@ import {Nav, Navbar, Button, NavDropdown} from "react-bootstrap";
 import loggedUser from "../session/loggedUser";
 import {ROLE} from "../session/userRoles.ice";
 import SessionDataService from "../services/session.service";
+import Modal from "react-bootstrap/Modal";
+import LoginView from "./loginView.component";
+import AddTopic from "./administration/administration_createTopic.component";
 
 export default class NavBar extends Component {
+
+    /********
+     *
+     * Constructor
+     *
+     ********/
+    constructor(props) {
+        super(props);
+        this.state = {
+            showLoginModal: false,
+        }
+    }
+    /********
+     *
+     * Logging function
+     *
+     ********/
+    async doLogout() {
+        try {
+            sessionStorage.setItem("sessionToken", "");
+            SessionDataService.delete(sessionStorage.getItem("sessionEmail"))
+                .then(res => console.log(res.data));
+            loggedUser.isLoggedIn = false;
+            loggedUser.loading = true;
+            sessionStorage.setItem("sessionUserID", "");
+            sessionStorage.setItem("sessionEmail", "");
+            sessionStorage.setItem("sessionRole", "");
+        } catch (e) {
+            console.log("Couldn't log out " + e);
+        }
+    }
+    /********
+     *
+     * Modal
+     *
+     ********/
+    handleLoginModal=()=>{
+            this.setState({showLoginModal: !this.state.showLoginModal});
+    }
+    renderLoginModal = () => {
+        if (this.state.showLoginModal) {
+            return (
+                <Modal show={true} onHide={() => this.handleLoginModal()} >
+                    <Modal.Body>
+                        <LoginView/>
+                    </Modal.Body>
+                </Modal>
+            )
+        }
+    }
+    /********
+     *
+     * Render
+     *
+     ********/
     render() {
         let navPublicStart, navPublicEnd, navLoginStart, navLoginEnd, navUser, navModerator, navAdmin;
 
@@ -34,7 +92,7 @@ export default class NavBar extends Component {
             </div>
         navLoginStart =
             <div>
-                <Navbar.Brand href={"/login/"}>ELBIS</Navbar.Brand>
+                <Navbar.Brand href={"/"}>ELBIS</Navbar.Brand>
                 <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
             </div>
         navLoginEnd =
@@ -54,10 +112,10 @@ export default class NavBar extends Component {
             </div>
         navPublicEnd =
             <div div className="row">
-                <Nav.Link href={"/terminal"}>Terminal aufrufen</Nav.Link>
-                <Nav.Link href={"/login"} >Anmelden</Nav.Link>
+                <Nav.Link href={"/terminal"}>(Terminal aufrufen)</Nav.Link>
+                <Nav.Link onClick={()=>{this.handleLoginModal()}} >Anmelden</Nav.Link>
             </div>
-
+        //full render
         if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
             /*************
              *   Admin Area
@@ -116,6 +174,9 @@ export default class NavBar extends Component {
                 </Navbar>
             );
         } else{
+            /*************
+             *   Public Area
+             * *************/
             return(
                 <Navbar
                     bg="dark"
@@ -127,6 +188,7 @@ export default class NavBar extends Component {
                         </Nav>
                         {navPublicEnd}
                     </Navbar.Collapse>
+                    {this.renderLoginModal()}
                 </Navbar>
             )
         }
@@ -136,21 +198,6 @@ export default class NavBar extends Component {
                 <Button onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
             </div>)
         }*/
-    }
-
-    async doLogout() {
-        try {
-            sessionStorage.setItem("sessionToken", "");
-            SessionDataService.delete(sessionStorage.getItem("sessionEmail"))
-                .then(res => console.log(res.data));
-            loggedUser.isLoggedIn = false;
-            loggedUser.loading = true;
-            sessionStorage.setItem("sessionUserID", "");
-            sessionStorage.setItem("sessionEmail", "");
-            sessionStorage.setItem("sessionRole", "");
-        } catch (e) {
-            console.log("Couldn't log out " + e);
-        }
     }
 }
 

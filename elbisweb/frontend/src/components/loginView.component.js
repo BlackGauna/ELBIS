@@ -11,7 +11,11 @@ import "./loginView.css";
 import Grid from "@material-ui/core/Grid";
 
 export default class loginViewComponent extends Component {
-
+    /********
+     *
+     * Constructor
+     *
+     ********/
     constructor(props) {
         super(props);
         this.state = {
@@ -19,10 +23,15 @@ export default class loginViewComponent extends Component {
             password: '',
             mounted: true,
             buttonDisabled: false,
+            submitted: false,
             // loginstate: "geben sie ihre Anmeldedaten ein."
         }
     }
-
+    /********
+     *
+     * Mounting
+     *
+     ********/
     componentWillUnmount() {
         console.log("unmounted login")
     }
@@ -46,7 +55,11 @@ export default class loginViewComponent extends Component {
         })
     }
 
-    //##########logging methods##########
+    /********
+     *
+     * Logging functions
+     *
+     ********/
     async doLogin() {
         if (!this.state.email) {
             return;
@@ -102,7 +115,6 @@ export default class loginViewComponent extends Component {
                             userid: res.data.userid,
                             email: res.data.email,
                             role: res.data.role,
-                            submitted: true
                         });
                         console.log(res.data);
                     })
@@ -112,6 +124,7 @@ export default class loginViewComponent extends Component {
                 //pageskip variables
                 loggedUser.loading = false;
                 loggedUser.isLoggedIn = true;
+                this.setState({submitted: true})
                 //authenticate failed
             } else if (res.data.success === false) {
                 loggedUser.loading = false;
@@ -133,9 +146,20 @@ export default class loginViewComponent extends Component {
         }
     }
 
+    handleRedirect = ()=>{
+        this.setState({ submitted: true})
+    }
 
-//##########Render##########
+    /********
+     *
+     * Render
+     *
+     ********/
     render() {
+        if(this.state.submitted){
+            window.location.reload();
+        }
+        else {
         return (
             <div className="Login">
                 <Form onSubmit={this.onSubmit}>
@@ -167,18 +191,16 @@ export default class loginViewComponent extends Component {
 
                     <Grid container>
                         <Grid item xs>
-                            <Link to="/resetpassword">Passwort vergessen?
+                            <Link to="/public/resetpassword" onClick={()=>{this.handleRedirect()}}>Passwort vergessen?
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link to="/register">
+                            <Link to="/public/register" onClick={()=>{this.handleRedirect()}}>
                                 Registrieren
                             </Link>
                         </Grid>
                     </Grid>
-
                     <br/>
-
                     <button
                         type="submit"
                         disabled={this.state.buttonDisabled}
@@ -186,9 +208,8 @@ export default class loginViewComponent extends Component {
                         onSubmit={() => this.doLogin()}
                         onKeyPress={this.handleKeyPress}
                         className="btn btn-dark btn-lg btn-block">Anmelden</button>
-
                 </Form>
             </div>
-        )
+        )}
     }
 }
