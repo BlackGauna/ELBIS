@@ -11,19 +11,24 @@ p{
     /*background-color: darkcyan;*/
     font-size: 1.1rem !important;
     text-align: left;
+    margin: auto 10vw auto 10vw !important;
 }
 
 iframe{
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
+    display: block;
+    margin: auto;
     alignment: center;
+}
+img{
+    display: block;
+    margin: 3.5rem auto;
+    width: 100%;
+    max-width: 860px;
+    height: auto;
+    justify-content: center;
+
 }
 
-img{
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
-    alignment: center;
-}
 
 div.banner{
     display: flex;

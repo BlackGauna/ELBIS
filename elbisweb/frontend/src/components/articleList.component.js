@@ -14,7 +14,8 @@ export default class ArticleList extends Component {
         this.state={
             content:"",
             articles:[],
-            listEntries:[]
+            listEntries:[],
+            selectedArticleIndex: null,
         }
     }
 
@@ -35,9 +36,15 @@ export default class ArticleList extends Component {
      */
     buildList=() =>{
         const listEntries= this.state.articles.map(
-            (article, index) => <ListGroup.Item key={index}>
-                <a href={"/article/"+article._id}>{article.title}</a>
-            </ListGroup.Item>
+            (article, index) =>
+                <ListGroup.Item
+                    key={index}
+                    action
+                    href={"#"+article._id}
+                    onClick={()=>this.onClick(index)}
+                >
+                    {article.title}
+                </ListGroup.Item>
         );
 
         this.setState({
@@ -46,17 +53,41 @@ export default class ArticleList extends Component {
 
     }
 
+    onClick=(index)=>{
+        this.setState({
+            selectedArticleIndex: index
+        })
+        console.log(this.state.selectedArticleIndex)
+    }
+
+
     render() {
+
+
         return (
             <Router>
-                <Container className={"mt-3 d-flex"}>
-                    <div>
+                <div className={"m-3 d-flex"}>
+                    <div style={{}}>
                         <ListGroup>
                             {this.state.listEntries}
                         </ListGroup>
                     </div>
 
-                </Container>
+                    <div className={"m-5 flex"} style={{width:"100%", height:"100%"}}>
+                        {this.state.selectedArticleIndex !=null &&
+                        parse(this.state.articles[this.state.selectedArticleIndex].content)}
+
+                        {/*{this.state.selectedArticleIndex !=null &&
+                        <iframe
+                            width={"100%"}
+                            height={"maxHeight"}
+                            style={{border:"none"}}
+                            src={"/article/"+this.state.articles[this.state.selectedArticleIndex]._id}>
+
+                        </iframe>}*/}
+                    </div>
+
+                </div>
             </Router>
         )
     }
