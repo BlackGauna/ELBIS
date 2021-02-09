@@ -7,8 +7,58 @@ import SessionDataService from "../services/session.service";
 
 export default class NavBar extends Component {
     render() {
+        let navPublicStart, navPublicEnd, navLoginStart, navLoginEnd, navUser, navModerator, navAdmin;
+
+        navAdmin =
+            <div>
+                <NavDropdown title="Administration" id="administrationDropdown">
+                    <NavDropdown.Item
+                        href={"/login/admin/manageTopics"}>Bereichsverwaltung</NavDropdown.Item>
+                </NavDropdown>
+            </div>
+        navModerator =
+            <div>
+                <NavDropdown title="Moderation" id="moderationDropdown">
+                    <NavDropdown.Item href={"/login/mod/manageSubmissions"}>Neue Veröffentlichungen</NavDropdown.Item>
+                    <NavDropdown.Item href={"/login/mod/manageArticles"}>Artikelverwaltung</NavDropdown.Item>
+                    <NavDropdown.Item href={"/login/mod/manageUsers"}>Benutzerverwaltung</NavDropdown.Item>
+                </NavDropdown>
+            </div>
+        navUser =
+            <div>
+                <NavDropdown title="Mein Bereich" id="userDropdown">
+                    <NavDropdown.Item href={"/login/manageAccount"}>Account verwalten</NavDropdown.Item>
+                    <NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>
+                    <NavDropdown.Item href={"/login/user/myArticles"}>Meine Artikel</NavDropdown.Item>
+                </NavDropdown>
+            </div>
+        navLoginStart =
+            <div>
+                <Navbar.Brand href={"/login/"}>ELBIS</Navbar.Brand>
+                <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
+            </div>
+        navLoginEnd =
+            <div className="row">
+                <span className="navbar-text">
+                            {sessionStorage.getItem("sessionEmail")}
+                        </span>
+                <Nav.Link href={"/"} onClick={() => this.doLogout()}>Abmelden</Nav.Link>
+                {/*<Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>*/}
+            </div>
+        navPublicStart =
+            <div>
+                <div>
+                    <Navbar.Brand href={"/"}>ELBIS</Navbar.Brand>
+                    <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
+                </div>
+            </div>
+        navPublicEnd =
+            <div div className="row">
+                <Nav.Link href={"/terminal"}>Terminal aufrufen</Nav.Link>
+                <Nav.Link href={"/login"} >Anmelden</Nav.Link>
+            </div>
+
         if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
-            //TODO resolve redundancies
             /*************
              *   Admin Area
              * *************/
@@ -16,37 +66,17 @@ export default class NavBar extends Component {
                 <Navbar
                     bg="dark"
                     variant={"dark"}
-                    className={"border-bottom border-light mb-3"}
-                >
-                    <Navbar.Brand href={"/login/"}>ELBIS</Navbar.Brand>
-                    <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
+                    className={"border-bottom border-light mb-3"}>
                     <Navbar.Collapse id={"basic-navbar-nav"}>
                         <Nav className={"mr-auto"}>
-                            <NavDropdown title="Mein Bereich" id="userDropdown">
-                                <NavDropdown.Item href={"/login/manageAccount"}>Account verwalten</NavDropdown.Item>
-                            </NavDropdown>
-                            <NavDropdown title="Artikelverwaltung" id="userDropdown">
-                                <NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>
-                                <NavDropdown.Item href={"/login/user/myArticles"}>Meine Artikel</NavDropdown.Item>
-                            </NavDropdown>
-                            <NavDropdown title="Moderation" id="moderationDropdown">
-                                <NavDropdown.Item href={"/login/mod/manageSubmissions"}>Neue Veröffentlichungen</NavDropdown.Item>
-                                <NavDropdown.Item href={"/login/mod/manageArticles"}>Artikelverwaltung</NavDropdown.Item>
-                                <NavDropdown.Item href={"/login/mod/manageUsers"}>Benutzerverwaltung</NavDropdown.Item>
-                            </NavDropdown>
-                            <NavDropdown title="Administration" id="administrationDropdown">
-                                <NavDropdown.Item
-                                    href={"/login/admin/manageTopics"}>Bereichsverwaltung</NavDropdown.Item>
-                            </NavDropdown>
+                            {navLoginStart}
+                            {navUser}
+                            {navModerator}
+                            {navAdmin}
                         </Nav>
-                        <span className="navbar-text m-1">
-                            {sessionStorage.getItem("sessionEmail")}
-                        </span>
-                        <Nav.Link href={"/"} onClick={() => this.doLogout()}>Logout</Nav.Link>
-                        {/*<Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>*/}
+                        {navLoginEnd}
                     </Navbar.Collapse>
                 </Navbar>
-
             );
         } else if (sessionStorage.getItem("sessionRole") === ROLE.MODERATOR) {
             /*************
@@ -56,32 +86,16 @@ export default class NavBar extends Component {
                 <Navbar
                     bg="dark"
                     variant={"dark"}
-                    className={"border-bottom border-light mb-3"}
-                >
-                    <Navbar.Brand href={"/login/"}>ELBIS</Navbar.Brand>
-                    <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
+                    className={"border-bottom border-light mb-3"}>
                     <Navbar.Collapse id={"basic-navbar-nav"}>
                         <Nav className={"mr-auto"}>
-                            <NavDropdown title="Mein Bereich" id="userDropdown">
-                                <NavDropdown.Item href={"/login/manageAccount"}>Account verwalten</NavDropdown.Item>
-                            </NavDropdown>
-                            <NavDropdown title="Artikelverwaltung" id="userDropdown">
-                                <NavDropdown.Item href={"/login/user/myArticles"}>Meine Artikel</NavDropdown.Item>
-                                <NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>
-                            </NavDropdown>
-                            <NavDropdown title="Moderation" id="moderationDropdown">
-                                <NavDropdown.Item href={"/login/mod/manageSubmissions"}>Neue Veröffentlichungen</NavDropdown.Item>
-                                <NavDropdown.Item href={"/login/mod/manageUsers"}>Benutzerverwaltung</NavDropdown.Item>
-                                <NavDropdown.Item href={"/login/mod/manageArticles"}>Artikelverwaltung</NavDropdown.Item>
-                            </NavDropdown>
+                            {navLoginStart}
+                            {navUser}
+                            {navModerator}
                         </Nav>
-                        <span className="navbar-text m-1">
-                            {sessionStorage.getItem("sessionEmail")}
-                        </span>
-                        <Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
+                        {navLoginEnd}
                     </Navbar.Collapse>
                 </Navbar>
-
             );
         } else if (sessionStorage.getItem("sessionRole") === ROLE.USER) {
             /*************
@@ -91,34 +105,37 @@ export default class NavBar extends Component {
                 <Navbar
                     bg="dark"
                     variant={"dark"}
-                    className={"border-bottom border-light mb-3"}
-                >
-                    <Navbar.Brand href={"/login/"}>ELBIS</Navbar.Brand>
-                    <Navbar.Toggle aria-controls={"basic-navbar-nav"}/>
+                    className={"border-bottom border-light mb-3"}>
                     <Navbar.Collapse id={"basic-navbar-nav"}>
                         <Nav className={"mr-auto"}>
-                            <NavDropdown title="Mein Bereich" id="userDropdown">
-                                <NavDropdown.Item href={"/login/manageAccount"}>Account verwalten</NavDropdown.Item>
-                            </NavDropdown>
-                            <NavDropdown title="Artikelverwaltung" id="userDropdown">
-                                <NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>
-                                <NavDropdown.Item href={"/login/user/myArticles"}>Meine Artikel</NavDropdown.Item>
-                            </NavDropdown>
+                            {navLoginStart}
+                            {navUser}
                         </Nav>
-                        <span className="navbar-text m-1">
-                            {sessionStorage.getItem("sessionEmail")}
-                        </span>
-                        <Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
+                        {navLoginEnd}
                     </Navbar.Collapse>
                 </Navbar>
-
             );
-        } else {
+        } else{
+            return(
+                <Navbar
+                    bg="dark"
+                    variant={"dark"}
+                    className={"border-bottom border-light mb-3"}>
+                    <Navbar.Collapse id={"basic-navbar-nav"}>
+                        <Nav className={"mr-auto"}>
+                            {navPublicStart}
+                        </Nav>
+                        {navPublicEnd}
+                    </Navbar.Collapse>
+                </Navbar>
+            )
+        }
+        /*else {
             return (<div>
                 Please contact an admin to to assign a valid role to your account.
                 <Button onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
             </div>)
-        }
+        }*/
     }
 
     async doLogout() {
@@ -128,9 +145,9 @@ export default class NavBar extends Component {
                 .then(res => console.log(res.data));
             loggedUser.isLoggedIn = false;
             loggedUser.loading = true;
-            sessionStorage.setItem("sessionUserID",  "");
-            sessionStorage.setItem("sessionEmail",  "");
-            sessionStorage.setItem("sessionRole",  "");
+            sessionStorage.setItem("sessionUserID", "");
+            sessionStorage.setItem("sessionEmail", "");
+            sessionStorage.setItem("sessionRole", "");
         } catch (e) {
             console.log("Couldn't log out " + e);
         }

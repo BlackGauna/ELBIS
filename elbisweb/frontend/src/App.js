@@ -43,7 +43,7 @@ import articleList from "./components/articleList.component";
 
 class App extends React.Component {
     render() {
-        const NotFound=()=> <div>Not found <Redirect to='/login' /></div>
+        const NotFound=()=> <div>Not found <Redirect to='/public' /></div>
         let adminRoutes, moderationRoutes, userRoutes,publicRoutes;
         adminRoutes =
             <div>
@@ -72,12 +72,13 @@ class App extends React.Component {
             </div>
         publicRoutes =
             <div>
+                <Route path="/public" component={NavBar}/>
                 <Switch>
-                    <Route path="/register" component={registerAccount}/>
-                    <Route path="/login" component={loginView}/>
+                    <Route exact path="/login" component={loginView}/>
                     <Route exact path="/terminal" component={terminalView}/>
-                    <Route exact path="/resetPassword" component={resetPassword}/>
-                    <Route exact path="/" component={articleList}/>
+                    <Route path="/public/register" component={registerAccount}/>
+                    <Route exact path="/public/resetPassword" component={resetPassword}/>
+                    <Route exact path="/public" component={articleList}/>
                     <Route exact path="/article/:id" component={articleView}/>
                 <Route component={NotFound} />
             </Switch>
