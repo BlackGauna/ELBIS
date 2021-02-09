@@ -7,23 +7,23 @@ import loggedUser from './session/loggedUser';
 import './ELBISWeb.css';
 import logo from './resources/ELBIS_logo/ELBIS_Ausgeschrieben.svg';
 import NavBar from "./components/ELBIS_navbar.component";
-import terminalView from "./components/terminal.component";
-import manageAccount from "./components/manageAccount.component";
-import userView from "./components/user/user_myArticles.Component";
-import loginView from "./components/loginView.component";
-import resetPassword from "./components/resetPassword.component";
+import TerminalView from "./components/terminal.component";
+import ManageAccount from "./components/manageAccount.component";
+import MyArticles from "./components/user/user_myArticles.Component";
+import LoginView from "./components/loginView.component";
+import ResetPassword from "./components/resetPassword.component";
 import CreateArticle from "./components/user/CreateArticle.component";
-import createTopic from "./components/administration/administration_createTopic.component";
-import allArticlesList from "./components/moderation/moderation_articleList.component";
-import manageSubmissions from "./components/moderation/moderation_submissionList.component";
-import editUser from "./components/moderation/moderation_editUser.component";
+import CreateTopic from "./components/administration/administration_createTopic.component";
+import AllArticlesList from "./components/moderation/moderation_articleList.component";
+import ManageSubmissions from "./components/moderation/moderation_submissionList.component";
+import EditUser from "./components/moderation/moderation_editUser.component";
 import SessionDataService from "./services/session.service";
-import moderation_userList from "./components/moderation/moderation_userList.component";
-import administration_topicList from "./components/administration/administration_topicList.component";
-import articleView from "./components/ArticleView.component";
-import editTopic from "./components/administration/administration_editTopic.component";
-import registerAccount from "./components/registerAccount.component";
-import articleList from "./components/articleList.component";
+import Moderation_userList from "./components/moderation/moderation_userList.component";
+import Administration_topicList from "./components/administration/administration_topicList.component";
+import ArticleView from "./components/ArticleView.component";
+import EditTopic from "./components/administration/administration_editTopic.component";
+import RegisterAccount from "./components/registerAccount.component";
+import ArticleList from "./components/articleList.component";
 
 //##########App start##########
 /*
@@ -47,40 +47,40 @@ class App extends React.Component {
         let adminRoutes, moderationRoutes, userRoutes,publicRoutes;
         adminRoutes =
             <div>
-                <Route exact path="/login/admin/manageTopics" component={administration_topicList}/>
-                <Route exact path="/login/admin/createTopic" component={createTopic}/>
-                <Route exact path="/login/admin/editTopic/:id" component={editTopic}/>
+                <Route exact path="/login/admin/manageTopics" component={Administration_topicList}/>
+                <Route exact path="/login/admin/createTopic" component={CreateTopic}/>
+                <Route exact path="/login/admin/editTopic/:id" component={EditTopic}/>
             </div>
         moderationRoutes =
             <div>
-                <Route exact path="/login/mod/manageSubmissions" component={manageSubmissions}/>
-                <Route exact path="/login/mod/manageArticles" component={allArticlesList}/>
-                <Route exact path="/login/mod/manageUsers" component={moderation_userList}/>
-                <Route exact path="/login/mod/editUser/:id" component={editUser}/>
+                <Route exact path="/login/mod/manageSubmissions" component={ManageSubmissions}/>
+                <Route exact path="/login/mod/manageArticles" component={AllArticlesList}/>
+                <Route exact path="/login/mod/manageUsers" component={Moderation_userList}/>
+                <Route exact path="/login/mod/editUser/:id" component={EditUser}/>
             </div>
         userRoutes =
             <div>
                 <Route path="/" component={NavBar}/>
+                <Route exact path="/article/:id" component={ArticleView}/>
                 <br/>
-                <Route exact path="/" component={articleList}/>
-                <Route exact path="/login/resetPassword" component={resetPassword}/>
-                <Route exact path="/login/terminal" component={terminalView}/>
-                <Route exact path="/login/manageAccount" component={manageAccount}/>
+                <Route exact path="/" component={ArticleList}/>
+                <Route exact path="/login/resetPassword" component={ResetPassword}/>
+                <Route exact path="/login/terminal" component={TerminalView}/>
+                <Route exact path="/login/manageAccount" component={ManageAccount}/>
                 <Route exact path="/login/edit" component={CreateArticle}/>
                 <Route exact path="/login/edit/:id" component={CreateArticle}/>
-                <Route exact path="/login/user/myArticles" component={userView}/>
-                <Route exact path="/article/:id" component={articleView}/>
-            </div>
+                <Route exact path="/login/user/myArticles" component={MyArticles}/>
+                </div>
         publicRoutes =
             <div>
-                <Route exact path="/terminal" component={terminalView}/>
                 <Route path="/" component={NavBar}/>
+                <Route exact path="/terminal" exact component={TerminalView}/>
                 {/*<Switch>*/}
-                    <Route exact path="/login" exact component={loginView}/>
-                    <Route path="/public/register" component={registerAccount}/>
-                    <Route exact path="/public/resetPassword" component={resetPassword}/>
-                    <Route exact path="/" component={articleList}/>
-                    <Route exact path="/article/:id" component={articleView}/>
+                    <Route exact path="/login" exact component={LoginView}/>
+                    <Route path="/public/register" component={RegisterAccount}/>
+                    <Route exact path="/public/resetPassword" component={ResetPassword}/>
+                    <Route exact path="/" component={ArticleList}/>
+                    <Route exact path="/article/:id" component={ArticleView}/>
                     {/*<Route component={NotFound} />
                     </Switch>*/}
             </div>
@@ -88,12 +88,12 @@ class App extends React.Component {
             return (
                 <div className="app">
                     <div className="container">
-                        <img src={logo} height={150} style={{marginBlock: "-4%", marginLeft: "-5%"}} alt="ELBIS"/> Is loading...
+                        <img src={logo} style={{marginBlock: "10%", marginLeft: "10.5%", height: 150}} alt="ELBIS"/><h1> Is loading...</h1>
                     </div>
                 </div>
             )
         } else {
-            if (loggedUser.isLoggedIn) {
+           if (loggedUser.isLoggedIn) {
                 if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
                     /*************
                      *   Admin Area

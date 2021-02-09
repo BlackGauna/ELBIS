@@ -12,7 +12,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import {Grid} from "@material-ui/core";
 
 //TODO close and refresh after creation of a topic
-export default class administration_topicList extends Component {
+export default class Administration_topicList extends Component {
     /********
      *
      * Constructor

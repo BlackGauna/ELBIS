@@ -99,7 +99,6 @@ export default class moderation_submissionList extends Component {
         this.handleSubmissionModal(index)
         window.location.reload()
     }
-    //show an article preview here
     showArticlePreview = (row) => {
         const id= row._id
         const url = '/article/'+id

@@ -9,7 +9,7 @@ import EditUser from "./moderation/moderation_editUser.component"
 import TopicDataService from "../services/topic.service";
 
 
-export default class manageAccount extends Component {
+export default class ManageAccount extends Component {
 
     /********
      *
@@ -59,7 +59,7 @@ export default class manageAccount extends Component {
 
             <div>
                 <div className="container">
-                    <img src={logo} height={150} style={{marginBlock: "-4%", marginLeft: "-5%"}} alt="ELBIS"/>
+                    <img src={logo} style={{marginBlock: "-4%", marginLeft: "-27.5%", height: 150}} alt="ELBIS"/>
                     <h3>Accountverwaltung</h3>
                     <hr/>
                     <br/>

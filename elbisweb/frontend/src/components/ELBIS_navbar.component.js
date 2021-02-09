@@ -116,6 +116,7 @@ export default class NavBar extends Component {
                 <Nav.Link onClick={()=>{this.handleLoginModal()}} >Anmelden</Nav.Link>
             </div>
         //full render
+        if(loggedUser.isLoggedIn){
         if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
             /*************
              *   Admin Area
@@ -173,7 +174,7 @@ export default class NavBar extends Component {
                     </Navbar.Collapse>
                 </Navbar>
             );
-        } else{
+        }} else{
             /*************
              *   Public Area
              * *************/

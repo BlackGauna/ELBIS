@@ -117,14 +117,14 @@ export default class loginViewComponent extends Component {
                             role: res.data.role,
                         });
                         console.log(res.data);
+                        //pageskip variables
+                        loggedUser.loading = false;
+                        loggedUser.isLoggedIn = true;
+                       // this.setState({submitted: true})
                     })
                     .catch(e => {
                         console.log(e);
                     });
-                //pageskip variables
-                loggedUser.loading = false;
-                loggedUser.isLoggedIn = true;
-                this.setState({submitted: true})
                 //authenticate failed
             } else if (res.data.success === false) {
                 loggedUser.loading = false;

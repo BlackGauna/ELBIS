@@ -14,6 +14,8 @@ import BootstrapTable from "react-bootstrap-table-next";
 import Alert from 'react-bootstrap/Alert'
 import Modal from "react-bootstrap/Modal";
 import HandleSubmission from "../moderation/moderation_handleSubmission.component";
+import $ from "jquery";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 
 export default class user_myArticles extends Component {
@@ -81,6 +83,9 @@ export default class user_myArticles extends Component {
                 },
             ],
         };
+        //article Preview
+        this.containerEl = document.createElement('div');
+        this.externalWindow = null;
     }
 
     statusRowStyle = (row, rowIndex) => {
@@ -141,6 +146,13 @@ export default class user_myArticles extends Component {
         }
         this.refreshPage()
     }
+    showArticlePreview = (row) => {
+        const id= row._id
+        const url = '/article/'+id
+        const width =  $(document).width()*0.6
+        this.externalWindow = window.open( url , '', 'width='+width+',height=700,left=200,top=200');
+        this.externalWindow.document.body.appendChild(this.containerEl);
+    }
 
     /********
      *
@@ -156,7 +168,9 @@ export default class user_myArticles extends Component {
                 console.log(error);
             })
     }
-
+    componentWillUnmount() {
+        this.externalWindow.close();
+    }
     /********
      *
      * Formatters
@@ -187,6 +201,13 @@ export default class user_myArticles extends Component {
                     aria-label="edit"
                     href={"/login/edit/" + row._id}>
                     <EditIcon/>
+                </IconButton>
+
+                <IconButton
+                    aria-label="view"
+                    onClick={()=>{this.showArticlePreview(row)}}
+                >
+                    <VisibilityIcon/>
                 </IconButton>
 
                 <IconButton aria-label="delete" href='#' onClick={() => {
