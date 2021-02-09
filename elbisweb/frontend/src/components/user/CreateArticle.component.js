@@ -205,7 +205,7 @@ export default class CreateArticle extends Component {
 
         if (userRole!=="Nutzer"){
             this.setState({
-                statusOptions: ARTICLESTATUS.getAll()
+                statusOptions: ARTICLESTATUS.getModeratorOptions()
             }, ()=>{
                 console.log("status: ")
                 console.log(this.state.statusOptions)

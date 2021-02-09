@@ -9,7 +9,7 @@ class ArticleDataService {
         return http.get("/article/");
     }
 
-    getAllAuthorized() {
+    getAllPublished() {
         return http.get("/article/published");
     }
 

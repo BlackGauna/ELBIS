@@ -1,8 +1,6 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router} from "react-router-dom";
 import axios from "axios";
-import UserTopicService from "../services/userTopic.service";
-import TopicService from "../services/topic.service";
 import parse from "html-react-parser";
 import "bootstrap/dist/css/bootstrap.min.css";
 import '../article_Terminal.module.css';
@@ -15,16 +13,10 @@ export default class ArticleView extends Component {
 
         this.state={
             content:"",
-            loggedUser:null
         }
     }
 
     componentDidMount() {
-
-        const userMail=sessionStorage.getItem("sessionEmail");
-        this.setState({
-            loggedUser: userMail
-        });
 
         axios.get("/article/"+this.props.match.params.id)
             .then(res=>{

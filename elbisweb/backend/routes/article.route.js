@@ -8,7 +8,7 @@ router.post("/", articles.create);
 router.get("/", articles.findAll);
 
 //Retrieve all published Articles
-router.get("/published", articles.findAllAuthorised);
+router.get("/published", articles.findAllPublished);
 
 // Retrieve all Articles with a specific status
 router.get("/fetchByStatus/:status", articles.findByStatus);

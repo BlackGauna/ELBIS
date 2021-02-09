@@ -29,13 +29,13 @@ export default class ELBISweb extends Component {
 
     componentDidMount() {
         // load authorized articles into state
-        ArticleService.getAllAuthorized()
+        ArticleService.getAllPublished()
            .then(res=>{
                //console.log(res.data)
                this.setState({
                    articles:res.data
                })
-               console.log(this.state.articles)
+               //console.log(this.state.articles)
 
                this.buildTabs()
 

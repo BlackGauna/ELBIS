@@ -7,7 +7,7 @@ import loggedUser from './session/loggedUser';
 import './ELBISWeb.css';
 import logo from './resources/ELBIS_logo/ELBIS_Ausgeschrieben.svg';
 import NavBar from "./components/ELBIS_navbar.component";
-import ELBISweb from "./components/index.component";
+import terminalView from "./components/terminal.component";
 import manageAccount from "./components/manageAccount.component";
 import userView from "./components/user/user_myArticles.Component";
 import loginView from "./components/loginView.component";
@@ -23,6 +23,7 @@ import administration_topicList from "./components/administration/administration
 import articleView from "./components/ArticleView.component";
 import editTopic from "./components/administration/administration_editTopic.component";
 import registerAccount from "./components/registerAccount.component";
+import articleList from "./components/articleList.component";
 
 //##########App start##########
 /*
@@ -62,7 +63,7 @@ class App extends React.Component {
                 <Route path="/login" component={NavBar}/>
                 <br/>
                 <Route exact path="/login/resetPassword" component={resetPassword}/>
-                <Route exact path="/login/" component={ELBISweb}/>
+                <Route exact path="/login/" component={terminalView}/>
                 <Route exact path="/login/manageAccount" component={manageAccount}/>
                 <Route exact path="/login/edit" component={CreateArticle}/>
                 <Route exact path="/login/edit/:id" component={CreateArticle}/>
@@ -74,8 +75,9 @@ class App extends React.Component {
                 <Switch>
                     <Route path="/register" component={registerAccount}/>
                     <Route path="/login" component={loginView}/>
-                    <Route exact path="/terminal" component={ELBISweb}/>
+                    <Route exact path="/terminal" component={terminalView}/>
                     <Route exact path="/resetPassword" component={resetPassword}/>
+                    <Route exact path="/" component={articleList}/>
                     <Route exact path="/article/:id" component={articleView}/>
                 <Route component={NotFound} />
             </Switch>
