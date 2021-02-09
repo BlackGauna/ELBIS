@@ -15,8 +15,6 @@ TODO MAYBE Make a public/submitted article revertable (unpublish) and the commen
 SidePages
 TODO finalize 'editUser' and load initial userTopics correctly
 TODO password reset for logged and nonn logged users
-TODO make sure all modals close on submit
-TODO dont show routine based status on article creation for admins/mods
 
 -------Editor-------
 
