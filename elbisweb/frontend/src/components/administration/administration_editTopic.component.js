@@ -25,7 +25,8 @@ export default class administration_editTopic extends Component {
                 choosenParentTopic: ''
             },
             parentTopic: [],
-            toggleParent: false
+            toggleParent: false,
+            submitted: false
         }
         console.log("Opened EDITTOPIC with: ")
         console.log(this.props.topic)
@@ -95,7 +96,8 @@ export default class administration_editTopic extends Component {
             .then(res => {
                 console.log(res.data);
                 this.setState({
-                    message: "The topic was updated successfully!"
+                    message: "The topic was updated successfully!",
+                    submitted: true
                 });
             })
             .catch(e => {
@@ -110,73 +112,78 @@ export default class administration_editTopic extends Component {
      *
      ********/
     render() {
-        const {currentTopic} = this.state;
-        const {parentTopic} = this.state;
-        const {toggleParent} = this.state;
-        let nameField =
-            <div className="form-group">
-                <label>Name: </label>
-                <br/>
-                <input
-                    type="name"
-                    className="form-control"
-                    defaultValue={currentTopic.name}
-                    onChange={this.onChange_name}/>
-            </div>
-        let chooseParent
-        if (toggleParent) {
-            chooseParent =
-                <div className="form-group">
-                    <label>Elternbereich: </label>
-                    <Select
-                        placeholder={"Elternbereich auswählen..."}
-                        options={parentTopic}
-                        onChange={this.onChange_parentTopic}
-                    />
-                </div>
-        } else {
-            chooseParent =
-                <div className="form-group">
-                    <label>Elternbereich: </label> <br/>
-                    <div className={"container"}>
-                    <label style={{
-                        fontWeight: "700",
-                        fontSize: "20px",
-                        background: "none",
-                        textAlign: "left",
-                        marginLeft: "-14px"
-                    }}> {currentTopic.choosenParentTopic} </label>
-                    </div>
-                    <Button variant="primary"
-                            size='sm'
-                            onClick={this.toggle_parentTopic}>Elternbereich ändern</Button>
-
-                </div>
+        if(this.state.submitted){
+            //TODO test if works for everyone
+            window.location.reload();
         }
-
-        return (
-            <div>
-                {currentTopic ? (
-                    <div className="container">
-                        {nameField}
-                        {chooseParent}
-                        <br/>
-                        <div className="form-group">
-                            <input
-                                type="submit"
-                                value="Bestätigen"
-                                className="btn btn-primary"
-                                onClick={this.updateTopic}/>
+        else {
+            const {currentTopic} = this.state;
+            const {parentTopic} = this.state;
+            const {toggleParent} = this.state;
+            let nameField =
+                <div className="form-group">
+                    <label>Name: </label>
+                    <br/>
+                    <input
+                        type="name"
+                        className="form-control"
+                        defaultValue={currentTopic.name}
+                        onChange={this.onChange_name}/>
+                </div>
+            let chooseParent
+            if (toggleParent) {
+                chooseParent =
+                    <div className="form-group">
+                        <label>Elternbereich: </label>
+                        <Select
+                            placeholder={"Elternbereich auswählen..."}
+                            options={parentTopic}
+                            onChange={this.onChange_parentTopic}
+                        />
+                    </div>
+            } else {
+                chooseParent =
+                    <div className="form-group">
+                        <label>Elternbereich: </label> <br/>
+                        <div className={"container"}>
+                            <label style={{
+                                fontWeight: "700",
+                                fontSize: "20px",
+                                background: "none",
+                                textAlign: "left",
+                                marginLeft: "-14px"
+                            }}> {currentTopic.choosenParentTopic} </label>
                         </div>
-                    </div>
-                ) : (
-                    <div>
-                        <p>Test...</p>
-                    </div>
-                )}
-            </div>
-        );
+                        <Button variant="primary"
+                                size='sm'
+                                onClick={this.toggle_parentTopic}>Elternbereich ändern</Button>
 
+                    </div>
+            }
+
+            return (
+                <div>
+                    {currentTopic ? (
+                        <div className="container">
+                            {nameField}
+                            {chooseParent}
+                            <br/>
+                            <div className="form-group">
+                                <input
+                                    type="submit"
+                                    value="Bestätigen"
+                                    className="btn btn-primary"
+                                    onClick={this.updateTopic}/>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <p>Test...</p>
+                        </div>
+                    )}
+                </div>
+            );
+        }
     }
 
     /********

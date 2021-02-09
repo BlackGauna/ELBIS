@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import TopicDataService from "../../services/topic.service";
 import Select from 'react-select';
+import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 
 export default class administration_createTopic extends Component {
     //##########constructor##########
@@ -39,11 +40,15 @@ export default class administration_createTopic extends Component {
 
     //##########Render##########
     render() {
+        if(this.state.submitted){
+            //TODO test if works for everyone
+            window.location.reload();
+           }
+        else{
         return (
             <div className="container">
                 <h3>Bereich erstellen</h3>
                 <br/>
-                <form onSubmit={this.onSubmit}>
                     <div className="form-group">
                         <label>Name: </label>
                         <br/>
@@ -63,14 +68,12 @@ export default class administration_createTopic extends Component {
                     }}>
                         Bereich erstellen
                     </button>
-                </form>
             </div>
-        )
+        )}
     }
 
     //##########submit method##########
     createTopic() {
-
         //create the object
         const topic = {
             name: this.state.name,
