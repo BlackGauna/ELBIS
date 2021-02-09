@@ -26,27 +26,8 @@ export default class ArticleView extends Component {
             loggedUser: userMail
         });
 
-        UserTopicService.getAllByMail(userMail)
-            .then(res =>{
-                if (res.data.length===0)
-                {
-                    TopicService.getAll()
-                        .then(res=>{
-                            console.log(res.data);
-                        })
-                }
-            });
-
         axios.get("/article/"+this.props.match.params.id)
             .then(res=>{
-                console.log("article: ");
-                console.log(res.data);
-
-                const test= res.data.content;
-                console.log(test);
-                console.log(sessionStorage.getItem("sessionEmail"));
-
-
                 this.setState({
                     content: res.data.content,
                 })
