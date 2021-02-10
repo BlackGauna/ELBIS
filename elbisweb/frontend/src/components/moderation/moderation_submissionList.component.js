@@ -112,7 +112,12 @@ export default class moderation_submissionList extends Component {
                     formatter: this.buttonFormatter,
                     style: {
                         verticalAlign: 'middle'
-                    }
+                    },
+                    headerStyle: () => {
+                        return {
+                            width: '5%',
+                        };
+                    },
                 },
             ],
         };
@@ -181,13 +186,16 @@ export default class moderation_submissionList extends Component {
                 </IconButton> */}
 
                 <IconButton
+                    size='small'
                     aria-label="view"
                     onClick={()=>{this.showArticlePreview(row)}}
                 >
                     <VisibilityIcon/>
                 </IconButton>
 
-                <IconButton aria-label="message" href='#' onClick={() => {
+                <IconButton aria-label="message"
+                            size='small'
+                            href='#' onClick={() => {
                     this.handleSubmissionModal(rowIndex)}}>
                     <MessageIcon/>
                 </IconButton>
@@ -202,7 +210,7 @@ export default class moderation_submissionList extends Component {
      ********/
     render() {
         return (
-            <div className="container-fluid">
+            <div className="articleTable">
                 <h3>Neue Veröffentlichungen</h3>
                 <Container style={{display: "flex"}}>
                 </Container>

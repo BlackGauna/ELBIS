@@ -109,7 +109,7 @@ export default class user_myArticles extends Component {
                         verticalAlign: 'middle'
                     },
                     headerStyle: () => {
-                        return {width: '13%',
+                        return {width: '10%',
                         };
                     },
                 },
@@ -226,19 +226,24 @@ export default class user_myArticles extends Component {
             <div>
                 {/*Edit and Delete buttons*/}
                 <IconButton
+                    size='small'
                     aria-label="edit"
                     href={"/login/edit/" + row._id}>
                     <EditIcon/>
                 </IconButton>
 
                 <IconButton
+                    size='small'
                     aria-label="view"
                     onClick={()=>{this.showArticlePreview(row)}}
                 >
                     <VisibilityIcon/>
                 </IconButton>
 
-                <IconButton aria-label="delete" href='#' onClick={() => {
+                <IconButton
+                    aria-label="delete"
+                    size='small'
+                    href='#' onClick={() => {
                     this.deleteArticle(row._id)
                 }}>
                     <DeleteIcon/>
