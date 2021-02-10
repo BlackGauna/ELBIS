@@ -1,0 +1,17 @@
+.userTable{
+    width: 1400px;
+    margin: 0 auto;
+    word-break: break-word;
+}
+
+.topicTable{
+    width: 1000px;
+    margin: 0 auto;
+    word-break: break-word;
+}
+
+.articleTable{
+    width: 1700px;
+    margin: 0 auto;
+    word-break: break-word;
+}

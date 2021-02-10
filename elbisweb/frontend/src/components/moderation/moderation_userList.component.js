@@ -12,6 +12,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import {Grid} from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import "../tables.css";
 
 function checkMod(againstRole) {
     if (sessionStorage.getItem("sessionRole") === ROLE.MODERATOR && (againstRole === ROLE.MODERATOR || againstRole === ROLE.ADMINISTRATOR)) {
@@ -39,38 +40,83 @@ export default class moderation_userList extends Component {
                     dataField: 'email',
                     text: 'E-Mail',
                     sort: true,
-                    headerStyle: () => {
-                        return {width: '20%',
-                        };
-                    }
+                    style:{
+                        verticalAlign: 'middle'
+                    },
+                    headerStyle: {
+                        verticalAlign: 'middle'
+                    },
+
                 },
                 {
                     dataField: 'fName',
                     text: 'Name',
                     sort: true,
                     formatter: this.nameFormatter,
+                    headerStyle: () => {
+                        return {
+                            width: '18%',
+                            verticalAlign: 'middle'
+                        };
+                    },
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                 },
                 {
                     dataField: 'gender',
                     text: 'Geschlecht',
-                    sort: true
+                    sort: true,
+                    headerStyle: () => {
+                        return {
+                            width: '11%',
+                            verticalAlign: 'middle'
+                        };
+                    },
+                    style:{
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: 'dateOfBirth',
                     text: 'Geburtsdatum',
                     sort: true,
                     formatter: this.dateFormatter,
+                    headerStyle: () => {
+                        return {
+                            width: '11%',
+                            verticalAlign: 'middle'
+                        };
+                    },
+                    style:{
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: 'street',
                     text: 'Adresse',
                     sort: true,
                     formatter: this.addressFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
+                    headerStyle:{
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: 'role',
                     text: 'Rolle',
-                    sort: true
+                    sort: true,
+                    headerStyle: () => {
+                        return {
+                            width: '9%',
+                            verticalAlign: 'middle'
+                        };
+                    },
+                    style:{
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: '_id',
@@ -78,6 +124,11 @@ export default class moderation_userList extends Component {
                     sort: false,
                     formatter: this.buttonFormatter,
                     headerFormatter: this.headerButtonFormatter,
+                    headerStyle: () => {
+                        return {
+                            width: '10%',
+                        };
+                    },
                     //formatExtraData: {}
                 },
             ]
@@ -129,12 +180,14 @@ export default class moderation_userList extends Component {
                 {/*Edit and delete buttons in each row*/}
                 <Grid container justify="flex-end">
                     <IconButton
+                        size='small'
                         aria-label="edit"
                         onClick={() => this.handleEditModal(rowIndex)}
                         disabled={checkMod(row.role)}> <EditIcon/>
                     </IconButton>
 
                     <IconButton
+                        size='small'
                         aria-label="delete"
                         href='#'
                         disabled={checkMod(row.role)}
@@ -147,12 +200,11 @@ export default class moderation_userList extends Component {
     }
 
     headerButtonFormatter = () => {
-        //TODO button crushes the header size
         return (
             <div>
                 <Grid container justify="flex-end">
                     {/*+ Button to open the create modal*/}
-                    <IconButton aria-label="add" href='#' onClick={() => {
+                    <IconButton size='small' aria-label="add" href='#' onClick={() => {
                         this.handleCreateModal()
                     }}>
                         <AddCircleIcon/>
@@ -202,7 +254,7 @@ export default class moderation_userList extends Component {
      ********/
     render() {
         return (
-            <div className="container-fluid">
+            <div className="userTable">
                 <h3>Nutzerverwaltung</h3>
                 Level: {sessionStorage.getItem("sessionRole")}
                 {/*Print the table*/}

@@ -21,56 +21,101 @@ export default class moderation_articleList extends Component {
                 dataField: 'title',
                 text: 'Titel',
                 sort: true,
+                style:{
+                    verticalAlign: 'middle'
+                },
             },
             {
                 dataField: 'status',
                 text: 'Status',
                 sort: true,
+                style:{
+                    verticalAlign: 'middle'
+                },
+                headerStyle: () => {
+                    return {
+                        width: '7%',
+                    };
+                },
             },
             {
                 dataField: 'createdAt',
                 text: 'Erstelldatum',
                 sort: true,
                 formatter: this.dateFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                }
             },
             {
                 dataField: 'updatedAt',
                 text: 'Bearbeitet',
                 sort: true,
                 formatter: this.dateFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                }
             },
             {
                 dataField: 'expireDate',
                 text: 'Ablaufdatum',
                 sort: true,
                 formatter: this.dateFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                }
             },
             {
                 dataField: 'topic',
                 text: 'Bereich',
                 sort: true,
+                style:{
+                    verticalAlign: 'middle'
+                },
+                headerStyle: () => {
+                    return {
+                        width: '8%',
+                    };
+                },
             },
             {
                 dataField: 'author',
                 text: 'Autor',
                 sort: true,
+                style:{
+                    verticalAlign: 'middle'
+                }
             },
             {
                 dataField: 'publisher',
                 text: 'Veröffentlicher',
                 sort: true,
+                style:{
+                    verticalAlign: 'middle'
+                }
             },
             {
                 dataField: 'publisherComment',
                 text: 'Kommentar',
                 sort: true,
                 formatter: this.commentFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                }
             },
             {
                 dataField: '_id',
-                text: 'Aktion',
+                text: '',
                 sort: false,
                 formatter: this.buttonFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                },
+                headerStyle: () => {
+                    return {
+                        width: '5%',
+                    };
+                },
             },
         ];
 
@@ -123,12 +168,13 @@ export default class moderation_articleList extends Component {
             <div>
                 {/*TODO mybe make this just a preview*/}
                 <IconButton
+                    size='small'
                     aria-label="edit"
                     href={"/login/edit/" + row._id}>
                     <EditIcon/>
                 </IconButton>
 
-                <IconButton aria-label="delete" href='#' onClick={() => {
+                <IconButton size='small' aria-label="delete" href='#' onClick={() => {
                     this.deleteArticle(row._id)}}>
                     <DeleteIcon/>
                 </IconButton>
@@ -141,7 +187,7 @@ export default class moderation_articleList extends Component {
 //##########Render##########
     render() {
         return (
-            <div className="container-fluid">
+            <div className="articleTable">
                 <h3>Artikelverwaltung</h3>
                 <BootstrapTable
                     headerClasses="thead-light"

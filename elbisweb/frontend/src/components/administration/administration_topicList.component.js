@@ -10,8 +10,8 @@ import AddTopic from '../administration/administration_createTopic.component';
 import EditTopic from '../administration/administration_editTopic.component';
 import BootstrapTable from 'react-bootstrap-table-next';
 import {Grid} from "@material-ui/core";
+import "../tables.css";
 
-//TODO close and refresh after creation of a topic
 export default class Administration_topicList extends Component {
     /********
      *
@@ -29,11 +29,23 @@ export default class Administration_topicList extends Component {
                     dataField: 'name',
                     text: 'Name',
                     sort: true,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
+                    headerStyle: {
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: 'parentTopic',
                     text: 'Elternbereich',
                     sort: true,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
+                    headerStyle: {
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: '_id',
@@ -79,12 +91,14 @@ export default class Administration_topicList extends Component {
                 <div>
                     <Grid container justify="flex-end">
                         <IconButton
+                            size='small'
                             aria-label="edit"
                             onClick={() => this.handleEditModal(rowIndex)}>
                             <EditIcon/>
                         </IconButton>
 
                         <IconButton
+                            size='small'
                             aria-label="delete"
                             href='#'
                             onClick={() => {
@@ -98,12 +112,11 @@ export default class Administration_topicList extends Component {
         )
     }
     headerButtonFormatter = () => {
-        //TODO button crushes the header size
         return (
             <div>
                 <Grid container justify="flex-end">
                     {/*+ Button to open the create modal*/}
-                    <IconButton aria-label="add" href='#' onClick={() => {
+                    <IconButton size='small' aria-label="add" href='#' onClick={() => {
                         this.handleCreateModal()
                     }}>
                         <AddCircleIcon/>
@@ -152,7 +165,7 @@ export default class Administration_topicList extends Component {
      ********/
     render() {
         return (
-            <div className="container-fluid">
+            <div className="topicTable">
                 <h3>Bereichsverwaltung</h3>
                 <BootstrapTable
                     headerClasses="thead-light"
