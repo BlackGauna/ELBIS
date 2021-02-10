@@ -84,7 +84,7 @@ class App extends React.Component {
                         <Route exact path="/preview/:id" component={ArticleView}/>
                         <br/>
                         <Route exact path="/" component={ArticleList}/>
-                        <Route exact path="/login/resetPassword" component={ResetPassword}/>
+                        <Route exact path="/login/resetPassword/:id" component={ResetPassword}/>
                         <Route exact path="/login/terminal" component={TerminalView}/>
                         <Route exact path="/login/manageAccount" component={ManageAccount}/>
                         <Route exact path="/login/edit" component={CreateArticle}/>
