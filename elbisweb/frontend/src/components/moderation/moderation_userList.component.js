@@ -129,6 +129,9 @@ export default class moderation_userList extends Component {
                             width: '10%',
                         };
                     },
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                     //formatExtraData: {}
                 },
             ]

@@ -22,63 +22,127 @@ export default class moderation_submissionList extends Component {
      ********/
     constructor(props) {
         super(props);
+
+        const columns = [
+            {
+                dataField: 'title',
+                text: 'Titel',
+                sort: true,
+                style:{
+                    verticalAlign: 'middle'
+                },
+            },
+            {
+                dataField: 'status',
+                text: 'Status',
+                sort: true,
+                style:{
+                    verticalAlign: 'middle'
+                },
+                headerStyle: () => {
+                    return {
+                        width: '7%',
+                    };
+                },
+            },
+            {
+                dataField: 'createdAt',
+                text: 'Erstellt',
+                sort: true,
+                formatter: this.dateFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                }
+            },
+            {
+                dataField: 'updatedAt',
+                text: 'Bearbeitet',
+                sort: true,
+                formatter: this.dateFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                }
+            },
+            {
+                dataField: 'publishDate',
+                text: 'Erscheint',
+                sort: true,
+                formatter: this.dateFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                },
+            },
+            {
+                dataField: 'expireDate',
+                text: 'Ablauf',
+                sort: true,
+                formatter: this.dateFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                }
+            },
+            {
+                dataField: 'topic',
+                text: 'Bereich',
+                sort: true,
+                style:{
+                    verticalAlign: 'middle'
+                },
+                headerStyle: () => {
+                    return {
+                        width: '8%',
+                    };
+                },
+            },
+            {
+                dataField: 'author',
+                text: 'Autor',
+                sort: true,
+                style:{
+                    verticalAlign: 'middle'
+                }
+            },
+            {
+                dataField: 'publisher',
+                text: 'Veröffentlicher',
+                sort: true,
+                style:{
+                    verticalAlign: 'middle'
+                }
+            },
+            {
+                dataField: 'publisherComment',
+                text: 'Kommentar',
+                sort: true,
+                formatter: this.commentFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                }
+            },
+            {
+                dataField: '_id',
+                text: '',
+                sort: false,
+                formatter: this.buttonFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                },
+                headerStyle: () => {
+                    return {
+                        width: '5%',
+                    };
+                },
+            },
+        ];
+
         this.state = {
             article: [],
             //MODALWORK: array with booleans for editUserModals
             submissionModal: [],
             //table columns
-            columns: [
-                {
-                    dataField: 'title',
-                    text: 'Titel',
-                    sort: true,
-                },
-                {
-                    dataField: 'status',
-                    text: 'Status',
-                    sort: true,
-                },
-                {
-                    dataField: 'topic',
-                    text: 'Bereich',
-                    sort: true,
-                },
-                {
-                    dataField: 'createdAt',
-                    text: 'Erstelldatum',
-                    sort: true,
-                    formatter: this.dateFormatter,
-                },
-                {
-                    dataField: 'updatedAt',
-                    text: 'Bearbeitet',
-                    sort: true,
-                    formatter: this.dateFormatter,
-                },
-                {
-                    dataField: 'expireDate',
-                    text: 'Ablaufdatum',
-                    sort: true,
-                    formatter: this.dateFormatter,
-                },
-                {
-                    dataField: 'author',
-                    text: 'Autor',
-                    sort: true,
-                },
-                {
-                    dataField: 'publisher',
-                    text: 'Veröffentlicher',
-                    sort: true,
-                },
-                {
-                    dataField: '_id',
-                    text: 'Aktion',
-                    sort: false,
-                    formatter: this.buttonFormatter,
-                },
-            ],
-        };
+            columns: columns
+        }
+
         //article Preview
         this.containerEl = document.createElement('div');
         this.externalWindow = null;
@@ -144,13 +208,14 @@ export default class moderation_submissionList extends Component {
                 </IconButton> */}
 
                 <IconButton
+                    size="small"
                     aria-label="view"
                     onClick={()=>{this.showArticlePreview(row)}}
                 >
                     <VisibilityIcon/>
                 </IconButton>
 
-                <IconButton aria-label="message" href='#' onClick={() => {
+                <IconButton size="small" aria-label="message" href='#' onClick={() => {
                     this.handleSubmissionModal(rowIndex)}}>
                     <MessageIcon/>
                 </IconButton>
@@ -165,7 +230,7 @@ export default class moderation_submissionList extends Component {
      ********/
     render() {
         return (
-            <div className="container-fluid">
+            <div className="articleTable">
                 <h3>Neue Veröffentlichungen</h3>
                 <Container style={{display: "flex"}}>
                 </Container>

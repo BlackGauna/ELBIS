@@ -9,6 +9,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import {Container} from "react-bootstrap";
 import moment from "moment";
+import "./../tables.css";
 
 
 export default class moderation_articleList extends Component {
@@ -40,7 +41,7 @@ export default class moderation_articleList extends Component {
             },
             {
                 dataField: 'createdAt',
-                text: 'Erstelldatum',
+                text: 'Erstellt',
                 sort: true,
                 formatter: this.dateFormatter,
                 style:{
@@ -57,8 +58,17 @@ export default class moderation_articleList extends Component {
                 }
             },
             {
+                dataField: 'publishDate',
+                text: 'Erscheint',
+                sort: true,
+                formatter: this.dateFormatter,
+                style:{
+                    verticalAlign: 'middle'
+                },
+            },
+            {
                 dataField: 'expireDate',
-                text: 'Ablaufdatum',
+                text: 'Ablauf',
                 sort: true,
                 formatter: this.dateFormatter,
                 style:{

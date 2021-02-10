@@ -12,7 +12,7 @@ TODO WIP fix routes to not show navbar in terminal and article previews
 
 Tables
 TODO MAYBE Make a public/submitted article revertable (unpublish) and the comment editable
-TODO show publish date and maybe remove creation date from article Tables
+TODO maybe remove creation date from article Tables
 TODO add a preview to all article tables
 
 SidePages

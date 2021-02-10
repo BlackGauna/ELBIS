@@ -16,6 +16,7 @@ import Modal from "react-bootstrap/Modal";
 import HandleSubmission from "../moderation/moderation_handleSubmission.component";
 import $ from "jquery";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import "./../tables.css";
 
 
 export default class user_myArticles extends Component {
@@ -35,51 +36,87 @@ export default class user_myArticles extends Component {
                     dataField: 'title',
                     text: 'Titel',
                     sort: true,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                 },
                 {
                     dataField: 'status',
                     text: 'Status',
                     sort: true,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                 },
                 {
                     dataField: 'topic',
                     text: 'Bereich',
                     sort: true,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                 },
                 {
                     dataField: 'createdAt',
-                    text: 'Erstelldatum',
+                    text: 'Erstellt',
                     sort: true,
                     formatter: this.dateFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                 },
                 {
                     dataField: 'updatedAt',
                     text: 'Bearbeitet',
                     sort: true,
                     formatter: this.dateFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
+                },
+                {
+                    dataField: 'publishDate',
+                    text: 'Erscheint',
+                    sort: true,
+                    formatter: this.dateFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                 },
                 {
                     dataField: 'expireDate',
-                    text: 'Ablaufdatum',
+                    text: 'Ablauf',
                     sort: true,
                     formatter: this.dateFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                 },
                 {
                     dataField: 'publisher',
                     text: 'Veröffentlicher',
                     sort: true,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                 },
                 {
                     dataField: 'publisherComment',
                     text: 'Kommentar',
                     sort: true,
                     formatter: this.commentFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                 },
                 {
                     dataField: '_id',
-                    text: 'Aktion',
+                    text: '',
                     sort: false,
                     formatter: this.buttonFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                     headerStyle: () => {
                         return {width: '12%',
                         };
@@ -200,12 +237,14 @@ export default class user_myArticles extends Component {
             <div>
                 {/*Edit and Delete buttons*/}
                 <IconButton
+                    size='small'
                     aria-label="edit"
                     href={"/login/edit/" + row._id}>
                     <EditIcon/>
                 </IconButton>
 
                 <IconButton
+                    size='small'
                     aria-label="view"
                     onClick={()=>{this.showArticlePreview(row)}}
                 >
@@ -235,7 +274,7 @@ export default class user_myArticles extends Component {
      ********/
     render() {
         return (
-            <div className="container-fluid">
+            <div className="articleTable">
                 <h3>Meine Artikel</h3>
                 <Container style={{display: "flex"}}>
                 </Container>
