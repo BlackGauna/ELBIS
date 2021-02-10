@@ -5,9 +5,9 @@ import parse from "html-react-parser";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {Container, ListGroup} from "react-bootstrap";
 import ArticleDataService from '../services/article.service';
+import wappen from '../resources/ElkrothWappen.png';
 
 export default class ArticleList extends Component {
-//##########Render##########
     constructor(props) {
         super(props);
 
@@ -48,7 +48,8 @@ export default class ArticleList extends Component {
         );
 
         this.setState({
-            listEntries: listEntries
+            listEntries: listEntries,
+            selectedArticleIndex: 0,
         });
 
     }
@@ -66,17 +67,22 @@ export default class ArticleList extends Component {
 
         return (
             <Router>
+                <img src={wappen} style={{position:"absolute", height: 80, width: 80, marginLeft: +80, marginBlock: -10}}/>
+                <div className={"container-fluid"}>
+                <h1>Aktuelle Veröffentlichungen</h1>
                 <div className={"m-3 d-flex"}>
                     <div style={{}}>
-                        <ListGroup>
+                        <ListGroup className={"list-group-flush"}>
                             {this.state.listEntries}
                         </ListGroup>
                     </div>
 
-                    <div className={"m-5 flex"} style={{width:"100%", height:"100%"}}>
+                    <div className={"m-5 flex"} style={{width:"100%", height:"100%",background: "#F5F8FB"}}>
+                        <br/>
                         {this.state.selectedArticleIndex !=null &&
                         parse(this.state.articles[this.state.selectedArticleIndex].content)}
-
+                        <hr/>
+                        {this.state.selectedArticleIndex !=null && "Artikelautor: "+ this.state.articles[this.state.selectedArticleIndex].author}
                         {/*{this.state.selectedArticleIndex !=null &&
                         <iframe
                             width={"100%"}
@@ -86,7 +92,7 @@ export default class ArticleList extends Component {
 
                         </iframe>}*/}
                     </div>
-
+                </div>
                 </div>
             </Router>
         )

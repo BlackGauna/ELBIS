@@ -176,7 +176,7 @@ export default class ELBISweb extends Component {
                     <div className={"container"}>
                         <p className={style.banner}>
                             Lesen Sie den vollständigen Artikel auf unserer Homepage:
-                            <img src={qr} alt={"QR"} style={{marginLeft:"2rem"}} height={"100rem"}/>
+                            <img src={qr} alt={"QR"} style={{height:"5rem", width:"5rem"}} />
                         </p>
                     </div>
                 </div>
