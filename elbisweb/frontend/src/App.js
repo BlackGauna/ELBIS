@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 import {observer} from 'mobx-react';
 import {ROLE} from "./session/userRoles.ice";
@@ -42,40 +42,65 @@ import ArticleList from "./components/articleList.component";
  */
 
 class App extends React.Component {
+
     render() {
-        const NotFound=()=> <div>Not found <Redirect to='/public' /></div>
-        let adminRoutes, moderationRoutes, userRoutes,publicRoutes;
-        adminRoutes =
-            <div>
-                <Route exact path="/login/admin/manageTopics" component={Administration_topicList}/>
-                <Route exact path="/login/admin/createTopic" component={CreateTopic}/>
-                <Route exact path="/login/admin/editTopic/:id" component={EditTopic}/>
-            </div>
-        moderationRoutes =
-            <div>
-                <Route exact path="/login/mod/manageSubmissions" component={ManageSubmissions}/>
-                <Route exact path="/login/mod/manageArticles" component={AllArticlesList}/>
-                <Route exact path="/login/mod/manageUsers" component={Moderation_userList}/>
-                <Route exact path="/login/mod/editUser/:id" component={EditUser}/>
-            </div>
-        userRoutes =
-            <div>
-                <Route path="/" component={NavBar}/>
-                <Route exact path="/article/:id" component={ArticleView}/>
-                <br/>
-                <Route exact path="/" component={ArticleList}/>
-                <Route exact path="/login/resetPassword" component={ResetPassword}/>
-                <Route exact path="/login/terminal" component={TerminalView}/>
-                <Route exact path="/login/manageAccount" component={ManageAccount}/>
-                <Route exact path="/login/edit" component={CreateArticle}/>
-                <Route exact path="/login/edit/:id" component={CreateArticle}/>
-                <Route exact path="/login/user/myArticles" component={MyArticles}/>
-                </div>
-        publicRoutes =
-            <div>
-                <Route path="/" component={NavBar}/>
-                <Route exact path="/terminal" exact component={TerminalView}/>
-                {/*<Switch>*/}
+        const NotFound = () => <div>Not found <Redirect to='/public'/></div>
+        let role = sessionStorage.getItem("sessionRole");
+        let adminRoutes = <Fragment></Fragment>
+        let moderationRoutes = <Fragment></Fragment>
+        let userRoutes = <Fragment></Fragment>
+        let publicRoutes = <Fragment></Fragment>
+        if (loggedUser.isLoggedIn) {
+            if (role === ROLE.ADMINISTRATOR) {
+                /*************
+                 *   Admin Area
+                 * *************/
+                adminRoutes =
+                    <Fragment>
+                        <Route exact path="/login/admin/manageTopics" component={Administration_topicList}/>
+                        <Route exact path="/login/admin/createTopic" component={CreateTopic}/>
+                        <Route exact path="/login/admin/editTopic/:id" component={EditTopic}/>
+                    </Fragment>
+            }
+            if (role === ROLE.MODERATOR || role === ROLE.ADMINISTRATOR) {
+                /*************
+                 *   Mod Area
+                 * *************/
+                moderationRoutes =
+                    <Fragment>
+                        <Route exact path="/login/mod/manageSubmissions" component={ManageSubmissions}/>
+                        <Route exact path="/login/mod/manageArticles" component={AllArticlesList}/>
+                        <Route exact path="/login/mod/manageUsers" component={Moderation_userList}/>
+                        <Route exact path="/login/mod/editUser/:id" component={EditUser}/>
+                    </Fragment>
+            }
+            if (role === ROLE.USER || role === ROLE.MODERATOR || role === ROLE.ADMINISTRATOR) {
+                /*************
+                 *   User Area
+                 * *************/
+                userRoutes =
+                    <Fragment>
+                        <Route path="/" component={NavBar}/>
+                        <Route exact path="/article/:id" component={ArticleView}/>
+                        <br/>
+                        <Route exact path="/" component={ArticleList}/>
+                        <Route exact path="/login/resetPassword" component={ResetPassword}/>
+                        <Route exact path="/login/terminal" component={TerminalView}/>
+                        <Route exact path="/login/manageAccount" component={ManageAccount}/>
+                        <Route exact path="/login/edit" component={CreateArticle}/>
+                        <Route exact path="/login/edit/:id" component={CreateArticle}/>
+                        <Route exact path="/login/user/myArticles" component={MyArticles}/>
+                    </Fragment>
+            }
+        } else {
+            /*************
+             *   Public Area
+             * *************/
+            publicRoutes =
+                <Fragment>
+                    <Route path="/" component={NavBar}/>
+                    <Route exact path="/terminal" exact component={TerminalView}/>
+                    {/*<Switch>*/}
                     <Route exact path="/login" exact component={LoginView}/>
                     <Route path="/public/register" component={RegisterAccount}/>
                     <Route exact path="/public/resetPassword" component={ResetPassword}/>
@@ -83,71 +108,30 @@ class App extends React.Component {
                     <Route exact path="/article/:id" component={ArticleView}/>
                     {/*<Route component={NotFound} />
                     </Switch>*/}
-            </div>
+                </Fragment>
+        }
         if (loggedUser.loading) {
             return (
                 <div className="app">
                     <div className="container">
-                        <img src={logo} style={{marginBlock: "10%", marginLeft: "10.5%", height: 150}} alt="ELBIS"/><h1> Is loading...</h1>
+                        <h1>ELBIS</h1>
+                        <h1>Application is loading...</h1>
                     </div>
                 </div>
             )
         } else {
-           if (loggedUser.isLoggedIn) {
-                if (sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR) {
-                    /*************
-                     *   Admin Area
-                     * *************/
-                    return (
-                        <div className="app">
-                            <Router>
-                                {userRoutes}
-                                {moderationRoutes}
-                                {adminRoutes}
-                            </Router>
-                        </div>
-                    )
-                } else if (sessionStorage.getItem("sessionRole") === ROLE.MODERATOR) {
-                    /*************
-                     *   Mod Area
-                     * *************/
-                    return (<div className="app">
-                        <Router>
-                            {userRoutes}
-                            {moderationRoutes}
-                        </Router>
-                    </div>);
-                } else if (sessionStorage.getItem("sessionRole") === ROLE.USER) {
-                    /*************
-                     *   User Area
-                     * *************/
-                    return (<div className="app">
-                        <Router>
-                            {userRoutes}
-                        </Router>
-                    </div>);
-                } else {
-                    return (
-                        <div className="app">
-                            <Router>
-                                <Route component={NotFound} />
-                            </Router>
-                        </div>
-                    )
-                }
-            } else if (!loggedUser.isLoggedIn) {
-                /*************
-                 *   public Area
-                 * *************/
-                return (
-                    <div className="app">
-                        <Router>
-                            {publicRoutes}
-                        </Router>
-                    </div>
-                )
-            }
+            return (
+                <div className="app">
+                    <Router>
+                        {publicRoutes}
+                        {userRoutes}
+                        {moderationRoutes}
+                        {adminRoutes}
+                    </Router>
+                </div>
+            )
         }
+
     }
 
     /*************

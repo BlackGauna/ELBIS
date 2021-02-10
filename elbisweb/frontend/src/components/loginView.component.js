@@ -163,7 +163,7 @@ export default class loginViewComponent extends Component {
         return (
             <div className="Login">
                 <Form onSubmit={this.onSubmit}>
-                    <img src={logo} height={150} style={{marginBlock: "-4%", marginLeft: "-5%"}} alt="ELBIS"/>
+                    <img src={logo} height={150} style={{marginBlock: "-4%", marginLeft: "-1%"}} alt="ELBIS"/>
                     <hr/>
                       <Form.Group size="lg" controlId="email">
                           <Form.Label>E-Mail</Form.Label>

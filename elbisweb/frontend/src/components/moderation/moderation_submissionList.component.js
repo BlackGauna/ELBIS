@@ -32,50 +32,87 @@ export default class moderation_submissionList extends Component {
                     dataField: 'title',
                     text: 'Titel',
                     sort: true,
+                    style: {
+                        verticalAlign: 'middle'
+                    },
                 },
                 {
                     dataField: 'status',
                     text: 'Status',
                     sort: true,
+                    style: {
+                        verticalAlign: 'middle'
+                    },
+                    headerStyle: () => {
+                        return {
+                            width: '8%',
+                        };
+                    },
                 },
                 {
                     dataField: 'topic',
                     text: 'Bereich',
                     sort: true,
-                },
-                {
-                    dataField: 'createdAt',
-                    text: 'Erstelldatum',
-                    sort: true,
-                    formatter: this.dateFormatter,
+                    style: {
+                        verticalAlign: 'middle'
+                    },
+                    headerStyle: () => {
+                        return {
+                            width: '8%',
+                        };
+                    },
                 },
                 {
                     dataField: 'updatedAt',
                     text: 'Bearbeitet',
                     sort: true,
                     formatter: this.dateFormatter,
+                    style: {
+                        verticalAlign: 'middle'
+                    }
+                },
+                {
+                    dataField: 'publishDate',
+                    text: 'Veröffentlichung',
+                    sort: true,
+                    formatter: this.dateFormatter,
+                    style: {
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: 'expireDate',
-                    text: 'Ablaufdatum',
+                    text: 'Ablauf',
                     sort: true,
                     formatter: this.dateFormatter,
+                    style: {
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: 'author',
                     text: 'Autor',
                     sort: true,
+                    style: {
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: 'publisher',
                     text: 'Veröffentlicher',
                     sort: true,
+                    style: {
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: '_id',
                     text: 'Aktion',
                     sort: false,
                     formatter: this.buttonFormatter,
+                    style: {
+                        verticalAlign: 'middle'
+                    }
                 },
             ],
         };

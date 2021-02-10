@@ -86,7 +86,7 @@ export default class NavBar extends Component {
             <div>
                 <NavDropdown title="Mein Bereich" id="userDropdown">
                     <NavDropdown.Item href={"/login/manageAccount"}>Account verwalten</NavDropdown.Item>
-                    <NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>
+                    {/*<NavDropdown.Item href={"/login/edit"}>Artikel erstellen</NavDropdown.Item>*/}
                     <NavDropdown.Item href={"/login/user/myArticles"}>Meine Artikel</NavDropdown.Item>
                 </NavDropdown>
             </div>
@@ -101,7 +101,6 @@ export default class NavBar extends Component {
                             {sessionStorage.getItem("sessionEmail")}
                         </span>
                 <Nav.Link href={"/"} onClick={() => this.doLogout()}>Abmelden</Nav.Link>
-                {/*<Button href={"/"} onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>*/}
             </div>
         navPublicStart =
             <div>
@@ -111,7 +110,7 @@ export default class NavBar extends Component {
                 </div>
             </div>
         navPublicEnd =
-            <div div className="row">
+            <div className="row">
                 <Nav.Link href={"/terminal"}>(Terminal aufrufen)</Nav.Link>
                 <Nav.Link onClick={()=>{this.handleLoginModal()}} >Anmelden</Nav.Link>
             </div>
@@ -193,12 +192,6 @@ export default class NavBar extends Component {
                 </Navbar>
             )
         }
-        /*else {
-            return (<div>
-                Please contact an admin to to assign a valid role to your account.
-                <Button onClick={() => this.doLogout()} variant={"outline-primary"}>Logout</Button>
-            </div>)
-        }*/
     }
 }
 

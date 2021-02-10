@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Link,} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -8,18 +7,15 @@ import ForwardIcon from '@material-ui/icons/Forward';
 import ArticleDataService from "../../services/article.service";
 import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import moment from "moment";
-import MessageIcon from "@material-ui/icons/Message";
 import {Container} from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
-import Alert from 'react-bootstrap/Alert'
-import Modal from "react-bootstrap/Modal";
-import HandleSubmission from "../moderation/moderation_handleSubmission.component";
 import $ from "jquery";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import {Grid} from "@material-ui/core";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 
 export default class user_myArticles extends Component {
-
     /********
      *
      * Constructor
@@ -35,55 +31,87 @@ export default class user_myArticles extends Component {
                     dataField: 'title',
                     text: 'Titel',
                     sort: true,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                 },
                 {
                     dataField: 'status',
                     text: 'Status',
                     sort: true,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
+                    headerStyle: () => {
+                        return {width: '8%',
+                        };
+                    }
                 },
                 {
                     dataField: 'topic',
                     text: 'Bereich',
                     sort: true,
-                },
-                {
-                    dataField: 'createdAt',
-                    text: 'Erstelldatum',
-                    sort: true,
-                    formatter: this.dateFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: 'updatedAt',
                     text: 'Bearbeitet',
                     sort: true,
                     formatter: this.dateFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    }
+                },
+                {
+                    dataField: 'publishDate',
+                    text: 'Veröffentlichung',
+                    sort: true,
+                    formatter: this.dateFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: 'expireDate',
-                    text: 'Ablaufdatum',
+                    text: 'Ablauf',
                     sort: true,
                     formatter: this.dateFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: 'publisher',
                     text: 'Veröffentlicher',
                     sort: true,
+                    style:{
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: 'publisherComment',
                     text: 'Kommentar',
                     sort: true,
                     formatter: this.commentFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    }
                 },
                 {
                     dataField: '_id',
                     text: 'Aktion',
                     sort: false,
                     formatter: this.buttonFormatter,
+                    headerFormatter: this.headerButtonFormatter,
+                    style:{
+                        verticalAlign: 'middle'
+                    },
                     headerStyle: () => {
-                        return {width: '12%',
+                        return {width: '13%',
                         };
-                    }
+                    },
                 },
             ],
         };
@@ -115,7 +143,6 @@ export default class user_myArticles extends Component {
         window.location.reload()
     }
 
-    // delete Article method
     deleteArticle = (id) => {
         if (window.confirm('Möchten Sie den ausgewählten Artikel löschen?')) {
             ArticleDataService.delete(id)
@@ -194,8 +221,7 @@ export default class user_myArticles extends Component {
     }
 
     buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
-        const editDisable = (row.status !== ARTICLESTATUS.ENTWURF)
-
+        const submitDisable = (row.status !== ARTICLESTATUS.ENTWURF)
         return (
             <div>
                 {/*Edit and Delete buttons*/}
@@ -218,12 +244,24 @@ export default class user_myArticles extends Component {
                     <DeleteIcon/>
                 </IconButton>
 
-                <IconButton disabled={editDisable} aria-label="forward" onClick={() => {
+                <IconButton disabled={submitDisable} aria-label="forward" onClick={() => {
                     this.updateArticleStatus(row)
                 }}>
                     <ForwardIcon/>
                 </IconButton>
 
+            </div>
+        )
+    }
+    headerButtonFormatter = () => {
+        return (
+            <div>
+                <Grid container justify="flex-end">
+                    {/*+ Button to open the create modal*/}
+                    <IconButton size='small' aria-label="add" href="/login/edit">
+                        <AddCircleIcon/>
+                    </IconButton>
+                </Grid>
             </div>
         )
     }
@@ -254,108 +292,4 @@ export default class user_myArticles extends Component {
             </div>
         )
     }
-
-    /* OLD
-const Article = props => (
-    <tr>
-        <td>{props.article.title}</td>
-        <td>{props.article.status}</td>
-        <td>{props.article.topic}</td>
-        <td>{props.article.author}</td>
-        <td>{props.article.publisher}</td>
-        <td>{props.article.publisherComment}</td>
-        <td align='right'>
-            <IconButton aria-label="edit" href={"/login/edit/" + props.article._id}>
-                <EditIcon/>
-            </IconButton>
-            <IconButton aria-label="delete" onClick={() => {
-                props.deleteArticle(props.article._id)
-            }}>
-                <DeleteIcon/>
-            </IconButton>
-            <IconButton aria-label="forward" onClick={() => {
-                props.updateArticleStatus(props.article._id)
-            }}>
-                <ForwardIcon/>
-            </IconButton>
-        </td>
-    </tr>
-)
-
-
-    // Constructor
-    constructor(props) {
-        super(props);
-
-        this.deleteArticle = this.deleteArticle.bind(this);
-        this.state = {
-            article: []
-        };
-    }
-
-
-    // Mount method
-    componentDidMount() {
-        ArticleDataService.findByEmail(sessionStorage.getItem("sessionEmail"))
-            .then(response => {
-                this.setState({article: response.data})
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }
-
-    // delete Article method
-    deleteArticle(id) {
-        ArticleDataService.delete(id)
-            .then(res => console.log(res.data));
-        this.setState({
-            article: this.state.article.filter(el => el._id !== id)
-        })
-    }
-
-    // delete Article method
-    updateArticleStatus = (id) => {
-        console.log("implement me")
-
-    }
-
-    // get article list
-    articleList() {
-        return this.state.article.map(currentArticle => {
-            return <Article article={currentArticle}
-                            deleteArticle={this.deleteArticle}
-                            updateArticleStatus={this.updateArticleStatus}
-                            key={currentArticle._id}/>;
-        })
-    }
-
-//##########Render##########
-    render() {
-        return (
-            <div className="container">
-                <h3>Meine Artikel</h3>
-                <table className="articleTable table">
-                    <thead className="thead-light">
-                    <tr>
-                        <th>Titel</th>
-                        <th>Status</th>
-                        <th>Bereich</th>
-                        <th>Autor</th>
-                        <th>Veröffentlicher</th>
-                        <th>Kommentar</th>
-                        <th className={"text-right"}><Link to="/login/edit">
-                            <button className="btn btn-primary btn-sm">+</button>
-                        </Link>
-                        </th>
-                    </tr>
-
-                    </thead>
-                    <tbody>
-                    {this.articleList()}
-                    </tbody>
-                </table>
-            </div>
-        )
-    } */
 }
