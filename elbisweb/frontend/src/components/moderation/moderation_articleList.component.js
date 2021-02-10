@@ -157,7 +157,7 @@ export default class moderation_articleList extends Component {
 
     showArticlePreview = (row) => {
         const id = row._id
-        const url = '/article/' + id
+        const url = '/preview/' + id
         const width = $(document).width() * 0.6
         this.externalWindow = window.open(url, '', 'width=' + width + ',height=700,left=200,top=200');
         this.externalWindow.document.body.appendChild(this.containerEl);

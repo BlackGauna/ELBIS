@@ -18,6 +18,7 @@ export default class NavBar extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            terminalMode:false,
             showLoginModal: false,
         }
     }
@@ -40,6 +41,19 @@ export default class NavBar extends Component {
             console.log("Couldn't log out " + e);
         }
     }
+    /********
+     *
+     * Mounting
+     *
+     ********/
+    componentDidMount() {
+        if(window.location.href.indexOf("terminal") > -1 || window.location.href.indexOf("preview") > -1) {
+            this.setState({terminalMode:true})
+        } else{
+            this.setState({terminalMode:false})
+        }
+    }
+
     /********
      *
      * Modal
@@ -65,6 +79,9 @@ export default class NavBar extends Component {
      *
      ********/
     render() {
+        if(!this.state.terminalMode){
+
+
         let navPublicStart, navPublicEnd, navLoginStart, navLoginEnd, navUser, navModerator, navAdmin;
 
         navAdmin =
@@ -191,6 +208,9 @@ export default class NavBar extends Component {
                     {this.renderLoginModal()}
                 </Navbar>
             )
+        }
+        } else{
+            return(<div></div>)
         }
     }
 }

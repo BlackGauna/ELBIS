@@ -26,7 +26,7 @@ export default class resetPassword extends Component {
                 return (
                     <Router>
                         <div className="container"> <br/><br/>
-                            <h4> Neues Passwort setzen? Bald gibts hier die Lösung! </h4>
+                            <h4> Neues Passwort setzen </h4>
                         </div>
                     </Router>
                 )

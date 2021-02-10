@@ -81,7 +81,7 @@ class App extends React.Component {
                 userRoutes =
                     <Fragment>
                         <Route path="/" component={NavBar}/>
-                        <Route exact path="/article/:id" component={ArticleView}/>
+                        <Route exact path="/preview/:id" component={ArticleView}/>
                         <br/>
                         <Route exact path="/" component={ArticleList}/>
                         <Route exact path="/login/resetPassword" component={ResetPassword}/>
