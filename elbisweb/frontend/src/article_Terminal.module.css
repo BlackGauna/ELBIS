@@ -1,4 +1,10 @@
 div.content{
+    margin: 2rem;
+}
+
+div.all{
+    all: unset;
+    margin: 0;
 }
 
 h1{
@@ -11,7 +17,7 @@ p{
     /*background-color: darkcyan;*/
     font-size: 1.1rem !important;
     text-align: left;
-    margin: auto 10vw auto 10vw !important;
+    margin: 1rem 0vw 0 0vw !important;
 }
 
 iframe{
@@ -21,10 +27,7 @@ iframe{
 }
 img{
     display: block;
-    margin: 3.5rem auto;
-    width: 100%;
-    max-width: 860px;
-    height: auto;
+    margin: 1.5rem;
     justify-content: center;
 
 }

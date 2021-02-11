@@ -146,7 +146,7 @@ export default class ELBISweb extends Component {
 
         return (
 
-        <div className={"all"} style={{marginTop:"3rem"}}>
+        <div className={"all"} style={{marginTop:"3rem",marginLeft:"0rem"}}>
             <Helmet>
                 <style type={"text/css"}>
                     {`
@@ -156,7 +156,7 @@ export default class ELBISweb extends Component {
                     `}
                 </style>
             </Helmet>
-            <div className={"container"}>
+            <div className={style.content}>
 
                 <Tabs
                     onSelect={this.onSelect}
