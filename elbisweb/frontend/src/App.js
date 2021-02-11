@@ -5,7 +5,6 @@ import {ROLE} from "./session/userRoles.ice";
 import "bootstrap/dist/css/bootstrap.min.css";
 import loggedUser from './session/loggedUser';
 import './ELBISWeb.css';
-import logo from './resources/ELBIS_logo/ELBIS_Ausgeschrieben.svg';
 import NavBar from "./components/ELBIS_navbar.component";
 import TerminalView from "./components/terminal.component";
 import ManageAccount from "./components/manageAccount.component";

@@ -6,7 +6,6 @@ import {ROLE} from "../session/userRoles.ice";
 import SessionDataService from "../services/session.service";
 import Modal from "react-bootstrap/Modal";
 import LoginView from "./loginView.component";
-import AddTopic from "./administration/administration_createTopic.component";
 
 export default class NavBar extends Component {
 

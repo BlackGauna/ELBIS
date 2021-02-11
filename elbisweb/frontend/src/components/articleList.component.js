@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router} from "react-router-dom";
-import axios from "axios";
 import parse from "html-react-parser";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Container, ListGroup} from "react-bootstrap";
+import {ListGroup} from "react-bootstrap";
 import ArticleDataService from '../services/article.service';
 import wappen from '../resources/ElkrothWappen.png';
 
@@ -20,7 +19,6 @@ export default class ArticleList extends Component {
     }
 
     componentDidMount() {
-
         ArticleDataService.getAllPublished()
             .then(res=>{
                 this.setState({
@@ -61,10 +59,7 @@ export default class ArticleList extends Component {
         console.log(this.state.selectedArticleIndex)
     }
 
-
     render() {
-
-
         return (
             <Router>
                 <img src={wappen} style={{position:"absolute", height: 80, width: 80, marginLeft: +80, marginBlock: -10}}/>
