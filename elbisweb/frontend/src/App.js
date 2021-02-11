@@ -5,7 +5,6 @@ import {ROLE} from "./session/userRoles.ice";
 import "bootstrap/dist/css/bootstrap.min.css";
 import loggedUser from './session/loggedUser';
 import './ELBISWeb.css';
-import logo from './resources/ELBIS_logo/ELBIS_Ausgeschrieben.svg';
 import NavBar from "./components/ELBIS_navbar.component";
 import TerminalView from "./components/terminal.component";
 import ManageAccount from "./components/manageAccount.component";
@@ -24,6 +23,7 @@ import ArticleView from "./components/ArticleView.component";
 import EditTopic from "./components/administration/administration_editTopic.component";
 import RegisterAccount from "./components/registerAccount.component";
 import ArticleList from "./components/articleList.component";
+import Dashboard from "./components/dashboard.component";
 
 //##########App start##########
 /*
@@ -83,7 +83,7 @@ class App extends React.Component {
                         <Route path="/" component={NavBar}/>
                         <Route exact path="/preview/:id" component={ArticleView}/>
                         <br/>
-                        <Route exact path="/" component={ArticleList}/>
+                        <Route exact path="/" component={Dashboard}/>
                         <Route exact path="/login/resetPassword/:id" component={ResetPassword}/>
                         <Route exact path="/login/terminal" component={TerminalView}/>
                         <Route exact path="/login/manageAccount" component={ManageAccount}/>
