@@ -257,18 +257,16 @@ exports.update = (req, res) => {
             } else {
                 console.log("writing to path: " + data.path);
 
-                // if html is empty, set empty String so that file saves correctly
-                if (!html){
-                    html="";
+                // update local html file with article's current content
+                if (html) {
+                    fs.writeFile(data.path, html, (err) => {
+                        if (err) throw err;
+
+                        // success
+                        console.log("File updated!");
+                    });
                 }
 
-                // update local html file with article's current content
-                fs.writeFile(data.path, html, (err) => {
-                    if (err) throw err;
-
-                    // success
-                    console.log("File updated!");
-                });
 
                 console.log(data);
                 res.send(data);

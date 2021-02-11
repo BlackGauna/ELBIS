@@ -130,14 +130,25 @@ export default class moderation_editUser extends Component {
 
     async getAllowedTopics(email) {
         const mail = email
-        const res = await UserTopicDataService.getAllByMail(mail)
-        const data = res.data
+        let data;
+        if (this.state.currentUser.choosenRole===ROLE.USER){
+            //const res = await UserTopicDataService.getAllByMail(mail)
 
-        const options = data.map(d => ({
-            "label": d.topic
-        }))
-        this.setState({choosenTopics: options})
-        console.log(this.state.choosenTopics)
+            UserTopicDataService.getAllByMail(mail)
+                .then(res=>{
+                    data = res.data
+
+                    this.getTopicOptions()
+
+                    const options = data.map(d => ({
+                        "label": d.topic
+                    }))
+                    this.setState({choosenTopics: options})
+                    console.log(this.state.choosenTopics)
+                })
+
+        }
+
     }
 
     async getTopicOptions() {
