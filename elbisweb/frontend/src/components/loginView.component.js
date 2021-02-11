@@ -24,7 +24,7 @@ export default class loginViewComponent extends Component {
             mounted: true,
             buttonDisabled: false,
             submitted: false,
-            // loginstate: "geben sie ihre Anmeldedaten ein."
+            loginstate: ""
         }
     }
     /********
@@ -184,9 +184,9 @@ export default class loginViewComponent extends Component {
                         />
                     </Form.Group>
 
-                    {/*<div>*/}
-                    {/*    <label>{this.state.loginstate}</label>*/}
-                    {/*</div>*/}
+                    <div>
+                        <label>{this.state.loginstate}</label>
+                    </div>
 
                     <Grid container>
                         <Grid item xs>
