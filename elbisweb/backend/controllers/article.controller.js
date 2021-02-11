@@ -207,14 +207,14 @@ exports.update = (req, res) => {
 
     // get old title by parsing path of req
     const oldtitle = req.body.path.substring(req.body.path.indexOf('_')+1, req.body.path.lastIndexOf('_'));
-    console.log("old title: "+ oldtitle);
-    console.log("new title: "+req.body.title)
+    // console.log("old title: "+ oldtitle);
+    // console.log("new title: "+req.body.title)
 
     // get old topic
     const oldTopic = req.body.path.substring(req.body.path.indexOf('/')+1, req.body.path.indexOf('_'));
-    console.log("old topic: "+ oldTopic);
-    console.log("new topic: "+ req.body.topic);
-    console.log(oldtitle!==req.body.title ||oldTopic!==req.body.topic);
+    // console.log("old topic: "+ oldTopic);
+    // console.log("new topic: "+ req.body.topic);
+    // console.log(oldtitle!==req.body.title ||oldTopic!==req.body.topic);
 
 
     // delete old file if title changed
@@ -232,6 +232,7 @@ exports.update = (req, res) => {
             +req.body.title + '_' + req.body.id
             +'.html';
 
+        console.log("old path_ "+ req.body.path);
         console.log('new path: '+ newPath);
 
         // overwrite old path with new
@@ -254,17 +255,20 @@ exports.update = (req, res) => {
                     message: "Cannot update Article with id = " + id + ". Maybe Article was not found!"
                 });
             } else {
-                console.log("path: " + data.path);
-                // update local html file with article's current content
-                if (html) {
-                    fs.writeFile(data.path, html, (err) => {
-                        if (err) throw err;
+                console.log("writing to path: " + data.path);
 
-                        // success
-                        console.log("File updated!");
-                    });
+                // if html is empty, set empty String so that file saves correctly
+                if (!html){
+                    html="";
                 }
 
+                // update local html file with article's current content
+                fs.writeFile(data.path, html, (err) => {
+                    if (err) throw err;
+
+                    // success
+                    console.log("File updated!");
+                });
 
                 console.log(data);
                 res.send(data);

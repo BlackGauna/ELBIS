@@ -12,6 +12,7 @@ import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
 import articleStyle from '../../article_Terminal.module.css';
+import $ from "jquery";
 
 
 
@@ -46,6 +47,9 @@ export default class CreateArticle extends Component {
 
         };
 
+        //article Preview
+        this.containerEl = document.createElement('div');
+        this.externalWindow = null;
 
     }
 
@@ -147,7 +151,9 @@ export default class CreateArticle extends Component {
 
         // setup beforeunload and unload events for deleting unnamed article
         window.addEventListener("beforeunload", this.onBeforeUnload);
-        window.addEventListener("unload", this.onUnload,false);
+        //window.addEventListener("unload", this.onUnload,false);
+
+
 
     }
 
@@ -155,6 +161,10 @@ export default class CreateArticle extends Component {
     onBeforeUnload =(e)=>{
         e.preventDefault();
         e.returnValue= "Ungespeicherte Änderungen";
+
+        if (this.externalWindow!==null){
+            this.externalWindow.close();
+        }
 
     }
 
@@ -173,7 +183,8 @@ export default class CreateArticle extends Component {
 
 
     componentWillUnmount() {
-        window.removeEventListener("unload", this.onUnload,false);
+        //window.removeEventListener("unload", this.onUnload,false);
+
     }
 
 
@@ -362,6 +373,8 @@ export default class CreateArticle extends Component {
                     publishDate: this.state.publishDate
                 }
 
+                console.log(article);
+
                 //console.log(article);
                 axios.put('/article/'+this.state.id, article)
                     .then(res =>{
@@ -393,6 +406,27 @@ export default class CreateArticle extends Component {
             ...state,
             showPreview: !this.state.showPreview,
         }));
+
+        if (!this.state.showPreview){
+            const url = '/preview/'+this.state.id
+            const width =  $(document).width()*0.6
+            this.externalWindow = window.open( url , '', 'width='+width+',height=700,left=200,top=200');
+            this.externalWindow.document.body.appendChild(this.containerEl);
+
+            $(this.externalWindow).on("beforeunload",()=> {
+                this.setState({
+                    showPreview: false
+                })
+                console.log(this.state.showPreview);
+
+            })
+
+        }else{
+            if (this.externalWindow!==null){
+                this.externalWindow.close();
+            }
+        }
+
     }
 
     onChangeTitle=(e)=>{
@@ -538,11 +572,6 @@ export default class CreateArticle extends Component {
 
 
 
-                {this.state.showPreview && (
-                <PreviewWindow>
-                    {parse(this.state.html)}
-                </PreviewWindow>
-                )}
 
 
                 <Container>
@@ -550,7 +579,7 @@ export default class CreateArticle extends Component {
                         <Button className={" mb-2"} onClick={this.manualSave}>
                         Manuell speichern</Button>
                         <Button className={" mb-2 ml-auto"} onClick={this.togglePreview}>
-                            {this.state.showPreview ? 'Live-Preview schließen':'Live-Preview öffnen'}
+                            {this.state.showPreview ? 'Preview schließen':'Preview öffnen'}
                         </Button>
 
                     </div>
@@ -656,7 +685,7 @@ export default class CreateArticle extends Component {
 
 
 // Live preview of article as a React Portal
-class PreviewWindow extends Component{
+/*class PreviewWindow extends Component{
 
 
     constructor(props) {
@@ -698,4 +727,4 @@ class PreviewWindow extends Component{
         return ReactDOM.createPortal(this.props.children, this.containerEl);
     }
 
-}
+}*/
