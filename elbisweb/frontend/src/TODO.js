@@ -1,5 +1,10 @@
 /*
 //TODOs
+-------DOC-------
+TODO installationshinweise
+    - welche Collections werden benötigt?
+    - wo muss der DB-Server eingetragen werden?
+    - Welche Pakete müssen installiert werden/wurden genutzt?
 
 -------General-------
 TODO MAYBE deploy the project to a free hosting server at the end ?
@@ -11,13 +16,10 @@ TODO MAYBE learn how to export it as an app to phones because its really cool
 
 Tables
 TODO Navbar doesnt resize with table oversize
-TODO MAYBE Make a public/submitted article revertable (unpublish) and the comment editable
 
 SidePages
 TODO finalize 'editUser' and load initial userTopics correctly
 
 -------Editor-------
-TODO QR-Code formatting is bugged
-TODO pictures are quickly oversized and are not manually resizeable at all (even if I do so in the Editor)
 
  */

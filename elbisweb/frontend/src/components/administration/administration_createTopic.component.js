@@ -41,7 +41,6 @@ export default class administration_createTopic extends Component {
     //##########Render##########
     render() {
         if(this.state.submitted){
-            //TODO test if works for everyone
             window.location.reload();
            }
         else{

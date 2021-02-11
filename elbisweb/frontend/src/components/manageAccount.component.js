@@ -59,7 +59,7 @@ export default class ManageAccount extends Component {
 
             <div>
                 <div className="container">
-                    <img src={logo} style={{marginBlock: "-4%", marginLeft: "-27.5%", height: 150}} alt="ELBIS"/>
+                    <img src={logo} style={{marginBlock: "-4%", marginLeft: "-5.5%", height: 150}} alt="ELBIS"/>
                     <h3>Accountverwaltung</h3>
                     <hr/>
                     <br/>

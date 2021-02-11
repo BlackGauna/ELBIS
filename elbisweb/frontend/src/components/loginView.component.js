@@ -90,7 +90,6 @@ export default class loginViewComponent extends Component {
                     * create a session
                  */
                 //frontend session
-                //TODO maybe replace token generation with time+date hashing!!
                 const token = Math.random().toString(36).substr(2);
                 //const token = bcrypt.hash(((Math.random().toString(36).substr(2)) + (Date.now.toString)), 10);
                 const sessUserID = res.data.data._id.toString();

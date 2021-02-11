@@ -109,7 +109,6 @@ export default class administration_editTopic extends Component {
      ********/
     render() {
         if(this.state.submitted){
-            //TODO test if works for everyone
             window.location.reload();
         }
         else {
