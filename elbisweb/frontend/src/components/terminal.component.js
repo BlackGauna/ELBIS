@@ -173,10 +173,10 @@ export default class ELBISweb extends Component {
 
             {this.state.isOverflown && (
                 <div className={style.banner}>
-                    <div className={"container"}>
+                    <div style={{display:"flex"}} className={"container"}>
                         <p className={style.banner}>
                             Lesen Sie den vollständigen Artikel auf unserer Homepage:
-                            <img src={qr} alt={"QR"} style={{height:"5rem", width:"5rem"}} />
+                            <img src={qr} alt={"QR"} className={style.banner} />
                         </p>
                     </div>
                 </div>

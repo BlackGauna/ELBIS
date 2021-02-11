@@ -37,24 +37,38 @@ div.banner{
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 20rem;
+    height: 15rem;
     align-items: flex-end;
 }
 
 p.banner{
+    all: unset;
     font-weight: lighter;
-    margin-bottom: auto;
     color: black;
-    font-size: 1.1rem !important;
+    font-size: 1.6rem !important;
+    float: left;
+    margin-top: 5rem ;
+    margin-right: 3rem;
+    align-self: flex-start;
 }
 
-@media (min-width: 750px) {
+img.banner{
+    all: unset;
+    width: 11%;
+    float: right;
+    margin-top: 0 ;
+    margin-bottom: 1rem;
+    alignment: top;
+}
+
+/*@media (min-width: 750px) {
     p.banner{
+        all: unset;
         font-weight: lighter;
         text-align: center;
-        margin-top: auto;
         color: black;
-        font-size: 1.8rem !important;
+        font-size: 1.5rem !important;
+        float: left;
     }
-}
+}*/
 
