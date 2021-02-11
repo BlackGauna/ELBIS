@@ -24,6 +24,7 @@ import ArticleView from "./components/ArticleView.component";
 import EditTopic from "./components/administration/administration_editTopic.component";
 import RegisterAccount from "./components/registerAccount.component";
 import ArticleList from "./components/articleList.component";
+import Dashboard from "./components/dashboard.component";
 
 //##########App start##########
 /*
@@ -83,7 +84,7 @@ class App extends React.Component {
                         <Route path="/" component={NavBar}/>
                         <Route exact path="/preview/:id" component={ArticleView}/>
                         <br/>
-                        <Route exact path="/" component={ArticleList}/>
+                        <Route exact path="/" component={Dashboard}/>
                         <Route exact path="/login/resetPassword/:id" component={ResetPassword}/>
                         <Route exact path="/login/terminal" component={TerminalView}/>
                         <Route exact path="/login/manageAccount" component={ManageAccount}/>
