@@ -10,6 +10,8 @@ import moment from "moment";
 import $ from "jquery";
 import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import Modal from "react-bootstrap/Modal";
+import EditUser from "./moderation_editUser.component";
 
 
 export default class moderation_articleList extends Component {
@@ -127,6 +129,7 @@ export default class moderation_articleList extends Component {
 
         this.state = {
             article: [],
+            showComment: [],
             columns: columns
         }
         //article Preview
@@ -150,9 +153,11 @@ export default class moderation_articleList extends Component {
         }
     }
 
-    showComment = (cell) => {
-        //TODO maybe toggle a modal here but thats good for now
-        window.alert(cell)
+    handleCommentModal = (index) => {
+        console.log(index)
+        const showComment = this.state.showComment;
+        showComment[index] = !this.state.showComment[index]
+        this.setState({showComment: showComment});
     }
 
     showArticlePreview = (row) => {
@@ -187,10 +192,11 @@ export default class moderation_articleList extends Component {
         return moment(cell).format("DD.MM.YYYY HH:mm:ss")
     }
 
-    commentFormatter = (cell) => {
+    commentFormatter = (cell, row, rowIndex, formatExtraData) => {
+        this.state.showComment.push(false);
         if (cell.length >= 20) {
-            return <div><a href='#' onClick={() => this.showComment(cell)}>{cell.substring(0, 20) + ("(...)")}</a></div>
-        } else return <div><a href='#' onClick={() => this.showComment(cell)}>{cell}</a></div>
+            return <div><a href='#' onClick={() => this.handleCommentModal(rowIndex)}>{cell.substring(0, 20) + ("(...)")}</a></div>
+        } else return <div><a href='#' onClick={() => this.handleCommentModal(rowIndex)}>{cell}</a></div>
 
     }
 
@@ -240,7 +246,30 @@ export default class moderation_articleList extends Component {
                     keyField='createdAt'
                     data={this.state.article}
                     columns={this.state.columns}/>
+                {this.renderCommentModal()}
             </div>
         )
+    }
+    renderCommentModal = () => {
+        for (let index = 0; index < this.state.showComment.length; index++) {
+            if (this.state.showComment[index]) {
+                console.log("open CommentModal")
+                return (
+                    <Modal
+                        show={true}
+                        onHide={()=>this.handleCommentModal(index)} size="lg">
+                        <Modal.Header><h4>Kommentar von {this.state.article[index].publisher}</h4></Modal.Header>
+                        <Modal.Body>
+                            {this.state.article[index].publisherComment}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <button className="btn btn-primary btn-sm" onClick={() => {
+                                this.handleCommentModal(index);
+                            }}>Zurück
+                            </button>
+                        </Modal.Footer>
+                    </Modal>)
+            }
+        }
     }
 }

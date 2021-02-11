@@ -13,6 +13,7 @@ import $ from "jquery";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import {Grid} from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import Modal from "react-bootstrap/Modal";
 
 
 export default class user_myArticles extends Component {
@@ -25,6 +26,7 @@ export default class user_myArticles extends Component {
         super(props);
         this.state = {
             article: [],
+            showComment: [],
             //table columns
             columns: [
                 {
@@ -153,12 +155,18 @@ export default class user_myArticles extends Component {
         } else {
         }
     }
-
-    showComment = (cell) => {
-        //TODO maybe toggle a modal here but thats good for now
-        window.alert(cell)
+    handleCommentModal = (index) => {
+        const showComment = this.state.showComment;
+        showComment[index] = !this.state.showComment[index]
+        this.setState({showComment: showComment});
     }
-
+    showArticlePreview = (row) => {
+        const id= row._id
+        const url = '/preview/'+id
+        const width =  $(document).width()*0.6
+        this.externalWindow = window.open( url , '', 'width='+width+',height=700,left=200,top=200');
+        this.externalWindow.document.body.appendChild(this.containerEl);
+    }
     updateArticleStatus = (row) => {
         row.status = ARTICLESTATUS.EINGEREICHT;
         if (window.confirm('Möchten Sie den ausgewählten Artikel zum veröffentlichen einreichen?')) {
@@ -177,13 +185,7 @@ export default class user_myArticles extends Component {
         }
         this.refreshPage()
     }
-    showArticlePreview = (row) => {
-        const id= row._id
-        const url = '/preview/'+id
-        const width =  $(document).width()*0.6
-        this.externalWindow = window.open( url , '', 'width='+width+',height=700,left=200,top=200');
-        this.externalWindow.document.body.appendChild(this.containerEl);
-    }
+
 
     /********
      *
@@ -209,14 +211,12 @@ export default class user_myArticles extends Component {
         return moment(cell).format("DD.MM.YYYY HH:mm:ss")
     }
 
-    commentFormatter = (cell) => {
+    commentFormatter = (cell, row, rowIndex, formatExtraData) => {
+        this.state.showComment.push(false);
         if (cell.length >= 20) {
-            if(this.state.commentAlert){
-
-            }
-            return <div><a href='#' onClick={() => this.showComment(cell)}>{cell.substring(0, 20) + ("(...)")}</a>
+            return <div><a href='#' onClick={() => this.handleCommentModal(rowIndex)}>{cell.substring(0, 20) + ("(...)")}</a>
             </div>
-        } else {return <div><a href='#' onClick={() => this.showComment(cell)}>{cell}</a></div>}
+        } else {return <div><a href='#' onClick={() => this.handleCommentModal(rowIndex)}>{cell}</a></div>}
 
     }
 
@@ -294,7 +294,30 @@ export default class user_myArticles extends Component {
                     columns={this.state.columns}
                     rowStyle={this.statusRowStyle}
                 />
+                {this.renderCommentModal()}
             </div>
         )
+    }
+    renderCommentModal = () => {
+        for (let index = 0; index < this.state.showComment.length; index++) {
+            if (this.state.showComment[index]) {
+                console.log("open CommentModal")
+                return (
+                    <Modal
+                        show={true}
+                        onHide={()=>this.handleCommentModal(index)} size="lg">
+                        <Modal.Header><h4>Kommentar von {this.state.article[index].publisher}</h4></Modal.Header>
+                        <Modal.Body>
+                            {this.state.article[index].publisherComment}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <button className="btn btn-primary btn-sm" onClick={() => {
+                                this.handleCommentModal(index);
+                            }}>Zurück
+                            </button>
+                        </Modal.Footer>
+                    </Modal>)
+            }
+        }
     }
 }

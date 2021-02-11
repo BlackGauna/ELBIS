@@ -10,11 +10,11 @@ TODO MAYBE learn how to export it as an app to phones because its really cool
 -------Main/Frontend-------
 
 Tables
+TODO Navbar doesnt resize with table oversize
 TODO MAYBE Make a public/submitted article revertable (unpublish) and the comment editable
 
 SidePages
 TODO finalize 'editUser' and load initial userTopics correctly
-TODO password reset for logged and nonn logged users
 
 -------Editor-------
 TODO QR-Code formatting is bugged
