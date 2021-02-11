@@ -4,6 +4,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import ForwardIcon from '@material-ui/icons/Forward';
+import BackspaceIcon from '@material-ui/icons/Backspace';
 import ArticleDataService from "../../services/article.service";
 import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import moment from "moment";
@@ -167,9 +168,27 @@ export default class user_myArticles extends Component {
         this.externalWindow = window.open( url , '', 'width='+width+',height=700,left=200,top=200');
         this.externalWindow.document.body.appendChild(this.containerEl);
     }
-    updateArticleStatus = (row) => {
+    updateArticleStatus_submit = (row) => {
         row.status = ARTICLESTATUS.EINGEREICHT;
         if (window.confirm('Möchten Sie den ausgewählten Artikel zum veröffentlichen einreichen?')) {
+            ArticleDataService.update(
+                row._id, row)
+                .then(response => {
+                    console.log(response.data);
+                    this.setState({
+                        message: "The article was submitted successfully!"
+                    });
+                })
+                .catch(e => {
+                    console.log(e);
+                });
+        } else {
+        }
+        this.refreshPage()
+    }
+    updateArticleStatus_bringBack = (row) => {
+        row.status = ARTICLESTATUS.ENTWURF;
+        if (window.confirm('Möchten Sie den ausgewählten Artikel wirklich zurück rufen?\nACHTUNG, sie müssen ihn anschließend erneut einreichen!')) {
             ArticleDataService.update(
                 row._id, row)
                 .then(response => {
@@ -251,12 +270,18 @@ export default class user_myArticles extends Component {
                     <DeleteIcon/>
                 </IconButton>
 
-                <IconButton disabled={submitDisable} aria-label="forward" onClick={() => {
-                    this.updateArticleStatus(row)
+                {row.status === ARTICLESTATUS.ÖFFENTLICH ?
+                    <IconButton aria-label="Rückruf" onClick={() => {
+                    this.updateArticleStatus_bringBack(row)
+                }}>
+                    <BackspaceIcon/>
+                </IconButton>
+                    :
+                    <IconButton disabled={submitDisable} aria-label="Einreichen" onClick={() => {
+                    this.updateArticleStatus_submit(row)
                 }}>
                     <ForwardIcon/>
-                </IconButton>
-
+                </IconButton> }
             </div>
         )
     }

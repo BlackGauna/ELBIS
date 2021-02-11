@@ -12,6 +12,7 @@ import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Modal from "react-bootstrap/Modal";
 import EditUser from "./moderation_editUser.component";
+import BackspaceIcon from "@material-ui/icons/Backspace";
 
 
 export default class moderation_articleList extends Component {
@@ -121,7 +122,7 @@ export default class moderation_articleList extends Component {
                 },
                 headerStyle: () => {
                     return {
-                        width: '8%',
+                        width: '11%',
                     };
                 },
             },
@@ -227,8 +228,38 @@ export default class moderation_articleList extends Component {
                 }}>
                     <DeleteIcon/>
                 </IconButton>
+
+                    <IconButton
+                        disabled={!editDisable}
+                        aria-label="Rückruf"
+                        onClick={() => {
+                        this.updateArticleStatus_bringBack(row)
+                    }}>
+                        <BackspaceIcon/>
+                    </IconButton>
             </div>
         )
+    }
+    updateArticleStatus_bringBack = (row) => {
+        row.status = ARTICLESTATUS.ENTWURF;
+        if (window.confirm('Möchten Sie den ausgewählten Artikel wirklich zurück rufen?\nACHTUNG, er muss anschließend erneut eingereicht werden!')) {
+            ArticleDataService.update(
+                row._id, row)
+                .then(response => {
+                    console.log(response.data);
+                    this.setState({
+                        message: "The article was submitted successfully!"
+                    });
+                })
+                .catch(e => {
+                    console.log(e);
+                });
+        } else {
+        }
+        this.refreshPage()
+    }
+    refreshPage = () => {
+        window.location.reload()
     }
 
     /********
