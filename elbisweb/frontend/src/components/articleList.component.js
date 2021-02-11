@@ -64,7 +64,7 @@ export default class ArticleList extends Component {
             <Router>
                 <div className={"row"} style={{float: "center", marginLeft: +315}}>
                 <img src={wappen}
-                     style={{position: "absolute", height: 80, width: 80, marginLeft: -220, marginBlock: +25}}/>
+                     style={{position: "absolute", height: 90, width: 90, marginLeft: -220, marginBlock: +25}}/>
 
                 <h1>Aktuelle Veröffentlichungen</h1>
                 </div>
