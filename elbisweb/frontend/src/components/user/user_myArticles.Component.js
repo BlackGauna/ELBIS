@@ -222,10 +222,12 @@ export default class user_myArticles extends Component {
 
     buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
         const submitDisable = (row.status !== ARTICLESTATUS.ENTWURF)
+        const editDisable = (row.status === ARTICLESTATUS.ÖFFENTLICH)
         return (
             <div>
                 {/*Edit and Delete buttons*/}
                 <IconButton
+                    disabled={editDisable}
                     size='small'
                     aria-label="edit"
                     href={"/login/edit/" + row._id}>

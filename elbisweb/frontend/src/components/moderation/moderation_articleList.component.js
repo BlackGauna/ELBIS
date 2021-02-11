@@ -201,10 +201,12 @@ export default class moderation_articleList extends Component {
     }
 
     buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
-        const editDisable = (row.status !== ARTICLESTATUS.ENTWURF)
+        const submitDisable = (row.status !== ARTICLESTATUS.ENTWURF)
+        const editDisable = (row.status === ARTICLESTATUS.ÖFFENTLICH)
         return (
             <div>
                 <IconButton
+                    disabled={editDisable}
                     size='small'
                     aria-label="edit"
                     href={"/login/edit/" + row._id}>
