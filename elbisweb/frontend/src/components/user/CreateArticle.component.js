@@ -147,7 +147,7 @@ export default class CreateArticle extends Component {
 
         // setup beforeunload and unload events for deleting unnamed article
         window.addEventListener("beforeunload", this.onBeforeUnload);
-        window.addEventListener("unload", this.onUnload,false);
+        //window.addEventListener("unload", this.onUnload,false);
 
     }
 
@@ -173,7 +173,7 @@ export default class CreateArticle extends Component {
 
 
     componentWillUnmount() {
-        window.removeEventListener("unload", this.onUnload,false);
+        //window.removeEventListener("unload", this.onUnload,false);
     }
 
 
@@ -361,6 +361,8 @@ export default class CreateArticle extends Component {
                     expireDate: this.state.expireDate,
                     publishDate: this.state.publishDate
                 }
+
+                console.log(article);
 
                 //console.log(article);
                 axios.put('/article/'+this.state.id, article)
