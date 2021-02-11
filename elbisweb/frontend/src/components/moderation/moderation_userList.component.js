@@ -257,21 +257,23 @@ export default class moderation_userList extends Component {
      ********/
     render() {
         return (
-            <div className="userTable">
-                <h3>Nutzerverwaltung</h3>
-                Level: {sessionStorage.getItem("sessionRole")}
-                {/*Print the table*/}
-                <BootstrapTable
-                    headerClasses="thead-light"
-                    bordered={false}
-                    bootstrap4={true}
-                    keyField='email'
-                    data={this.state.user}
-                    columns={this.state.columns}/>
+            <div className={"tableWrapper"}>
+                <div className="userTable">
+                    <h3>Nutzerverwaltung</h3>
+                    Level: {sessionStorage.getItem("sessionRole")}
+                    {/*Print the table*/}
+                    <BootstrapTable
+                        headerClasses="thead-light"
+                        bordered={false}
+                        bootstrap4={true}
+                        keyField='email'
+                        data={this.state.user}
+                        columns={this.state.columns}/>
 
-                {/*Check the modals*/}
-                {this.renderCreateModal()}
-                {this.renderEditModal()}
+                    {/*Check the modals*/}
+                    {this.renderCreateModal()}
+                    {this.renderEditModal()}
+                </div>
             </div>
         )
     }

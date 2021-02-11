@@ -1,3 +1,7 @@
+.tableWrapper{
+    overflow: auto;
+}
+
 .userTable{
     width: 1400px;
     margin: 0 auto;

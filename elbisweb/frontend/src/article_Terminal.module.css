@@ -28,7 +28,6 @@ iframe{
 img{
     display: block;
     margin: 1.5rem;
-    justify-content: center;
 
 }
 
@@ -36,7 +35,9 @@ img{
 div.banner{
     display: flex;
     background-image: linear-gradient(to bottom, rgba(232,232,232,0)10%,rgba(232,232,232, 1)56%);
-    /*background-color: rgba(176, 176, 176, 0.5);*/
+    -webkit-background-image: linear-gradient(to bottom, rgba(232,232,232,0)10%,rgba(232,232,232, 1)56%);
+    -o-background-image: linear-gradient(to bottom, rgba(232,232,232,0)10%,rgba(232,232,232, 1)56%);
+    -moz-background-image: linear-gradient(to bottom, rgba(232,232,232,0)10%,rgba(232,232,232, 1)56%);
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -48,7 +49,7 @@ p.banner{
     all: unset;
     font-weight: lighter;
     color: black;
-    font-size: 1.6rem !important;
+    font-size: 3.0vw !important;
     float: left;
     margin-top: 5rem ;
     margin-right: 3rem;

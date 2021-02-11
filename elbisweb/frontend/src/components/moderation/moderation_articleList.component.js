@@ -12,7 +12,6 @@ import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Modal from "react-bootstrap/Modal";
 import EditUser from "./moderation_editUser.component";
-import BackspaceIcon from "@material-ui/icons/Backspace";
 
 
 export default class moderation_articleList extends Component {
@@ -122,7 +121,7 @@ export default class moderation_articleList extends Component {
                 },
                 headerStyle: () => {
                     return {
-                        width: '11%',
+                        width: '8%',
                     };
                 },
             },
@@ -228,38 +227,8 @@ export default class moderation_articleList extends Component {
                 }}>
                     <DeleteIcon/>
                 </IconButton>
-
-                    <IconButton
-                        disabled={!editDisable}
-                        aria-label="Rückruf"
-                        onClick={() => {
-                        this.updateArticleStatus_bringBack(row)
-                    }}>
-                        <BackspaceIcon/>
-                    </IconButton>
             </div>
         )
-    }
-    updateArticleStatus_bringBack = (row) => {
-        row.status = ARTICLESTATUS.ENTWURF;
-        if (window.confirm('Möchten Sie den ausgewählten Artikel wirklich zurück rufen?\nACHTUNG, er muss anschließend erneut eingereicht werden!')) {
-            ArticleDataService.update(
-                row._id, row)
-                .then(response => {
-                    console.log(response.data);
-                    this.setState({
-                        message: "The article was submitted successfully!"
-                    });
-                })
-                .catch(e => {
-                    console.log(e);
-                });
-        } else {
-        }
-        this.refreshPage()
-    }
-    refreshPage = () => {
-        window.location.reload()
     }
 
     /********
@@ -269,17 +238,19 @@ export default class moderation_articleList extends Component {
      ********/
     render() {
         return (
-            <div className="articleTable">
-                <h3>Artikelverwaltung</h3>
-                <BootstrapTable
-                    headerClasses="thead-light"
-                    bordered={false}
-                    bootstrap4={true}
-                    //KeyField needs to be uniqe - else error on updates!
-                    keyField='createdAt'
-                    data={this.state.article}
-                    columns={this.state.columns}/>
-                {this.renderCommentModal()}
+            <div className={"tableWrapper"}>
+                <div className="articleTable">
+                    <h3>Artikelverwaltung</h3>
+                    <BootstrapTable
+                        headerClasses="thead-light"
+                        bordered={false}
+                        bootstrap4={true}
+                        //KeyField needs to be uniqe - else error on updates!
+                        keyField='createdAt'
+                        data={this.state.article}
+                        columns={this.state.columns}/>
+                    {this.renderCommentModal()}
+                </div>
             </div>
         )
     }

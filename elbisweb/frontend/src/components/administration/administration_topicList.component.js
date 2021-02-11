@@ -165,19 +165,21 @@ export default class Administration_topicList extends Component {
      ********/
     render() {
         return (
-            <div className="topicTable">
-                <h3>Bereichsverwaltung</h3>
-                <BootstrapTable
-                    headerClasses="thead-light"
-                    bordered={false}
-                    bootstrap4={true}
-                    keyField='name'
-                    data={this.state.topic}
-                    columns={this.state.columns}/>
+            <div className={"tableWrapper"}>
+                <div className="topicTable">
+                    <h3>Bereichsverwaltung</h3>
+                    <BootstrapTable
+                        headerClasses="thead-light"
+                        bordered={false}
+                        bootstrap4={true}
+                        keyField='name'
+                        data={this.state.topic}
+                        columns={this.state.columns}/>
 
-                {/*Check the modals*/}
-                {this.renderCreateModal()}
-                {this.renderEditModal()}
+                    {/*Check the modals*/}
+                    {this.renderCreateModal()}
+                    {this.renderEditModal()}
+                </div>
             </div>
         )
     }
