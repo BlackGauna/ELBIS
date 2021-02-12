@@ -140,11 +140,19 @@ export default class moderation_editUser extends Component {
 
                     this.getTopicOptions()
 
-                    const options = data.map(d => ({
+                    if (data.length!==0){
+                        const options = data.map(d => ({
+                            "label": d.topic
+                        }))
+                        this.setState({choosenTopics: options})
+                        console.log(this.state.choosenTopics)
+                    }
+
+                    /*const options = data.map(d => ({
                         "label": d.topic
                     }))
                     this.setState({choosenTopics: options})
-                    console.log(this.state.choosenTopics)
+                    console.log(this.state.choosenTopics)*/
                 })
 
         }
@@ -757,23 +765,26 @@ export default class moderation_editUser extends Component {
         const choosenTopics = this.state.choosenTopics;
         UserTopicDataService.deleteAllByMail(this.state.currentUser.email).then(res => {
             console.log(res.data);
-            for (let run = 0; run < choosenTopics.length; run++) {
-                let userTopic = {
-                    email: this.state.currentUser.email,
-                    topic: choosenTopics[run].label
-                }
-                UserTopicDataService.create(userTopic)
-                    .then(res => {
-                        this.setState({
-                            email: res.data.email,
-                            topic: res.data.topic
+            if (choosenTopics){
+                for (let run = 0; run < choosenTopics.length; run++) {
+                    let userTopic = {
+                        email: this.state.currentUser.email,
+                        topic: choosenTopics[run].label
+                    }
+                    UserTopicDataService.create(userTopic)
+                        .then(res => {
+                            this.setState({
+                                email: res.data.email,
+                                topic: res.data.topic
+                            });
+                            console.log(res.data);
+                        })
+                        .catch(e => {
+                            console.log(e);
                         });
-                        console.log(res.data);
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
+                }
             }
+
             this.toggle_topic()
         });
     }

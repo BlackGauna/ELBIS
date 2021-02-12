@@ -88,7 +88,8 @@ exports.findByEmail = (req, res) => {
     UserTopic.find({email: email})
         .then(data => {
             if((!data) || (!data.length)) {
-                res.status(404).send({message: "Not found UserTopic with email " + email});
+                //res.status(404).send({message: "Not found UserTopic with email " + email});
+                res.send(new Array(0))
             } else{
                 res.send(data)
             }
