@@ -600,7 +600,7 @@ export default class CreateArticle extends Component {
                         ],
                         toolbar:
                         // eslint-disable-next-line no-multi-str
-                            "undo redo | formatselect | bold italic forecolor backcolor | \
+                            "undo redo | formatselect fontselect fontsizeselect | bold italic forecolor backcolor | \
                                             alignleft aligncenter alignright alignjustify | \
                                             bullist numlist outdent indent | removeformat | help",
                         toolbar_mode: "floating",
