@@ -210,23 +210,25 @@ export default class moderation_submissionList extends Component {
      ********/
     render() {
         return (
-            <div className="articleTable">
-                <h3>Neue Veröffentlichungen</h3>
-                <Container style={{display: "flex"}}>
-                </Container>
+            <div className={"tableWrapper"}>
+                <div className="articleTable">
+                    <h3>Neue Veröffentlichungen</h3>
+                    <Container style={{display: "flex"}}>
+                    </Container>
 
-                {/*Print the table*/}
-                <BootstrapTable
-                    headerClasses="thead-light"
-                    bordered={false}
-                    bootstrap4={true}
-                    keyField='createdAt'
-                    data={this.state.article}
-                    columns={this.state.columns}/>
+                    {/*Print the table*/}
+                    <BootstrapTable
+                        headerClasses="thead-light"
+                        bordered={false}
+                        bootstrap4={true}
+                        keyField='createdAt'
+                        data={this.state.article}
+                        columns={this.state.columns}/>
 
-                {/*Check the modals*/}
-                {this.renderSubmissionModal()}
-                {ReactDOM.createPortal(this.props.children, this.containerEl)}
+                    {/*Check the modals*/}
+                    {this.renderSubmissionModal()}
+                    {ReactDOM.createPortal(this.props.children, this.containerEl)}
+                </div>
             </div>
         )
     }
