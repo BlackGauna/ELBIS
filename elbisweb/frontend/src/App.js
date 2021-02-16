@@ -22,7 +22,7 @@ import Administration_topicList from "./components/administration/administration
 import ArticleView from "./components/ArticleView.component";
 import EditTopic from "./components/administration/administration_editTopic.component";
 import RegisterAccount from "./components/registerAccount.component";
-import ArticleList from "./components/articleList.component";
+import Index from "./components/index.component";
 import Dashboard from "./components/dashboard.component";
 
 //##########App start##########
@@ -104,7 +104,7 @@ class App extends React.Component {
                     <Route exact path="/login" exact component={LoginView}/>
                     <Route path="/public/register" component={RegisterAccount}/>
                     <Route exact path="/public/resetPassword" component={ResetPassword}/>
-                    <Route exact path="/" component={ArticleList}/>
+                    <Route exact path="/" component={Index}/>
                     <Route exact path="/article/:id" component={ArticleView}/>
                     {/*<Route component={NotFound} />
                     </Switch>*/}

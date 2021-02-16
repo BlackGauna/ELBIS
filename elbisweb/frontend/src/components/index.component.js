@@ -4,9 +4,12 @@ import parse from "html-react-parser";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {ListGroup} from "react-bootstrap";
 import ArticleDataService from '../services/article.service';
-import wappen from '../resources/ElkrothWappen.png';
+import wappen from '../resources/ElkenrothWappen.png';
 
-export default class ArticleList extends Component {
+/**
+ * Homepage of ELBIS which loads all published articles in a list and displays them
+ */
+export default class Index extends Component {
     constructor(props) {
         super(props);
 
@@ -64,6 +67,7 @@ export default class ArticleList extends Component {
             <Router>
                 <div className={"row"} style={{float: "center", marginLeft: +315}}>
                 <img src={wappen}
+                     alt={"Wappen"}
                      style={{position: "absolute", height: 90, width: 90, marginLeft: -220, marginBlock: +25}}/>
 
                 <h1>Aktuelle Veröffentlichungen</h1>

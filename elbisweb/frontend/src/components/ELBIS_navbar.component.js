@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Nav, Navbar, Button, NavDropdown} from "react-bootstrap";
+import {Nav, Navbar, NavDropdown} from "react-bootstrap";
 import loggedUser from "../session/loggedUser";
 import {ROLE} from "../session/userRoles.ice";
 import SessionDataService from "../services/session.service";
@@ -209,7 +209,7 @@ export default class NavBar extends Component {
             )
         }
         } else{
-            return(<div></div>)
+            return(<div/>)
         }
     }
 }
