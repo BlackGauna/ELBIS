@@ -45,7 +45,7 @@ exports.findOne = (req, res) => {
                 res.status(404).send({message: "Not found gender with id " + id});
             else res.send(data);
         })
-        .catch(err => {
+        .catch(() => {
             res
                 .status(500)
                 .send({message: "Error retrieving gender with id " + id});

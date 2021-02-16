@@ -16,7 +16,7 @@ exports.delete = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error on delete userTopic with email " + email + " and topic "+ topic
             });
@@ -38,7 +38,7 @@ exports.deleteAllByMail = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error on delete userTopic with email " + email
             });
@@ -95,7 +95,7 @@ exports.findByEmail = (req, res) => {
             }
 
         })
-        .catch(err => {
+        .catch(() => {
             res
                 .status(500)
                 .send({message: "Error retrieving UserTopics with email " + email});

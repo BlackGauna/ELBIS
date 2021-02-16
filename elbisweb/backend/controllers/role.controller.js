@@ -45,7 +45,7 @@ exports.findOne = (req, res) => {
                 res.status(404).send({message: "Not found role with id " + id});
             else res.send(data);
         })
-        .catch(err => {
+        .catch(() => {
             res
                 .status(500)
                 .send({message: "Error retrieving role with id " + id});

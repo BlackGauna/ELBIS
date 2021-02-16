@@ -54,7 +54,7 @@ exports.findOne = (req, res) => {
                 res.status(404).send({message: "Not found topic with id " + id});
             else res.send(data);
         })
-        .catch(err => {
+        .catch(() => {
             res
                 .status(500)
                 .send({message: "Error retrieving topic with id " + id});
@@ -84,7 +84,7 @@ exports.update = (req, res) => {
                 res.send({message: "Topic was updated successfully."});
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error updating Topic with id " + id
             });
@@ -109,7 +109,7 @@ exports.delete = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Could not delete Topic with id " + id
             });
