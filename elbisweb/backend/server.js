@@ -9,9 +9,9 @@ const app = express();
 
 cron.schedule('* * * * *', function() {
     console.log('Database Refresh with routines');
-    Article.updateMany({"expireDate":{"$lte":now}},{"$set":{"status":"Archiviert"}},{"multi":true},(err, writeResult) => {});
-    Article.deleteMany({"path":{"$eq":""}},{"multi":true},(err) => {});
-    Article.updateMany({"publishDate":{"$lte":now},"status":"Autorisiert"},{"$set":{"status":"Öffentlich"}},{"multi":true},(err, writeResult) => {});
+    Article.updateMany({"expireDate":{"$lte":now}},{"$set":{"status":"Archiviert"}},{"multi":true},() => {});
+    Article.deleteMany({"path":{"$eq":""}},{"multi":true},() => {});
+    Article.updateMany({"publishDate":{"$lte":now},"status":"Autorisiert"},{"$set":{"status":"Öffentlich"}},{"multi":true},() => {});
 });
 
 const port = process.env.PORT || 5000;

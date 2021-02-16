@@ -65,7 +65,7 @@ exports.findOne = (req, res) => {
                 res.status(404).send({message: "Not found user with id " + id});
             else res.send(data);
         })
-        .catch(err => {
+        .catch(() => {
             res
                 .status(500)
                 .send({message: "Error retrieving user with id " + id});
@@ -90,7 +90,7 @@ exports.authOne = (req, res) => {
                 }
             }
         })
-        .catch(err => {
+        .catch(() => {
             res
                 .status(500)
                 .send({success: false,message: "Error retrieving user with email " + postemail});
@@ -122,14 +122,14 @@ exports.update = async (req, res) => {
                  res.send({message: "User was updated successfully."});
             if(req.body.email){
 
-                Article.updateMany({"author":data.email},{"$set":{"author":req.body.email}},{"multi":true},(err, writeResult) => {});
-                Article.updateMany({"publisher":data.email},{"$set":{"publisher":req.body.email}},{"multi":true},(err, writeResult) => {});
-                UserTopic.updateMany({"email":data.email},{"$set":{"email":req.body.email}},{"multi":true},(err, writeResult) => {});
-                Session.updateMany({"email":data.email},{"$set":{"email":req.body.email}},{"multi":true},(err, writeResult) => {});
+                Article.updateMany({"author":data.email},{"$set":{"author":req.body.email}},{"multi":true},() => {});
+                Article.updateMany({"publisher":data.email},{"$set":{"publisher":req.body.email}},{"multi":true},() => {});
+                UserTopic.updateMany({"email":data.email},{"$set":{"email":req.body.email}},{"multi":true},() => {});
+                Session.updateMany({"email":data.email},{"$set":{"email":req.body.email}},{"multi":true},() => {});
             }
 
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error updating User with id " + id
             });
@@ -147,17 +147,17 @@ exports.delete = (req, res) => {
                     message: "Cannot delete User with id " + id + ". Maybe User was not found"
                 });
             } else {
-                Article.updateMany({"author":data.email},{"$set":{"author":"Gelöschter Nutzer"}},{"multi":true},(err, writeResult) => {});
-                Article.updateMany({"publisher":data.email},{"$set":{"publisher":"Gelöschter Nutzer"}},{"multi":true},(err, writeResult) => {});
-                Article.updateMany({"author":data.email},{"$set":{"status":"Archived"}},{"multi":true},(err, writeResult) => {});
-                UserTopic.deleteMany({"email":data.email},{"multi":true},(err) => {});
-                Session.deleteMany({"email":data.email},{"multi":true},(err) => {});
+                Article.updateMany({"author":data.email},{"$set":{"author":"Gelöschter Nutzer"}},{"multi":true},() => {});
+                Article.updateMany({"publisher":data.email},{"$set":{"publisher":"Gelöschter Nutzer"}},{"multi":true},() => {});
+                Article.updateMany({"author":data.email},{"$set":{"status":"Archived"}},{"multi":true},() => {});
+                UserTopic.deleteMany({"email":data.email},{"multi":true},() => {});
+                Session.deleteMany({"email":data.email},{"multi":true},() => {});
                 res.send({
                     message: "User was deleted successfully!"
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Could not delete User with id " + id
             });

@@ -51,7 +51,7 @@ exports.findOne = (req, res) => {
                 res.status(404).send({message: "Not found status with id " + id});
             else res.send(data);
         })
-        .catch(err => {
+        .catch(() => {
             res
                 .status(500)
                 .send({message: "Error retrieving status with id " + id});
@@ -76,7 +76,7 @@ exports.update = (req, res) => {
                 });
             } else res.send({message: "status was updated successfully."});
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error updating status with id " + id
             });
@@ -99,7 +99,7 @@ exports.delete = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Could not delete status with id " + id
             });

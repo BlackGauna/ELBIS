@@ -40,7 +40,7 @@ exports.delete = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Could not delete Session with email " + delemail
             });
@@ -65,7 +65,7 @@ exports.checkSession = (req, res) => {
                 }
             }
         })
-        .catch(err => {
+        .catch(() => {
             res
                 .status(500)
                 .send({existing: false,message: "Error checking token for " + postemail});

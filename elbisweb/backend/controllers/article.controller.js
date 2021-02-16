@@ -79,7 +79,7 @@ exports.findAll = (req, res) => {
         });
 };
 
-// Retrieve all Articles from the database which are authorised
+// Retrieve all Articles from the database which are published
 exports.findAllPublished = (req, res) => {
     Article.find({status: "Öffentlich"}, null, {sort: {authorizeDate: -1}})
         .then(data => {
@@ -117,7 +117,7 @@ exports.findAllPublished = (req, res) => {
 };
 
 
-// Retrieve all Articles with by email
+// Retrieve all Articles that have a specific status
 exports.findByStatus = (req, res) => {
     const status = req.params.status;
 
@@ -131,7 +131,7 @@ exports.findByStatus = (req, res) => {
             }
 
         })
-        .catch(err => {
+        .catch(() => {
             res
                 .status(500)
                 .send({message: "Error retrieving Article with status " + status});
@@ -151,7 +151,7 @@ exports.findByEmail = (req, res) => {
             }
 
         })
-        .catch(err => {
+        .catch(() => {
                 res
                 .status(500)
                     .send({message: "Error retrieving Article with email " + email});
@@ -180,7 +180,7 @@ exports.findOne = (req, res) => {
                 res.json({article, content});
             }
         })
-        .catch(err => {
+        .catch(() => {
             res
                 .status(500)
                 .send({message: "Error retrieving Article with id " + id});
@@ -270,7 +270,7 @@ exports.update = (req, res) => {
                 res.send(data);
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Error updating Article with id " + id
             });
@@ -300,7 +300,7 @@ exports.delete = (req, res) => {
                 });
             }
         })
-        .catch(err => {
+        .catch(() => {
             res.status(500).send({
                 message: "Could not delete Article with id " + id
             });
