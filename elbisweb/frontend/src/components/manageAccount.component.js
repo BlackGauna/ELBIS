@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import UserTopicDataService from "../services/userTopic.service";
 import logo from '../resources/ELBIS_logo/ELBIS_Ausgeschrieben.svg';
 import "bootstrap/dist/css/bootstrap.min.css";
-import Select from 'react-select';
 import {ROLE} from "../session/userRoles.ice";
 import EditUser from "./moderation/moderation_editUser.component"
 import TopicDataService from "../services/topic.service";
@@ -29,23 +28,23 @@ export default class ManageAccount extends Component {
      ********/
     componentDidMount() {
         this.getAllowedTopics()
+            .then()
     }
+
     async getAllowedTopics() {
         if(sessionStorage.getItem("sessionRole") === ROLE.ADMINISTRATOR || sessionStorage.getItem("sessionRole")=== ROLE.MODERATOR){
-            const res = await TopicDataService.getAll()
-            const data = res.data
+            const data = (await TopicDataService.getAll()).data
 
             const options = data.map(d => ({
                 "label": d.name
             }))
             this.setState({allowedTopics: options})
         } else{
-        const mail = sessionStorage.getItem("sessionEmail")
-        const res = await UserTopicDataService.getAllByMail(mail)
-        const data = res.data
+            const mail = sessionStorage.getItem("sessionEmail")
+            const data = (await UserTopicDataService.getAllByMail(mail)).data
 
-        const options = data.map(d => ({
-            "label": d.topic
+            const options = data.map(d => ({
+                "label": d.topic
         }))
         this.setState({allowedTopics: options})}
     }

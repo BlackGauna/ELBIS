@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from '../resources/ELBIS_logo/ELBIS_Ausgeschrieben.svg';
 import DatePicker from "react-datepicker";
-import {Button, Col, Container, FormLabel, Row} from "react-bootstrap";
+import {Button, Col, Container, Row} from "react-bootstrap";
 import Select from "react-select";
 import {GENDER} from "../session/gender.ice";
 import UserDataService from "../services/user.service";
@@ -40,6 +40,7 @@ export default class registerAccount extends Component {
 
     componentDidMount() {
         this.getGenderOptions()
+            .then()
     }
 
 

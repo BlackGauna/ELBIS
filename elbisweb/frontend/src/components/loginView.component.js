@@ -142,6 +142,7 @@ export default class loginViewComponent extends Component {
     handleKeyPress = (event) => {
         if(event.key === 'Enter'){
             this.doLogin()
+                .then()
         }
     }
 

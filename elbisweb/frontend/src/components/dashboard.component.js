@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import ArticleList from "./articleList.component";
+import Index from "./index.component";
 import {Nav} from "react-bootstrap";
 import IconButton from "@material-ui/core/IconButton";
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -107,7 +107,7 @@ export default class Dasboard extends Component {
                     <br/>
                 </div>
                 <div className={"container-fluid"}>
-                    <ArticleList/>
+                    <Index/>
                 </div>
             </div>
         )
