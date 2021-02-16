@@ -32,7 +32,7 @@ exports.delete = (req, res) => {
         .then(data => {
             if (!data) {
                 res.status(404).send({
-                    message: "Cannot delete Session with email " + email + ". Maybe Session was not found"
+                    message: "Cannot delete Session with email " + delemail + ". Maybe Session was not found"
                 });
             } else {
                 res.send({
@@ -42,7 +42,7 @@ exports.delete = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete Session with email " + email
+                message: "Could not delete Session with email " + delemail
             });
         });
 }
