@@ -1,13 +1,10 @@
-import React, {useState} from "react";
-import ReactDOM from "react-dom";
+import React from "react";
 import { Component } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
-import parse from 'html-react-parser';
 import {Button, Container, Form} from "react-bootstrap";
 import TopicService from "../../services/topic.service";
 import UserTopicService from "../../services/userTopic.service";
-import ArticleService from '../../services/article.service';
 import {ARTICLESTATUS} from "../../session/articleStatus.ice";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
@@ -15,9 +12,9 @@ import articleStyle from '../../article_Terminal.module.css';
 import $ from "jquery";
 
 
-
-//TODO: Reuse uploaded images (?)
-
+/**
+ * Create/edit article page with TinyMCE as the editor
+ */
 export default class CreateArticle extends Component {
     constructor(props) {
         super(props);
@@ -28,7 +25,6 @@ export default class CreateArticle extends Component {
         console.log(expireDate);
 
         this.state = {
-            imageFilename: "",
             showPreview:false,
             path:"",
             html:"",
@@ -53,6 +49,9 @@ export default class CreateArticle extends Component {
 
     }
 
+    /**
+     * When mounted create new article in Db or load with id from url params
+     */
     componentDidMount() {
 
         // get current logged in user as email
@@ -169,7 +168,7 @@ export default class CreateArticle extends Component {
     }
 
     // delete unnamed article when leaving page
-    onUnload= (e)=>{
+    /*onUnload= (e)=>{
         //console.log("unload")
         if (this.state.title===""){
 
@@ -179,7 +178,7 @@ export default class CreateArticle extends Component {
             xhr.send();
 
         }
-    }
+    }*/
 
 
     componentWillUnmount() {
@@ -228,10 +227,8 @@ export default class CreateArticle extends Component {
         }
     }
 
-    //update to use topic array in user object?
     /**
      * Get allowed topics of user and save to state.
-     * If role is not user, have all topics
      */
     getUserTopics= () =>{
         const userRole=this.state.loggedUser.role;
@@ -272,9 +269,19 @@ export default class CreateArticle extends Component {
     }
 
 /**################# Handle Editor Changes ###############################**/
+
+    /**
+     * Delete db image files when removed from editor
+     * by comparing the current html code with previous.
+     *
+     * @param oldHtml - html code of previous state
+     * @param newHtml . current html code state
+     */
     deleteRemovedImg = (oldHtml, newHtml)=>{
+        // regex matching all html img elements
         let re=/(<img [\s\S]*?\/>)/g;
 
+        // get all matches in both htmls
         let oldImages=oldHtml.match(re);
         let newImages=newHtml.match(re);
 
@@ -285,10 +292,14 @@ export default class CreateArticle extends Component {
 
         if(oldImages!==null){
 
+            // if newImages is empty, delete all images in oldImages
             if(newImages==null){
+
                 for (let i=0; i<oldImages.length;i++){
+
                     let imgPath = oldImages[i].substring(oldImages[i].indexOf('images/'));
                     imgPath= imgPath.substring(0, imgPath.indexOf(' ') -1);
+
                     axios.delete("/"+imgPath)
                         .then(res => console.log(res.data));
 
@@ -296,11 +307,16 @@ export default class CreateArticle extends Component {
                     //console.log(imgPath);
                 }
 
+            // else compare oldImages and newImages and delete when not in newImages
             }else if (oldImages.length> newImages.length){
+
                 for (let i=0; i<oldImages.length;i++) {
+
                     if (newImages.includes(oldImages[i])===false) {
+
                         let imgPath = oldImages[i].substring(oldImages[i].indexOf('images/'));
                         imgPath= imgPath.substring(0, imgPath.indexOf(' ') -1);
+
                         axios.delete("/"+imgPath)
                             .then(res => console.log(res.data));
 
@@ -395,12 +411,18 @@ export default class CreateArticle extends Component {
 
     }
 
+    /**
+     * Handler for when manual save button is pressed
+     */
     manualSave=()=>{
         console.log(this.state.html);
         this.handleEditorChange(this.state.html);
     }
 
 /**################# OnChange ###############################**/
+    /**
+     * Toggle preview state
+     */
     togglePreview=() =>{
         this.setState(state =>({
             ...state,
@@ -429,6 +451,10 @@ export default class CreateArticle extends Component {
 
     }
 
+    /**
+     * Handle title change
+     * @param e - textfield event
+     */
     onChangeTitle=(e)=>{
         // console.log(e.target.value);
         this.setState(state =>({
@@ -438,15 +464,10 @@ export default class CreateArticle extends Component {
 
     }
 
-    onChangeImage = (e) => {
-        this.setState({
-            imageFilename: e.target.files[0],
-        });
-        console.log("Image change: ");
-        console.log(e.target.files[0]);
-        console.log(this.state.imageFilename);
-    }
-
+    /**
+     * Handle topic change
+     * @param e - Topic textfield event
+     */
     onChangeTopic= (e)=>{
         //console.log(e.target);
 
@@ -460,6 +481,10 @@ export default class CreateArticle extends Component {
         })
     }
 
+    /**
+     * Handle status change
+     * @param e - Status select event
+     */
     onChangeStatus= (e)=>{
         //console.log(e.target);
 
@@ -473,6 +498,10 @@ export default class CreateArticle extends Component {
         })
     }
 
+    /**
+     * Handle expire date change
+     * @param e - datetimepicker event
+     */
     onChangeExpireDate= (e) =>{
         const date=e[0].toISOString();
         this.setState({
@@ -481,6 +510,10 @@ export default class CreateArticle extends Component {
         //console.log(date)
     }
 
+    /**
+     * Handle publish date change
+     * @param e - datetimepicker event
+     */
     onChangePublishDate= (e) =>{
         const date=e[0].toISOString();
         this.setState({
@@ -489,6 +522,9 @@ export default class CreateArticle extends Component {
         //console.log(this.state.publishDate)
     }
 
+    /**
+     * Load content from state into editor
+     */
     loadEditorContent=()=>{
         // console.log("loaded: "+ this.state.html);
         return this.state.html;

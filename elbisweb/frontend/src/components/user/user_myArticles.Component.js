@@ -123,7 +123,7 @@ export default class user_myArticles extends Component {
         this.externalWindow = null;
     }
 
-    statusRowStyle = (row, rowIndex) => {
+    statusRowStyle = (row) => {
         const style = {};
         if (row.status === ARTICLESTATUS.AUTORISIERT || row.status === ARTICLESTATUS.ÖFFENTLICH) {
             style.backgroundColor = '#A3E4D7';
@@ -230,7 +230,7 @@ export default class user_myArticles extends Component {
         return moment(cell).format("DD.MM.YYYY HH:mm:ss")
     }
 
-    commentFormatter = (cell, row, rowIndex, formatExtraData) => {
+    commentFormatter = (cell, row, rowIndex) => {
         this.state.showComment.push(false);
         if (cell.length >= 20) {
             return <div><a href='#' onClick={() => this.handleCommentModal(rowIndex)}>{cell.substring(0, 20) + ("(...)")}</a>
@@ -239,7 +239,7 @@ export default class user_myArticles extends Component {
 
     }
 
-    buttonFormatter = (cell, row, rowIndex, formatExtraData) => {
+    buttonFormatter = (cell, row) => {
         const submitDisable = (row.status !== ARTICLESTATUS.ENTWURF)
         const editDisable = (row.status === ARTICLESTATUS.ÖFFENTLICH)
         return (
