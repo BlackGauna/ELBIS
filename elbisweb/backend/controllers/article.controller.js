@@ -61,8 +61,7 @@ exports.findAll = (req, res) => {
             mod.forEach(article=>{
 
                 try {
-                    const content=fs.readFileSync(article.path, 'utf8');
-                    article.content=content;
+                    article.content=fs.readFileSync(article.path, 'utf8');
                 }catch {
                     article.content="Article not found.";
                 }
@@ -96,8 +95,7 @@ exports.findAllPublished = (req, res) => {
             mod.forEach(article=>{
 
                 try {
-                    const content=fs.readFileSync(article.path, 'utf8');
-                    article.content=content;
+                    article.content=fs.readFileSync(article.path, 'utf8');
                 }catch {
                     article.content="Article not found.";
                 }
