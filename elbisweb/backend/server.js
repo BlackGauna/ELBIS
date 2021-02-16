@@ -23,7 +23,7 @@ app.use(express.json());
 
 
 const uri = "mongodb+srv://admin:admin@elbis8.ilafq.mongodb.net/ELBIS?retryWrites=true&w=majority";
-mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
+mongoose.connect(process.env.MONGODB_URI || uri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
 mongoose.connection.once('open', () => {
     console.log("MongoDB connected");
 })
