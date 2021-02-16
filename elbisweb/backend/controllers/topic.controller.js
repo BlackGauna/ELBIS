@@ -78,8 +78,8 @@ exports.update = (req, res) => {
                 });
             } else {
                 if(req.body.name){
-                    Article.updateMany({"topic":data.name},{"$set":{"topic":req.body.name}},{"multi":true},(err, writeResult) => {});
-                    UserTopic.updateMany({"topic":data.name},{"$set":{"topic":req.body.name}},{"multi":true},(err, writeResult) => {});
+                    Article.updateMany({"topic":data.name},{"$set":{"topic":req.body.name}},{"multi":true},() => {});
+                    UserTopic.updateMany({"topic":data.name},{"$set":{"topic":req.body.name}},{"multi":true},() => {});
                 }
                 res.send({message: "Topic was updated successfully."});
             }
@@ -102,8 +102,8 @@ exports.delete = (req, res) => {
                     message: "Cannot delete Topic with id " + id + ". Maybe Topic was not found"
                 });
             } else {
-                Article.updateMany({"topic":data.name},{"$set":{"topic":data.parentTopic}},{"multi":true},(err, writeResult) => {});
-                UserTopic.deleteMany({"topic":data.name},{"multi":true},(err, writeResult) => {});
+                Article.updateMany({"topic":data.name},{"$set":{"topic":data.parentTopic}},{"multi":true},() => {});
+                UserTopic.deleteMany({"topic":data.name},{"multi":true},() => {});
                 res.send({
                     message: "Topic was deleted successfully!"
                 });

@@ -79,7 +79,7 @@ exports.findAll = (req, res) => {
         });
 };
 
-// Retrieve all Articles from the database which are authorised
+// Retrieve all Articles from the database which are published
 exports.findAllPublished = (req, res) => {
     Article.find({status: "Öffentlich"}, null, {sort: {authorizeDate: -1}})
         .then(data => {
@@ -117,7 +117,7 @@ exports.findAllPublished = (req, res) => {
 };
 
 
-// Retrieve all Articles with by email
+// Retrieve all Articles that have a specific status
 exports.findByStatus = (req, res) => {
     const status = req.params.status;
 
